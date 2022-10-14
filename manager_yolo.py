@@ -24,6 +24,7 @@ class Manager():
                 src_folder:str,
                 dst_folder: str,
                 mode: str,
+                system: str = 'windows',
                 ratio: float = [0.7, 0.15, 0.15], 
                 tile_shape = 2048,
                 yolo_tiles = 512,
@@ -67,11 +68,21 @@ class Manager():
         self.yolo_weights = yolo_weights
         self.ratio = ratio
         self.unet_epochs = unet_epochs
+        self.system = system
+
+        if self.system == 'windows':
+            self.yolov5dir = 'C:\marco\yolov5'
+            self.yolodir = 'C:\marco\code\glom_detection'
+        elif self.system == 'mac':
+            self.yolodir = '/Users/marco/yolo'
+            self.yolov5dir = '/Users/marco/yolov5'
+
 
         if mode == 'test':
             self.slides_fns = self.set_folders()
         elif mode == 'train':
-            masks_already_computed = utils.check_already_patchified(train_dir='/Users/marco/hubmap/training/train')
+            masks_already_computed = utils.check_already_patchified(train_dir= os.path.join(self.dst_dir, 'training', 'train') )
+            print(masks_already_computed)
             if masks_already_computed is False:
                 self.train_dir, self.val_dir, self.test_dir =  self.set_folders()
             else:
@@ -151,7 +162,7 @@ class Manager():
         roots = [self.train_dir, self.val_dir, self.test_dir]
         for root in roots:
             dirs = [os.path.join(root, dir) for dir in os.listdir(root) if os.path.isdir(os.path.join(root, dir))]
-            for dir in [self.test_dir]:
+            for dir in dirs:
                 print(f"Creating bb annotations for {dir}:")
                 get_wsi_bb(source_folder=dir, convert_to= 'yolo')
                 print(f"Creating patches:")
@@ -172,24 +183,24 @@ class Manager():
         
         # move data
         utils.move_yolo_data_temp(train_dir=self.train_dir, val_dir = self.val_dir, test_dir = self.test_dir)
-        utils.edit_yaml(root = '/Users/marco/hubmap/training', mode = 'train')
-        os.chdir('/Users/marco/yolov5')
+        utils.edit_yaml(root = os.path.join(self.dst_dir, 'training'), mode = 'train')
+        os.chdir(self.yolov5dir)
         # os.system(f'git pull')
         os.system(f' python train.py --img {self.yolo_tiles} --batch {self.yolo_batch} --epochs {self.yolo_epochs} --data hubmap.yaml --weights yolov5s.pt')
-        os.chdir('/Users/marco/yolo')
+        os.chdir()
 
         return
     
     def test_yolo(self):
         """ Tests YOLO on the test set and returns performance metrics. """
 
-        os.chdir('/Users/marco/yolov5/')
+        os.chdir(self.yolov5dir)
         if self.yolo_weights is False:
             weights_dir = get_last_weights()
         else:
             weights_dir = self.yolo_weights
         os.system(f'python val.py --task test --weights {weights_dir} --data data/hubmap.yaml --device cpu')
-        os.chdir('/Users/marco/yolo')
+        os.chdir(self.yolodir)
 
         return
 
@@ -198,7 +209,7 @@ class Manager():
     def predict_yolo(self, dir):
         """ Predicts bounding boxes for images in dir and outputs txt labels for those boxes. """
 
-        os.chdir('/Users/marco/yolov5/')
+        os.chdir(self.yolov5dir)
         if self.yolo_weights is False:
             weights_dir = get_last_weights()
         else:
@@ -206,7 +217,7 @@ class Manager():
 
         print(f'Loading weights from {weights_dir}')
         os.system(f'python detect.py --source {dir} --weights {weights_dir} --data data/hubmap.yaml --device cpu --conf-thres 0.5 --save-txt --class 0')
-        os.chdir('/Users/marco/yolo')
+        os.chdir(self.yolodir)
 
         return
     
@@ -323,8 +334,8 @@ class Manager():
     def train(self):
         """ Runs the whole pipeline end2end, i.e. runs both YOLO and U-Net. """
 
-        # if self.masks_already_computed is False:
-        #     self.prepare_training_yolo()
+        if self.masks_already_computed is False:
+            self.prepare_training_yolo()
         # self.train_yolo() # TODO ADD CHECK IF ALREADY TRAINED YOLO
         # dirs = [self.train_dir, self.val_dir, self.test_dir]
         # dirnames = ['train', 'val', 'test']
@@ -334,7 +345,7 @@ class Manager():
         #     self.predict_yolo(dir = tiles_imgs_folder  )
         #     print(f"Preparing {dirname} data for U-Net training:  ")
         #     self.prepare_unet(tiles_imgs_folder= tiles_imgs_folder)
-        self.train_unet()
+        # self.train_unet()
 
         return
 
@@ -378,13 +389,13 @@ class Manager():
 
 
 if __name__ == '__main__':
-    manager = Manager(src_folder = '/Users/marco/downloads/train-3',
-                      dst_folder ='/Users/marco/hubmap/',
+    manager = Manager(src_folder = r'C:\marco\biopsies\hubmap\slides',
+                      dst_folder = r'C:\marco\biopsies\hubmap',
                       ratio = [0.7, 0.15, 0.15], 
                       mode = 'train')
-
+    manager.train()
     # print(manager.train_dir)
     # manager.predict_yolo(dir = '/Users/marco/hubmap/training/train/model_train/images')
     # manager.prepare_unet(tiles_imgs_folder= '/Users/marco/hubmap/training/train/model_train/images' )
-    manager.train()
+    # manager.train()
     # TODO NB SE USI PIOU' VOLTE PREPARE UNET STAI APPENDENDO NUOVI VALORI AI FILE TXT E QUINDI VA TUTTO A TROIE

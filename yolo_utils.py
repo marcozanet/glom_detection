@@ -1,5 +1,4 @@
 import os
-from matplotlib import test
 import numpy as np
 import yaml
 

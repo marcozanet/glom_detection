@@ -1,5 +1,12 @@
 from patchify import patchify
-import openslide
+OPENSLIDE_PATH = r'C:\Users\hp\Documents\Downloads\openslide-win64-20220811\openslide-win64-20220811\bin'
+import os
+if hasattr(os, 'add_dll_directory'):
+    # Python >= 3.8 on Windows
+    with os.add_dll_directory(OPENSLIDE_PATH):
+        import openslide
+else:
+    import openslide
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt

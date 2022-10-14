@@ -1,5 +1,11 @@
 import os
-from openslide import OpenSlide
+OPENSLIDE_PATH = r'C:\Users\hp\Documents\Downloads\openslide-win64-20220811\openslide-win64-20220811\bin'
+if hasattr(os, 'add_dll_directory'):
+    # Python >= 3.8 on Windows
+    with os.add_dll_directory(OPENSLIDE_PATH):
+        import openslide
+else:
+    import openslide
 import yaml
 
 
@@ -13,7 +19,7 @@ def split_slides(data_folder: str, ratio = [0.7, 0.15, 0.15]):
     readable_slides = []
     for wsi in wsi_fps:
         try:
-            OpenSlide(wsi)
+            openslide.OpenSlide(wsi)
             readable_slides.append(wsi)
         except:
             print(f"Warning: couldn't read slide {wsi}")
@@ -235,7 +241,7 @@ def move_unet(train_dir, val_dir, test_dir, mode = 'forth'):
 def check_already_patchified(train_dir: str):
     
     try:
-        slide_dir = os.path.join(train_dir, os.listdir(train_dir)[0])
+        slide_dir = os.path.join(train_dir, os.listdir(train_dir))[0]
         if os.path.isdir(slide_dir):
             mask_dir = os.path.join(slide_dir, 'tiles', 'masks')
             masks = os.listdir(mask_dir)
