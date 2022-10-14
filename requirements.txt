@@ -1,0 +1,103 @@
+absl-py==1.2.0
+aiohttp==3.8.3
+aiosignal==1.2.0
+appnope==0.1.3
+asttokens==2.0.8
+async-timeout==4.0.2
+attrs==22.1.0
+backcall==0.2.0
+brotlipy @ file:///Users/runner/miniforge3/conda-bld/brotlipy_1648854303569/work
+cachetools==5.2.0
+certifi==2022.9.24
+cffi @ file:///Users/runner/miniforge3/conda-bld/cffi_1656783163977/work
+charset-normalizer @ file:///home/conda/feedstock_root/build_artifacts/charset-normalizer_1661170624537/work
+contourpy==1.0.5
+cryptography @ file:///Users/runner/miniforge3/conda-bld/cryptography_1664921525005/work
+cycler==0.11.0
+debugpy==1.6.3
+decorator==5.1.1
+efficientnet-pytorch==0.7.1
+entrypoints==0.4
+executing==1.0.0
+fonttools==4.37.4
+frozenlist==1.3.1
+fsspec==2022.8.2
+geojson==2.5.0
+google-auth==2.12.0
+google-auth-oauthlib==0.4.6
+grpcio==1.49.1
+idna @ file:///home/conda/feedstock_root/build_artifacts/idna_1663625384323/work
+imageio==2.22.1
+ipykernel==6.15.3
+ipython==8.5.0
+jedi==0.18.1
+jupyter-core==4.11.1
+jupyter_client==7.3.5
+kiwisolver==1.4.4
+Markdown==3.4.1
+MarkupSafe==2.1.1
+matplotlib==3.6.0
+matplotlib-inline==0.1.6
+multidict==6.0.2
+munch==2.5.0
+nest-asyncio==1.5.5
+networkx==2.8.7
+numpy @ file:///Users/runner/miniforge3/conda-bld/numpy_1662888984243/work
+oauthlib==3.2.1
+opencv-python==4.6.0.66
+openslide-python @ file:///Users/runner/miniforge3/conda-bld/openslide-python_1661206766832/work
+packaging==21.3
+pandas==1.5.0
+parso==0.8.3
+patchify==0.2.3
+pexpect==4.8.0
+pickleshare==0.7.5
+Pillow @ file:///Users/runner/miniforge3/conda-bld/pillow_1660385909106/work
+pretrainedmodels==0.7.4
+prompt-toolkit==3.0.31
+protobuf==3.19.6
+psutil==5.9.2
+ptyprocess==0.7.0
+pure-eval==0.2.2
+pyasn1==0.4.8
+pyasn1-modules==0.2.8
+pycparser @ file:///home/conda/feedstock_root/build_artifacts/pycparser_1636257122734/work
+pyDeprecate==0.3.2
+Pygments==2.13.0
+pyOpenSSL @ file:///home/conda/feedstock_root/build_artifacts/pyopenssl_1663846997386/work
+pyparsing==3.0.9
+PySocks @ file:///home/conda/feedstock_root/build_artifacts/pysocks_1661604839144/work
+python-dateutil==2.8.2
+pytorch-lightning==1.7.7
+pytz==2022.2.1
+PyWavelets==1.4.1
+PyYAML==6.0
+pyzmq==24.0.1
+requests @ file:///home/conda/feedstock_root/build_artifacts/requests_1661872987712/work
+requests-oauthlib==1.3.1
+rsa==4.9
+scikit-image==0.19.3
+scipy==1.9.1
+seaborn==0.12.0
+segmentation-models-pytorch @ git+https://github.com/qubvel/segmentation_models.pytorch@1fa49d0953708c0a61ab11c5cc4052d20909a9bc
+six==1.16.0
+stack-data==0.5.0
+tensorboard==2.10.1
+tensorboard-data-server==0.6.1
+tensorboard-plugin-wit==1.8.1
+thop==0.1.1.post2209072238
+tifffile==2022.8.12
+timm==0.4.12
+torch==1.12.1
+torch-tb-profiler==0.4.0
+torchaudio==0.12.1
+torchmetrics==0.10.0
+torchvision==0.13.1
+tornado==6.2
+tqdm==4.64.1
+traitlets==5.4.0
+typing_extensions @ file:///home/conda/feedstock_root/build_artifacts/typing_extensions_1656706066251/work
+urllib3 @ file:///home/conda/feedstock_root/build_artifacts/urllib3_1658789158161/work
+wcwidth==0.2.5
+Werkzeug==2.2.2
+yarl==1.8.1
