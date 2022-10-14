@@ -389,8 +389,20 @@ class Manager():
 
 
 if __name__ == '__main__':
-    manager = Manager(src_folder = r'C:\marco\biopsies\hubmap\slides',
-                      dst_folder = r'C:\marco\biopsies\hubmap',
+    
+    def get_folders(system = 'windows'):
+        if system == 'windows':
+            src_folder = r'C:\marco\biopsies\hubmap\slides'
+            dst_folder = r'C:\marco\biopsies\hubmap'
+        elif system == 'mac':
+            src_folder = '/Users/marco/Downloads/train-3'        
+            dst_folder = '/Users/marco/hubmap'
+        
+        return src_folder, dst_folder
+
+    src_folder, dst_folder = get_folders('mac')
+    manager = Manager(src_folder = src_folder,
+                      dst_folder = dst_folder,
                       ratio = [0.7, 0.15, 0.15], 
                       mode = 'train')
     manager.train()
