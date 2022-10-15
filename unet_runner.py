@@ -1,6 +1,6 @@
 
 import os
-# os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
+os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
 
 from segmentation_models_pytorch.encoders import get_preprocessing_fn
 import segmentation_models_pytorch as smp
@@ -13,11 +13,6 @@ import numpy as np
 import pytorch_lightning as pl
 import matplotlib.pyplot as plt
 
-# os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
-
-# if torch.backends.mps.is_available():
-#     device = torch.device("mps")
-#     print(device)
 
 
 # create experiment dir for results
@@ -44,12 +39,12 @@ def create_dirs():
     return
 
 
-def get_loaders(train_img_dir, val_img_dir, test_img_dir, batch = 2, num_workers = 8, resize = False):
+def get_loaders(train_img_dir, val_img_dir, test_img_dir, batch = 2, num_workers = 8, resize = False, classes = 2):
 
     # get train, val, test set
-    trainset = GlomDataset(img_dir=train_img_dir, resize = resize)
-    valset = GlomDataset(img_dir=val_img_dir, resize = resize)
-    testset = GlomDataset(img_dir=test_img_dir, resize = resize)
+    trainset = GlomDataset(img_dir=train_img_dir, resize = resize, classes = 3)
+    valset = GlomDataset(img_dir=val_img_dir, resize = resize, classes = 3)
+    testset = GlomDataset(img_dir=test_img_dir, resize = resize, classes = 3)
 
     # It is a good practice to check datasets don`t intersects with each other
     # assert set(trainset.imgs_fn).isdisjoint(set(valset.imgs_fn))
@@ -200,27 +195,39 @@ class GlomModel(pl.LightningModule):
     def predict_step(self, batch, batch_idx, dataloader_idx=0):
         return self(batch)
 
-# model = GlomModel(
-#     arch = 'unet',
-#     encoder_name='resnet34', 
-#     encoder_weights='imagenet',
-#     in_channels = 3,
-#     out_classes = 1,
-#     # aux_params = aux_params
-# )
-# # print(model)
-# # preprocess_input = get_preprocessing_fn('resnet18', pretrained
-# #  ='imagenet')
 
 
 if __name__ == '__main__':
     # TODO PRINT A COUPLE IMAGES 
-    train_img_dir = '/Users/marco/hubmap/unet_data/train/images'
-    val_img_dir = '/Users/marco/hubmap/unet_data/val/images'
-    test_img_dir = '/Users/marco/hubmap/unet_data/test/images'
-    create_dirs()
-    train_dataloader, val_dataloader, _ = get_loaders(train_img_dir, val_img_dir, test_img_dir)
-    trainer = pl.Trainer(max_epochs=30, accelerator='mps' )
+    os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
+    os.chdir('/Users/marco/hubmap/unet')
+    if torch.backends.mps.is_available():
+        device = torch.device("mps")
+        print(device)
+    train_img_dir = '/Users/marco/zaneta-tiles-pos0_02/train/images'
+    val_img_dir = train_img_dir.replace('train', 'val')
+    test_img_dir =  train_img_dir.replace('train', 'test')
+    # create_dirs()
+    train_dataloader, val_dataloader, _ = get_loaders(train_img_dir, 
+                                                     val_img_dir, 
+                                                     test_img_dir, 
+                                                     classes = 3, 
+                                                     batch = 2)
+    trainer = pl.Trainer(max_epochs=10, 
+                        accelerator='mps', 
+                        weights_save_path= '/Users/marco/hubmap/unet'
+                        )
+    model = GlomModel(
+        arch = 'unet',
+        encoder_name='resnet34', 
+        encoder_weights='imagenet',
+        in_channels = 3,
+        out_classes = 3,
+        # aux_params = aux_params
+    )
+    # print(model)
+    # preprocess_input = get_preprocessing_fn('resnet18', pretrained
+    #  ='imagenet')
     trainer.fit(model,
                 train_dataloaders = train_dataloader, 
                 val_dataloaders = val_dataloader)

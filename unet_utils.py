@@ -13,7 +13,7 @@ import numpy as np
 
 class GlomDataset(Dataset):
 
-    def __init__(self, img_dir, resize = False, transform=None, target_transform=None):
+    def __init__(self, img_dir, classes = 1, resize = False, transform=None, target_transform=None):
 
         mask_dir = img_dir.replace('images', 'masks')
         self.imgs_fn = [file for file in os.listdir(img_dir) if '.png' in file and 'DS' not in file and 'preds' not in file]
@@ -23,6 +23,7 @@ class GlomDataset(Dataset):
         self.resize = resize
         self.img_dir = img_dir
         self.mask_dir = mask_dir
+        self.classes = classes
 
         if len(self.imgs_fp) < len(self.masks_fp):
             print(f'Warning: len images: {len(self.imgs_fp)}, len masks: {len(self.masks_fp)}. Additional masks will be ignored.')
@@ -50,8 +51,9 @@ class GlomDataset(Dataset):
             img = ttf.resize(img, [3, self.resize, self.resize])
             mask = ttf.resize(mask, [3, self.resize, self.resize])
 
+        if self.classes == 0 or self.classes == 1 or self.classes == 2:
+            mask = T.Grayscale()(mask)
 
-        mask = T.Grayscale()(mask)
         mask = mask /255
         # img = img /255
         # mask = mask /255

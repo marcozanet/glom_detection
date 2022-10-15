@@ -334,8 +334,8 @@ class Manager():
     def train(self):
         """ Runs the whole pipeline end2end, i.e. runs both YOLO and U-Net. """
 
-        if self.masks_already_computed is False:
-            self.prepare_training_yolo()
+        # if self.masks_already_computed is False:
+        self.prepare_training_yolo()
         # self.train_yolo() # TODO ADD CHECK IF ALREADY TRAINED YOLO
         # dirs = [self.train_dir, self.val_dir, self.test_dir]
         # dirnames = ['train', 'val', 'test']

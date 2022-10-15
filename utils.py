@@ -242,13 +242,20 @@ def check_already_patchified(train_dir: str):
     
     try:
         slide_dir = os.path.join(train_dir, os.listdir(train_dir))[0]
+        labels_dir = os.path.join(train_dir, 'model_train', 'labels')
         if os.path.isdir(slide_dir):
             mask_dir = os.path.join(slide_dir, 'tiles', 'masks')
             masks = os.listdir(mask_dir)
             n_masks = len(masks)
             if n_masks > 2:
                 print(f'Found {n_masks} masks in {mask_dir}. Assuming patchification already computed. ')
-        computed = True
+                computed = True
+        elif len(os.listdir(labels_dir)) > 2:
+            print(f'Found {n_masks} masks in {mask_dir}. Assuming patchification already computed. ')
+            computed = True
+        else:
+            print(f"Folder found, but masks found while checking destination folder, creating a new tree directory: ")
+            computed = False
 
     except:
         print(f"No masks found while checking destination folder, creating a new tree directory: ")
