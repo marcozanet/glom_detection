@@ -13,8 +13,8 @@ from unet_runner import GlomModel, create_dirs
 
 
 # testloader 
-def get_loader(img_dir: str):
-    testset = GlomDataset(img_dir=img_dir)
+def get_loader(img_dir: str, classes = 3):
+    testset = GlomDataset(img_dir=img_dir, classes = classes) # TODO TODO TODO FAR SI CHE SIA UN PARAMETRO 
     print(f"Test size: {len(testset)} images.")
     # n_cpu = os.cpu_count()
     test_dataloader = DataLoader(testset, batch_size=4, shuffle=False, num_workers=0, pin_memory=True)
@@ -37,10 +37,10 @@ def load_model():
         encoder_name='resnet34', 
         encoder_weights='imagenet',
         in_channels = 3,
-        out_classes = 1,
+        out_classes = 3,
         # aux_params = aux_params
     )
-    model_path, hparams_path = get_last_model()
+    model_path, hparams_path = get_last_model('/Users/marco/hubmap/unet/lightning_logs')
     model = model.load_from_checkpoint(model_path, 
                                        hparams_file=hparams_path)
     
@@ -58,7 +58,7 @@ def create_pred_dir(test_dir: str):
     return preds_folder
 
 
-def predict(test_folder: str, plot: bool = False, save_plot_every: int = 5):
+def predict(test_folder: str, classes: int = 3, plot: bool = False, save_plot_every: int = 5):
     """ Uses the last trained model to predict all images within a folder. """
 
     # GPU
@@ -69,7 +69,7 @@ def predict(test_folder: str, plot: bool = False, save_plot_every: int = 5):
 
     # set folders and load model
     preds_folder = create_pred_dir(test_folder)
-    test_dataloader = get_loader(test_folder)
+    test_dataloader = get_loader(os.path.join(test_folder, 'images'), classes = classes)
     model = load_model()
 
     # predict on 
@@ -79,7 +79,12 @@ def predict(test_folder: str, plot: bool = False, save_plot_every: int = 5):
         with torch.no_grad():
             model.eval()
             logits = model(batch["image"])
-        pr_masks = logits.sigmoid()
+        if classes <= 2:
+            pr_masks = torch.sigmoid()
+        elif classes >= 3:
+            pr_masks = torch.softmax(logits, dim = 1)
+            pr_masks = pr_masks.argmax(dim = 1)
+            print(pr_masks.shape)
 
 
         # save preds:
@@ -87,8 +92,23 @@ def predict(test_folder: str, plot: bool = False, save_plot_every: int = 5):
             
             img_num += 1
             i += 1
-            preds = pr_mask.numpy().squeeze() 
-            io.imsave(fname = os.path.join(preds_folder, fname ), arr = np.uint8(preds * 255), check_contrast=False)
+            print(f"shape: {pr_mask.shape}" )
+            if classes <= 2:
+                preds = pr_mask.numpy().squeeze()
+                preds *= 255
+                gt_mask.numpy().squeeze()
+            elif classes == 3:
+                col_map = {0: 0, 1:127, 2:255}
+                preds = pr_mask.numpy()
+                preds = preds * 127.5
+                gt_mask = gt_mask.numpy().transpose(1, 2, 0)
+                print(gt_mask.shape)
+                print(preds.shape)
+            else:
+                raise NotImplementedError()
+            
+            print(f" saving {fname}")
+            io.imsave(fname = os.path.join(preds_folder, fname ), arr = np.uint8(preds), check_contrast=False)
             
             # plot:
             if plot is True:
@@ -100,7 +120,7 @@ def predict(test_folder: str, plot: bool = False, save_plot_every: int = 5):
                 plt.axis("off")
 
                 plt.subplot(1, 3, 2)
-                plt.imshow(gt_mask.numpy().squeeze()) # just squeeze classes dim, because we have only one class
+                plt.imshow(gt_mask) # just squeeze classes dim, because we have only one class
                 plt.title("Ground truth")
                 plt.axis("off")
 
@@ -123,5 +143,5 @@ def predict(test_folder: str, plot: bool = False, save_plot_every: int = 5):
 
 
 if __name__ == '__main__':
-    test_folder = '/Users/marco/hubmap/unet_data/test/'
-    predict(test_folder)
+    test_folder = '/Users/marco/zaneta-tiles-pos0_02/test'
+    predict(test_folder, classes = 3, plot = True)

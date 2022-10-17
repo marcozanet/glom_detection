@@ -213,7 +213,7 @@ if __name__ == '__main__':
                                                      test_img_dir, 
                                                      classes = 3, 
                                                      batch = 2)
-    trainer = pl.Trainer(max_epochs=10, 
+    trainer = pl.Trainer(max_epochs=30, 
                         accelerator='mps', 
                         weights_save_path= '/Users/marco/hubmap/unet'
                         )

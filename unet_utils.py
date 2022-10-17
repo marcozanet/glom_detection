@@ -146,10 +146,9 @@ class IoULoss(nn.Module):
                 
         return 1 - IoU
 
-def get_last_model():
+def get_last_model(path_to_exps = '/Users/marco/yolo/lightning_logs'):
     """ Returns path to the last trained model. """
 
-    path_to_exps = '/Users/marco/yolo/lightning_logs'
     files = os.listdir(path_to_exps)
     nums = [file.split('_')[1] for file in files if 'version' in file]
     nums = np.array([int(file) for file in nums if len(file) > 0])
