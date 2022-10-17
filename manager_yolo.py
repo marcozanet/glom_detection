@@ -182,12 +182,12 @@ class Manager():
         """   Runs the YOLO model as if it was executed on the command line.  """
         
         # move data
-        utils.move_yolo_data_temp(train_dir=self.train_dir, val_dir = self.val_dir, test_dir = self.test_dir)
+        utils.move_yolo(train_dir=self.train_dir, val_dir = self.val_dir, test_dir = self.test_dir, mode = 'forth')
         utils.edit_yaml(root = os.path.join(self.dst_dir, 'training'), mode = 'train')
         os.chdir(self.yolov5dir)
-        # os.system(f'git pull')
         os.system(f' python train.py --img {self.yolo_tiles} --batch {self.yolo_batch} --epochs {self.yolo_epochs} --data hubmap.yaml --weights yolov5s.pt')
-        os.chdir()
+        os.chdir(self.yolodir)
+        utils.move_yolo(train_dir=self.train_dir, val_dir = self.val_dir, test_dir = self.test_dir, mode = 'back')
 
         return
     
