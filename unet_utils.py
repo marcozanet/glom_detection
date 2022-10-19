@@ -47,24 +47,49 @@ class GlomDataset(Dataset):
         except:
             raise TypeError(f'{mask_fp}')
 
-        if self.resize is not False:
+        if self.resize is True:
             img = ttf.resize(img, [3, self.resize, self.resize])
             mask = ttf.resize(mask, [3, self.resize, self.resize])
 
         if self.classes == 0 or self.classes == 1 or self.classes == 2:
             mask = T.Grayscale()(mask)
+        
+        
+        target = mask
+        target = target.permute(1, 2, 0).numpy()
+        # plt.imshow(target) # Each class in 10 rows
+        H, W, C = target.shape
+        # print(target.shape)
+        # Create mapping
+        # Get color codes for dataset (maybe you would have to use more than a single
+        # image, if it doesn't contain all classes)
+        target = torch.from_numpy(target)
+        # print(colors)
+        target = target.permute(2, 0, 1).contiguous()
+        # print(target.shape)
+        mapping = {(0, 0, 0): 0, (0, 255, 0): 1, (255, 0, 0): 2}
+        # mapping = {tuple(c): t for c, t in zip(colors.tolist(), range(len(colors)))}
+        # print(f"mapping:{mapping}")
 
-        mask = mask /255
-        # img = img /255
-        # mask = mask /255
-        # print(img.shape)
-        # print(mask.shape)
+        mask = torch.empty(H, W, dtype=torch.long)
+        for k in mapping:
+            # Get all indices for current class
+            idx = (target==torch.tensor(k, dtype=torch.uint8).unsqueeze(1).unsqueeze(2))
+            validx = (idx.sum(0) == 3)  # Check that all channels match
+            mask[validx] = torch.tensor(mapping[k], dtype=torch.long)
+            
+        
+        # mask = F.one_hot(mask, num_classes = 3)
+        # mask = mask.permute(2, 0, 1)
+        mask = mask.unsqueeze(0)
         fname = os.path.split(mask_fp)[1]
 
+        # print(f"MASK SHAPE IN DATASET WITHOUT ONE HOT: {mask.shape}")
         # if self.transform:
         #     image = self.transform(image)
         # if self.target_transform:
         #     label = self.target_transform(label)
+        # print(f"image: {img.shape}, mask: {mask.shape}")
         data = {'image': img, 'mask': mask, 'fname': fname }
         
         return data
