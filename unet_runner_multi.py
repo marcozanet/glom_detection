@@ -4,7 +4,7 @@ os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
 
 from segmentation_models_pytorch.encoders import get_preprocessing_fn
 import segmentation_models_pytorch as smp
-from unet_utils import GlomDataset, IoULoss
+from unet_utils import GlomDataset
 import torch
 from torch.utils.data import DataLoader
 from tqdm import tqdm
@@ -16,30 +16,30 @@ import matplotlib.pyplot as plt
 
 
 # create experiment dir for results
-def create_dirs():
+# def create_dirs():
 
-    cwd = os.getcwd()
-    exp_dir = os.path.join(cwd, 'unet_runs')
-    if not os.path.isdir(exp_dir):
-        exp_dir = os.path.join(exp_dir, 'exp_0')
-        os.makedirs(exp_dir)
-    else:
-        exps = [folder for folder in os.listdir(exp_dir) if 'exp' in folder]
-        if len(exps) == 0:
-            exp_dir = os.path.join(exp_dir, 'exp_0')
-            os.makedirs(exp_dir)
-        else:
-            exps = [folder for folder in os.listdir(exp_dir) if 'exp' in folder]
-            run_nums = [int(os.path.split(folder)[1].split('_')[1].split('.')[0]) for folder in exps]
-            last_run_num = np.array(run_nums).max()
-            exp_dir = os.path.join(exp_dir, f'exp_{last_run_num+1}' )
-            os.makedirs(exp_dir)
-    print(f'Experiment results will be saved at {exp_dir}')
+#     cwd = os.getcwd()
+#     exp_dir = os.path.join(cwd, 'unet_runs')
+#     if not os.path.isdir(exp_dir):
+#         exp_dir = os.path.join(exp_dir, 'exp_0')
+#         os.makedirs(exp_dir)
+#     else:
+#         exps = [folder for folder in os.listdir(exp_dir) if 'exp' in folder]
+#         if len(exps) == 0:
+#             exp_dir = os.path.join(exp_dir, 'exp_0')
+#             os.makedirs(exp_dir)
+#         else:
+#             exps = [folder for folder in os.listdir(exp_dir) if 'exp' in folder]
+#             run_nums = [int(os.path.split(folder)[1].split('_')[1].split('.')[0]) for folder in exps]
+#             last_run_num = np.array(run_nums).max()
+#             exp_dir = os.path.join(exp_dir, f'exp_{last_run_num+1}' )
+#             os.makedirs(exp_dir)
+#     print(f'Experiment results will be saved at {exp_dir}')
 
-    return
+#     return
 
 
-def get_loaders(train_img_dir, val_img_dir, test_img_dir, batch = 2, num_workers = 8, resize = False, classes = 2):
+def get_loaders(train_img_dir, val_img_dir, test_img_dir, batch = 2, num_workers = 8, resize = False, classes = 3):
 
     # get train, val, test set
     trainset = GlomDataset(img_dir=train_img_dir, resize = resize, classes = 3)
@@ -60,6 +60,17 @@ def get_loaders(train_img_dir, val_img_dir, test_img_dir, batch = 2, num_workers
     valid_dataloader = DataLoader(valset, batch_size=batch, shuffle=False, num_workers=num_workers, pin_memory=True)
     test_dataloader = DataLoader(testset, batch_size=batch, shuffle=False, num_workers=num_workers, pin_memory=True)
 
+    data = next(iter(train_dataloader))
+    print('mask')
+    print(data['mask'].shape)
+    print(data['mask'].min().dtype, data['mask'].max().dtype)
+    print(type(data['mask']))
+
+    print('image:')
+    print(data['image'].shape)
+    print(data['image'].min(), data['image'].max())
+    print(type(data['image']))
+
     return train_dataloader, valid_dataloader, test_dataloader
 
 
@@ -72,19 +83,20 @@ def get_loaders(train_img_dir, val_img_dir, test_img_dir, batch = 2, num_workers
 
 class GlomModel(pl.LightningModule):
 
-    def __init__(self, arch, encoder_name, in_channels, out_classes, **kwargs):
+    def __init__(self, arch, encoder_name, in_channels, out_classes, activation, **kwargs):
         super().__init__()
         self.model = smp.create_model(
-            arch, encoder_name=encoder_name, in_channels=in_channels, classes=out_classes, **kwargs
+            arch, encoder_name=encoder_name, in_channels=in_channels, classes=out_classes, activation = activation, **kwargs
         )
 
+        print(f"out_classes: {out_classes}")
         # preprocessing parameteres for image
         params = smp.encoders.get_preprocessing_params(encoder_name)
         self.register_buffer("std", torch.tensor(params["std"]).view(1, 3, 1, 1))
         self.register_buffer("mean", torch.tensor(params["mean"]).view(1, 3, 1, 1))
 
         # for image segmentation dice loss could be the best first choice
-        self.loss_fn = smp.losses.DiceLoss(smp.losses.BINARY_MODE, from_logits=True)
+        self.loss_fn = smp.losses.dice.DiceLoss(mode = 'multiclass', from_logits=True, log_loss = False)
 
     def forward(self, image):
         # normalize image here
@@ -127,8 +139,8 @@ class GlomModel(pl.LightningModule):
         # Lets compute metrics for some threshold
         # first convert mask values to probabilities, then 
         # apply thresholding
-        prob_mask = logits_mask.sigmoid()
-        pred_mask = (prob_mask > 0.5).float()
+        prob_mask = logits_mask.softmax(dim = 1) #softmax(dim = 1)
+        pred_mask = prob_mask.argmax(dim = 1, keepdim = True)
 
         # We will compute IoU metric by two ways
         #   1. dataset-wise
@@ -136,7 +148,7 @@ class GlomModel(pl.LightningModule):
         # but for now we just compute true positive, false positive, false negative and
         # true negative 'pixels' for each image and class
         # these values will be aggregated in the end of an epoch
-        tp, fp, fn, tn = smp.metrics.get_stats(pred_mask.long(), mask.long(), mode="binary")
+        tp, fp, fn, tn = smp.metrics.get_stats(pred_mask.long(), mask.long(), mode="multiclass", num_classes = 3)
 
         return {
             "loss": loss,
@@ -212,17 +224,19 @@ if __name__ == '__main__':
                                                      val_img_dir, 
                                                      test_img_dir, 
                                                      classes = 3, 
-                                                     batch = 2)
-    trainer = pl.Trainer(max_epochs=30, 
+                                                     batch = 7)
+    trainer = pl.Trainer(max_epochs=3, 
                         accelerator='mps', 
                         weights_save_path= '/Users/marco/hubmap/unet'
                         )
     model = GlomModel(
         arch = 'unet',
         encoder_name='resnet34', 
-        encoder_weights='imagenet',
+        encoder_weights='imagenet', 
         in_channels = 3,
-        out_classes = 1,
+        out_classes = 2,
+        activation = None
+        # activation = 'softmax'
         # aux_params = aux_params
     )
     # print(model)
@@ -230,7 +244,7 @@ if __name__ == '__main__':
     #  ='imagenet')
     trainer.fit(model,
                 train_dataloaders = train_dataloader, 
-                val_dataloaders = val_dataloader)
+                val_dataloaders = val_dataloader,)
 
 
 
