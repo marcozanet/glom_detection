@@ -155,36 +155,39 @@ def move_yolo(train_dir, val_dir, test_dir, mode = 'forth'):
                 src_img = os.path.join(src_imgs, img)
                 dst_img = os.path.join(model_img_dir, img)
                 if mode == 'forth':
-                    os.rename(src = src_img, dst = dst_img)
+                    try:
+                        os.rename(src = src_img, dst = dst_img)
+                    except:
+                        raise Exception(f"Couldn't move data")
                 elif mode == 'back':
-                    os.rename(src = dst_img, dst = src_img)
+                    try:
+                        os.rename(src = dst_img, dst = src_img)
+                    except:
+                        raise Exception(f"Couldn't move data")
             for mask in (masks_files):
                 src_mask = os.path.join(src_masks, mask)
                 dst_mask = os.path.join(model_mask_dir, mask)
                 if mode == 'forth':
-                    os.rename(src = src_mask, dst = dst_mask)
+                    try:
+                        os.rename(src = src_mask, dst = dst_mask)
+                    except:
+                        raise Exception(f"Couldn't move data")
                 elif mode == 'back':
                     os.rename(src = dst_mask, dst = src_mask)
             for bb in bb_files:
                 src_bb = os.path.join(src_bbs, bb)
                 dst_bb = os.path.join(model_bb_dir, bb)
                 if mode == 'forth':
-                    os.rename(src = src_bb, dst = dst_bb)
+                    try:
+                        os.rename(src = src_bb, dst = dst_bb)
+                    except:
+                        raise Exception(f"Couldn't move data")
                 elif mode == 'back':
-                    os.rename(src = dst_bb, dst = src_bb)
+                    try:
+                        os.rename(src = dst_bb, dst = src_bb)
+                    except:
+                        raise Exception(f"Couldn't move data")
 
-            # for img, bb in zip(imgs_files, bb_files):
-            #     src_img = os.path.join(src_imgs, img)
-            #     src_bb = os.path.join(src_bbs, bb)
-            #     dst_img = os.path.join(model_img_dir, img)
-            #     dst_bb = os.path.join(model_bb_dir, bb)
-
-            #     if mode == 'forth':
-            #         os.rename(src = src_img, dst = dst_img)
-            #         os.rename(src = src_bb, dst = dst_bb)
-            #     elif mode == 'back':
-            #         os.rename(src = dst_img, dst = src_img)
-            #         os.rename(src = dst_bb, dst = src_bb)
     return
 
 
@@ -263,7 +266,7 @@ def check_already_patchified(train_dir: str):
 
     return computed
 
-def edit_yaml(root: str = False, test_folder: str = False, mode = 'train' ):
+def edit_yaml(root: str = False, test_folder: str = False, mode = 'train', system = 'windows' ):
     """ Edits YAML data file from yolov5. """
     if mode == 'test':
         if isinstance(root, str) and test_folder is False:
@@ -282,8 +285,12 @@ def edit_yaml(root: str = False, test_folder: str = False, mode = 'train' ):
         else:
             raise TypeError(f"Params to edit_yaml should be path or False and either 'root' or 'test_folder' are to be specified.")
     elif mode == 'train':
-        yaml_fp = '/Users/marco/yolov5/data/hubmap.yaml'
-        text = {'path':root, 'train': 'train/yolo_train/', 'val':'val/yolo_val/', 'test':'test/yolo_test/', 'names':{0:'glom'}}
+        if system == 'mac':
+            yaml_fp = '/Users/marco/yolov5/data/hubmap.yaml'
+            text = {'path':root, 'train': 'train/yolo_train/', 'val':'val/yolo_val/', 'test':'test/yolo_test/', 'names':{0:'glom'}}
+        elif system == 'windows':
+            yaml_fp = r'C:\marco\yolov5\data\hubmap.yaml'
+            text = {'path':root, 'train': "train\\yolo_train\\", 'val': "val\\yolo_val", 'test':'test\\yolo_test\\', 'names':{0:'glom'}}
         print(text)
         with open(yaml_fp, 'w') as f:
             yaml.dump(data = text, stream=f)

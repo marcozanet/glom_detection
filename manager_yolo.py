@@ -336,7 +336,7 @@ class Manager():
 
         # if self.masks_already_computed is False:
         self.prepare_training_yolo()
-        # self.train_yolo() # TODO ADD CHECK IF ALREADY TRAINED YOLO
+        self.train_yolo() # TODO ADD CHECK IF ALREADY TRAINED YOLO
         # dirs = [self.train_dir, self.val_dir, self.test_dir]
         # dirnames = ['train', 'val', 'test']
         # for dir, dirname in zip(dirs, dirnames):
@@ -400,7 +400,7 @@ if __name__ == '__main__':
         
         return src_folder, dst_folder
 
-    src_folder, dst_folder = get_folders('mac')
+    src_folder, dst_folder = get_folders('windows')
     manager = Manager(src_folder = src_folder,
                       dst_folder = dst_folder,
                       ratio = [0.7, 0.15, 0.15], 
