@@ -9,6 +9,7 @@ import torch
 from torchvision.io import read_image
 import pytorch_lightning as pl
 import numpy as np
+import json
 
 
 class GlomDataset(Dataset):
@@ -46,12 +47,11 @@ class GlomDataset(Dataset):
             mask = read_image(mask_fp)
         except:
             raise TypeError(f'{mask_fp}')
+        if self.resize is not False:
+            img = ttf.resize(img, (256, 256))
+            mask = ttf.resize(mask, (256, 256))
 
-        if self.resize is True:
-            img = ttf.resize(img, [3, self.resize, self.resize])
-            mask = ttf.resize(mask, [3, self.resize, self.resize])
-
-        if self.classes == 0 or self.classes == 1 or self.classes == 2:
+        if self.classes == 0 or self.classes == 1:
             mask = T.Grayscale()(mask)
         
         
@@ -89,7 +89,7 @@ class GlomDataset(Dataset):
         #     image = self.transform(image)
         # if self.target_transform:
         #     label = self.target_transform(label)
-        # print(f"image: {img.shape}, mask: {mask.shape}")
+        print(f"image: {img.shape}, mask: {mask.shape}")
         data = {'image': img, 'mask': mask, 'fname': fname }
         
         return data
@@ -171,11 +171,13 @@ class IoULoss(nn.Module):
                 
         return 1 - IoU
 
-def get_last_model(path_to_exps = '/Users/marco/yolo/lightning_logs'):
+def get_last_model(path_to_exps: str):
     """ Returns path to the last trained model. """
 
     files = os.listdir(path_to_exps)
     nums = [file.split('_')[1] for file in files if 'version' in file]
+    if len(nums) == 0:
+        raise Exception(f"No 'version' folder found in the experiment folder '{path_to_exps}'. " )
     nums = np.array([int(file) for file in nums if len(file) > 0])
     last = str(nums.max())
     last = [file for file in files if last in file][0]
@@ -184,11 +186,66 @@ def get_last_model(path_to_exps = '/Users/marco/yolo/lightning_logs'):
     last = os.path.join(version_path, 'checkpoints')
     last = [file for file in os.listdir(last) if 'ckpt' in file][0]
     last = os.path.join(version_path, 'checkpoints', last)
-
+    
     return last, hparams_file
 
+
+
+def test_glom_dataset(system: str = 'windows', resize = 128, classes= 3):
+
+    if system == 'windows':
+        train_img_dir = r'D:\marco\zaneta-tiles-pos0_02\train\images'
+    else:
+        raise Exception("test not implemented for mac")
+    val_img_dir = train_img_dir.replace('train', 'val')
+    test_img_dir =  train_img_dir.replace('train', 'test')
+    # create_dirs()
+    # get train, val, test set
+    trainset = GlomDataset(img_dir=train_img_dir, resize = resize, classes = classes)
+    valset = GlomDataset(img_dir=val_img_dir, resize = resize, classes = classes)
+    testset = GlomDataset(img_dir=test_img_dir, resize = resize, classes = classes)
+
+    print(f"Train size: {len(trainset)} images.")
+    print(f"Valid size: {len(valset)} images." )
+    print(f"Test size: {len(testset)} images.")
+    data = trainset[0]
+    image = data['image']
+    mask = data['mask']
+    print(image.shape)
+    print(mask.shape)
+
+    return
+
+
+def write_hparams_yaml(hparams_file: str, hparams: dict):
+
+    hparams = json.dumps(hparams)
+
+    with open(hparams_file, 'w') as f:
+        f.write(hparams)
+        f.close()
+
+    return
+
+
+def test_get_last_model():
+    
+    path_to_exps= r'C:\marco\biopsies\zaneta\lightning_logs'
+    last, hparams = get_last_model(path_to_exps)
+    print(last)
+    print(hparams)
+
+
+    return
+
+
 if __name__ == '__main__':
-    # GlomDataset(img_dir = '/Users/marco/hubmap/unet_data/train/images')
-    # save_imgs_folder = '/Users/marco/hubmap/unet_data/images'
-    # split_sets(img_dir = save_imgs_folder
-    get_last_model()
+    
+    hparams = {'arch' : 'unet',
+        'encoder_name': 'resnet34', 
+        'encoder_weights': 'imagenet', 
+        'in_channels' : 3,
+        'out_classes': 3,
+        'activation' : None}
+    hparams_file = r'C:\marco\biopsies\zaneta\lightning_logs\version_0\hparams.yaml'
+    write_hparams_yaml(hparams_file = hparams_file, hparams=hparams)

@@ -28,10 +28,10 @@ def get_loader(img_dir: str, classes = 3):
 #     classes=4,                 # define number of output labels
 # )
 
-def load_model():
-    """ Load last trained model. NB: TODO: yaml configuration file needs to be filled. """
+def load_model(path_to_exps: str):
+    """ Load last trained model. NB: TODO: yaml configuration 
+        file needs to be filled. """
     
-
     model = GlomModel(
         arch = 'unet',
         encoder_name='resnet34', 
@@ -40,7 +40,8 @@ def load_model():
         out_classes = 3,
         # aux_params = aux_params
     )
-    model_path, hparams_path = get_last_model('/Users/marco/hubmap/unet/lightning_logs')
+    model_path, hparams_path = get_last_model(path_to_exps=path_to_exps)
+    print(f"Loading model from '{model_path}'")
     model = model.load_from_checkpoint(model_path, 
                                        hparams_file=hparams_path)
     
@@ -58,7 +59,7 @@ def create_pred_dir(test_dir: str):
     return preds_folder
 
 
-def predict(test_folder: str, classes: int = 3, plot: bool = False, save_plot_every: int = 5):
+def predict(test_folder: str, path_to_exps: str, classes: int = 3, plot: bool = False, save_plot_every: int = 5,  ):
     """ Uses the last trained model to predict all images within a folder. """
 
     # GPU
@@ -70,7 +71,7 @@ def predict(test_folder: str, classes: int = 3, plot: bool = False, save_plot_ev
     # set folders and load model
     preds_folder = create_pred_dir(test_folder)
     test_dataloader = get_loader(os.path.join(test_folder, 'images'), classes = classes)
-    model = load_model()
+    model = load_model(path_to_exps = path_to_exps)
 
     # predict on 
     img_num = 0
@@ -143,5 +144,17 @@ def predict(test_folder: str, classes: int = 3, plot: bool = False, save_plot_ev
 
 
 if __name__ == '__main__':
-    test_folder = '/Users/marco/zaneta-tiles-pos0_02/test'
-    predict(test_folder, classes = 3, plot = True)
+
+    # NB C:\marco\biopsies\zaneta\\' (zaneta without final \\ won't work)
+    system = 'windows'
+    if system == 'windows':
+        test_folder = r'D:\marco\zaneta-tiles-pos0_02\test'
+        path_to_exps = r'C:\marco\biopsies\zaneta\lightning_logs'
+    elif system == 'mac':
+        path_to_exps = '/Users/marco/hubmap/unet/lightning_logs'
+        test_folder = '/Users/marco/zaneta-tiles-pos0_02/test'
+
+    predict(test_folder,
+            path_to_exps= path_to_exps,
+            classes = 3, 
+            plot = True )

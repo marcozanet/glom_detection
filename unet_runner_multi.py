@@ -4,7 +4,7 @@ os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
 
 from segmentation_models_pytorch.encoders import get_preprocessing_fn
 import segmentation_models_pytorch as smp
-from unet_utils import GlomDataset
+from unet_utils import GlomDataset, get_last_model, write_hparams_yaml
 import torch
 from torch.utils.data import DataLoader
 from tqdm import tqdm
@@ -42,9 +42,9 @@ import matplotlib.pyplot as plt
 def get_loaders(train_img_dir, val_img_dir, test_img_dir, batch = 2, num_workers = 8, resize = False, classes = 3):
 
     # get train, val, test set
-    trainset = GlomDataset(img_dir=train_img_dir, resize = resize, classes = 3)
-    valset = GlomDataset(img_dir=val_img_dir, resize = resize, classes = 3)
-    testset = GlomDataset(img_dir=test_img_dir, resize = resize, classes = 3)
+    trainset = GlomDataset(img_dir=train_img_dir, resize = resize, classes = classes)
+    valset = GlomDataset(img_dir=val_img_dir, resize = resize, classes = classes)
+    testset = GlomDataset(img_dir=test_img_dir, resize = resize, classes = classes)
 
     # It is a good practice to check datasets don`t intersects with each other
     # assert set(trainset.imgs_fn).isdisjoint(set(valset.imgs_fn))
@@ -129,7 +129,7 @@ class GlomModel(pl.LightningModule):
         assert mask.ndim == 4
 
         # Check that mask values in between 0 and 1, NOT 0 and 255 for binary segmentation
-        assert mask.max() <= 1.0 and mask.min() >= 0
+        # assert mask.max() <= 1.0 and mask.min() >= 0
 
         logits_mask = self.forward(image)
         
@@ -211,40 +211,57 @@ class GlomModel(pl.LightningModule):
 
 if __name__ == '__main__':
     # TODO PRINT A COUPLE IMAGES 
-    os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
-    os.chdir('/Users/marco/hubmap/unet')
-    if torch.backends.mps.is_available():
-        device = torch.device("mps")
-        print(device)
-    train_img_dir = '/Users/marco/zaneta-tiles-pos0_02/train/images'
+    os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
+    # os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
+    # os.chdir('/Users/marco/hubmap/unet')
+    os.chdir(r'C:\marco\biopsies\zaneta')
+    # if torch.backends.mps.is_available():
+    #     device = torch.device("mps")
+    #     print(device)
+    train_img_dir = r'D:\marco\zaneta-tiles-pos0_02\train\images'
     val_img_dir = train_img_dir.replace('train', 'val')
     test_img_dir =  train_img_dir.replace('train', 'test')
-    # create_dirs()
-    train_dataloader, val_dataloader, _ = get_loaders(train_img_dir, 
+
+    train_dataloader, val_dataloader, test_loader = get_loaders(train_img_dir, 
                                                      val_img_dir, 
                                                      test_img_dir, 
                                                      classes = 3, 
-                                                     batch = 7)
-    trainer = pl.Trainer(max_epochs=3, 
-                        accelerator='mps', 
-                        weights_save_path= '/Users/marco/hubmap/unet'
-                        )
+                                                     batch = 4,
+                                                     resize = False)
+    trainer = pl.Trainer(max_epochs=5, 
+                        accelerator='gpu', devices = 1, 
+                        weights_save_path= r"C:\marco\biopsies\zaneta\\")
+
+    hparams = {'arch' : 'unet',
+        'encoder_name': 'resnet34', 
+        'encoder_weights': 'imagenet', 
+        'in_channels' : 3,
+        'out_classes': 3,
+        'activation' : None}
+
     model = GlomModel(
-        arch = 'unet',
-        encoder_name='resnet34', 
-        encoder_weights='imagenet', 
-        in_channels = 3,
-        out_classes = 2,
-        activation = None
-        # activation = 'softmax'
-        # aux_params = aux_params
-    )
-    # print(model)
-    # preprocess_input = get_preprocessing_fn('resnet18', pretrained
-    #  ='imagenet')
+        arch = hparams['arch'],
+        encoder_name=hparams['encoder_name'], 
+        encoder_weights=hparams['encoder_weights'], 
+        in_channels = hparams['in_channels'],
+        out_classes = hparams['out_classes'],
+        activation = hparams['activation'])
+        # aux_params = aux_params)
+
     trainer.fit(model,
                 train_dataloaders = train_dataloader, 
                 val_dataloaders = val_dataloader,)
+    
+    system = 'windows'
+    if system == 'windows':
+        test_folder = r'D:\marco\zaneta-tiles-pos0_02\test'
+        path_to_exps = r'C:\marco\biopsies\zaneta\lightning_logs'
+    elif system == 'mac':
+        path_to_exps = '/Users/marco/hubmap/unet/lightning_logs'
+        test_folder = '/Users/marco/zaneta-tiles-pos0_02/test'
+
+    last, hparams_file = get_last_model(path_to_exps= path_to_exps)
+    write_hparams_yaml(hparams_file= hparams_file, hparams = hparams)
 
 
 
