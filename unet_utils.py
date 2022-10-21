@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 import os
 from skimage import io 
 from torch.utils.data import Dataset
@@ -47,9 +48,10 @@ class GlomDataset(Dataset):
             mask = read_image(mask_fp)
         except:
             raise TypeError(f'{mask_fp}')
+
         if self.resize is not False:
-            img = ttf.resize(img, (256, 256))
-            mask = ttf.resize(mask, (256, 256))
+            img = ttf.resize(img, (self.resize, self.resize))
+            mask = ttf.resize(mask, (self.resize, self.resize))
 
         if self.classes == 0 or self.classes == 1:
             mask = T.Grayscale()(mask)
@@ -191,35 +193,12 @@ def get_last_model(path_to_exps: str):
 
 
 
-def test_glom_dataset(system: str = 'windows', resize = 128, classes= 3):
-
-    if system == 'windows':
-        train_img_dir = r'D:\marco\zaneta-tiles-pos0_02\train\images'
-    else:
-        raise Exception("test not implemented for mac")
-    val_img_dir = train_img_dir.replace('train', 'val')
-    test_img_dir =  train_img_dir.replace('train', 'test')
-    # create_dirs()
-    # get train, val, test set
-    trainset = GlomDataset(img_dir=train_img_dir, resize = resize, classes = classes)
-    valset = GlomDataset(img_dir=val_img_dir, resize = resize, classes = classes)
-    testset = GlomDataset(img_dir=test_img_dir, resize = resize, classes = classes)
-
-    print(f"Train size: {len(trainset)} images.")
-    print(f"Valid size: {len(valset)} images." )
-    print(f"Test size: {len(testset)} images.")
-    data = trainset[0]
-    image = data['image']
-    mask = data['mask']
-    print(image.shape)
-    print(mask.shape)
-
-    return
-
 
 def write_hparams_yaml(hparams_file: str, hparams: dict):
 
     hparams = json.dumps(hparams)
+    if not os.path.isfile(hparams_file):
+        raise ValueError(f"'{hparams_file}' is not a valid yaml file path.")
 
     with open(hparams_file, 'w') as f:
         f.write(hparams)
@@ -228,24 +207,31 @@ def write_hparams_yaml(hparams_file: str, hparams: dict):
     return
 
 
-def test_get_last_model():
-    
-    path_to_exps= r'C:\marco\biopsies\zaneta\lightning_logs'
-    last, hparams = get_last_model(path_to_exps)
-    print(last)
-    print(hparams)
+def pred_mask2colors(pred_mask: torch.Tensor, n_colors = int):
+    """ Converts predicted mask to colors. """
+
+    if n_colors == 3:
+        color_map = {0: 0, 1: 127, 2: 255}
+    elif n_colors == 2:
+        color_map = {0:0, 1:255}
+    else:
+        raise ValueError(f"n_colors = {n_colors}, but admitted n_colors are 2 or 3.")
+
+    for key, value in color_map.items():
+        print(key, value)
+        pred_mask[pred_mask == key] = value 
+        # pred_mask = pred_mask.where(pred_mask == key, torch.Tensor([value]).unsqueeze(1))
+        print(pred_mask.size())
+        print(pred_mask.unique())
 
 
-    return
+
+    return pred_mask
+
+
+
 
 
 if __name__ == '__main__':
-    
-    hparams = {'arch' : 'unet',
-        'encoder_name': 'resnet34', 
-        'encoder_weights': 'imagenet', 
-        'in_channels' : 3,
-        'out_classes': 3,
-        'activation' : None}
-    hparams_file = r'C:\marco\biopsies\zaneta\lightning_logs\version_0\hparams.yaml'
-    write_hparams_yaml(hparams_file = hparams_file, hparams=hparams)
+    pred_mask2colors()
+
