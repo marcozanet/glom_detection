@@ -228,7 +228,7 @@ if __name__ == '__main__':
                                                      classes = 3, 
                                                      batch = 4,
                                                      resize = False)
-    trainer = pl.Trainer(max_epochs=5, 
+    trainer = pl.Trainer(max_epochs=10, 
                         accelerator='gpu', devices = 1, 
                         weights_save_path= r"C:\marco\biopsies\zaneta\\")
 

@@ -91,7 +91,6 @@ class GlomDataset(Dataset):
         #     image = self.transform(image)
         # if self.target_transform:
         #     label = self.target_transform(label)
-        print(f"image: {img.shape}, mask: {mask.shape}")
         data = {'image': img, 'mask': mask, 'fname': fname }
         
         return data
@@ -218,11 +217,7 @@ def pred_mask2colors(pred_mask: torch.Tensor, n_colors = int):
         raise ValueError(f"n_colors = {n_colors}, but admitted n_colors are 2 or 3.")
 
     for key, value in color_map.items():
-        print(key, value)
         pred_mask[pred_mask == key] = value 
-        # pred_mask = pred_mask.where(pred_mask == key, torch.Tensor([value]).unsqueeze(1))
-        print(pred_mask.size())
-        print(pred_mask.unique())
 
 
 

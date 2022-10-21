@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import torch
 from torch.utils.data import DataLoader
 import os 
-from unet_utils import GlomDataset, get_last_model
+from unet_utils import GlomDataset, get_last_model, pred_mask2colors
 import numpy as nps
 import segmentation_models_pytorch as smp
 import pytorch_lightning as pl
@@ -85,31 +85,21 @@ def predict(test_folder: str, path_to_exps: str, classes: int = 3, plot: bool = 
         elif classes >= 3:
             pr_masks = torch.softmax(logits, dim = 1)
             pr_masks = pr_masks.argmax(dim = 1)
-            print(pr_masks.shape)
 
 
         # save preds:
         for i, (image, gt_mask, pr_mask, fname) in enumerate(zip(batch["image"], batch["mask"], pr_masks, batch["fname"])):
             
+            print(f"Image: {fname}")
             img_num += 1
             i += 1
-            print(f"shape: {pr_mask.shape}" )
-            if classes <= 2:
-                preds = pr_mask.numpy().squeeze()
-                preds *= 255
-                gt_mask.numpy().squeeze()
-            elif classes == 3:
-                col_map = {0: 0, 1:127, 2:255}
-                preds = pr_mask.numpy()
-                preds = preds * 127.5
-                gt_mask = gt_mask.numpy().transpose(1, 2, 0)
-                print(gt_mask.shape)
-                print(preds.shape)
-            else:
-                raise NotImplementedError()
-            
-            print(f" saving {fname}")
-            io.imsave(fname = os.path.join(preds_folder, fname ), arr = np.uint8(preds), check_contrast=False)
+
+            print(f"GT uniques: {gt_mask.unique()}, pred uniques: {pr_mask.unique()} ")
+            gt_mask = pred_mask2colors(pred_mask = gt_mask, n_colors= classes)
+            preds = pred_mask2colors(pred_mask= pr_mask, n_colors = classes)
+            pr_mask = np.array(pr_mask.squeeze(), dtype=np.uint8)
+            gt_mask = np.array(gt_mask.squeeze(), dtype=np.uint8)
+            io.imsave(fname = os.path.join(preds_folder, fname ), arr = pr_mask, check_contrast=False)
             
             # plot:
             if plot is True:
