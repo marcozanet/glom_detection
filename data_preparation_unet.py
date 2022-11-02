@@ -43,6 +43,7 @@ def get_tiles_masks(slide_folder: str,
             continue
 
         # read slide
+        print(f"OPENING SLIDE: {fp}")
         try:
             slide = OpenSlide(fp)
         except:

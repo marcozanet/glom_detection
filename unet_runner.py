@@ -42,9 +42,9 @@ def create_dirs():
 def get_loaders(train_img_dir, val_img_dir, test_img_dir, batch = 2, num_workers = 8, resize = False, classes = 2):
 
     # get train, val, test set
-    trainset = GlomDataset(img_dir=train_img_dir, resize = resize, classes = 3)
-    valset = GlomDataset(img_dir=val_img_dir, resize = resize, classes = 3)
-    testset = GlomDataset(img_dir=test_img_dir, resize = resize, classes = 3)
+    trainset = GlomDataset(img_dir=train_img_dir, resize = resize, classes = classes)
+    valset = GlomDataset(img_dir=val_img_dir, resize = resize, classes = classes)
+    testset = GlomDataset(img_dir=test_img_dir, resize = resize, classes = classes)
 
     # It is a good practice to check datasets don`t intersects with each other
     # assert set(trainset.imgs_fn).isdisjoint(set(valset.imgs_fn))
@@ -82,7 +82,7 @@ class GlomModel(pl.LightningModule):
         params = smp.encoders.get_preprocessing_params(encoder_name)
         self.register_buffer("std", torch.tensor(params["std"]).view(1, 3, 1, 1))
         self.register_buffer("mean", torch.tensor(params["mean"]).view(1, 3, 1, 1))
-
+        self.out_classes = out_classes
         # for image segmentation dice loss could be the best first choice
         self.loss_fn = smp.losses.DiceLoss(smp.losses.BINARY_MODE, from_logits=True)
 
@@ -119,10 +119,12 @@ class GlomModel(pl.LightningModule):
         # Check that mask values in between 0 and 1, NOT 0 and 255 for binary segmentation
         assert mask.max() <= 1.0 and mask.min() >= 0
 
+
         logits_mask = self.forward(image)
         
         # Predicted mask contains logits, and loss_fn param `from_logits` is set to True
         loss = self.loss_fn(logits_mask, mask)
+        # print(f"loss: {loss}")
 
         # Lets compute metrics for some threshold
         # first convert mask values to probabilities, then 
@@ -130,21 +132,25 @@ class GlomModel(pl.LightningModule):
         prob_mask = logits_mask.sigmoid()
         pred_mask = (prob_mask > 0.5).float()
 
+
         # We will compute IoU metric by two ways
         #   1. dataset-wise
         #   2. image-wise
         # but for now we just compute true positive, false positive, false negative and
         # true negative 'pixels' for each image and class
         # these values will be aggregated in the end of an epoch
-        tp, fp, fn, tn = smp.metrics.get_stats(pred_mask.long(), mask.long(), mode="binary")
-
-        return {
+        # print(f'pred_mask shape: {pred_mask.shape} ')
+        tp, fp, fn, tn = smp.metrics.get_stats(pred_mask.cpu().long(), mask.cpu().long(), mode="binary")
+        
+        ret_obj = {
             "loss": loss,
             "tp": tp,
             "fp": fp,
             "fn": fn,
             "tn": tn,
         }
+
+        return ret_obj
 
     def shared_epoch_end(self, outputs, stage):
         # aggregate step metics
@@ -153,9 +159,10 @@ class GlomModel(pl.LightningModule):
         fn = torch.cat([x["fn"] for x in outputs])
         tn = torch.cat([x["tn"] for x in outputs])
 
+
         # per image IoU means that we first calculate IoU score for each image 
         # and then compute mean over these scores
-        per_image_iou = smp.metrics.iou_score(tp, fp, fn, tn, reduction="micro-imagewise")
+        per_image_iou = smp.metrics.iou_score(tp, fp, fn, tn, reduction="macro")
         
         # dataset IoU means that we aggregate intersection and union over whole dataset
         # and then compute IoU score. The difference between dataset_iou and per_image_iou scores

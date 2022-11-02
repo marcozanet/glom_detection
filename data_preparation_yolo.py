@@ -100,7 +100,7 @@ def split_wsi_yolo(data_folder: str, new_root: str, ratio: float = [0.7, 0.15, 0
 def read_slide(fp):
     ''' Reads slide and returns dims. '''
     try:
-        wsi = OpenSlide(fp)
+        wsi = openslide.OpenSlide(fp)
         W, H = wsi.dimensions
     except:
         print(f"Couldn't open {fp}")
@@ -245,7 +245,7 @@ def get_one_tiles_bb(fp, shape_patch):
     try:
         # Read WSI:
         slide_fp = fp.replace('_boxes.txt', '.tiff')
-        slide = OpenSlide(slide_fp)
+        slide = openslide.OpenSlide(slide_fp)
     except:
         print('patchify skipped')
         return
@@ -334,7 +334,7 @@ def get_one_tiles(fp):
     ''' Reads a slide, patchify it. '''
     
     try:
-        slide = OpenSlide(fp)
+        slide = openslide.OpenSlide(fp)
     except:
         warnings.warn(f'Couldn t open file: {fp}. Skipping. ')
         return

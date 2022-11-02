@@ -241,27 +241,30 @@ def move_unet(train_dir, val_dir, test_dir, mode = 'forth'):
     return
 
 
+
 def check_already_patchified(train_dir: str):
-    
+
     try:
-        slide_dir = os.path.join(train_dir, os.listdir(train_dir))[0]
-        labels_dir = os.path.join(train_dir, 'model_train', 'labels')
+        dirs = [dir for dir in os.listdir(train_dir) if 'DS' not in dir and 'masks' not in dir and 'images' not in dir and 'model' not in dir]
+        slide_dir = os.path.join(train_dir, dirs[0])
+        other_masks_dir = os.path.join(train_dir, 'model_train', 'masks')
         if os.path.isdir(slide_dir):
             mask_dir = os.path.join(slide_dir, 'tiles', 'masks')
             masks = os.listdir(mask_dir)
             n_masks = len(masks)
             if n_masks > 2:
-                print(f'Found {n_masks} masks in {mask_dir}. Assuming patchification already computed. ')
                 computed = True
-        elif len(os.listdir(labels_dir)) > 2:
-            print(f'Found {n_masks} masks in {mask_dir}. Assuming patchification already computed. ')
-            computed = True
+            else:
+                computed = False
+        if os.path.isdir(other_masks_dir):
+            if len(os.listdir(other_masks_dir)) > 2:
+                computed = True
+            else:
+                computed = False                
         else:
-            print(f"Folder found, but masks found while checking destination folder, creating a new tree directory: ")
             computed = False
 
     except:
-        print(f"No masks found while checking destination folder, creating a new tree directory: ")
         computed = False
 
     return computed
@@ -287,10 +290,10 @@ def edit_yaml(root: str = False, test_folder: str = False, mode = 'train', syste
     elif mode == 'train':
         if system == 'mac':
             yaml_fp = '/Users/marco/yolov5/data/hubmap.yaml'
-            text = {'path':root, 'train': 'train/yolo_train/', 'val':'val/yolo_val/', 'test':'test/yolo_test/', 'names':{0:'glom'}}
+            text = {'path':root, 'train': 'train/model_train/images', 'val':'val/model_val/images', 'test':'test/model_test/images', 'names':{0:'glom'}}
         elif system == 'windows':
             yaml_fp = r'C:\marco\yolov5\data\hubmap.yaml'
-            text = {'path':root, 'train': "train\\yolo_train\\", 'val': "val\\yolo_val", 'test':'test\\yolo_test\\', 'names':{0:'glom'}}
+            text = {'path':root, 'train': "train\\model_train\\images", 'val': "val\\model_val\\images", 'test':'test\\model_test\\images', 'names':{0:'glom'}}
         print(text)
         with open(yaml_fp, 'w') as f:
             yaml.dump(data = text, stream=f)
@@ -301,11 +304,8 @@ def test_check_already_patchified():
     computed = check_already_patchified('/Users/marco/hubmap/training/train')
     print(computed)
     return
-def test_move_yolo_data_temp():
-    move_yolo_data_temp(train_dir = '/Users/marco/hubmap/training/train', 
-                        val_dir= '/Users/marco/hubmap/training/val',
-                        test_dir = '/Users/marco/hubmap/training/test' )
-    return
+
+    
 def test_edit_yaml():
     edit_yaml(root = '/Users/marco/hubmap/training' )
     return
@@ -334,6 +334,11 @@ def test_move_yolo():
               val_dir = '/Users/marco/hubmap/training/val', 
               test_dir = '/Users/marco/hubmap/training/test', 
               mode = 'forth')
+              
     return
+
+
+
+
 if __name__ == '__main__':
-    test_move_yolo()
+    test_check_already_patchified()

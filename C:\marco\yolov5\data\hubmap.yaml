@@ -1,0 +1,6 @@
+names:
+  0: glom
+path: /Users/marco/hubmap/training
+test: test\model_test\
+train: train\model_train\
+val: val\model_val

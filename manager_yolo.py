@@ -3,7 +3,7 @@ os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
  
 from data_preparation_yolo import *
 from data_preparation_unet import *
-from unet_utils import split_sets
+from unet_utils import split_sets, write_hparams_yaml, get_last_model
 from yolo_utils import *
 from tqdm import tqdm
 from typing import List, Type
@@ -15,7 +15,6 @@ from reconstruct_tile import reconstruct
 import utils
 import shutil
 import torch
-
 # TODO try creating environment with pytorch for m1, requirements for yolo, 
 # requirements for segmentation model pytorch (including pytorchlightning)
 
@@ -29,9 +28,12 @@ class Manager():
                 tile_shape = 2048,
                 yolo_tiles = 512,
                 yolo_batch = 8,
-                yolo_epochs = 20,
+                yolo_epochs = 3,
+                unet_classes = 3,
                 unet_tiles = 512,
-                unet_epochs = 10,
+                unet_epochs = 20,
+                unet_resize = False,
+                unet_weights_save_path = '/Users/marco/hubmap/unet/lightning_logs',
                 yolo_weights = False,
                 unet_ratio: List[float] = [0.7, 0.15, 0.15],
                 ) -> None: 
@@ -68,14 +70,18 @@ class Manager():
         self.yolo_weights = yolo_weights
         self.ratio = ratio
         self.unet_epochs = unet_epochs
+        self.unet_resize = unet_resize
         self.system = system
+        self.unet_classes = unet_classes
 
         if self.system == 'windows':
             self.yolov5dir = 'C:\marco\yolov5'
             self.yolodir = 'C:\marco\code\glom_detection'
+            raise Exception('define weights path for unet')
         elif self.system == 'mac':
             self.yolodir = '/Users/marco/yolo'
             self.yolov5dir = '/Users/marco/yolov5'
+            self.unet_weights_save_path = unet_weights_save_path
 
 
         if mode == 'test':
@@ -91,7 +97,7 @@ class Manager():
                 self.test_dir = os.path.join(self.dst_dir, 'training', 'test')
             # TODO creare una funzione riprendi_da in modo da non rifare sempre tutto dall'inizio cancellando ecc
         
-        self.masks_already_computed = masks_already_computed
+            self.masks_already_computed = masks_already_computed
 
         return
     
@@ -155,23 +161,23 @@ class Manager():
 
     def prepare_training_yolo(self):
 
-        if self.masks_already_computed is True:
-            print("Preparation to train YOLO already done. ")
-            return
+        # if self.masks_already_computed is True:
+        #     print("Preparation to train YOLO already done. ")
+        #     return
 
         roots = [self.train_dir, self.val_dir, self.test_dir]
         for root in roots:
             dirs = [os.path.join(root, dir) for dir in os.listdir(root) if os.path.isdir(os.path.join(root, dir))]
+            dirs = [dir for dir in dirs if 'images' not in dir and 'masks' not in dir and 'DS' not in dir and 'model' not in dir]
+            print(dirs)
             for dir in dirs:
                 print(f"Creating bb annotations for {dir}:")
                 get_wsi_bb(source_folder=dir, convert_to= 'yolo')
                 print(f"Creating patches:")
                 get_tiles_bb(folder = os.path.join(dir), shape_patch = self.tile_shape)
-                print(f"Moving tiles:")
-                move_tiles(src_folder= dir, mode = 'train')
-                print('Creating tiles:')
-                print(f'outfolder: {root}')
-                get_tiles_masks(slide_folder = dir, out_folder = root, tile_shape = 2048, tile_step = 2048)
+                move_tiles(src_folder= dir, mode = 'train') # moving bb tiles to their folders
+                # print(f'outfolder: {root}' )
+                # get_tiles_masks(slide_folder = dir, out_folder = root, tile_shape = 2048, tile_step = 2048)
         # print(f"Moving created tile boundig boxes to their folders: ")
         # move_tiles(dir)
         
@@ -183,13 +189,14 @@ class Manager():
         
         # move data
         utils.move_yolo(train_dir=self.train_dir, val_dir = self.val_dir, test_dir = self.test_dir, mode = 'forth')
-        utils.edit_yaml(root = os.path.join(self.dst_dir, 'training'), mode = 'train')
+        utils.edit_yaml(root = os.path.join(self.dst_dir, 'training'), mode = 'train', system = self.system)
         os.chdir(self.yolov5dir)
         os.system(f' python train.py --img {self.yolo_tiles} --batch {self.yolo_batch} --epochs {self.yolo_epochs} --data hubmap.yaml --weights yolov5s.pt')
         os.chdir(self.yolodir)
-        utils.move_yolo(train_dir=self.train_dir, val_dir = self.val_dir, test_dir = self.test_dir, mode = 'back')
+        # utils.move_yolo(train_dir=self.train_dir, val_dir = self.val_dir, test_dir = self.test_dir, mode = 'back')
 
         return
+
     
     def test_yolo(self):
         """ Tests YOLO on the test set and returns performance metrics. """
@@ -242,60 +249,110 @@ class Manager():
 
         # 4 - create images and masks 
         if self.mode == 'train':
-            txt_folder = get_last_detect()
-            utils.move_yolo(train_dir=self.train_dir, 
-                            val_dir = self.val_dir, 
-                            test_dir = self.test_dir, 
-                            mode = 'forth')
-            utils.move_wsis(src_dir = self.src_dir,
-                            mode = 'back', 
-                            root_dir = self.dst_dir )
+            print("Preparing for YOLO prediction: ")
+            self.prepare_predicting_yolo()
+            dir_names = ['train', 'val', 'test']
+            dir_paths = [self.train_dir, self.val_dir, self.test_dir]
+            tiles_dirs = [ os.path.join(dir, f'model_{name}', 'images') for dir, name in zip(dir_paths, dir_names)]
+            for dirname, dir in zip(dir_names, tiles_dirs):
+                print(f"Predicting with YOLO on {dir}")
+                self.predict_yolo(dir = dir)
+                print(f"Getting last detected images path: ")
+                txt_folder = get_last_detect()
+                save_imgs_folder = os.path.join(dir.replace('images', 'unet'), 'images')
+                print(f'Cropping images from: {txt_folder} and {dir}')
+                crop_obj(txt_folder= txt_folder, 
+                        tiles_imgs_folder= dir, 
+                        save_imgs_folder = save_imgs_folder,
+                        crop_shape = 512)
 
-            root_name = os.path.split(os.path.split(os.path.split(tiles_imgs_folder)[0])[0])[1]
-            # print(root_name)
-            # print(tiles_imgs_folder)
-            save_imgs_folder = os.path.join(os.path.split(tiles_imgs_folder)[0], 'crops', 'images')
-            # print(save_imgs_folder)
-            print(f'Cropping images from: {txt_folder} and {tiles_imgs_folder}')
-            print(f'Saving images in {save_imgs_folder}')
-            crop_obj(txt_folder= txt_folder, 
-                    tiles_imgs_folder= tiles_imgs_folder, 
-                    save_imgs_folder = save_imgs_folder,
-                    crop_shape = 512)
-
-
-
-
-            # for dir in [self.train_dir, self.val_dir]:
-            #     out_folder = '/Users/marco/hubmap/unet_data'
-            #     get_tiles_masks(dir, out_folder)
-
-
-        # 5 - crop images and masks using the detected images 
-
-        
-        # 6 - split cropped images and masks into train, val, test sets
-        # if self.mode == 'train':
-        #     split_sets(img_dir = tiles_imgs_folder)
-
-        
         return
     
-    
-    def predict_unet(self, 
-                    image_folder: str,
-                    coords_folder: str, 
-                    crops_folder: str,
-                    reconstructed_tiles_folder: str
-                    ):
+
+    def infere_testset(self):
         """ Segments images using pretrained U-Net on test folder. """
 
-        preds_folder = pu.predict(image_folder, plot = False, save_plot_every= 2)
-        reconstruct(preds_folder = preds_folder,
-                    coords_folder = coords_folder ,
-                    crops_folder = preds_folder,
-                    reconstructed_tiles_folder= reconstructed_tiles_folder,
-                    plot = True )
+        if self.system == 'windows':
+            raise NotImplemented('test_unet method not yet implemented for windows. need to define image_folder path for that case')
+        image_folder = '/Users/marco/hubmap/training/val/model_val/unet' 
+
+        preds_folder = pu.predict(image_folder, 
+                                  plot = True, 
+                                  save_plot_every= 2, 
+                                  path_to_exps='/Users/marco/hubmap/unet/lightning_logs',
+                                  classes = 1)
+
+        return
+    
+    def test_unet(self, version_n: str = None):
+
+        """ version_n: str = number of version folder where the model and hparams is stored. """
+
+
+        model = GlomModel(arch = 'unet',
+                        encoder_name='resnet34', 
+                        encoder_weights='imagenet',
+                        in_channels = 3,
+                        out_classes = self.unet_classes
+                        # aux_params = aux_params
+        )
+        path_to_exps = '/Users/marco/hubmap/unet/lightning_logs' if self.system == 'mac' else r'C:\marco\biopsies\zaneta\lightning_logs'
+
+        if version_n is None:
+            weights_path, hparams_path = get_last_model(path_to_exps=path_to_exps)
+        else:
+            version_fold = os.path.join(path_to_exps, f'version_{version_n}')
+            # print(version_fold)
+            weights_path = os.listdir(os.path.join(version_fold, 'checkpoints'))
+            # print(weights_path)
+            weights_path = [os.path.join(version_fold, 'checkpoints', file) for file in weights_path if '.ckpt' in file][0]
+
+            # print(weights_path)
+            hparams_path = os.path.join(version_fold, 'hparams.yaml')
+
+
+        print(f"Loading model from '{weights_path}'")
+    
+        os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
+
+        train_img_dir = os.path.join(self.train_dir, 'model_train', 'unet', 'images')
+        val_img_dir = os.path.join(self.val_dir, 'model_val', 'unet', 'images',)
+        test_img_dir = os.path.join(self.test_dir, 'model_test', 'unet', 'images')
+
+        _, _, test_loader = get_loaders(train_img_dir, val_img_dir, test_img_dir, resize = self.unet_resize, classes = 1)
+
+        model = model.load_from_checkpoint(
+            checkpoint_path=weights_path,
+            hparams_file=hparams_path)
+
+        if self.system == 'mac':
+            trainer = pl.Trainer(accelerator='mps', 
+                                  devices = 1)
+        elif self.system == 'windows':
+            trainer = pl.Trainer( max_epochs = self.unet_epochs, )
+
+
+        trainer.validate(model = model, dataloaders=test_loader, ckpt_path=weights_path)
+
+        os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '0'
+        return
+
+
+    def predict_unet(self, 
+                    image_folder: str,
+                    reconstruct: bool = False,
+                    coords_folder: str = None, 
+                    crops_folder: str = None,
+                    reconstructed_tiles_folder: str = None):
+        """ Segments images using pretrained U-Net on test folder. """
+
+        path_to_exps = '/Users/marco/hubmap/unet/lightning_logs' if self.system == 'mac' else r'C:\marco\biopsies\zaneta\lightning_logs'
+        preds_folder = pu.predict(image_folder, path_to_exps=path_to_exps, plot = False, save_plot_every= 2, classes = 1)
+        # reconstruct(preds_folder = preds_folder,
+        #             coords_folder = coords_folder ,
+        #             crops_folder = preds_folder,
+        #             reconstructed_tiles_folder= reconstructed_tiles_folder,
+        #             plot = True )
 
 
         return
@@ -303,38 +360,55 @@ class Manager():
     def train_unet(self):
         """  Trains the U-Net model.  """
 
-        # os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
+        if self.system == 'mac':
+            os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
+        
+        self.unet_hparams = {'arch' : 'unet',
+        'encoder_name': 'resnet34', 
+        'encoder_weights': 'imagenet', 
+        'in_channels' : 3,
+        'out_classes': 1,
+        'activation' : None}
 
-        if torch.backends.mps.is_available():
-            device = torch.device("mps")
-            print(device)
         model = GlomModel(
-            arch = 'unet',
-            encoder_name='resnet34', 
-            encoder_weights='imagenet',
-            in_channels = 3,
-            out_classes = 1)
-            # aux_params = aux_params)
-        # create_dirs()
-        train_img_dir = os.path.join(self.train_dir, 'model_train', 'images')
-        val_img_dir = os.path.join(self.val_dir, 'model_val', 'crops', 'images')
-        test_img_dir = os.path.join(self.test_dir, 'model_test', 'crops', 'images')
+            arch = self.unet_hparams['arch'],
+            encoder_name = self.unet_hparams['encoder_name'], 
+            encoder_weights = self.unet_hparams['encoder_weights'], 
+            in_channels = self.unet_hparams['in_channels'],
+            out_classes = self.unet_hparams['out_classes'],
+            activation = self.unet_hparams['activation'])
 
-        train_loader, val_loader, _ = get_loaders(train_img_dir, val_img_dir, test_img_dir)
-        trainer = pl.Trainer( max_epochs = self.unet_epochs, )
+        # create_dirs()
+        train_img_dir = os.path.join(self.train_dir, 'model_train', 'unet', 'images')
+        val_img_dir = os.path.join(self.val_dir, 'model_val', 'unet', 'images',)
+        test_img_dir = os.path.join(self.test_dir, 'model_test', 'unet', 'images')
+
+        train_loader, val_loader, _ = get_loaders(train_img_dir, val_img_dir, test_img_dir, resize = self.unet_resize, classes = 1)
+
+        if self.system == 'mac':
+            trainer = pl.Trainer( max_epochs = self.unet_epochs, 
+                                  accelerator='mps', 
+                                  devices = 1, 
+                                  weights_save_path= self.unet_weights_save_path)
+        elif self.system == 'windows':
+            trainer = pl.Trainer( max_epochs = self.unet_epochs, )
+
         trainer.fit(model,
                     train_dataloaders = train_loader, 
                     val_dataloaders = val_loader)
 
-        # os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '0'
-        
+        os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '0'
+
+        path_to_exps = '/Users/marco/hubmap/unet/lightning_logs' if self.system == 'mac' else r'C:\marco\biopsies\zaneta\lightning_logs'
+        last, hparams_file = get_last_model(path_to_exps= path_to_exps)
+        write_hparams_yaml(hparams_file= hparams_file, hparams = self.unet_hparams)
+
         return
     
 
     def train(self):
         """ Runs the whole pipeline end2end, i.e. runs both YOLO and U-Net. """
 
-        # if self.masks_already_computed is False:
         self.prepare_training_yolo()
         self.train_yolo() # TODO ADD CHECK IF ALREADY TRAINED YOLO
         # dirs = [self.train_dir, self.val_dir, self.test_dir]
@@ -353,16 +427,20 @@ class Manager():
     def prepare_predicting_yolo(self):
         """ Prepares data for YOLO. """
 
-        print(f"Creating bb annotations for wsis in '{self.src_dir}' folder:")
-        get_wsi_bb(source_folder=self.src_dir , convert_to= 'yolo')
-        print(f"Creating bb annotations for tiles in {self.src_dir} folder:")
-        get_tiles_bb(folder = self.src_dir, shape_patch = self.tile_shape)
-        print(f"Moving created tiles and annotations to their folders: ")
-        move_tiles(src_folder = self.src_dir, dst_folder =self.dst_dir, mode = 'test')
-        print(f'generating slides for: {self.slides_fns}')
-        dst = os.path.join(self.dst_dir, 'predictions')
-        get_tiles_masks(self.src_dir, out_folder = dst)
-        edit_yaml(root = self.dst_dir)
+        if self.mode == 'test':
+            print(f"Creating bb annotations for wsis in '{self.src_dir}' folder:")
+            get_wsi_bb(source_folder=self.src_dir , convert_to= 'yolo')
+            print(f"Creating bb annotations for tiles in {self.src_dir} folder:")
+            get_tiles_bb(folder = self.src_dir, shape_patch = self.tile_shape)
+            print(f"Moving created tiles and annotations to their folders: ")
+            move_tiles(src_folder = self.src_dir, dst_folder =self.dst_dir, mode = 'test')
+            print(f'generating slides for: {self.slides_fns}')
+            dst = os.path.join(self.dst_dir, 'predictions')
+            get_tiles_masks(self.src_dir, out_folder = dst)
+            edit_yaml(root = self.dst_dir)
+        elif self.mode == 'train': # i.e. if predictions is to generate images for unet to be trained
+            self.prepare_training_yolo()
+
 
         return
 
@@ -370,17 +448,21 @@ class Manager():
     def predict(self):
         """   Predicts using the entire pipeline.   """
 
-        # self.prepare_predicting_yolo()
-        for slide in self.slides_fns:
-            # print("Predicting with YOLO on {slide}:")
-            # self.predict_yolo( dir = os.path.join(self.dst_dir, 'predictions', slide, 'tiles', 'images'))
-            print(f"Preparing U-Net for {slide}:")
-            self.prepare_unet(tiles_imgs_folder = os.path.join(self.dst_dir, 'predictions', f'{slide}', 'tiles', 'images'))
-            print(f"Segmenting {slide} with U-Net.")
-            self.predict_unet(image_folder = os.path.join(self.dst_dir, 'predictions', slide, 'crops', 'images'),
-                             coords_folder = os.path.join(self.dst_dir, 'predictions', slide, 'crops', 'bb') ,
-                             crops_folder = os.path.join(self.dst_dir, 'predictions', slide, 'crops', 'images'),
-                             reconstructed_tiles_folder= os.path.join(self.dst_dir, 'predictions', slide, 'tiles', 'reconstruced'))
+
+        if self.mode == 'test':
+            for slide in self.slides_fns:
+                # print("Predicting with YOLO on {slide}:")
+                # self.predict_yolo( dir = os.path.join(self.dst_dir, 'predictions', slide, 'tiles', 'images'))
+                print(f"Preparing U-Net for {slide}:")
+                self.prepare_unet(tiles_imgs_folder = os.path.join(self.dst_dir, 'predictions', f'{slide}', 'tiles', 'images'))
+                print(f"Segmenting {slide} with U-Net.")
+                self.predict_unet(image_folder = os.path.join(self.dst_dir, 'predictions', slide, 'crops', 'images'),
+                                coords_folder = os.path.join(self.dst_dir, 'predictions', slide, 'crops', 'bb') ,
+                                crops_folder = os.path.join(self.dst_dir, 'predictions', slide, 'crops', 'images'),
+                                reconstructed_tiles_folder= os.path.join(self.dst_dir, 'predictions', slide, 'tiles', 'reconstruced'))
+        
+
+
 
         return
         
@@ -400,14 +482,17 @@ if __name__ == '__main__':
         
         return src_folder, dst_folder
 
-    src_folder, dst_folder = get_folders('windows')
+    src_folder, dst_folder = get_folders('mac')
+
     manager = Manager(src_folder = src_folder,
                       dst_folder = dst_folder,
                       ratio = [0.7, 0.15, 0.15], 
-                      mode = 'train')
-    manager.train()
-    # print(manager.train_dir)
-    # manager.predict_yolo(dir = '/Users/marco/hubmap/training/train/model_train/images')
-    # manager.prepare_unet(tiles_imgs_folder= '/Users/marco/hubmap/training/train/model_train/images' )
-    # manager.train()
+                      mode = 'train',
+                      system= 'mac',
+                      unet_epochs= 3,
+                      unet_classes= 1)
+
+
+    manager.train_unet()
+
     # TODO NB SE USI PIOU' VOLTE PREPARE UNET STAI APPENDENDO NUOVI VALORI AI FILE TXT E QUINDI VA TUTTO A TROIE

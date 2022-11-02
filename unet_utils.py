@@ -1,4 +1,3 @@
-from multiprocessing.sharedctypes import Value
 import os
 from skimage import io 
 from torch.utils.data import Dataset
@@ -11,7 +10,7 @@ from torchvision.io import read_image
 import pytorch_lightning as pl
 import numpy as np
 import json
-
+from torch.utils.data import DataLoader
 
 class GlomDataset(Dataset):
 
@@ -55,36 +54,49 @@ class GlomDataset(Dataset):
 
         if self.classes == 0 or self.classes == 1:
             mask = T.Grayscale()(mask)
+            mask = torch.Tensor(mask).int()
+            mask = mask / 255
+            # print(mask.unique())
         
+        elif self.classes == 2:
         
-        target = mask
-        target = target.permute(1, 2, 0).numpy()
-        # plt.imshow(target) # Each class in 10 rows
-        H, W, C = target.shape
-        # print(target.shape)
-        # Create mapping
-        # Get color codes for dataset (maybe you would have to use more than a single
-        # image, if it doesn't contain all classes)
-        target = torch.from_numpy(target)
-        # print(colors)
-        target = target.permute(2, 0, 1).contiguous()
-        # print(target.shape)
-        mapping = {(0, 0, 0): 0, (0, 255, 0): 1, (255, 0, 0): 2}
-        # mapping = {tuple(c): t for c, t in zip(colors.tolist(), range(len(colors)))}
-        # print(f"mapping:{mapping}")
+            target = mask
+            target = target.permute(1, 2, 0).numpy()
+            # plt.imshow(target) # Each class in 10 rows
+            H, W, C = target.shape
+            # print(target.shape)
+            # Create mapping
+            # Get color codes for dataset (maybe you would have to use more than a single
+            # image, if it doesn't contain all classes)
+            target = torch.from_numpy(target)
+            # print(colors)
+            target = target.permute(2, 0, 1).contiguous()
+            # print(target.shape)
+            mapping = {(0, 0, 0): 0, (0, 255, 0): 1, (255, 0, 0): 2}
+            # mapping = {tuple(c): t for c, t in zip(colors.tolist(), range(len(colors)))}
+            # print(f"mapping:{mapping}")
 
-        mask = torch.empty(H, W, dtype=torch.long)
-        for k in mapping:
-            # Get all indices for current class
-            idx = (target==torch.tensor(k, dtype=torch.uint8).unsqueeze(1).unsqueeze(2))
-            validx = (idx.sum(0) == 3)  # Check that all channels match
-            mask[validx] = torch.tensor(mapping[k], dtype=torch.long)
-            
-        
-        # mask = F.one_hot(mask, num_classes = 3)
-        # mask = mask.permute(2, 0, 1)
-        mask = mask.unsqueeze(0)
+            mask = torch.empty(H, W, dtype=torch.long)
+            for k in mapping:
+                # Get all indices for current class
+                idx = (target==torch.tensor(k, dtype=torch.uint8).unsqueeze(1).unsqueeze(2))
+                validx = (idx.sum(0) == 3)  # Check that all channels match
+                mask[validx] = torch.tensor(mapping[k], dtype=torch.long)
+                
+            # mask = F.one_hot(mask, num_classes = 3)
+            # mask = mask.permute(2, 0, 1)
+            mask = mask.unsqueeze(0)
         fname = os.path.split(mask_fp)[1]
+        
+        if self.classes == 1:
+            mask = torch.where(mask == 0., 0., 1.)
+        assert type(mask) == torch.Tensor, f"mask is type {type(mask)}, but should be type torch.Tensor"
+        assert mask.shape == torch.Size([self.classes, 512, 512]), f"Mask shape is {mask.shape}, but should be {torch.Size([self.classes, 512, 512])}"
+        assert mask.max() <= 1.0 and mask.min() >= 0, f"Mask range is in ({mask.min()}, {mask.max()}), but should be (0,1)"  
+        if self.classes == 1:
+            uniques = mask.unique().tolist()
+            
+            assert all(elem in [0., 1.] for elem in uniques), f"out_classes = {self.classes}, but mask unique values are: {uniques}"
 
         # print(f"MASK SHAPE IN DATASET WITHOUT ONE HOT: {mask.shape}")
         # if self.transform:
@@ -183,14 +195,23 @@ def get_last_model(path_to_exps: str):
     last = str(nums.max())
     last = [file for file in files if last in file][0]
     version_path = os.path.join(path_to_exps, last)
-    hparams_file = [os.path.join(version_path, file) for file in os.listdir(version_path) if 'hparams' in file][0]
+    try:
+        hparams_file = [os.path.join(version_path, file) for file in os.listdir(version_path) if 'hparams' in file][0]
+    except:
+        raise Exception(f"No hparams.yaml found in {path_to_exps}")
     last = os.path.join(version_path, 'checkpoints')
     last = [file for file in os.listdir(last) if 'ckpt' in file][0]
     last = os.path.join(version_path, 'checkpoints', last)
     
     return last, hparams_file
 
+def get_testloader(img_dir: str, classes = 3, batch_size = 4, num_workers = 0):
+    testset = GlomDataset(img_dir=img_dir, classes = classes) # TODO TODO TODO FAR SI CHE SIA UN PARAMETRO 
+    print(f"Test size: {len(testset)} images.")
+    # n_cpu = os.cpu_count()
+    test_dataloader = DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=True)
 
+    return test_dataloader
 
 
 def write_hparams_yaml(hparams_file: str, hparams: dict):
@@ -225,8 +246,41 @@ def pred_mask2colors(pred_mask: torch.Tensor, n_colors = int):
 
 
 
+def test_glomdataset():
+
+    dataset = GlomDataset(img_dir = '/Users/marco/hubmap/training/train/model_train/unet/images',
+                          classes = 1, 
+                          resize = False, 
+                          transform= None)
+    data = dataset[3]
+
+    return
+
+
+def test_write_yaml():
+
+
+    hparams = {'arch' : 'unet',
+        'encoder_name': 'resnet34', 
+        'encoder_weights': 'imagenet', 
+        'in_channels' : 3,
+        'out_classes': 3,
+        'activation' : None}
+    
+    system = 'mac'
+    if system == 'windows':
+        test_folder = r'D:\marco\zaneta-tiles-pos0_02\test'
+        path_to_exps = r'C:\marco\biopsies\zaneta\lightning_logs'
+    elif system == 'mac':
+        path_to_exps = '/Users/marco/hubmap/unet/lightning_logs'
+        test_folder = '/Users/marco/zaneta-tiles-pos0_02/test'
+
+    last, hparams_file = get_last_model(path_to_exps= path_to_exps)
+    write_hparams_yaml(hparams_file= hparams_file, hparams = hparams)
+
+    return
 
 
 if __name__ == '__main__':
-    pred_mask2colors()
+    test_write_yaml()
 

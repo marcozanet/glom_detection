@@ -1,2 +1,1 @@
 non riesce a aprire tutte le slide, alcune danno errore quindi non vengono usate
-scrivere una funzione che scriva i parametri usati anche in uscita nella unet altrimenti li devi sempre inserire manualmente

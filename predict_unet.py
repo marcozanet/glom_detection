@@ -62,6 +62,7 @@ def create_pred_dir(test_dir: str):
 def predict(test_folder: str, path_to_exps: str, classes: int = 3, plot: bool = False, save_plot_every: int = 5,  ):
     """ Uses the last trained model to predict all images within a folder. """
 
+    print(f'number of classes: {classes}')
     # GPU
     os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
     if torch.backends.mps.is_available():
@@ -81,7 +82,7 @@ def predict(test_folder: str, path_to_exps: str, classes: int = 3, plot: bool = 
             model.eval()
             logits = model(batch["image"])
         if classes <= 2:
-            pr_masks = torch.sigmoid()
+            pr_masks = torch.sigmoid(logits)
         elif classes >= 3:
             pr_masks = torch.softmax(logits, dim = 1)
             pr_masks = pr_masks.argmax(dim = 1)
@@ -94,13 +95,22 @@ def predict(test_folder: str, path_to_exps: str, classes: int = 3, plot: bool = 
             img_num += 1
             i += 1
 
-            print(f"GT uniques: {gt_mask.unique()}, pred uniques: {pr_mask.unique()} ")
-            gt_mask = pred_mask2colors(pred_mask = gt_mask, n_colors= classes)
-            preds = pred_mask2colors(pred_mask= pr_mask, n_colors = classes)
-            pr_mask = np.array(pr_mask.squeeze(), dtype=np.uint8)
-            gt_mask = np.array(gt_mask.squeeze(), dtype=np.uint8)
+
+            # print(f"GT uniques: {gt_mask.unique()}, pred uniques: {pr_mask.unique()} ")
+            if classes > 1:
+                gt_mask = pred_mask2colors(pred_mask = gt_mask, n_colors= classes)
+                pr_mask = pred_mask2colors(pred_mask= pr_mask, n_colors = classes)
+            else:
+                pr_mask = np.array(pr_mask.squeeze()) * 255
+                gt_mask = np.array(gt_mask.squeeze()) * 255
+                pr_mask = np.uint8(pr_mask)
+                gt_mask = np.uint8(gt_mask)
+  
             io.imsave(fname = os.path.join(preds_folder, fname ), arr = pr_mask, check_contrast=False)
             
+            # print(np.unique(pr_mask))
+            # print(np.unique(gt_mask))
+
             # plot:
             if plot is True:
                 
@@ -116,7 +126,7 @@ def predict(test_folder: str, path_to_exps: str, classes: int = 3, plot: bool = 
                 plt.axis("off")
 
                 plt.subplot(1, 3, 3)
-                plt.imshow(preds) # just squeeze classes dim, because we have only one class
+                plt.imshow(pr_mask) # just squeeze classes dim, because we have only one class
                 title = f"Prediction_{i}"
                 plt.title(title)
                 plt.axis("off")
@@ -136,7 +146,7 @@ def predict(test_folder: str, path_to_exps: str, classes: int = 3, plot: bool = 
 if __name__ == '__main__':
 
     # NB C:\marco\biopsies\zaneta\\' (zaneta without final \\ won't work)
-    system = 'windows'
+    system = 'mac'
     if system == 'windows':
         test_folder = r'D:\marco\zaneta-tiles-pos0_02\test'
         path_to_exps = r'C:\marco\biopsies\zaneta\lightning_logs'
@@ -146,5 +156,5 @@ if __name__ == '__main__':
 
     predict(test_folder,
             path_to_exps= path_to_exps,
-            classes = 3, 
+            classes = 1, 
             plot = True )
