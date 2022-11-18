@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import torch
 from torch.utils.data import DataLoader
 import os 
-from unet_utils import GlomDataset, get_last_model, pred_mask2colors
+from utils_unet import GlomDataset, get_last_model, pred_mask2colors
 import numpy as nps
 import segmentation_models_pytorch as smp
 import pytorch_lightning as pl
