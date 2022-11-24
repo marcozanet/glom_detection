@@ -273,7 +273,7 @@ class Processor():
     def make_bboxes(self, 
                     clear_txt: bool = False, 
                     reduce_classes: bool = False)-> None:
-        """ Converts masks from a folder to bounding boxes and saves them in the same folder. 
+        """ Converts mask images from a folder to bounding boxes and saves them in the same folder. 
             Masks MUST be named like: <name-labelled.png>
             clear_txt = if True, all txt files are removed from src_root before making txt_files.
             reduce_classes = if True, it makes unhealthy class = NA class -> classes = {0: healthy, 1: unhealthy}. 

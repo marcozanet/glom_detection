@@ -3,9 +3,8 @@ os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
  
 from data_preparation_yolo import *
 from data_preparation_unet import *
-import utils_yolo
-import utils_unet
-import utils_manager
+from unet_utils import split_sets, write_hparams_yaml, get_last_model
+from yolo_utils import *
 from tqdm import tqdm
 from typing import List, Type
 from unet_runner import GlomModel, create_dirs, get_loaders
@@ -13,27 +12,23 @@ import pytorch_lightning as pl
 from crop_predictions import crop_obj
 import predict_unet as pu
 from reconstruct_tile import reconstruct
-from processor import Processor
+import utils_wsi
 import shutil
 import torch
-import time
-import datetime
-from statistix import plot_labels
+# TODO try creating environment with pytorch for m1, requirements for yolo, 
+# requirements for segmentation model pytorch (including pytorchlightning)
 
 class Manager():
-
-
     def __init__(self, 
                 src_folder:str,
                 dst_folder: str,
                 mode: str,
                 system: str = 'windows',
                 ratio: float = [0.7, 0.15, 0.15], 
-                tile_shape = 2048,
+                tile_shape = 4096,
                 yolo_tiles = 512,
                 yolo_batch = 8,
                 yolo_epochs = 3,
-                conf_thres = 0.8,
                 unet_classes = 3,
                 unet_tiles = 512,
                 unet_epochs = 20,
@@ -43,6 +38,26 @@ class Manager():
                 yolo_val_augment = False, 
                 unet_ratio: List[float] = [0.7, 0.15, 0.15],
                 ) -> None: 
+
+        # check if train, val, test already exist; if so, then 
+        # if mode == 'train':
+        #     if not os.path.isdir(root):
+        #         os.makedirs(root)
+        #     dirs = 'train', 'val', 'test'
+        #     already_splitted = True
+        #     for dir in dirs:
+        #         if not os.path.isdir(os.path.join(root, dir)):
+        #             already_splitted = False
+        #     if already_splitted is False:
+        #         self.train_dir, self.val_dir, self.test_dir = split_wsi_yolo(data_folder= src_folder, new_root=dst_folder, ratio = ratio)
+        #     else:
+        #         self.train_dir = [os.path.join(dst_folder, dir) for dir in os.listdir(root) if 'train' in dir][0]
+        #         self.val_dir = [os.path.join(dst_folder, dir) for dir in os.listdir(root) if 'val' in dir][0]
+        #         self.test_dir = [os.path.join(dst_folder, dir) for dir in os.listdir(root) if 'test' in dir][0]
+        # elif mode == 'test':
+        #     if not os.path.isdir(dst_folder):
+        #         os.makedirs(dst_folder)
+
 
         self.src_dir = src_folder
         self.dst_dir = dst_folder
@@ -60,12 +75,6 @@ class Manager():
         self.system = system
         self.unet_classes = unet_classes
         self.yolo_val_augment = yolo_val_augment
-        self.conf_thres = 0.8
-
-        self.processor = Processor(src_root=src_folder,
-                                   dst_root=dst_folder,
-                                   mode='detection',
-                                   ratio=ratio)
 
         if self.system == 'windows':
             self.yolov5dir = 'C:\marco\yolov5'
@@ -78,96 +87,150 @@ class Manager():
             self.unet_weights_save_path = unet_weights_save_path
             self.code_dir = os.path.join(self.yolodir, 'code')
 
+
         if mode == 'test':
-            raise NotImplemented() 
-            # check if already splitted into train val test 
             self.slides_fns = self.set_folders()
         elif mode == 'train':
-            self.train_dir, self.val_dir, self.test_dir =  self.processor.get_trainvaltest()
+            masks_already_computed = utils_wsi.check_already_patchified(train_dir= os.path.join(self.dst_dir, 'training', 'train') )
+            print(masks_already_computed)
+            if masks_already_computed is False:
+                self.train_dir, self.val_dir, self.test_dir =  self.set_folders()
+            else:
+                self.train_dir = os.path.join(self.dst_dir, 'training', 'train')
+                self.val_dir = os.path.join(self.dst_dir, 'training', 'val')
+                self.test_dir = os.path.join(self.dst_dir, 'training', 'test')
+            # TODO creare una funzione riprendi_da in modo da non rifare sempre tutto dall'inizio cancellando ecc
+        
+            self.masks_already_computed = masks_already_computed
 
+        return
+    
+
+    def set_folders(self):
+
+        if self.mode == 'train':
+            target_dir = os.path.join(self.dst_dir, 'training')
+                # if exists, collect all tiff and move them back to source before deleting
+            if os.path.isdir(target_dir):
+                wsi_files_tot = []
+                for (root, _, files) in os.walk(os.path.join(self.dst_dir, 'training')):
+                    wsi_files = [file for file in files if '.tiff' in file or '.json' in file and '.DS_Store' not in file]
+                    wsi_files = [os.path.join(root, file) for file in wsi_files]
+                    wsi_files_tot.extend(wsi_files)
+                for fp in wsi_files_tot:
+                    fn = os.path.split(fp)[1]
+                    os.rename(src = os.path.join(fp), dst = os.path.join(self.src_dir, fn))
+            shutil.rmtree(target_dir)
+
+            train_wsis, val_wsis, test_wsis = utils_wsi.split_slides(data_folder = self.src_dir, ratio = self.ratio)
+            print(f"train: {train_wsis}, \nval = {val_wsis}, \ntest: {test_wsis}")
+            dirs = [train_wsis, val_wsis, test_wsis]
+            dir_names = ['train', 'val', 'test']
+            for slides, dir_name in zip(dirs, dir_names):
+                subdirs =  ['bb', 'images', 'masks']
+                for fn in slides:
+                    tiles_dir = [os.path.join(self.dst_dir, 'training', dir_name, fn, 'tiles', subdir) for subdir in subdirs ]
+                    masks_dir = [os.path.join(self.dst_dir, 'training', dir_name, fn, 'crops', subdir) for subdir in subdirs ]
+                    for tile_dir, mask_dir in zip(tiles_dir, masks_dir):
+                        if not os.path.isdir(tile_dir):
+                            os.makedirs(tile_dir)
+                        if not os.path.isdir(mask_dir):
+                            os.makedirs(mask_dir)  
+            
+            train_dir = os.path.join(self.dst_dir, 'training', 'train')
+            val_dir = os.path.join(self.dst_dir, 'training', 'val')
+            test_dir = os.path.join(self.dst_dir, 'training', 'test')
+
+            utils_wsi.move_wsis(src_dir = self.src_dir, root_dir = self.dst_dir, mode = 'forth')
+
+            return train_dir, val_dir, test_dir
+        
+        elif self.mode == 'test':
+            wsi_fns = list(set([file.split('.')[0] for file in os.listdir(self.src_dir) if 'tiff' in file and 'DS' not in file]))
+            subdirs =  ['bb', 'images', 'masks']
+            for fn in wsi_fns:
+                tiles_dir = [os.path.join(self.dst_dir, 'predictions', fn, 'tiles', subdir) for subdir in subdirs ]
+                masks_dir = [os.path.join(self.dst_dir, 'predictions', fn, 'crops', subdir) for subdir in subdirs ]
+                for tile_dir, mask_dir in zip(tiles_dir, masks_dir):
+                    if not os.path.isdir(tile_dir):
+                        os.makedirs(tile_dir)
+                    if not os.path.isdir(mask_dir):
+                        os.makedirs(mask_dir)
+            return 
+        else:
+            raise TypeError(f"'mode' should be either 'train' or 'test'. ")
+
+
+        return 
+
+    def prepare_training_yolo(self):
+
+        # if self.masks_already_computed is True:
+        #     print("Preparation to train YOLO already done. ")
+        #     return
+
+        roots = [self.train_dir, self.val_dir, self.test_dir]
+        for root in roots:
+            dirs = [os.path.join(root, dir) for dir in os.listdir(root) if os.path.isdir(os.path.join(root, dir))]
+            dirs = [dir for dir in dirs if 'images' not in dir and 'masks' not in dir and 'DS' not in dir and 'model' not in dir]
+            print(dirs)
+            for dir in dirs:
+                print(f"Creating bb annotations for {dir}:")
+                get_wsi_bb(source_folder=dir, convert_to= 'yolo')
+                print(f"Creating patches:")
+                get_tiles_bb(folder = os.path.join(dir), shape_patch = self.tile_shape)
+                move_tiles(src_folder= dir, mode = 'train') # moving bb tiles to their folders
+                # print(f'outfolder: {root}' )
+                # get_tiles_masks(slide_folder = dir, out_folder = root, tile_shape = 2048, tile_step = 2048)
+        # print(f"Moving created tile boundig boxes to their folders: ")
+        # move_tiles(dir)
+        
         return
     
 
     def train_yolo(self):
         """   Runs the YOLO model as if it was executed on the command line.  """
         
-        # 1) show statistics dataset:
-        plot_labels(self.train_dir, reduce_classes = True)
-
-
-        start_time = time.time()
-        yolo_classes = {0: 'healthy', 1: 'unhealthy'}
-        otherinfo_yolo = {'data': self.src_dir, 'classes': yolo_classes, 'epochs': self.yolo_epochs}
-        utils_manager.edit_yaml(root = self.dst_dir, mode = 'train', system = self.system, classes = yolo_classes )
+        # move data
+        utils_wsi.move_yolo(train_dir=self.train_dir, val_dir = self.val_dir, test_dir = self.test_dir, mode = 'forth')
+        utils_wsi.edit_yaml(root = os.path.join(self.dst_dir, 'training'), mode = 'train', system = self.system)
         os.chdir(self.yolov5dir)
         os.system(f' python train.py --img {self.yolo_tiles} --batch {self.yolo_batch} --epochs {self.yolo_epochs} --data hubmap.yaml --weights yolov5s.pt')
         os.chdir(self.yolodir)
-        end_time = time.time()
+        # utils.move_yolo(train_dir=self.train_dir, val_dir = self.val_dir, test_dir = self.test_dir, mode = 'back')
 
-        utils_manager.write_YOLO_txt(otherinfo_yolo, root_exps = '/Users/marco/yolov5/runs/train')
-        train_yolo_duration = datetime.timedelta(seconds = end_time - start_time)
-        print(f"Training Done. Train YOLO duration: {train_yolo_duration}")
-
-        return  train_yolo_duration
+        return
 
     
-    def test_yolo(self, conf_thres = None):
+    def test_yolo(self):
         """ Tests YOLO on the test set and returns performance metrics. """
 
-        assert isinstance(conf_thres, float) or conf_thres is None, TypeError(f"conf_thres is {type(conf_thres)}, but should be either None or float.")
-
-        # get model
         os.chdir(self.yolov5dir)
         if self.yolo_weights is False:
-            weights_dir = utils_yolo.get_last_weights()
+            weights_dir = get_last_weights()
         else:
             weights_dir = self.yolo_weights
-
-        # define command
-        command = f'python val.py --task test --weights {weights_dir} --data data/hubmap.yaml --device cpu'
         if self.yolo_val_augment is True:
-            command += " --augment"
-        if conf_thres is not None:
-            command += f" --conf_thres {conf_thres}" 
-
-        # execute
-        os.system(f'python val.py --task test --weights {weights_dir} --data data/hubmap.yaml --device cpu')
+            os.system(f'python val.py --task test --weights {weights_dir} --data data/hubmap.yaml --device cpu --augment')
+        else:
+            os.system(f'python val.py --task test --weights {weights_dir} --data data/hubmap.yaml --device cpu')
         os.chdir(self.yolodir)
 
         return
+
     
-
-    def prepare_predicting_yolo(self):
-        """ Prepares data for YOLO prediction on a inference set. """
-
-        if self.mode == 'test':
-            print(f"Creating bb annotations for wsis in '{self.src_dir}' folder:")
-            get_wsi_bb(source_folder=self.src_dir , convert_to= 'yolo')
-            print(f"Creating bb annotations for tiles in {self.src_dir} folder:")
-            get_tiles_bb(folder = self.src_dir, shape_patch = self.tile_shape)
-            print(f"Moving created tiles and annotations to their folders: ")
-            move_tiles(src_folder = self.src_dir, dst_folder =self.dst_dir, mode = 'test')
-            print(f'generating slides for: {self.slides_fns}')
-            dst = os.path.join(self.dst_dir, 'predictions')
-            get_tiles_masks(self.src_dir, out_folder = dst)
-            utils_yolo.edit_yaml(root = self.dst_dir)
-        elif self.mode == 'train': # i.e. if predictions is to generate images for unet to be trained
-            self.prepare_training_yolo()
-
-        return
-
 
     def predict_yolo(self, dir):
         """ Predicts bounding boxes for images in dir and outputs txt labels for those boxes. """
 
         os.chdir(self.yolov5dir)
         if self.yolo_weights is False:
-            weights_dir = utils_yolo.get_last_weights()
+            weights_dir = get_last_weights()
         else:
             weights_dir = self.yolo_weights
 
         print(f'Loading weights from {weights_dir}')
-        os.system(f'python detect.py --source {dir} --weights {weights_dir} --data data/hubmap.yaml --device cpu --conf-thres {self.conf_thres} --save-txt --class 0')
+        os.system(f'python detect.py --source {dir} --weights {weights_dir} --data data/hubmap.yaml --device cpu --conf-thres 0.5 --save-txt --class 0')
         os.chdir(self.yolodir)
 
         return
@@ -182,7 +245,7 @@ class Manager():
         if self.mode == 'test':
             if tiles_imgs_folder is False:
                 raise TypeError("''tiles_imgs_folder' can't be False if mode is 'test'")
-            txt_folder = utils_yolo.get_last_detect()
+            txt_folder = get_last_detect()
             save_imgs_folder = tiles_imgs_folder.replace('tiles', 'crops')
             print(f'Cropping images from: {txt_folder} and {tiles_imgs_folder}')
             print(f'Saving images in {save_imgs_folder}')
@@ -202,7 +265,7 @@ class Manager():
                 print(f"Predicting with YOLO on {dir}")
                 self.predict_yolo(dir = dir)
                 print(f"Getting last detected images path: ")
-                txt_folder = utils_yolo.get_last_detect()
+                txt_folder = get_last_detect()
                 save_imgs_folder = os.path.join(dir.replace('images', 'unet'), 'images')
                 print(f'Cropping images from: {txt_folder} and {dir}')
                 crop_obj(txt_folder= txt_folder, 
@@ -228,7 +291,6 @@ class Manager():
 
         return
     
-
     def test_unet(self, version_n: str = None, dataset = 'test'):
         """ version_n: str = number of version folder where the model and hparams is stored. """
 
@@ -241,7 +303,7 @@ class Manager():
         path_to_exps = '/Users/marco/hubmap/unet/lightning_logs' if self.system == 'mac' else r'C:\marco\biopsies\zaneta\lightning_logs'
 
         if version_n is None:
-            weights_path, hparams_path = utils_yolo.get_last_model(path_to_exps=path_to_exps)
+            weights_path, hparams_path = get_last_model(path_to_exps=path_to_exps)
         else:
             version_fold = os.path.join(path_to_exps, f'version_{version_n}')
             weights_path = os.listdir(os.path.join(version_fold, 'checkpoints'))
@@ -292,7 +354,6 @@ class Manager():
 
         return
     
-
     def train_unet(self):
         """  Trains the U-Net model.  """
 
@@ -338,8 +399,8 @@ class Manager():
         os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '0'
 
         path_to_exps = '/Users/marco/hubmap/unet/lightning_logs' if self.system == 'mac' else r'C:\marco\biopsies\zaneta\lightning_logs'
-        last, hparams_file = utils_unet.get_last_model(path_to_exps= path_to_exps)
-        utils_unet.write_hparams_yaml(hparams_file= hparams_file, hparams = self.unet_hparams)
+        last, hparams_file = get_last_model(path_to_exps= path_to_exps)
+        write_hparams_yaml(hparams_file= hparams_file, hparams = self.unet_hparams)
 
         return
     
@@ -347,6 +408,7 @@ class Manager():
     def train(self):
         """ Runs the whole pipeline end2end, i.e. runs both YOLO and U-Net. """
 
+        self.prepare_training_yolo()
         self.train_yolo() # TODO ADD CHECK IF ALREADY TRAINED YOLO
         # dirs = [self.train_dir, self.val_dir, self.test_dir]
         # dirnames = ['train', 'val', 'test']
@@ -357,6 +419,27 @@ class Manager():
         #     print(f"Preparing {dirname} data for U-Net training:  ")
         #     self.prepare_unet(tiles_imgs_folder= tiles_imgs_folder)
         # self.train_unet()
+
+        return
+
+
+    def prepare_predicting_yolo(self):
+        """ Prepares data for YOLO. """
+
+        if self.mode == 'test':
+            print(f"Creating bb annotations for wsis in '{self.src_dir}' folder:")
+            get_wsi_bb(source_folder=self.src_dir , convert_to= 'yolo')
+            print(f"Creating bb annotations for tiles in {self.src_dir} folder:")
+            get_tiles_bb(folder = self.src_dir, shape_patch = self.tile_shape)
+            print(f"Moving created tiles and annotations to their folders: ")
+            move_tiles(src_folder = self.src_dir, dst_folder =self.dst_dir, mode = 'test')
+            print(f'generating slides for: {self.slides_fns}')
+            dst = os.path.join(self.dst_dir, 'predictions')
+            get_tiles_masks(self.src_dir, out_folder = dst)
+            edit_yaml(root = self.dst_dir)
+        elif self.mode == 'train': # i.e. if predictions is to generate images for unet to be trained
+            self.prepare_training_yolo()
+
 
         return
 
@@ -380,6 +463,7 @@ class Manager():
         
 
 
+
 if __name__ == '__main__':
     
     def get_folders(system = 'windows'):
@@ -387,8 +471,8 @@ if __name__ == '__main__':
             src_folder = r'C:\marco\biopsies\hubmap\slides'
             dst_folder = r'C:\marco\biopsies\hubmap'
         elif system == 'mac':
-            src_folder = '/Users/marco/glomseg-share'        
-            dst_folder = '/Users/marco/datasets/muw_exps'
+            src_folder = '/Users/marco/Downloads/train-3'        
+            dst_folder = '/Users/marco/hubmap'
         
         return src_folder, dst_folder
 
@@ -401,9 +485,8 @@ if __name__ == '__main__':
                       system= 'mac',
                       unet_epochs= 10,
                       unet_classes= 1,
-                      yolo_epochs=50, 
                       yolo_val_augment=False)
 
 
     # manager.test_unet(version_n = '1', dataset='val')
-    manager.test_yolo(conf_thres=0.43)
+    manager.test_yolo()
