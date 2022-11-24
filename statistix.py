@@ -8,8 +8,11 @@ from typing import List
 
 
 
-def plot_labels(root: str)-> None:
-    """ Looks into e.g. train, test, val sets and plots statistics on labels. """
+def plot_labels(root: str, reduce_classes: bool = True)-> None:
+    """ Looks into e.g. train, test, val sets and plots statistics on labels. 
+        root = root where subfolds with images are stored.
+        reduce_classes = if True, classes = {0: 'healthy', 1: 'unhealthy}, 
+                        if False: classes = {0: 'healthy', 1: 'unhealthy}"""
 
     assert isinstance(root, str), TypeError(f"'root' should be str.")
     assert os.path.isdir(root), ValueError(f"'root':{root} is not a valid dir.")
@@ -71,14 +74,19 @@ def plot_labels(root: str)-> None:
     
     # 5) plot:
     print(df.head())
+    
+    if reduce_classes is True:
+        df[df['Class'] == 1] = 2
     data = sns.countplot(data = df, x = 'Class')
+    fig = data.get_figure()
+    fig.savefig("statistics.png")
 
     return
 
 
 def test_plot_labels():
 
-    plot_labels(root = '/Users/marco/datasets/muw_exps/detection/train')
+    plot_labels(root = '/Users/marco/datasets/muw_exps/detection/train', reduce_classes= True)
 
     return
 

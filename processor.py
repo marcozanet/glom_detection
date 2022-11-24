@@ -237,8 +237,19 @@ class Processor():
 
     def get_trainvaltest(self) :
 
-        if self.mode == 'segmentation':
+        traindir = os.path.join(self.dst_root, self.mode, 'train')
+        valdir = os.path.join(self.dst_root, self.mode, 'val')
+        testdir =  os.path.join(self.dst_root, self.mode, 'test')
 
+        # 1) check if dataset already exists:
+        skip_splitting = self._check_already_splitted()
+        if skip_splitting:
+            return traindir, valdir, testdir
+        else:
+            self._clear_dataset()
+
+        if self.mode == 'segmentation':
+            
             image_list, mask_list = self._get_images_masks()
             images, masks = self._split_images_trainvaltest(image_list = image_list, mask_list= mask_list)
             self._makedirs_moveimages(images=images, masks=masks)
@@ -249,11 +260,6 @@ class Processor():
             fullimgs_list = [file for file in image_list if file not in empty_list]
             images, labels = self._split_images_trainvaltest(image_list = fullimgs_list, empty_images= empty_list)
             self._makedirs_moveimages(images=images, labels=labels)
-
-
-        traindir = os.path.join(self.dst_root, self.mode, 'train')
-        valdir = os.path.join(self.dst_root, self.mode, 'val')
-        testdir =  os.path.join(self.dst_root, self.mode, 'test')
 
 
         assert os.path.isdir(traindir), f"{traindir} is not a dir."
@@ -377,7 +383,38 @@ class Processor():
             count_classes[fname] = mask_instances
 
         return 
+    
 
+    def _check_already_splitted(self) -> bool:
+        """ Checks if train, val, test folder are created and contain images"""
 
+        skip_splitting = True
+
+        # check existance of dirs:
+        subfolds_names = ['train', 'val', 'test']
+        subsubfolds_names = ['images', 'masks'] if self.mode == 'segmentation' else ['images', 'labels']
+        for subfold in subfolds_names:
+            for subsubfold in subsubfolds_names:
+                dir = os.path.join(self.dst_root, self.mode, subfold, subsubfold)
+                if not os.path.isdir(dir):
+                    print("'train', 'val', 'test' folders not found. Deleting dataset and creating a new one.")
+                    skip_splitting = False
+                else:
+                    files = [file for file in os.listdir(dir) if 'png' in file or 'txt' in file]
+                    if len(files) == 0:
+                        print(f" No file found in {dir}.  Deleting existing dataset and creating a new one.")
+                        skip_splitting = False
+
+        return skip_splitting
+    
+
+    def _clear_dataset(self) -> None:
+        """ Clears the old dataset and creates a new one. """
+
+        if os.path.isdir(self.dst_root):
+            shutil.rmtree(path = self.dst_root)
+            print(f"Dataset at: {self.dst_root} removed.")
+
+        return
 
 

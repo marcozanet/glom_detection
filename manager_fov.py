@@ -18,6 +18,7 @@ import shutil
 import torch
 import time
 import datetime
+from statistix import plot_labels
 
 class Manager():
 
@@ -90,6 +91,10 @@ class Manager():
     def train_yolo(self):
         """   Runs the YOLO model as if it was executed on the command line.  """
         
+        # 1) show statistics dataset:
+        plot_labels(self.train_dir, reduce_classes = True)
+
+
         start_time = time.time()
         yolo_classes = {0: 'healthy', 1: 'unhealthy'}
         otherinfo_yolo = {'data': self.src_dir, 'classes': yolo_classes, 'epochs': self.yolo_epochs}
@@ -106,18 +111,27 @@ class Manager():
         return  train_yolo_duration
 
     
-    def test_yolo(self):
+    def test_yolo(self, conf_thres = None):
         """ Tests YOLO on the test set and returns performance metrics. """
 
+        assert isinstance(conf_thres, float) or conf_thres is None, TypeError(f"conf_thres is {type(conf_thres)}, but should be either None or float.")
+
+        # get model
         os.chdir(self.yolov5dir)
         if self.yolo_weights is False:
             weights_dir = utils_yolo.get_last_weights()
         else:
             weights_dir = self.yolo_weights
+
+        # define command
+        command = f'python val.py --task test --weights {weights_dir} --data data/hubmap.yaml --device cpu'
         if self.yolo_val_augment is True:
-            os.system(f'python val.py --task test --weights {weights_dir} --data data/hubmap.yaml --device cpu --augment')
-        else:
-            os.system(f'python val.py --task test --weights {weights_dir} --data data/hubmap.yaml --device cpu')
+            command += " --augment"
+        if conf_thres is not None:
+            command += f" --conf_thres {conf_thres}" 
+
+        # execute
+        os.system(f'python val.py --task test --weights {weights_dir} --data data/hubmap.yaml --device cpu')
         os.chdir(self.yolodir)
 
         return
@@ -364,8 +378,7 @@ class Manager():
     
         return
         
-
-
+\
 
 if __name__ == '__main__':
     
@@ -388,9 +401,9 @@ if __name__ == '__main__':
                       system= 'mac',
                       unet_epochs= 10,
                       unet_classes= 1,
-                      yolo_epochs=10, 
+                      yolo_epochs=50, 
                       yolo_val_augment=False)
 
 
     # manager.test_unet(version_n = '1', dataset='val')
-    manager.train()
+    manager.test_yolo(conf_thres=0.43)
