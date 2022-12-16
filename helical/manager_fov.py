@@ -14,7 +14,6 @@ from loggers import get_logger
 
 class Manager():
 
-
     def __init__(self, 
                 src_folder:str,
                 dst_folder: str,
