@@ -6,7 +6,7 @@ from typing import List
 from skimage import io
 import seaborn as sns
 import matplotlib.pyplot as plt
-from .loggers import get_logger
+from loggers import get_logger
 
 
 
@@ -18,8 +18,9 @@ class Cropper():
                 save_folder:str, 
                 image_shape:tuple, 
                 crop_shape:tuple = None,
-                percentile:int = 90,
-                plot_boxes:bool = False) -> None:
+                percentile:int = 95,
+                plot_boxes:bool = False,
+                skip_cropped_objects: bool = True) -> None:
         
         self.log = get_logger()
         
@@ -28,24 +29,26 @@ class Cropper():
         assert os.path.isdir(root), ValueError(f"'root_dir': {root} is not a valid dirpath. ")
         assert os.path.isdir(save_folder), ValueError(f"'save_folder': {save_folder} is not a valid dirpath. ")
         assert (isinstance(crop_shape, tuple) and crop_shape[0]==crop_shape[1] and isinstance(crop_shape[0]), int) or crop_shape is None, f"'crop_shape': {crop_shape} should be either None or a tuple of int."
-        assert isinstance(percentile, int) and 0<=percentile<=100, f"'perentile' should be a int between 0 and 100."
+        assert isinstance(percentile, int) and 0<=percentile<=100, f"'percentile' should be a int between 0 and 100."
         assert isinstance(plot_boxes, bool), f"'plot':{plot_boxes} should be boolean. "
+        assert isinstance(skip_cropped_objects, bool), f"'skip_cropped_objects' should be boolean."
         
         # attributes 
         self.W, self.H = image_shape
         self.root = root
         self.detect_dir = os.path.join(root, 'detection')
-        self.cwd = '/Users/marco/yolov5'
+        self.cwd = '/Users/marco/yolov5_copy'
         self.save_folder = save_folder
         self.percentile = percentile
         self.plot = plot_boxes
+        self.skip_cropped = skip_cropped_objects
         os.chdir(self.cwd)
 
         return
 
 
     def _get_last3_detect_dir(self) -> str:
-        """ Get dir of the last detected images with YOLO. """
+        """ Get dir of the last detected images with YOLO (i.e. train, val test). """
 
         # get all dirs in /runs/detect:
         detect_dir = os.path.join(self.cwd, 'runs', 'detect')
@@ -108,7 +111,10 @@ class Cropper():
             plt.xlabel("(norm) bbox dim")
             plt.title('Histogram bbox dim.')
 
-        return int(perc90 * self.W)
+        max_box = int(perc90 * self.W)
+        print(f"max box: {(max_box, max_box)}")
+
+        return max_box
     
 
     def _get_images(self) -> List[str]:
@@ -159,16 +165,23 @@ class Cropper():
                 
                 xc, yc = int(self.W * xc), (self.H * yc)
                 x0, x1, y0, y1 = int(xc - (max_box/2)), int(xc + (max_box/2)), int(yc - (max_box/2)), int(yc + (max_box/2))
+
                 # 2.1) get crop x coords:
-                if x0 >= 0 and x1 <= self.W:
+                if x0 > 0 and x1 < self.W:
                     crop_x0 = x0
                     crop_x1 = x1
-                elif x0 >= 0 and x1 > self.W: # if box would be out of the image
-                    crop_x0 = int(self.W - max_box)
-                    crop_x1 = self.W
-                elif x0 < 0 and x1 <= self.W:
-                    crop_x0 = 0
-                    crop_x1 = int(max_box)
+                elif x0 >= 0 and x1 >= self.W: # if box would be out of the image
+                    if self.skip_cropped is True:
+                        continue
+                    else:
+                        crop_x0 = int(self.W - max_box)
+                        crop_x1 = self.W
+                elif x0 <= 0 and x1 <= self.W:
+                    if self.skip_cropped is True:
+                        continue
+                    else:
+                        crop_x0 = 0
+                        crop_x1 = int(max_box)
                 else:
                     raise Exception(f"x crop coords [{crop_x0, crop_x1}] exceed image x dim ({self.W}).")
 
@@ -177,11 +190,17 @@ class Cropper():
                     crop_y0 = y0
                     crop_y1 = y1
                 elif y0 >= 0 and y1 > self.H: # if box would be out of the image
-                    crop_y0 = int(self.H - max_box)
-                    crop_y1 = self.H
+                    if self.skip_cropped is True:
+                        continue
+                    else:
+                        crop_y0 = int(self.H - max_box)
+                        crop_y1 = self.H
                 elif y0 < 0 and y1 <= self.H:
-                    crop_y0 = 0
-                    crop_y1 = int(max_box)
+                    if self.skip_cropped is True:
+                        continue
+                    else:
+                        crop_y0 = 0
+                        crop_y1 = int(max_box)
                 else:
                     raise Exception(f"y crop coords [{crop_y0, crop_y1}] exceed image y dim ({self.H}).")
                 
@@ -289,3 +308,18 @@ class Cropper():
         return df[category]
     
     
+    
+if __name__ == '__main__':
+    root = '/Users/marco/datasets/muw_exps/'
+    save_folder = '/Users/marco/butta'
+    cropper = Cropper(root=root, 
+                      save_folder=save_folder, 
+                      image_shape=(4096,4096))
+    # cropper._is_glom_whole(info = )
+    cropper()
+
+
+    # PROBLEMA: le crop fanno schifo perche' yolo detects gloms on patches -> tante volte 
+    # c'e' solo un pezzo di glom che viene beccato da yolo -> crop e' su quel pezzetto
+    # dovrei balzare tutti i casi in cui la crop e' sugli angoli e per quei casi non fare una crop
+    # posso usare redundant tiling cosi dovrei avere sempre un'immagine in cui il glom e' intero?

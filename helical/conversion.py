@@ -156,11 +156,19 @@ class Converter():
 
 
 
-if __name__ == '__main__':
 
+
+def test_Converter():
     folder = '/Users/marco/Downloads/new_source'
     converter = Converter(folder = folder, 
                           convert_from='json_wsi_mask', 
                           convert_to='txt_wsi_bboxes',
                           save_folder= '/Users/marco/Downloads/folder_random' )
     converter()
+
+    return
+
+
+if __name__ == '__main__':
+
+    test_Converter()

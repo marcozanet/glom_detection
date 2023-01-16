@@ -78,7 +78,7 @@ class WSI_Processor(Tile_Processor):
         return labels_dir
     
 
-    def get_yolo_images(self, tile_shape: tuple = (4096, 4096) ) -> None:
+    def get_yolo_images(self, tile_shape: tuple = (4096, 4096)) -> None:
         """ Tiles the WSI and saves the patches in 'save_folder'. """
 
         self.log.info(f"Getting YOLO image tiles: ⏳")
