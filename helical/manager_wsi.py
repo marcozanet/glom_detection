@@ -20,7 +20,7 @@ import torch
 
 class Manager():
     def __init__(self, 
-                src_folder:str,
+                src_folder: str,
                 dst_folder: str,
                 mode: str,
                 system: str = 'windows',
@@ -450,10 +450,12 @@ if __name__ == '__main__':
         if system == 'windows':
             src_folder = r'C:\marco\biopsies\hubmap\slides'
             dst_folder = r'C:\marco\biopsies\hubmap'
+
         elif system == 'mac':
-            src_folder = '/Users/marco/Downloads/train-3'        
-            dst_folder = '/Users/marco/hubmap'
-        
+            # src_folder = '/Users/marco/Downloads/train-3'        
+            # dst_folder = '/Users/marco/hubmap'
+            src_folder = '/Users/marco/Downloads/new_source'
+            dst_folder = '/Users/marco/Downloads/folder_random'        
         return src_folder, dst_folder
 
     src_folder, dst_folder = get_folders('mac')
@@ -469,4 +471,4 @@ if __name__ == '__main__':
 
 
     # manager.test_unet(version_n = '1', dataset='val')
-    manager.test_yolo()
+    # manager.test_yolo()

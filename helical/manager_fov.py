@@ -1,15 +1,17 @@
 import os
 os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
-from utils import utils_yolo, utils_unet, utils_manager
+import utils_yolo, utils_unet, utils_manager
 from typing import List
 from model import GlomModel
 from dataloader import get_loaders
 import pytorch_lightning as pl
 import predict_unet as pu
 from processor_tile import TileProcessor
+from processor_wsi import WSI_Processor
 import time
 import datetime
 from loggers import get_logger
+from typing import Literal, List
 
 
 class Manager():
@@ -17,9 +19,11 @@ class Manager():
     def __init__(self, 
                 src_folder:str,
                 dst_folder: str,
+                data_tiled: bool,
+                mode: Literal['train', 'test', 'detect'],
                 task: str,
                 model: str,
-                system: str = 'windows',
+                system: Literal['windows', 'mac'],
                 ratio: float = [0.7, 0.15, 0.15], 
                 tile_shape = (4096, 4096),
                 yolo_tiles = 512,
@@ -30,6 +34,7 @@ class Manager():
                 unet_tiles = 512,
                 unet_epochs = 20,
                 unet_batch = 8,
+                step: int = None,
                 unet_resize = False,
                 unet_weights_save_path = '/Users/marco/hubmap/unet/',
                 yolo_weights = False,
@@ -38,12 +43,19 @@ class Manager():
                 unet_ratio: List[float] = [0.7, 0.15, 0.15],
                 unet_RGBmapping: dict = {(0, 0, 0): 0, (0, 255, 0): 1, (255, 0, 0): 2},
                 percentile:int = 90,
+                empty_perc: float = 0.1
                 ) -> None: 
 
         self.log = get_logger()
         assert isinstance(conf_thres, float) or conf_thres is None, TypeError(f"conf_thres is {type(conf_thres)}, but should be either None or float.")
         assert model in ['yolo', 'unet'], f"'model' should be either 'yolo' or 'unet'."
         assert task in ['segmentation', 'detection'], f"'task' should be either 'segmentation' or 'detection'."
+        assert isinstance(data_tiled, bool), f"'data_tiled' should be boolean."
+        assert isinstance(step, int) or step is None, f"'step' should be either None or int."
+        assert isinstance(empty_perc, float), f"'empty_perc' should be a float between 0 and 1."
+        assert 0<=empty_perc<=1, f"'empty_perc' should be a float between 0 and 1."
+        assert mode in ['train', 'test', 'detect'], f"'mode' should be one of ['train', 'test', 'detect']."
+
 
         self.src_dir = src_folder
         self.dst_dir = dst_folder
@@ -67,12 +79,11 @@ class Manager():
         self.percentile = percentile
         self.unet_batch = unet_batch
         self.unet_RGBmapping = unet_RGBmapping
+        self.data_tiled = data_tiled
+        self.step = step
+        self.empty_perc = empty_perc
+        self.mode = mode
 
-        self.processor = TileProcessor(src_root=src_folder,
-                                       dst_root=dst_folder,
-                                       task='segmentation',
-                                       ratio=ratio, 
-                                       copy=True)
 
         if self.system == 'windows':
             self.yolov5dir = 'C:\marco\yolov5'
@@ -85,8 +96,31 @@ class Manager():
             self.unet_weights_save_path = unet_weights_save_path
             self.code_dir = os.path.join(self.yolodir, 'code')
 
-        # get images and labels/masks:
-        self.train_dir, self.val_dir, self.test_dir =  self.processor.get_trainvaltest()
+        # # get images and labels/masks:
+        # self.train_dir, self.val_dir, self.test_dir =  self.processor.get_trainvaltest()
+        self._prepare_data()
+
+        return
+    
+    def _prepare_data(self):
+
+        assert not (self.step is None and self.data_tiled is False), f"If data is not tiled ('data_tiled' is False), 'step' should be provided."
+        assert not (self.empty_perc is None and self.data_tiled is False), f"If data is not tiled ('data_tiled' is False), '' should be provided."
+
+        if self.data_tiled is True:
+            processor = TileProcessor(src_root=src_folder,
+                                      dst_root=dst_folder,
+                                      task=self.task,
+                                      ratio=self.ratio)
+        else:
+            processor = WSI_Processor(src_root= self.src_dir, 
+                                      dst_root=self.dst_dir,
+                                      task = self.task, 
+                                      ratio=self.ratio, 
+                                      step = self.step,
+                                      empty_perc=self.empty_perc)
+        
+        self.traindir, self.valdir, self.testdir = processor()
 
         return
     
@@ -117,7 +151,7 @@ class Manager():
     def _train_yolo_detection(self) -> None:
         """   Runs the YOLO detection model. """
         
-        # 1) prepare:
+        # 1) prepare training:
         start_time = time.time()
         yolo_classes = self._prepare_training_yolo_detection()
 
@@ -139,7 +173,7 @@ class Manager():
 
     def _train_yolo_segmentation(self) -> None:
         """   Runs the YOLO segmentation model. """
-        
+
         # 1) prepare:
         start_time = time.time()
         yolo_classes = self._prepare_training_yolo_segmentation()
@@ -154,7 +188,7 @@ class Manager():
         end_time = time.time()
         train_yolo_duration = datetime.timedelta(seconds = end_time - start_time)
         otherinfo_yolo = {'data': self.src_dir, 'classes': yolo_classes, 'epochs': self.yolo_epochs, 'duration': train_yolo_duration}
-        utils_manager.write_YOLO_txt(otherinfo_yolo, root_exps = '/Users/marco/yolov5/runs/train')
+        utils_manager.write_YOLO_txt(otherinfo_yolo, root_exps = '/Users/marco/yolov5/runs-seg/train')
         self.log.info(f"Training segmentation YOLO done ✅ . Training duration: {train_yolo_duration}")
 
         return 
@@ -195,6 +229,7 @@ class Manager():
         self.log.info(f"Testing YOLO done ✅ .")
 
         return
+    
 
 
     def _prepare_infering_yolo_detection(self) -> str:
@@ -233,6 +268,10 @@ class Manager():
         os.chdir(self.yolodir)
         self.log.info(f"Inference YOLO done ✅ .")
 
+        return
+    
+    def _infere_yolo_segmentation(self):
+        raise NotImplementedError()
         return
 
     
@@ -332,6 +371,12 @@ class Manager():
         path_to_exps = '/Users/marco/hubmap/unet/lightning_logs' if self.system == 'mac' else r'C:\marco\biopsies\zaneta\lightning_logs'
         last, hparams_file = utils_unet.get_last_model(path_to_exps= path_to_exps)
         utils_unet.write_hparams_yaml(hparams_file= hparams_file, hparams = self.unet_hparams)
+
+        return
+    
+    def test_yolo_segmentation(self):
+
+        raise NotImplementedError()
 
         return
 
@@ -455,6 +500,35 @@ class Manager():
         self._train_yolo() 
 
         return
+    
+    def parse_args(self):
+
+
+
+        return
+
+    def __call__(self) -> None:
+
+        self._prepare_data()
+
+        if self.mode == 'train':
+            if self.task == 'detection':
+                self._train_yolo_detection()
+            else:
+                self._train_yolo_segmentation()
+        elif self.mode == 'test':
+            if self.task == 'detection':
+                self._test_yolo_detection()
+            else:
+                self.test_yolo_segmentation()
+        else:
+            if self.task == 'detection':
+                self._infere_yolo_detection()
+            else:
+                self._infere_yolo_segmentation()
+
+
+        return
 
 
     # def predict(self):
@@ -483,24 +557,27 @@ if __name__ == '__main__':
             src_folder = r'C:\marco\biopsies\hubmap\slides'
             dst_folder = r'C:\marco\biopsies\hubmap'
         elif system == 'mac':
-            src_folder = '/Users/marco/glomseg-share'        
-            dst_folder = '/Users/marco/datasets/muw_exps'
+            # src_folder = '/Users/marco/glomseg-share'        
+            # dst_folder = '/Users/marco/datasets/muw_exps'
+            src_folder = '/Users/marco/Downloads/new_source'
+            dst_folder = '/Users/marco/Downloads/folder_random'
+
         
         return src_folder, dst_folder
 
     src_folder, dst_folder = get_folders('mac')
-
+    # unet_RGBmapping =  {(0, 0, 0): 0, (0, 255, 0): 1, (255, 0, 0): 2, (255, 255, 255): 3}
+    
     manager = Manager(src_folder = src_folder,
                       dst_folder = dst_folder,
-                      ratio = [0.7, 0.15, 0.15], 
-                      task = 'segmentation',
+                      data_tiled=False,
+                      task = 'detection',
+                      mode = 'train',
                       model = 'yolo',
+                      step = 1024,
                       system= 'mac',
-                      unet_epochs= 1,
-                      unet_classes= 4,
-                      yolo_epochs=100, 
-                      yolo_val_augment=False,
-                      unet_RGBmapping =  {(0, 0, 0): 0, (0, 255, 0): 1, (255, 0, 0): 2, (255, 255, 255): 3})
+                     )
+    
+    manager()
 
-    manager._prepare_training_yolo_segmentation()
     

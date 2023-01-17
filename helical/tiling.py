@@ -25,7 +25,7 @@ class Tiler():
                 step: int,
                 tile_shape: tuple = (2048, 2048),
                 save_root = None, 
-                test: bool = False) -> None:
+                testing: bool = False) -> None:
         """ Class for patchification/tiling of WSIs and annotations. """
 
         assert os.path.isdir(folder), ValueError(f"Provided 'folder':{folder} is not a valid dirpath.")
@@ -33,16 +33,15 @@ class Tiler():
         assert isinstance(tile_shape[0], int) and isinstance(tile_shape[1], int), TypeError(f"'tile_shape' should be a tuple of int.")
         assert save_root is None or os.path.isdir(save_root), ValueError(f"'save_root':{save_root} should be either None or a valid dirpath. ")
         assert isinstance(step, int), f"'step' should be int."
-        assert isinstance(test, bool), f"'test' should be a boolean."
+        assert isinstance(testing, bool), f"'testing' should be a boolean."
 
 
         self.folder = folder 
         self.tile_shape = tile_shape
         self.save_root = save_root
         self.step = step
-        self.test = test
+        self.testing = testing
         
-        print(f"Tip: Make sure 'step' divides in tiles such that gloms are at least once fully captured in one tile. ")
 
         return
     
@@ -214,7 +213,7 @@ class Tiler():
         
         # 3) save patches:
         patches = patches[:, :, 0, ...]
-        for i in tqdm(range(patches.shape[0]), desc= f"Tiling '{fname}'"):
+        for i in tqdm(range(patches.shape[0]), desc= f"⏳ Tiling '{fname}'"):
             for j in range(patches.shape[1]):
                 save_fp = fp.replace('.tiff',f'_{i}_{j}.png')
                 if save_folder is not None:
@@ -259,7 +258,7 @@ class Tiler():
             if target_format == 'txt':
                 # self._get_tile_txt_annotations(fp = file, save_folder=save_folder)
                 self._get_tile_labels_wstep(fp = file, save_folder=save_folder)
-                if self.test is True:
+                if self.testing is True:
                     self.test_show_image_labels()
             else:
                 self._get_tile_images(fp = file, save_folder=save_folder )
@@ -371,7 +370,7 @@ def test_Tiler():
                   tile_shape= (2048, 2048), 
                   step=1024, 
                   save_root='/Users/marco/Downloads/folder_random', 
-                  test = True)
+                  testing = True)
     tiler(target_format='txt')
     # tiler(target_format='tiff')
 

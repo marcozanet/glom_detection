@@ -23,7 +23,7 @@ class TileProcessor():
                 ratio = [0.7, 0.15, 0.15], 
                 task = Literal['detection', 'segmentation', 'both'],
                 empty_perc: float = 0.1, 
-                copy = True) -> None:
+                safe_copy = True) -> None:
 
         """ Sets paths and folders starting from tiles. 
             NB images should be named <name>.png <name-labelled>.png img_folder:"""
@@ -40,14 +40,14 @@ class TileProcessor():
             TypeError(f"Values in 'ratio' can't be converted to float.")
         assert len(ratio) == 3 and round(np.sum(np.array(ratio)), 2) == 1.0, ValueError(f"'ratio' should be a list of floats with sum 1, but has sum {np.sum(np.array(ratio))}." )
         assert task in ['segmentation', 'detection', 'both'], ValueError(f"'task'= {task} should be either segmentation, detection or both. ")
-        assert isinstance(copy, bool), f"copy should be boolean."
+        assert isinstance(safe_copy, bool), f"safe_copy should be boolean."
 
         self.src_root = src_root
         self.dst_root = dst_root
         self.ratio = ratio
         self.task = task 
         self.empty_perc = 0.1 if empty_perc is None else empty_perc
-        self.copy = copy
+        self.safe_copy = safe_copy
 
         return
 
@@ -220,7 +220,7 @@ class TileProcessor():
                     src_img, dst_img = image, os.path.join(root, self.task, fold, 'images', img_fn)
                     src_mask, dst_mask = mask, os.path.join(root, self.task, fold, 'masks', mask_fn)
                     dst_mask = dst_mask.replace('-labelled', '') # YOLO needs the same exact name between images and masks.
-                    if self.copy is True:
+                    if self.safe_copy is True:
                         shutil.copy(src = src_img, dst = dst_img )
                         shutil.copy(src = src_mask, dst = dst_mask)
                     else:
@@ -234,7 +234,7 @@ class TileProcessor():
                 for image in tqdm(img_dir, desc = f"Filling {fold}"):
                     img_fn = os.path.split(image)[1]
                     src_img, dst_img = image, os.path.join(root, self.task, fold, 'images', img_fn)
-                    if self.copy is True:
+                    if self.safe_copy is True:
                         shutil.copy(src = src_img, dst = dst_img)
                     else:
                         shutil.move(src = src_img, dst = dst_img)
@@ -242,7 +242,7 @@ class TileProcessor():
                     label_fn = os.path.split(label)[1]
                     src_label, dst_label = label, os.path.join(root, self.task, fold, 'labels', label_fn)
                     dst_label = dst_label.replace('-labelled', '') # YOLO needs the same exact name between images and masks.
-                    if self.copy is True:
+                    if self.safe_copy is True:
                         shutil.copy(src = src_label, dst = dst_label)
                     else:
                         shutil.move(src = src_img, dst = dst_img)
@@ -406,6 +406,8 @@ class TileProcessor():
         """ Checks if train, val, test folder are created and contain images"""
 
         skip_splitting = True
+        no_folders = False
+        empty_fold = False
 
         # check existance of dirs:
         subfolds_names = ['train', 'val', 'test']
@@ -414,13 +416,20 @@ class TileProcessor():
             for subsubfold in subsubfolds_names:
                 dir = os.path.join(self.dst_root, self.task, subfold, subsubfold)
                 if not os.path.isdir(dir):
-                    print("'train', 'val', 'test' folders not found. Deleting dataset and creating a new one.")
+                    no_folders = True
                     skip_splitting = False
                 else:
                     files = [file for file in os.listdir(dir) if 'png' in file or 'txt' in file]
                     if len(files) == 0:
-                        print(f" No file found in {dir}.  Deleting existing dataset and creating a new one.")
+                        empty_fold = True
                         skip_splitting = False
+        
+        if skip_splitting is False:
+            if no_folders is True:
+                print("'train', 'val', 'test' folders not found. Deleting dataset and creating a new one.")
+            elif empty_fold is True:
+                print(f" No file found in {dir}.  Deleting existing dataset and creating a new one.")
+
 
         return skip_splitting
     

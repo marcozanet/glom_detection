@@ -36,6 +36,7 @@ def write_YOLO_txt(add_params: dict, root_exps: str = '/Users/marco/yolov5/runs/
     print(last_dir)
     # 2) write text 
     txt_fp = os.path.join(last_dir, f"other_info.json")
+    add_params = json.dumps(add_params, indent=4, sort_keys=True, default=str)
     with open(txt_fp, 'w') as f:
         json.dump(add_params, f)
 

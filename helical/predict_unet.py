@@ -9,7 +9,8 @@ import pytorch_lightning as pl
 from tqdm import tqdm
 from skimage import io
 import numpy as np
-from unet_runner import GlomModel, create_dirs
+from model import GlomModel
+from dataset import GlomDataset
 
 
 # testloader 

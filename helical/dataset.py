@@ -3,8 +3,8 @@ from skimage import io, transform, color
 from torch.utils.data import Dataset
 import torchvision.transforms as T
 import torch
-from utils.utils_image import map_RGB2coloridx
 import numpy as np
+import utils_image
 
 
 
@@ -75,7 +75,7 @@ class GlomDataset(Dataset):
             mask = torch.where(mask == 0., 0., 1.)
 
         elif self.classes >= 2: # map colors from RGB to classes
-            mask = map_RGB2coloridx(mask = mask, mapping = self.mapping, classes = self.classes)
+            mask = utils_image.map_RGB2coloridx(mask = mask, mapping = self.mapping, classes = self.classes)
 
 
         assert isinstance(mask, torch.Tensor), f"mask is type {type(mask)}, but should be type torch.Tensor"

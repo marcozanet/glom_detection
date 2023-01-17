@@ -12,19 +12,22 @@ import random
 from conversion import Converter
 from tiling import Tiler
 from loggers import get_logger
-from processor_tile import Tile_Processor
+from processor_tile import TileProcessor
 
 
 
 
-class WSI_Processor(Tile_Processor):
+class WSI_Processor(TileProcessor):
 
     def __init__(self,
                 src_root: str, 
                 dst_root: str, 
+                step: int,
                 ratio = [0.7, 0.15, 0.15], 
-                mode = Literal['detection', 'segmentation', 'both'],
+                task = Literal['detection', 'segmentation', 'both'],
+                safe_copy: bool = True,
                 tile_shape: tuple = (4096, 4096),
+                testing: bool = False,
                 empty_perc: float = 0.1) -> None:
 
         """ Sets paths and folders starting from tiles. 
@@ -42,19 +45,27 @@ class WSI_Processor(Tile_Processor):
         except:
             TypeError(f"Values in 'ratio' can't be converted to float.")
         assert len(ratio) == 3 and round(np.sum(np.array(ratio)), 2) == 1.0, ValueError(f"'ratio' should be a list of floats with sum 1, but has sum {np.sum(np.array(ratio))}." )
-        assert mode in ['segmentation', 'detection', 'both'], ValueError(f"'mode'= {mode} should be either segmentation, detection or both. ")
+        assert task in ['segmentation', 'detection', 'both'], ValueError(f"'task'= {task} should be either segmentation, detection or both. ")
         assert isinstance(tile_shape, tuple), TypeError(f"'tile_shape' should be a tuple of int.")
         assert isinstance(tile_shape[0], int) and isinstance(tile_shape[1], int), TypeError(f"'tile_shape' should be a tuple of int.")
-        
+        assert isinstance(testing, bool), f"'testing' should be a boolean."
+        assert isinstance(step, int), f"'step' should be int."
+        assert isinstance(safe_copy, bool), f"safe_copy should be boolean."
+        assert isinstance(empty_perc, float), f"'empty_perc' should be a float between 0 and 1."
+        assert 0<=empty_perc<=1, f"'empty_perc' should be a float between 0 and 1."
+
         self.src_root = src_root
         self.dst_root = dst_root
         self.ratio = ratio
-        self.mode = mode 
-        self.empty_perc = 0.1 if empty_perc is None else empty_perc
+        self.task = task 
         self.tile_shape = tile_shape
+        self.testing = testing
+        self.step = step
+        self.safe_copy = safe_copy
+        self.empty_perc = empty_perc
 
     
-    def get_yolo_labels(self, tile_shape: tuple = (4096, 4096)) -> None:
+    def get_yolo_labels(self) -> None:
         """ Converts .json WSI annotation file to .txt tile annotations suitable to be trained with YOLO.  """
         
         self.log.info(f"Getting YOLO label tiles: ⏳")
@@ -66,37 +77,34 @@ class WSI_Processor(Tile_Processor):
                               convert_to='txt_wsi_bboxes' )
         converter()
 
-        # 2) Tiling
+        # 2) Label Tiling
         tiler = Tiler(folder = self.src_root, 
-                      tile_shape= tile_shape, 
-                      save_root=self.src_root)
+                      tile_shape= self.tile_shape, 
+                      save_root=self.src_root, 
+                      step = self.step,
+                      testing = self.testing)
         tiler(target_format='txt')
 
-        self.log.info(f"Getting YOLO image tiles: ✅")
+        self.log.info(f"Tiled annotations into .txt tiled files: ✅")
         labels_dir = os.path.join(self.src_root, 'labels')
 
         return labels_dir
     
 
-    def get_yolo_images(self, tile_shape: tuple = (4096, 4096)) -> None:
+    def get_yolo_images(self) -> None:
         """ Tiles the WSI and saves the patches in 'save_folder'. """
 
         self.log.info(f"Getting YOLO image tiles: ⏳")
 
-        # 1) Conversion
-        folder = self.src_root
-        converter = Converter(folder = folder, 
-                              convert_from='json_wsi_mask', 
-                              convert_to='txt_wsi_bboxes' )
-        converter()
-
-        # 2) Tiling
+        # Image Tiling
         tiler = Tiler(folder = self.src_root, 
-                      tile_shape= tile_shape, 
-                      save_root=self.src_root)
+                      tile_shape= self.tile_shape, 
+                      save_root=self.src_root, 
+                      step = self.step,
+                      testing = self.testing)
         tiler(target_format='tiff')
 
-        self.log.info(f"Getting YOLO image tiles: ✅")
+        self.log.info(f"Tiled slide into image tiles: ✅")
         images_dir = os.path.join(self.src_root, 'images')
         
         return images_dir
@@ -104,9 +112,11 @@ class WSI_Processor(Tile_Processor):
 
     def _get_yolo_data(self) -> None:
         """ Tiles both WSI and its annotations and saves them into 'images', 'labels' folder.  """
+        
+        print(f"Tip: Make sure 'step' divides in tiles such that gloms are at least once fully captured in one tile. ")
 
-        images_dir = self.get_yolo_images(tile_shape=self.tile_shape)
-        labels_dir = self.get_yolo_labels(tile_shape=self.tile_shape)
+        images_dir = self.get_yolo_images()
+        labels_dir = self.get_yolo_labels()
 
         return images_dir, labels_dir
     
@@ -149,11 +159,11 @@ class WSI_Processor(Tile_Processor):
 
         images = [train_imgs, val_imgs, test_imgs]
 
-        if self.mode == 'segmentation':
-            
+        if self.task == 'segmentation':
+            print(f"Splitting for segmentation has not yet been implemented. ")
             raise NotImplementedError()
 
-        elif self.mode == 'detection':
+        elif self.task == 'detection':
 
             assert empty_images is not None, ValueError(f"'empty_images' is None but should be provided.")
             train_labels = [file.replace('images', 'labels').replace('.png', '.txt') for file in train_imgs]
@@ -161,7 +171,7 @@ class WSI_Processor(Tile_Processor):
             test_labels = [file.replace('images', 'labels').replace('.png', '.txt') for file in test_imgs]
 
             # now also add emtpy images to train
-            n_tot_imgs =  len(train_imgs) / self.empty_perc
+            n_tot_imgs =  int(len(train_imgs) * (1+ self.empty_perc))
             n_empty_imgs = int(self.empty_perc * n_tot_imgs)
             additional_empty_imgs = empty_images[:n_empty_imgs]
             for image in additional_empty_imgs:
@@ -174,9 +184,9 @@ class WSI_Processor(Tile_Processor):
 
     def get_trainvaltest(self) :
 
-        traindir = os.path.join(self.dst_root, self.mode, 'train')
-        valdir = os.path.join(self.dst_root, self.mode, 'val')
-        testdir =  os.path.join(self.dst_root, self.mode, 'test')
+        traindir = os.path.join(self.dst_root, self.task, 'train')
+        valdir = os.path.join(self.dst_root, self.task, 'val')
+        testdir =  os.path.join(self.dst_root, self.task, 'test')
 
         # 1) check if dataset already exists:
         skip_splitting = self._check_already_splitted()
@@ -189,13 +199,15 @@ class WSI_Processor(Tile_Processor):
         else:
             self._clear_dataset()
 
-        if self.mode == 'segmentation':
+        if self.task == 'segmentation':
+            
+            print(f"splitting for segmentation task has not yet been implemented.")
             raise NotImplementedError()
             image_list, mask_list = self._get_images_masks()
             images, masks = self._split_images_trainvaltest(image_list = image_list, mask_list= mask_list)
             self._makedirs_moveimages(images=images, masks=masks)
             
-        elif self.mode == 'detection':
+        elif self.task == 'detection':
 
             images_dir, labels_dir = self._get_yolo_data() 
             images_list = [os.path.join(images_dir, file) for file in os.listdir(images_dir) if 'DS' not in file]
@@ -220,15 +232,15 @@ class WSI_Processor(Tile_Processor):
 
     def __call__(self) :
 
-        if self.mode == 'detection':
-            self.get_trainvaltest()
+        if self.task == 'detection':
+            traindir, valdir, testdir = self.get_trainvaltest()
         
         else:
             raise NotImplementedError()
 
 
 
-        return
+        return traindir, valdir, testdir
 
 
 def test_WSI_Processor():
@@ -236,13 +248,15 @@ def test_WSI_Processor():
     src_root = '/Users/marco/Downloads/new_source'
     dst_root = '/Users/marco/Downloads/folder_random'
     ratio = [0.7, 0.15, 0.15]
-    mode = 'detection'
-    empty_perc =  0.3
+    task = 'detection'
+    empty_perc =  0.1
+    step = 1024
 
     processor = WSI_Processor(src_root=src_root, 
                               dst_root=dst_root, 
                               ratio=ratio, 
-                              mode = mode, 
+                              task = task, 
+                              step = step,
                               empty_perc=empty_perc)
 
     processor()
