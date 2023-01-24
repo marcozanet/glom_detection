@@ -23,6 +23,9 @@ class Manager():
                 mode: Literal['train', 'test', 'detect'],
                 task: str,
                 model: str,
+                convert_from: Literal['json_wsi_mask', 'jsonliketxt_wsi_mask'], 
+                convert_to: Literal['json_wsi_bboxes', 'txt_wsi_bboxes'],  
+                slide_format: Literal['tiff', 'tif'],
                 system: Literal['windows', 'mac'],
                 ratio: float = [0.7, 0.15, 0.15], 
                 tile_shape = (4096, 4096),
@@ -55,6 +58,7 @@ class Manager():
         assert isinstance(empty_perc, float), f"'empty_perc' should be a float between 0 and 1."
         assert 0<=empty_perc<=1, f"'empty_perc' should be a float between 0 and 1."
         assert mode in ['train', 'test', 'detect'], f"'mode' should be one of ['train', 'test', 'detect']."
+        assert slide_format in ['tiff', 'tif'], f"'slide_format' should be either 'tiff' or 'tif' format."
 
 
         self.src_dir = src_folder
@@ -83,22 +87,22 @@ class Manager():
         self.step = step
         self.empty_perc = empty_perc
         self.mode = mode
+        self.slide_format = slide_format
+        self.convert_from = convert_from
+        self.convert_to = convert_to
 
 
         if self.system == 'windows':
             self.yolov5dir = 'C:\marco\yolov5'
             self.yolodir = 'C:\marco\code\glom_detection'
             self.code_dir = ''
-            raise Exception('define weights path for unet')
+            # raise Exception('define weights path for unet')
         elif self.system == 'mac':
             self.yolodir = '/Users/marco/yolo'
             self.yolov5dir = '/Users/marco/yolov5'
             self.unet_weights_save_path = unet_weights_save_path
             self.code_dir = os.path.join(self.yolodir, 'code')
 
-        # # get images and labels/masks:
-        # self.train_dir, self.val_dir, self.test_dir =  self.processor.get_trainvaltest()
-        self._prepare_data()
 
         return
     
@@ -117,6 +121,9 @@ class Manager():
                                       dst_root=self.dst_dir,
                                       task = self.task, 
                                       ratio=self.ratio, 
+                                      slide_format = self.slide_format,
+                                      convert_from = self.convert_from,
+                                      convert_to = self.convert_to,
                                       step = self.step,
                                       empty_perc=self.empty_perc)
         
@@ -502,14 +509,14 @@ class Manager():
         return
     
     def parse_args(self):
-
-
-
+        raise NotImplementedError()
         return
 
     def __call__(self) -> None:
 
         self._prepare_data()
+
+        raise NotImplementedError()
 
         if self.mode == 'train':
             if self.task == 'detection':
@@ -559,7 +566,7 @@ if __name__ == '__main__':
         elif system == 'mac':
             # src_folder = '/Users/marco/glomseg-share'        
             # dst_folder = '/Users/marco/datasets/muw_exps'
-            src_folder = '/Users/marco/Downloads/new_source'
+            src_folder = '/Users/marco/Downloads/converted_test'
             dst_folder = '/Users/marco/Downloads/folder_random'
 
         
@@ -571,7 +578,10 @@ if __name__ == '__main__':
     manager = Manager(src_folder = src_folder,
                       dst_folder = dst_folder,
                       data_tiled=False,
+                      slide_format= 'tif',
                       task = 'detection',
+                      convert_from='jsonliketxt_wsi_mask', 
+                      convert_to='txt_wsi_bboxes',   
                       mode = 'train',
                       model = 'yolo',
                       step = 1024,

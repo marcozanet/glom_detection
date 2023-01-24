@@ -1,9 +1,1 @@
-17/01 11:31 INFO - get_trainvaltest: Getting YOLO image tiles: ✅
-17/01 11:31 INFO - get_trainvaltest: Getting YOLO label tiles: ✅
-17/01 11:31 INFO - get_trainvaltest: Splitting in train, val, test sets ✅. 
-17/01 11:31 INFO - get_trainvaltest: Getting YOLO image tiles: ✅
-17/01 11:31 INFO - get_trainvaltest: Getting YOLO label tiles: ✅
-17/01 11:31 INFO - get_trainvaltest: Splitting in train, val, test sets ✅. 
-17/01 11:31 INFO - _prepare_training_yolo_detection: Prepared training YOLO ✅ .
-17/01 11:31 INFO - _train_yolo_detection: Start training YOLO: ⏳
-17/01 11:31 INFO - _train_yolo_detection: Training YOLO done ✅ . Training duration: 0:00:04.261984
+24/01 18:54 INFO - _check_already_splitted: Dataset already splitted in train, val, test sets ✅. 

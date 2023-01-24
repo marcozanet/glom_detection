@@ -16,6 +16,8 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 from skimage import io, draw
 import cv2
+import geojson
+from typing import Literal
 
 
 class Tiler():
@@ -25,7 +27,9 @@ class Tiler():
                 step: int,
                 tile_shape: tuple = (2048, 2048),
                 save_root = None, 
-                testing: bool = False) -> None:
+                multiple_samples: bool = True,
+                # region_annotations: str = None,
+                verbose: bool = False) -> None:
         """ Class for patchification/tiling of WSIs and annotations. """
 
         assert os.path.isdir(folder), ValueError(f"Provided 'folder':{folder} is not a valid dirpath.")
@@ -33,20 +37,23 @@ class Tiler():
         assert isinstance(tile_shape[0], int) and isinstance(tile_shape[1], int), TypeError(f"'tile_shape' should be a tuple of int.")
         assert save_root is None or os.path.isdir(save_root), ValueError(f"'save_root':{save_root} should be either None or a valid dirpath. ")
         assert isinstance(step, int), f"'step' should be int."
-        assert isinstance(testing, bool), f"'testing' should be a boolean."
+        assert isinstance(verbose, bool), f"'verbose' should be a boolean."
+        assert isinstance(multiple_samples, bool), f"'multiple_samples' should be a boolean."
+        # assert os.path.isfile(fp), ValueError(f"'fp':{fp} is not a valid filepath. ")
 
 
         self.folder = folder 
         self.tile_shape = tile_shape
         self.save_root = save_root
         self.step = step
-        self.testing = testing
+        self.verbose = verbose
+        self.multiple_samples = multiple_samples
         
 
         return
     
 
-    def _get_tile_labels_nostep(self, fp: str, save_folder: str = None):
+    def _original_get_tile_labels_nostep(self, fp: str, save_folder: str = None):
         ''' Makes tile txt annotations in YOLO format (normalized) out of (not normalized) txt annotations for the entire image.
             Annotations tiles are of shape 'tile_shape' and are only made around each object contained in the WSI annotation, since YOLO doesn't 
             need annotations for empty images. 
@@ -83,8 +90,96 @@ class Tiler():
         print(f"Tiler: WSI .txt annotation tiled into .txt annotation tiles, saved in {save_folder}. ")
 
         return
+    
+    # def _tile_multisample_annotation(self):
+    #     ""
 
-    def _get_tile_labels_wstep(self, fp: str, save_folder: str = None):
+    def _get_tile_labels_wstep(self, fp: str, save_folder: str = None ):
+        ''' Makes tile txt annotations in YOLO format (normalized) out of (not normalized) txt annotations for the entire image.
+            Annotations tiles are of shape 'tile_shape' and are only made around each object contained in the WSI annotation, since YOLO doesn't 
+            need annotations for empty images. 
+            fp = path to WSI (not normalized) annotation in .txt format '''
+
+        assert os.path.isfile(fp), ValueError(f"'fp':{fp} is not a valid filepath. ")
+        save_folder = os.path.join(self.save_root, 'labels') if save_folder is None else save_folder
+
+
+
+        # from tile folder I get the x possible values and y possible values:
+        tile_images_fp = save_folder.replace('labels', 'images')
+        wsi_fn = os.path.split(fp)[1].split('.')[0]
+        print(f"wsi_fn: {wsi_fn}")
+        files = [file for file in os.listdir(tile_images_fp) if '.png' in file and wsi_fn in file]
+        print(files)
+        num_x_tiles = [int(file.split('_')[-2]) for file in files]
+        x_max = max(num_x_tiles)
+        print(f"xmax: {x_max}")
+
+        num_y_tiles = [int(file.split('_')[-1].split('.')[0]) for file in files]
+        y_max = max(num_y_tiles)
+        print(f"ymax: {y_max}")
+
+        print(f"Tiling: {fp}")
+        # Get BB from txt file:
+        with open(fp, 'r') as f:
+            text = f.readlines()
+            f.close()
+        
+        # raise NotImplementedError()
+        for row in text:
+
+            # capisco in che sample file sta -> 
+
+            # get values:
+            items = row.split(sep = ',')
+            xc, yc, box_w, box_h = [float(num) for num in items[1:]]
+
+            clss = items[0]
+            W, H = self.tile_shape[0], self.tile_shape[1]
+            
+            x_start = xc - box_w // 2
+            x_end = xc + box_w // 2
+            y_start = yc - box_h // 2
+            y_end = yc + box_h // 2
+
+
+
+            for i in range(0, x_max*W, self.step):
+                if i <=  x_start <=  i + W or i <=  x_end <=  i + W:
+                    # print(f"range x: {(i, i+ W)}")
+                    for j in range(0, y_max*H, self.step):
+                        if j <=  y_start <=  j + H or j <=  y_end <=  j + H:
+                            x0 = i if x_start <= i else x_start
+                            x1 = i + W if x_end >= i + W else x_end
+                            y0 = j if y_start <= j else y_start
+                            y1 = j + H if y_end >= j + H else y_end 
+
+                            tile_xc = (x0 + x1)/2 - i  # no need to normalize, self._write_txt does that
+                            tile_yc = (y0 + y1)/2 - j 
+                            tile_w = (x1 - x0) 
+                            tile_h = (y1 - y0) 
+
+                            assert 0 <= tile_xc <=W, f"{x0, x1, i, tile_xc}"
+                            assert 0 <= tile_xc <=W, f"'tile_xc'={tile_xc}, but should be in  (0,{W})."
+                            assert 0 <= tile_yc <=H, f"'tile_yc'={tile_yc}, but should be in  (0,{H})."
+                            assert 0 <= tile_w <=W, f"'tile_w'={tile_w}, but should be in  (0,{W})."
+                            assert 0 <= tile_h <=H, f"'tile_h'={tile_h}, but should be in  (0,{H})."
+                            # print(f"i:{i}, j:{j}")
+                            
+
+                            # save
+                            save_fp = fp.replace('.txt', f'_{j//self.step}_{i//self.step}.txt') # img that contains a part of the glom
+                            if save_folder is not None:
+                                fname = os.path.split(save_fp)[1]
+                                save_fp = os.path.join(save_folder, fname)
+                            self._write_txt(clss, tile_xc, tile_yc, tile_w, tile_h, save_fp)
+            
+
+        print(f"Tiler: WSI .txt annotations tiled into .txt annotation tiles and saved in {save_folder}. ")
+
+        return
+
+    def _original_get_tile_labels_wstep(self, fp: str, save_folder: str = None):
         ''' Makes tile txt annotations in YOLO format (normalized) out of (not normalized) txt annotations for the entire image.
             Annotations tiles are of shape 'tile_shape' and are only made around each object contained in the WSI annotation, since YOLO doesn't 
             need annotations for empty images. 
@@ -134,21 +229,6 @@ class Tiler():
                     # print(f"range x: {(i, i+ W)}")
                     for j in range(0, y_max*H, self.step):
                         if j <=  y_start <=  j + H or j <=  y_end <=  j + H:
-                            # if i == 0:
-                            #     print((i, j))
-                            #     print("xc, yc, box_w, box_h:")
-                            #     print(xc, yc, box_w, box_h)
-                            #     print(f"x_start: {x_start}")
-                            #     print(f"x_end: {x_end}")
-                            #     print(f"y_start: {y_start}")
-                            #     print(f"y_end: {y_end}")
-                            #     print(f"range x: {(i, i+ W)}")
-                            #     print(f"range y: {(j, j+ H)}")
-                            #     print(f"salvata in {j//self.step}, {i//self.step}")
-
-                            #     raise NotImplementedError()
-
-
                             x0 = i if x_start <= i else x_start
                             x1 = i + W if x_end >= i + W else x_end
                             y0 = j if y_start <= j else y_start
@@ -181,46 +261,63 @@ class Tiler():
 
     def _get_tile_images(self, 
                         fp: str, 
-                        tile_shape: tuple = (2048, 2048), 
                         overlapping: bool = False,
                         save_folder: str = None) -> None:
         """ Tiles the WSI into tiles and saves them into the save_folder. """
         
         assert os.path.isfile(fp), ValueError(f"{fp} is not a valid filepath.")
-        assert isinstance(tile_shape, tuple) and len(tile_shape) == 2, TypeError(f"'tile_shape':{tile_shape} should be a tuple of two int.")
-        assert isinstance(tile_shape[0], int) and isinstance(tile_shape[1], int), TypeError(f"'tile_shape':{tile_shape} should be a tuple of two int.")
+        assert isinstance(self.tile_shape, tuple) and len(self.tile_shape) == 2, TypeError(f"'tile_shape':{self.tile_shape} should be a tuple of two int.")
+        assert isinstance(self.tile_shape[0], int) and isinstance(self.tile_shape[1], int), TypeError(f"'tile_shape':{self.tile_shape} should be a tuple of two int.")
         assert isinstance(overlapping, bool), TypeError(f"'overlapping' should be a boolean. ")
         save_folder = os.path.join(self.save_root, 'images') if save_folder is None else save_folder
 
-        w, h = tile_shape
-        fname = os.path.split(fp)[1]
+        w, h = self.tile_shape
 
         # 1) read slide:
         try:
+            print(f"Opening {fp}.")
             slide = openslide.OpenSlide(fp)
+            print(f"Opened. {fp}.")
         except:
             warnings.warn(f'Couldn t open file: {fp}. Skipping. ')
             return
         W, H = slide.dimensions
+        print(f"W, H: {W, H}")
 
-        # 2) convert to numpy:
-        slide = slide.read_region(location = (0,0), level = 0, size= (W,H)).convert("RGB")
-        slide = np.array(slide)
-        if overlapping is False:
-            patches = patchify(slide, (w, h, 3), step =  self.step )
+        # 2) if file has multi_samples -> region = sample:
+        if self.multiple_samples is True:
+            # get file with location of image/label samples within the slide:
+            multisample_loc_file = self._get_multisample_loc_file(fp, file_format='geojson')
+            sample_locations = self._get_location_w_h(fp = multisample_loc_file) if multisample_loc_file is not None else [{'location':(0,0), 'w':W, 'h':H}]
         else:
-            raise NotImplementedError()
-        
-        # 3) save patches:
-        patches = patches[:, :, 0, ...]
-        for i in tqdm(range(patches.shape[0]), desc= f"⏳ Tiling '{fname}'"):
-            for j in range(patches.shape[1]):
-                save_fp = fp.replace('.tiff',f'_{i}_{j}.png')
-                if save_folder is not None:
-                    fname = os.path.split(save_fp)[1]
-                    save_fp = os.path.join(save_folder, fname)
-                pil_img = Image.fromarray(patches[i, j])
-                pil_img.save(save_fp)
+            multisample_loc_file = None
+            sample_locations = [{'location':(0,0), 'w':W, 'h':H}]
+
+
+        for sample_n, sample in enumerate(sample_locations):
+            location, W, H = sample['location'], sample['w'], sample['h']
+            print(f"Reading slide region ({W, H})")
+            region = slide.read_region(location = location , level = 0, size= (W,H)).convert("RGB")
+            print('Converting to numpy array:')
+            np_slide = np.array(region)
+            print('Patchifying:')
+            if overlapping is False:
+                patches = patchify(np_slide, (w, h, 3), step =  self.step )
+            else:
+                raise NotImplementedError()
+            
+            # 3) save patches:
+            patches = patches[:, :, 0, ...]
+            
+            fname = f"{os.path.split(fp)[1]}, sample {sample_n+1}/{len(sample_locations)}" if multisample_loc_file is not None else os.path.split(fp)[1]
+            for i in tqdm(range(patches.shape[0]), desc= f"⏳ Tiling '{fname}'"):
+                for j in range(patches.shape[1]):
+                    save_fp = fp.replace(f'.{self.format}',f'_sample{sample_n}_{i}_{j}.png') if self.multiple_samples else fp.replace(f'.{self.format}',f'_{i}_{j}.png')
+                    if save_folder is not None:
+                        fname = os.path.split(save_fp)[1]
+                        save_fp = os.path.join(save_folder, fname)
+                    pil_img = Image.fromarray(patches[i, j])
+                    pil_img.save(save_fp)
 
         print(f"Tiler: WSI tiled into .png tiles, saved in {save_folder}. ")
 
@@ -230,12 +327,16 @@ class Tiler():
     def __call__(self, target_format: str, save_folder: str = None) -> None:
         """ Tiles/patchifies WSI or annotations. """
 
-        assert target_format in ['tiff', 'txt'], ValueError(f"Patchification target format should be either an image in 'tiff' format or an annotation in 'txt' format. ")
+        SLIDE_FORMATS =  ['tiff', 'tif']
+        LABEL_FORMATS = ['txt']
+
+        assert target_format in SLIDE_FORMATS or target_format in LABEL_FORMATS, ValueError(f"Patchification target format = {target_format} should be either an image in 'tiff', 'tif' format or an annotation in 'txt' format. ")
         assert save_folder is None or os.path.isdir(save_folder), ValueError(f"'save_folder':{save_folder} should be either None or a valid dirpath. ")
         
-        default_folder = 'images' if target_format == 'tiff' else 'labels'
+        default_folder = 'images' if (target_format == 'tiff' or target_format == 'tif') else 'labels'
         save_folder = os.path.join(self.save_root, default_folder) if save_folder is None else save_folder
 
+        self.format = target_format
 
         # 1) make save folders:
         os.makedirs(save_folder, exist_ok=True)
@@ -248,20 +349,21 @@ class Tiler():
             print(f"No file in format '{target_format}' was found in '{self.folder}'.")
 
         for file in files:
-            
-            fname = os.path.split(file)[1].split('.')[0]
-
             # check if already tiled:
+            fname = os.path.split(file)[1].split('.')[0]
             if self._check_already_computed(fname, target_format, save_folder= save_folder):
                 continue
-            
             if target_format == 'txt':
-                # self._get_tile_txt_annotations(fp = file, save_folder=save_folder)
-                self._get_tile_labels_wstep(fp = file, save_folder=save_folder)
-                if self.testing is True:
+                if self.multiple_samples is True: 
+                    multisample_loc_file = os.path.join(self.folder, fname + f".geojson")
+                    samples_txt = self._split_multisample_annotation(file, multisample_loc_file)
+                    for sample in samples_txt:
+                        self._get_tile_labels_wstep(fp = sample, save_folder=save_folder)
+                if self.verbose is True:
                     self.test_show_image_labels()
             else:
                 self._get_tile_images(fp = file, save_folder=save_folder )
+            
 
 
 
@@ -288,7 +390,9 @@ class Tiler():
     def _get_files(self, format:str ) -> List[str]:
         """ Collects source files to be converted. """
 
+
         files = glob(os.path.join(self.folder, f'*.{format}' ))
+        files = [file for file in files if "sample" not in file]
 
         # sanity check:
         already_patched = glob(os.path.join(self.folder, f'*_?_?.{format}' ))
@@ -300,18 +404,74 @@ class Tiler():
         return files
     
 
+    def _get_multisample_loc_file(self, fp: str, file_format: Literal['geojson']):
+        """ For multisample slides, it collects files with annotations of sample locations within the slides. """
+
+        FORMATS = ['geojson']
+        assert os.path.isfile(fp), f"'fp':{fp} if not a valid filepath."
+        assert file_format in FORMATS, f"'file_format' should be one of {FORMATS}."
+        assert self.multiple_samples is True, f"'multiple_samples' is False, but _get_multisample_annotations() was called. "
+
+        # name = "msample_image" if self.format in ['tiff', 'tif'] else "sample_label"
+        multisample_loc_file = fp.replace(f".{self.format}", f".{file_format}")
+
+        if self.verbose is True:
+            print(f"{fp}:fp")
+            print(f"multisample_loc_file:{multisample_loc_file}")
+
+        multisample_loc_file = multisample_loc_file if os.path.isfile(multisample_loc_file) else None
+
+        return multisample_loc_file
+
+    
+    
+
     def _check_already_computed(self, fname: str, format: str, save_folder:str ):
         """ Checks if tiling is already computed for this WSI; if so, skips the slide. 
             Hypothesis: tiling is considered to be done if at least 2 tiles are found in 'save_folder'. """
 
-        format = 'png' if format == 'tiff' else format
+        format = 'png' if (format == 'tiff' or format == 'tif') else format
         files = glob(os.path.join(save_folder, f'*.{format}'))
         files = [file for file in files if fname in file ]
         computed = True if len(files) > 2 else False
         if computed:
-            print(f"Tiler: found .{format} tiles in '{save_folder}' for {fname}.tiff. Skipping slide.")
+            print(f"Tiler: found .{format} tiles in '{save_folder}' for {fname}.{format}. Skipping slide.")
 
         return computed
+
+    
+    def _get_location_w_h(self, fp:str):
+        """ Given a WSI with multiple samples and a file with annotations of the samples location 
+            within the WSI, it returns the location, H, W for the openslide.read_region function to use. """
+
+        assert os.path.isfile(fp), ValueError(f"'fp':{fp} is not a valid filepath. ")
+
+        with open(fp, 'r') as f:
+            data = geojson.load(f)
+        
+        all_dicts = []
+        for rect in data['features']:
+
+            assert len(rect['geometry']['coordinates'][0]) == 5, f"There seems to be more than 4 vertices annotated. "
+
+            vertices = rect['geometry']['coordinates'][0][:-1]
+            print(f"vertices: {vertices}")
+            location = vertices[0]
+            h =  vertices[1][1] - vertices[0][1]
+            w =  vertices[2][0] - vertices[0][0]
+
+            assert h>=0, f"{fp} has a feature with negative height. "
+            assert w>=0, f"{fp} has a feature with negative width. "
+
+            dictionary = {'location':location, 'w':w, 'h':h}
+            all_dicts.append(dictionary)
+        
+        if self.verbose is True:
+            print(f"fp: {fp} \n{all_dicts}") 
+    
+        return all_dicts
+    
+
     
     def test_show_image_labels(self):
         """ Shows 2 random images/labels. """
@@ -357,22 +517,73 @@ class Tiler():
 
         return
     
+    def _get_sample_n(self, wsi_label_fp: str) -> int:
+        """ Given teh label fp of the WSI, it returns the n of samples within it."""
+
+        # 1) get the basename from txt file: 
+        fn = os.path.basename(wsi_label_fp).split('.')[0]
 
 
+        # 2) look matching tiles in the images folder and extract n_samples:
+        image_dir = os.path.join(self.save_root, 'images')
+        matching_tiles = [tile for tile in os.listdir(image_dir) if fn in tile]
+        sample_numbers = [int(tile.split('sample')[-1][:1]) for tile in matching_tiles]
+        sample_n = np.array(sample_numbers).max()
 
+        if self.verbose is True:
+            print(f"n of tissue samples in the slide: {sample_n}")
 
+        return sample_n
+
+    def _split_multisample_annotation(self, txt_file:str, multisample_loc_file:str) -> None:
+        """ Given a WSI txt (not normalised) annotation, it splits the annotation file 
+            into one file for each sample within the slide."""
+        
+        assert os.path.isfile(txt_file), f"'label_file':{txt_file} is not a valid filepath."
+        assert os.path.isfile(multisample_loc_file), f"'label_file':{multisample_loc_file} is not a valid filepath."
+        assert txt_file.split(".")[-1] == 'txt', f"'txt_file':{txt_file} should have '.txt' format. "
+
+        with open(txt_file, 'r') as f:
+            rows = f.readlines()
+        
+        with open(multisample_loc_file, 'r') as f:
+            data = geojson.load(f)
+        
+        for row in rows:
+            clss, xc, yc, box_w, box_h = row.replace(',', '').split(' ')
+            clss, xc, yc, box_w, box_h = int(clss), int(xc), int(yc), int(box_w), int(box_h)
+            for sample_n, rect in enumerate(data['features']):
+                assert len(rect['geometry']['coordinates'][0]) == 5, f"There seems to be more than 4 vertices annotated. "
+                vertices = rect['geometry']['coordinates'][0][:-1]
+                x0, y0 = vertices[0]
+                x1, y1 = vertices[2]
+
+                if x0<xc<x1 and y0<yc<y1:
+                    text = f'{clss}, {xc - x0}, {yc - y0}, {box_w}, {box_h}\n'   # TODO DIVIDE TO NORMALIZE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    # save txt file:
+                    save_fp = txt_file.replace('.txt', f"_sample{sample_n}.txt")
+                    with open(save_fp, 'a+') as f:
+                        f.write(text)
+        
+        # return a list of txt files for each sample:
+        txt_files = glob(os.path.join(self.folder, '*sample?.txt'))
+
+        return txt_files
 
 
 def test_Tiler():
 
-    folder = '/Users/marco/Downloads/new_source'
+    print(" ########################    TEST 1: ⏳    ########################")
+    folder = '/Users/marco/Downloads/test_pyramidal'
     tiler = Tiler(folder = folder, 
-                  tile_shape= (2048, 2048), 
-                  step=1024, 
-                  save_root='/Users/marco/Downloads/folder_random', 
-                  testing = True)
+                  tile_shape= (4096, 4096), 
+                  step=2048, 
+                  save_root='/Users/marco/Downloads/test_pyramidal', 
+                  verbose = True)
+    # tiler._split_multisample_annotation(txt_file=)
     tiler(target_format='txt')
     # tiler(target_format='tiff')
+    print(" ########################    TEST 1: ✅    ########################")
 
 
     return

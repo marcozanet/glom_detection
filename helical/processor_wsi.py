@@ -23,12 +23,17 @@ class WSI_Processor(TileProcessor):
                 src_root: str, 
                 dst_root: str, 
                 step: int,
+                convert_from: Literal['json_wsi_mask', 'jsonliketxt_wsi_mask'], 
+                convert_to: Literal['json_wsi_bboxes', 'txt_wsi_bboxes'],
+                slide_format: Literal['tiff', 'tif'],
+                # label_format: Literal['json', 'gson'],
                 ratio = [0.7, 0.15, 0.15], 
                 task = Literal['detection', 'segmentation', 'both'],
                 safe_copy: bool = True,
                 tile_shape: tuple = (4096, 4096),
-                testing: bool = False,
-                empty_perc: float = 0.1) -> None:
+                verbose: bool = False,
+                empty_perc: float = 0.1, 
+                ) -> None:
 
         """ Sets paths and folders starting from tiles. 
             NB images should be named <name>.png <name-labelled>.png img_folder:"""
@@ -48,21 +53,26 @@ class WSI_Processor(TileProcessor):
         assert task in ['segmentation', 'detection', 'both'], ValueError(f"'task'= {task} should be either segmentation, detection or both. ")
         assert isinstance(tile_shape, tuple), TypeError(f"'tile_shape' should be a tuple of int.")
         assert isinstance(tile_shape[0], int) and isinstance(tile_shape[1], int), TypeError(f"'tile_shape' should be a tuple of int.")
-        assert isinstance(testing, bool), f"'testing' should be a boolean."
+        assert isinstance(verbose, bool), f"'verbose' should be a boolean."
         assert isinstance(step, int), f"'step' should be int."
         assert isinstance(safe_copy, bool), f"safe_copy should be boolean."
         assert isinstance(empty_perc, float), f"'empty_perc' should be a float between 0 and 1."
         assert 0<=empty_perc<=1, f"'empty_perc' should be a float between 0 and 1."
+        assert slide_format in ['tiff', 'tif'], f"'slide_format'={slide_format} should be either 'tiff' or 'tif' format."
+        # assert label_format in ['json', 'gson'], f"'label_format'={label_format} should be either 'json' or 'gson' format."
 
         self.src_root = src_root
         self.dst_root = dst_root
         self.ratio = ratio
         self.task = task 
         self.tile_shape = tile_shape
-        self.testing = testing
+        self.verbose = verbose
         self.step = step
         self.safe_copy = safe_copy
         self.empty_perc = empty_perc
+        self.slide_format = slide_format
+        self.convert_from = convert_from
+        self.convert_to = convert_to
 
     
     def get_yolo_labels(self) -> None:
@@ -72,9 +82,10 @@ class WSI_Processor(TileProcessor):
 
         # 1) Conversion
         folder = self.src_root
+        print('Conversiooonnnnn')
         converter = Converter(folder = folder, 
-                              convert_from='json_wsi_mask', 
-                              convert_to='txt_wsi_bboxes' )
+                              convert_from=self.convert_from, 
+                              convert_to=self.convert_to )
         converter()
 
         # 2) Label Tiling
@@ -82,7 +93,7 @@ class WSI_Processor(TileProcessor):
                       tile_shape= self.tile_shape, 
                       save_root=self.src_root, 
                       step = self.step,
-                      testing = self.testing)
+                      verbose = self.verbose)
         tiler(target_format='txt')
 
         self.log.info(f"Tiled annotations into .txt tiled files: ✅")
@@ -101,8 +112,8 @@ class WSI_Processor(TileProcessor):
                       tile_shape= self.tile_shape, 
                       save_root=self.src_root, 
                       step = self.step,
-                      testing = self.testing)
-        tiler(target_format='tiff')
+                      verbose = self.verbose)
+        tiler(target_format=self.slide_format)
 
         self.log.info(f"Tiled slide into image tiles: ✅")
         images_dir = os.path.join(self.src_root, 'images')
@@ -238,30 +249,33 @@ class WSI_Processor(TileProcessor):
         else:
             raise NotImplementedError()
 
-
-
         return traindir, valdir, testdir
 
 
 def test_WSI_Processor():
     
-    src_root = '/Users/marco/Downloads/new_source'
+    src_root = '/Users/marco/Downloads/another_test'
     dst_root = '/Users/marco/Downloads/folder_random'
     ratio = [0.7, 0.15, 0.15]
     task = 'detection'
-    empty_perc =  0.1
+    empty_perc =  0.1 
     step = 1024
 
     processor = WSI_Processor(src_root=src_root, 
-                              dst_root=dst_root, 
+                              dst_root=dst_root,
+                              convert_from='jsonliketxt_wsi_mask', 
+                              convert_to='txt_wsi_bboxes',                               
                               ratio=ratio, 
+                              slide_format= 'tif',
+                              verbose = True,
                               task = task, 
                               step = step,
+                              tile_shape = (4096, 4096),
                               empty_perc=empty_perc)
 
     processor()
 
-    return
+    return  
 
 
 

@@ -5,6 +5,29 @@ import numpy as np
 import json
 
 
+def del_empty_images_labels(folder:str, full_perc:float = 0.9, size_thres: int = 200000):
+    """ Removes empty images such that the folder 
+        contains a given percentage of full images. 
+        perc: float = percentage to be removed"""
+
+    fpaths = [os.path.join(folder, file) for file in os.listdir(folder)]
+    del_files = []
+    for file in fpaths:
+        mem = os.stat(file).st_size
+        if mem < size_thres:
+            del_files.append()
+    
+    print(f"tot files:{len(fpaths)}")
+    print({del_files})
+    
+
+    
+
+
+
+
+    return
+
 def edit_yaml(task:str,
               root:str = False,
               system:str = 'windows',
@@ -50,6 +73,12 @@ def test_write_YOLO_txt():
 
     return
 
+def test_del_empty_images_labels():
+    folder = '/Users/marco/Downloads/another_test/images'
+    del_empty_images_labels(folder = folder)
+
+
+    return
 
 
 
@@ -57,4 +86,4 @@ def test_write_YOLO_txt():
 
 if __name__ == '__main__':
 
-    test_write_YOLO_txt()
+    test_del_empty_images_labels()

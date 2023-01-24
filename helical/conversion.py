@@ -3,35 +3,47 @@ import os
 from typing import List
 import geojson
 from glob import glob
+import json
+from dirtyparser import JsonLikeParser
+from typing import Literal
 
 
 class Converter():
 
     def __init__(self, 
                 folder: str, 
-                convert_from: str, 
-                convert_to:str,
-                save_folder = None) -> None:
+                convert_from: Literal['json_wsi_mask', 'jsonliketxt_wsi_mask'], 
+                convert_to: Literal['json_wsi_bboxes', 'txt_wsi_bboxes'],
+                save_folder = None,
+                verbose: bool = False) -> None:
         """ Offers conversion capabilities from/to a variety of formats. 
             json_wsi_mask"""
 
         assert os.path.isdir(folder), ValueError(f"'folder': {folder} is not a dir.")
-        assert convert_from in ['json_wsi_mask']
+        assert convert_from in ['json_wsi_mask', 'jsonliketxt_wsi_mask'], f"'convert_from'{convert_from} should be in ['json_wsi_mask', 'jsonliketxt_wsi_mask']. '"
         assert convert_to in ['json_wsi_bboxes', 'txt_wsi_bboxes']
         assert save_folder is None or os.path.isdir(save_folder), ValueError(f"'save_folder':{save_folder} should be either None or a valid dirpath. ")
+        assert isinstance(verbose, bool), f"'verbose' should be a boolean."  
 
         self.convert_from = convert_from
         self.convert_to = convert_to
         self.folder = folder
-        self.format = convert_from.split('_')[0]
+        self.format_from = convert_from.split('_')[0] if convert_from != 'jsonliketxt_wsi_mask' else 'txt'
+        self.format_to = convert_to.split('_')[0]
         self.save_folder = save_folder
+        self.verbose = verbose
 
 
     def _get_files(self) -> List[str]:
         """ Collects source files to be converted. """
 
-        format = self.convert_from.split('_')[0]
-        files = glob(os.path.join(self.folder, f'*.{format}' ))
+        
+        files = glob(os.path.join(self.folder, f'*.{self.format_from}' ))
+
+        if self.verbose is True:
+            print(files)
+
+        assert len(files)>0, f"No file like {os.path.join(self.folder, f'*.{self.format_from}')} found"
 
         return files
 
@@ -54,18 +66,24 @@ class Converter():
             f.close()
 
         return
-
+    
 
     def _get_bboxes_from_mask(self, fp:str) -> List:
         ''' Gets bboxes values either in .json or in .txt format.
             Output = if 'convert_to' == 'txt_wsi_bboxes':  [class, x_center, y_center, box_w, box_y] (not normalized)
                      if 'convert_to' == 'json_wsi_bboxes':  [x_min, y_min], [x_max, y_min], [x_max, y_max], [x_min, y_max], [x_min, y_min]. '''
 
-        assert os.path.isfile(fp), ValueError(f"Geojson annotation file '{fp}' is not a valid filepath.")
+        assert os.path.isfile(fp), ValueError(f"Annotation file '{fp}' is not a valid filepath.")
         
-        # read json file
+        # read annotation file
+        print('opening file')
+        print(fp)
         with open(fp, 'r') as f:
-            data = geojson.load(f)
+            try:
+                data = geojson.load(f)
+            except:
+                raise Exception
+            print(data)
             
         # saving outer coords (bboxes) for each glom:
         new_coords = []
@@ -122,26 +140,42 @@ class Converter():
             
         return
     
-    
-    def __call__(self) -> None:
-        """ Converts using the proper function depending on the conversion task of choice. """
+    def _convert_gson2txt(self, gson_file:str):
+        file = "/Users/marco/Downloads/test_pyramidal/200104066_09_SFOG.mrxs.gson"
+        with open(file, 'rb') as f:
+            # text = json.load(file)
+            text = open(file,"rb").read()[7:]
 
-        files = self._get_files()
-        for file in files:
-            if self.convert_from == 'json_wsi_mask' and self.convert_to == 'txt_wsi_bboxes':
-                if self._check_already_converted(json_file=file):
-                    continue
-                self._convert_json2txt(json_file = file)
 
         return
+    
+    # def _converttxt2txt(self, txt_file:str) -> None:
+    #     """ Converts .txt file with mask annotations on a WSI to bboxes annotations in .txt format """
+    #     # 1) get bounding boxes values:
+    #     bboxes = self._get_bboxes_from_mask(fp = txt_file)
+    #     # 2) save to txt 
+    #     self._write_txt(bboxes, fp = txt_file)
+    #     print("Converter: WSi .json annotation converted to WSI .txt annotation. ")
+    #     return
+
+    def _convert_jsonliketxt2txt(self, jsonliketxt_file:str) -> None:
+        """ Saves into a file the bbox in YOLO format. NB values are NOT normalized."""
+
+        parser = JsonLikeParser(fp = jsonliketxt_file, 
+                                save_folder=self.save_folder, 
+                                label_map = {'Glo-healthy':0, 'Glo-unhealthy':1, 'Glo-NA':2, 'Tissue':3})
+        parser()
+
+        return
+    
 
 
-    def _check_already_converted(self, json_file: str) -> bool:
+    def _check_already_converted(self, file: str) -> bool:
         """ Checks whether conversion has already been computed. """
 
-        fname = os.path.split(json_file)[1].split('.json')[0]
+        fname = os.path.split(file)[1].split(f'.{self.format_from}')[0]
 
-        files = glob(os.path.join(self.folder, '*.txt'))
+        files = glob(os.path.join(self.save_folder, f'*.{self.format_to}'))
         files = [file for file in files if fname in file]
 
         if len(files) > 0:
@@ -151,6 +185,23 @@ class Converter():
             computed = False
 
         return computed
+    
+    def __call__(self) -> None:
+        """ Converts using the proper function depending on the conversion task of choice. """
+
+        files = self._get_files()
+        for file in files:
+            if self.convert_from == 'json_wsi_mask' and self.convert_to == 'txt_wsi_bboxes':
+                if self._check_already_converted(file=file):
+                    continue
+                self._convert_json2txt(json_file = file)
+            elif self.convert_from == 'jsonliketxt_wsi_mask' and self.convert_to == 'txt_wsi_bboxes':
+                self._convert_jsonliketxt2txt(jsonliketxt_file=file)
+ 
+
+        return
+
+
         
 
 
@@ -159,11 +210,12 @@ class Converter():
 
 
 def test_Converter():
-    folder = '/Users/marco/Downloads/new_source'
+    folder = '/Users/marco/Downloads/test_pyramidal'
     converter = Converter(folder = folder, 
-                          convert_from='json_wsi_mask', 
+                          convert_from='jsonliketxt_wsi_mask', 
                           convert_to='txt_wsi_bboxes',
-                          save_folder= '/Users/marco/Downloads/folder_random' )
+                          save_folder= '/Users/marco/Downloads/test_pyramidal', 
+                          verbose=True)
     converter()
 
     return
