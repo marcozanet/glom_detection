@@ -53,6 +53,46 @@ class Tiler():
         return
     
 
+    def _original_get_tile_labels_nostep(self, fp: str, save_folder: str = None):
+        ''' Makes tile txt annotations in YOLO format (normalized) out of (not normalized) txt annotations for the entire image.
+            Annotations tiles are of shape 'tile_shape' and are only made around each object contained in the WSI annotation, since YOLO doesn't 
+            need annotations for empty images. 
+            fp = path to WSI (not normalized) annotation in .txt format '''
+
+        assert os.path.isfile(fp), ValueError(f"'fp':{fp} is not a valid filepath. ")
+        save_folder = os.path.join(self.save_root, 'labels') if save_folder is None else save_folder
+
+        # Get BB from txt file:
+        with open(fp, 'r') as f:
+            text = f.readlines()
+            f.close()
+        
+        # for each glom, find corresponding patch:
+        for row in text:
+            # get values:
+            items = row.split(sep = ',')
+            xc, yc, box_w, box_h = [float(num) for num in items[1:]]
+            clss = items[0]
+            w, h = self.tile_shape[0], self.tile_shape[1]
+            # get the position of the tile in WSI coords 
+            i = int(xc // w) 
+            j = int(yc // h) 
+            # normalize coords for YOLO:
+            xc = xc % w  
+            yc = yc % h
+            # save
+            save_fp = fp.replace('.txt', f'_{i}_{j}.txt') # img that contains the center of that glom
+            if save_folder is not None:
+                fname = os.path.split(save_fp)[1]
+                save_fp = os.path.join(save_folder, fname)
+            self._write_txt(clss, xc, yc, box_w, box_h, save_fp)
+
+        print(f"Tiler: WSI .txt annotation tiled into .txt annotation tiles, saved in {save_folder}. ")
+
+        return
+    
+    # def _tile_multisample_annotation(self):
+    #     ""
 
     def _get_tile_labels_wstep(self, fp: str, save_folder: str = None ):
         ''' Makes tile txt annotations in YOLO format (normalized) out of (not normalized) txt annotations for the entire image.
@@ -66,23 +106,108 @@ class Tiler():
         # from tile folder I get the x possible values and y possible values:
         tile_images_fp = save_folder.replace('labels', 'images')
         wsi_fn = os.path.split(fp)[1].split('.')[0]
+        print(f"wsi_fn: {wsi_fn}")
         files = [file for file in os.listdir(tile_images_fp) if '.png' in file and wsi_fn in file]
         num_x_tiles = [int(file.split('_')[-2]) for file in files]
         if len(num_x_tiles) == 0: 
             print(f"❌ No tile images found. Skipping tiling of annotations for {wsi_fn}")
             return
         x_max = max(num_x_tiles)
+        print(f"xmax: {x_max}")
 
         num_y_tiles = [int(file.split('_')[-1].split('.')[0]) for file in files]
         y_max = max(num_y_tiles)
+        print(f"ymax: {y_max}")
 
-        print(f"⏳ Tiling: {os.path.basename(fp)}")
+        print(f"Tiling: {fp}")
         # Get BB from txt file:
         with open(fp, 'r') as f:
             text = f.readlines()
             f.close()
         
         # raise NotImplementedError()
+        for row in text:
+
+            # capisco in che sample file sta -> 
+
+            # get values:
+            items = row.split(sep = ',')
+            xc, yc, box_w, box_h = [float(num) for num in items[1:]]
+
+            clss = items[0]
+            W, H = self.tile_shape[0], self.tile_shape[1]
+            
+            x_start = xc - box_w // 2
+            x_end = xc + box_w // 2
+            y_start = yc - box_h // 2
+            y_end = yc + box_h // 2
+
+
+
+            for i in range(0, x_max*W, self.step):
+                if i <=  x_start <=  i + W or i <=  x_end <=  i + W:
+                    # print(f"range x: {(i, i+ W)}")
+                    for j in range(0, y_max*H, self.step):
+                        if j <=  y_start <=  j + H or j <=  y_end <=  j + H:
+                            x0 = i if x_start <= i else x_start
+                            x1 = i + W if x_end >= i + W else x_end
+                            y0 = j if y_start <= j else y_start
+                            y1 = j + H if y_end >= j + H else y_end 
+
+                            tile_xc = (x0 + x1)/2 - i  # no need to normalize, self._write_txt does that
+                            tile_yc = (y0 + y1)/2 - j 
+                            tile_w = (x1 - x0) 
+                            tile_h = (y1 - y0) 
+
+                            assert 0 <= tile_xc <=W, f"{x0, x1, i, tile_xc}"
+                            assert 0 <= tile_xc <=W, f"'tile_xc'={tile_xc}, but should be in  (0,{W})."
+                            assert 0 <= tile_yc <=H, f"'tile_yc'={tile_yc}, but should be in  (0,{H})."
+                            assert 0 <= tile_w <=W, f"'tile_w'={tile_w}, but should be in  (0,{W})."
+                            assert 0 <= tile_h <=H, f"'tile_h'={tile_h}, but should be in  (0,{H})."
+                            # print(f"i:{i}, j:{j}")
+                            
+
+                            # save
+                            save_fp = fp.replace('.txt', f'_{j//self.step}_{i//self.step}.txt') # img that contains a part of the glom
+                            if save_folder is not None:
+                                fname = os.path.split(save_fp)[1]
+                                save_fp = os.path.join(save_folder, fname)
+                            self._write_txt(clss, tile_xc, tile_yc, tile_w, tile_h, save_fp)
+            
+
+        print(f"Tiler: WSI .txt annotations tiled into .txt annotation tiles and saved in {save_folder}. ")
+
+        return
+
+    def _original_get_tile_labels_wstep(self, fp: str, save_folder: str = None):
+        ''' Makes tile txt annotations in YOLO format (normalized) out of (not normalized) txt annotations for the entire image.
+            Annotations tiles are of shape 'tile_shape' and are only made around each object contained in the WSI annotation, since YOLO doesn't 
+            need annotations for empty images. 
+            fp = path to WSI (not normalized) annotation in .txt format '''
+
+        assert os.path.isfile(fp), ValueError(f"'fp':{fp} is not a valid filepath. ")
+        save_folder = os.path.join(self.save_root, 'labels') if save_folder is None else save_folder
+
+        # from tile folder I get the x possible values and y possible values:
+        tile_images_fp = save_folder.replace('labels', 'images')
+        wsi_fn = os.path.split(fp)[1].split('.')[0]
+        print(f"wsi_fn: {wsi_fn}")
+        files = [file for file in os.listdir(tile_images_fp) if '.png' in file and wsi_fn in file]
+        num_x_tiles = [int(file.split('_')[1]) for file in files]
+        x_max = max(num_x_tiles)
+        # print(f"max: {x_max}")
+
+        
+        num_y_tiles = [int(file.split('_')[2].split('.')[0]) for file in files]
+        y_max = max(num_y_tiles)
+        # print(f"max: {y_max}")
+
+        # Get BB from txt file:
+        with open(fp, 'r') as f:
+            text = f.readlines()
+            f.close()
+        
+        
         for row in text:
 
             # get values:
@@ -128,11 +253,11 @@ class Tiler():
                                 fname = os.path.split(save_fp)[1]
                                 save_fp = os.path.join(save_folder, fname)
                             self._write_txt(clss, tile_xc, tile_yc, tile_w, tile_h, save_fp)
-        print(f"✅ Tile labels saved in {save_folder}. ")
+            
+
+        print(f"Tiler: WSI .txt annotations tiled into .txt annotation tiles and saved in {save_folder}. ")
 
         return
-
-
 
     def _get_tile_images(self, 
                         fp: str, 
@@ -150,10 +275,11 @@ class Tiler():
 
         # 1) read slide:
         try:
-            print(f"Opening {os.path.basename(fp)}.")
+            print(f"Opening {fp}.")
             slide = openslide.OpenSlide(fp)
+            print(f"Opened. {fp}.")
         except:
-            warnings.warn(f'❌ Couldn t open file: {fp}. Skipping. ')
+            warnings.warn(f'Couldn t open file: {fp}. Skipping. ')
             return
         W, H = slide.dimensions
         print(f"W, H: {W, H}")
@@ -170,14 +296,11 @@ class Tiler():
 
         for sample_n, sample in enumerate(sample_locations):
             location, W, H = sample['location'], sample['w'], sample['h']
-            if self.verbose is True:
-                print(f"Reading slide region ({W, H})")
+            print(f"Reading slide region ({W, H})")
             region = slide.read_region(location = location , level = 0, size= (W,H)).convert("RGB")
-            if self.verbose is True:
-                print('Converting to numpy array:')
+            print('Converting to numpy array:')
             np_slide = np.array(region)
-            if self.verbose is True:
-                print('Patchifying:')
+            print('Patchifying:')
             if overlapping is False:
                 patches = patchify(np_slide, (w, h, 3), step =  self.step )
             else:
@@ -196,7 +319,7 @@ class Tiler():
                     pil_img = Image.fromarray(patches[i, j])
                     pil_img.save(save_fp)
 
-        print(f"✅ Tile images saved in {save_folder}. ")
+        print(f"Tiler: WSI tiled into .png tiles, saved in {save_folder}. ")
 
         return
 
@@ -223,7 +346,7 @@ class Tiler():
 
         # 3) tile files:
         if len(files) == 0: 
-            print(f"❌ No file in format '{target_format}' was found in '{self.folder}'.")
+            print(f"No file in format '{target_format}' was found in '{self.folder}'.")
 
         for file in files:
             # check if already tiled:
@@ -235,6 +358,7 @@ class Tiler():
                     multisample_loc_file = os.path.join(self.folder, fname + f".geojson")
                     samples_txt = self._split_multisample_annotation(file, multisample_loc_file)
                     for sample in samples_txt:
+                        print(f"Tiling {sample}")
                         self._get_tile_labels_wstep(fp = sample, save_folder=save_folder)
                 if self.verbose is True:
                     self.test_show_image_labels()

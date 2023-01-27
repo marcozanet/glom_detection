@@ -5,27 +5,19 @@ import numpy as np
 import json
 
 
-def del_empty_images_labels(folder:str, full_perc:float = 0.9, size_thres: int = 200000):
-    """ Removes empty images such that the folder 
-        contains a given percentage of full images. 
-        perc: float = percentage to be removed"""
+def del_empty_images_labels(folder:str, size_thres: int = 1_000_000):
+    """ Removes empty images, defined as images with dim < size_thres. """
 
     fpaths = [os.path.join(folder, file) for file in os.listdir(folder)]
     del_files = []
     for file in fpaths:
         mem = os.stat(file).st_size
         if mem < size_thres:
-            del_files.append()
+            del_files.append(file)
     
     print(f"tot files:{len(fpaths)}")
-    print({del_files})
+    print(len(del_files))
     
-
-    
-
-
-
-
     return
 
 def edit_yaml(task:str,
@@ -74,8 +66,9 @@ def test_write_YOLO_txt():
     return
 
 def test_del_empty_images_labels():
-    folder = '/Users/marco/Downloads/another_test/images'
-    del_empty_images_labels(folder = folder)
+    size_thres = 1_000_000
+    folder = '/Users/marco/Downloads/muw_slides/images'
+    del_empty_images_labels(folder = folder, size_thres=size_thres)
 
 
     return

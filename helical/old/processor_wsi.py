@@ -131,21 +131,125 @@ class WSI_Processor(TileProcessor):
         return images_dir, labels_dir
     
 
+    def _split_images_trainvaltest(self, 
+                                   image_list: list, 
+                                   mask_list: list = None, 
+                                   empty_images: list = None,
+                                   train_balance: bool = False) -> Tuple[List, List] :
+        """ Splits images in train, val and test. 
+            Returns: tuple containing lists of train, val, test images and masks"""
+
+        n_images = len(image_list)
+        n_val_imgs = int(self.ratio[1] * n_images)
+        n_test_imgs = int(self.ratio[2] * n_images)
+
+        # 1) randomly pick val images:
+        val_imgs = []
+        for _ in range(n_val_imgs):
+            rand_img = random.choice(image_list)
+            val_imgs.append(rand_img)
+            image_list.remove(rand_img)
+        print(f"Val images: {len(val_imgs)}")
+        
+        # 2) randomly pick test images:
+        test_imgs = []
+        for _ in range(n_test_imgs):
+            rand_img = random.choice(image_list)
+            test_imgs.append(rand_img)
+            image_list.remove(rand_img)
+        print(f"Test images: {len(test_imgs)}")
+
+        # 3) remaining images are train:
+        if train_balance is False:
+            train_imgs = image_list
+            print(f"Train images: {len(train_imgs)}")
+        else:
+            raise NotImplementedError()
+
+
+        images = [train_imgs, val_imgs, test_imgs]
+
+        if self.task == 'segmentation':
+            print(f"Splitting for segmentation has not yet been implemented. ")
+            raise NotImplementedError()
+
+        elif self.task == 'detection':
+
+            assert empty_images is not None, ValueError(f"'empty_images' is None but should be provided.")
+            train_labels = [file.replace('images', 'labels').replace('.png', '.txt') for file in train_imgs]
+            val_labels = [file.replace('images', 'labels').replace('.png', '.txt') for file in val_imgs]
+            test_labels = [file.replace('images', 'labels').replace('.png', '.txt') for file in test_imgs]
+
+            # now also add emtpy images to train
+            n_tot_imgs =  int(len(train_imgs) * (1+ self.empty_perc))
+            n_empty_imgs = int(self.empty_perc * n_tot_imgs)
+            additional_empty_imgs = empty_images[:n_empty_imgs]
+            for image in additional_empty_imgs:
+                train_imgs.append(image)
+
+            labels = [train_labels, val_labels, test_labels]
+
+            return images, labels
+
+
+    def get_trainvaltest(self) :
+
+        traindir = os.path.join(self.dst_root, self.task, 'train')
+        valdir = os.path.join(self.dst_root, self.task, 'val')
+        testdir =  os.path.join(self.dst_root, self.task, 'test')
+
+        # 1) check if dataset already exists:
+        skip_splitting = self._check_already_splitted()
+        if skip_splitting:
+            print('Files are already splitted into train, val and test.')
+            self.log.info(f"Getting YOLO image tiles: ✅")
+            self.log.info(f"Getting YOLO label tiles: ✅")
+            self.log.info("Splitting in train, val, test sets ✅. ")
+            return traindir, valdir, testdir
+        else:
+            print(f"clearing dataset")
+            self._clear_dataset()
+
+        if self.task == 'segmentation':
+            
+            print(f"splitting for segmentation task has not yet been implemented.")
+            raise NotImplementedError()
+            image_list, mask_list = self._get_images_masks()
+            images, masks = self._split_images_trainvaltest(image_list = image_list, mask_list= mask_list)
+            self._makedirs_moveimages(images=images, masks=masks)
+            
+        elif self.task == 'detection':
+
+            images_dir, labels_dir = self._get_yolo_data() 
+            images_list = [os.path.join(images_dir, file) for file in os.listdir(images_dir) if 'DS' not in file]
+            full_fnames = [file.split('.')[0] for file in os.listdir(labels_dir)] # images with labelled obj
+            full_images = [os.path.join(images_dir, f"{fname}.png") for fname in full_fnames]
+            empty_images = [file for file in images_list if file not in full_images]
+            print(f"full images: {len(full_images)}, empty images: {len(empty_images)}")
+
+
+            images, labels = self._split_images_trainvaltest(image_list = full_images, empty_images= empty_images)
+            self._makedirs_moveimages(images=images, labels=labels)
+
+
+        assert os.path.isdir(traindir), f"{traindir} is not a dir."
+        assert os.path.isdir(valdir), f"{valdir} is not a dir."
+        assert os.path.isdir(testdir), f"{testdir} is not a dir."
+
+        self.log.info("Splitting in train, val, test sets ✅. ")
+
+        return traindir, valdir, testdir
+
 
     def __call__(self) :
 
-        # 1) clear existing datasets/make new one:
-        self._clear_dataset()
-
-        # 2) process images and labels:
         if self.task == 'detection':
-            _, _ = self._get_yolo_data() 
+            traindir, valdir, testdir = self.get_trainvaltest()
         
-        elif self.task == 'segmentation':
-            print(f"❌ Splitting for segmentation task has not yet been implemented.")
+        else:
             raise NotImplementedError()
 
-        return 
+        return traindir, valdir, testdir
 
 
 def test_WSI_Processor():

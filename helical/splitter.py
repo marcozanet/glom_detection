@@ -83,7 +83,7 @@ class Splitter():
         # 5) move to new dataset
         self._move_files(images = images, labels = labels, dataset_dir=dataset_dir)
 
-        return
+        return images
     
     def _split_slides(self, 
                     image_list: list, 
@@ -280,6 +280,111 @@ class Splitter():
                     shutil.copy(src = src_label, dst = dst_label)
                 else:
                     shutil.move(src = src_img, dst = dst_img)
+    
+
+    def move_already_tiled(self, tile_root:str):
+        """ Moves tiles already tiled from root/images and root/labels to the 
+            new_dataset and splits them based on the wsi splitting."""
+        assert os.path.isdir(tile_root), f"'tile_root':{tile_root} is not a valid filepath."
+
+        print(f"Moving already tiled images:")
+
+        # 1) get slides fnames and folders:
+        slides = []
+        for root, dirs, files in os.walk(os.path.join(self.src_dir, self.task)):
+            for file in files:
+                if 'tif' in file:
+                    slides.append(os.path.join(root, file))
+        
+        slides = [(os.path.dirname(slide), os.path.basename(slide).split('.')[0]) for slide in slides]
+
+        # 2) make new folders for tiles:
+        new_datafolder = os.path.join(self.dst_dir, self.task, 'tiles')
+        if os.path.isdir(new_datafolder):
+            shutil.rmtree(path = new_datafolder)
+            print(f"Dataset at: {new_datafolder} removed.")
+        subfolds_names = ['train', 'val', 'test']
+        subsubfolds_names = ['images', 'labels']
+        for subfold in subfolds_names:
+            for subsubfold in subsubfolds_names:
+                os.makedirs(os.path.join(new_datafolder, subfold, subsubfold), exist_ok=True)
+
+        # 3) for each tile, find its corresponding folder and move/copy it there:
+        tile_images_fold = os.path.join(tile_root, 'images')
+        n_moved_images = 0
+        for tile_fn in tqdm(os.listdir(tile_images_fold), desc = "Moving images"):
+            src_fp = os.path.join(tile_root, 'images', tile_fn)
+            for slide_folder, slide_fn in slides:
+                if slide_fn in src_fp:
+                    dst_fp = os.path.join(slide_folder, tile_fn).replace('wsi', 'tiles')
+                    if not os.path.isfile(dst_fp):
+                        shutil.copy(src = src_fp, dst = dst_fp)
+                        n_moved_images+= 1
+
+        
+        # 4) do the same for labels:
+        n_moved_labels = 0
+        tile_labels_fold = os.path.join(tile_root, 'labels')
+        for tile_fn in tqdm(os.listdir(tile_labels_fold), desc = "Moving labels"):
+            src_fp = os.path.join(tile_root, 'labels', tile_fn)
+            for slide_folder, slide_fn in slides:
+                if slide_fn in src_fp:
+                    dst_fp = os.path.join(slide_folder, tile_fn).replace('wsi', 'tiles').replace('images', 'labels')
+                    # print(src_fp, dst_fp)
+                    if not os.path.isfile(dst_fp):
+                        shutil.copy(src = src_fp, dst = dst_fp)
+                        n_moved_labels+= 1
+
+        print(f"Moved {n_moved_images} images from {len(os.listdir(tile_images_fold))} original images")
+        print(f"Moved {n_moved_labels} labels from {len(os.listdir(tile_labels_fold))} original labels ")
+
+        return
+    
+    def _remove_empty_images(self):
+
+        # print(os.path.join(dst_dir, task, 'tiles', '*', 'labels', '*.txt' ))
+        # 1) get all image tiles from the train, val, test
+        train_images = glob(os.path.join(self.dst_dir, self.task, 'tiles', 'train', 'images', '*.png' ))
+        assert all(['wsi' not in file for file in train_images]), f"All selected files should be tile images, not wsi images."
+        assert all(['images' in file for file in train_images]), f"All selected files should be tile images, not labels."
+        assert len(train_images)> 0, f"No image found."
+        # 2) get all label tiles from train, val, test
+        train_labels = glob(os.path.join(self.dst_dir, self.task, 'tiles', 'train', 'labels', '*.txt' ))
+        train_labels = [label for label in train_labels if 'test' not in train_labels]
+        assert all(['wsi' not in file for file in train_labels]), f"All selected files should be tile labels, not wsi labels."
+        assert all(['labels' in file for file in train_labels]), f"All selected files should be tile labels, not images."
+        assert len(train_labels)> 0, f"No label found."
+
+        # 3) collect images without a label (i.e. empty)
+        train_empty = [image for image in train_images if image.replace('images', 'labels').replace('png', 'txt') not in train_labels]
+        assert all([not os.path.isfile(image.replace('images', 'labels').replace('png', 'txt')) for image in train_empty])
+
+        # 4) from this files keep an empty_perc and delete the other ones:
+        train_full = [image for image in train_images if image.replace('images', 'labels').replace('png', 'txt') in train_labels]
+        # train_images, trin_labels = [image for image in images if 'val' in image], [label for label in labels if 'val' in labels]
+        
+        # check if empty percantage already <= empty_perc:
+        if (len(train_empty)/len(train_images)) <= self.empty_perc:
+            print(f"Empty perc of images: {round(len(train_empty)/len(train_images), 2)} already <= {self.empty_perc}. ")
+            return
+
+        # delete random empty images:
+        # print(f"train images: {len(train_images)}")
+        # print(f'train_full: {len(train_full)}')
+        # print(f"train empty: {len(train_empty)}")
+        n_train_wished =  int(len(train_full) * (1+ self.empty_perc))
+        n_del_train =  len(train_images) - n_train_wished 
+        train_del_imgs = random.sample(train_empty, n_del_train )
+        assert all([not os.path.isfile(image.replace('images', 'labels').replace('png', 'txt')) for image in train_del_imgs])
+        for file in tqdm(train_del_imgs):
+            os.remove(file)
+        final_train_images = glob(os.path.join(self.dst_dir, self.task, 'tiles', 'train', 'images', '*.png' ))
+        print(f"Removed {n_del_train} empty images. Train images: {len(train_images)} -> {len(final_train_images)} .")
+        assert len(final_train_images) == n_train_wished, f"Wished: {n_train_wished}, obtained: {len(final_train_images)}"
+
+
+        return
+
 
     def __call__(self):
 
@@ -297,35 +402,35 @@ class Splitter():
 
 def test_Splitter():
 
-    print(" ########################    TEST 1: ⏳    ########################")
-    src_dir = '/Users/marco/Downloads/another_test'
-    dst_dir = '/Users/marco/Downloads/boh'
-    image_format = 'tif'
-    ratio = [0.7, 0.3]
-    task = 'detection'
-    verbose = True
-    safe_copy = True
+    # print(" ########################    TEST 1: ⏳    ########################")
+    # src_dir = '/Users/marco/Downloads/another_test'
+    # dst_dir = '/Users/marco/Downloads/boh'
+    # image_format = 'tif'
+    # ratio = [0.7, 0.3]
+    # task = 'detection'
+    # verbose = True
+    # safe_copy = True
 
-    splitter = Splitter(src_dir=src_dir,
-                        dst_dir=dst_dir,
-                        image_format=image_format,
-                        ratio=ratio,
-                        task=task,
-                        verbose = verbose, 
-                        safe_copy = safe_copy)
-    splitter()
-    print(" ########################    TEST 1: ✅    ########################")
+    # splitter = Splitter(src_dir=src_dir,
+    #                     dst_dir=dst_dir,
+    #                     image_format=image_format,
+    #                     ratio=ratio,
+    #                     task=task,
+    #                     verbose = verbose, 
+    #                     safe_copy = safe_copy)
+    # splitter()
+    # print(" ########################    TEST 1: ✅    ########################")
 
     # raise Exception
 
-    print(f"Testing: dataset removed.")
-    shutil.rmtree(path= os.path.join(dst_dir, task) )
+    # print(f"Testing: dataset removed.")
+    # shutil.rmtree(path= os.path.join(dst_dir, task) )
 
     print(" ########################    TEST 2: ⏳     ########################")
-    src_dir = '/Users/marco/Downloads/another_test'
-    dst_dir = '/Users/marco/Downloads/boh'
+    src_dir = '/Users/marco/Downloads/try_train'
+    dst_dir = '/Users/marco/Downloads/try_train'
     image_format = 'tif'
-    ratio = [0.6, 0.3, 0.1]
+    ratio = [0.4, 0.1, 0.5]
     task = 'detection'
     verbose = True
     safe_copy = True
@@ -339,6 +444,9 @@ def test_Splitter():
                         safe_copy = safe_copy)
     splitter()
     print(" ########################    TEST 2: ✅    ########################")
+
+    splitter.move_already_tiled(tile_root = '/Users/marco/Downloads/try_train')
+    splitter._remove_empty_images()
 
 
     return

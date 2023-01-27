@@ -1,1 +1,4 @@
-24/01 18:54 INFO - _check_already_splitted: Dataset already splitted in train, val, test sets ✅. 
+27/01 17:16 INFO - _edit_yaml: ⏳ Setting configurations for YOLO: 
+27/01 17:16 INFO - _edit_yaml: ✅ YOLO set up completed YOLO ✅ .
+27/01 17:16 INFO - train: ⏳ Start training YOLO:
+27/01 17:29 INFO - train: Training YOLO done ✅ . Training duration: 0:12:19.419878

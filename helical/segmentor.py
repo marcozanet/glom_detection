@@ -12,9 +12,10 @@ import time
 import datetime
 from loggers import get_logger
 from typing import Literal, List
+from manager import Manager
 
 
-class Manager():
+class Segmentor(Manager):
 
     def __init__(self, 
                 src_folder:str,
@@ -102,6 +103,7 @@ class Manager():
             self.yolov5dir = '/Users/marco/yolov5'
             self.unet_weights_save_path = unet_weights_save_path
             self.code_dir = os.path.join(self.yolodir, 'code')
+
 
         return
     

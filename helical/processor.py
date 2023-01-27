@@ -15,7 +15,7 @@ import random
 from loggers import get_logger
 
 
-class TileProcessor():
+class Processor():
 
     def __init__(self,
                 src_root: str, 
