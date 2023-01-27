@@ -148,7 +148,7 @@ class YOLODetector():
         self.log.info(f"Inference YOLO done ✅ .")
 
         return
-        
+
 
     def _edit_yaml(self) -> None:
         """ Edits YAML data file from yolov5. """
@@ -193,11 +193,10 @@ class YOLODetector():
 
 def test_YOLODetector(): 
 
-    yolodir = '/Users/marco/yolo/code/helical'
-    # code_dir = ''
-    # yolodir = '/Users/marco/yolo'
-    yolov5dir = '/Users/marco/yolov5'
-    # code_dir = os.path.join(self.yolodir, 'code')
+    system = 'mac'
+    yolodir = '/Users/marco/yolo/code/helical' if system == 'mac' else 'C:\marco\code\glom_detection\helical'
+    yolov5dir = '/Users/marco/yolov5' if system == 'mac' else 'C:\marco\yolov5'
+
     data_folder = '/Users/marco/Downloads/try_train/detection/tiles'
     map_classes = {'Glo-healthy':0, 'Glo-NA':1, 'Glo-unhealthy':2, 'Tissue':3}
     tile_size = 512
