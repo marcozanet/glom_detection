@@ -1,1 +1,6 @@
-28/01 18:44 INFO - get_yolo_images: Getting YOLO image tiles: ⏳
+30/01 15:59 INFO - _edit_yaml: ⏳ Setting configurations for YOLO: 
+30/01 15:59 INFO - _edit_yaml: ✅ YOLO set up completed YOLO ✅ .
+30/01 15:59 INFO - train: ⏳ Start training YOLO:
+30/01 16:02 INFO - save_training_data: Training YOLO done ✅ . Training duration: 0:02:39.577146
+30/01 16:02 INFO - _edit_yaml: ⏳ Setting configurations for YOLO: 
+30/01 16:02 INFO - _edit_yaml: ✅ YOLO set up completed YOLO ✅ .

@@ -152,15 +152,15 @@ def test_WSI_Processor():
     
     print(" ########################    TEST 1: ⏳     ########################")
     # setting:
-    src_root = '/Users/marco/Downloads/muw_slides'
-    dst_root = '/Users/marco/Downloads/muw_slides'
+    src_root = '/Users/marco/Downloads/test_folders/test_processor/send_windows'
+    dst_root = '/Users/marco/Downloads/test_folders/test_processor/send_windows'
     ratio = [0.7, 0.15, 0.15]
     task = 'detection'
     convert_from = 'gson_wsi_mask'
     convert_to = 'txt_wsi_bboxes'    
     empty_perc =  0.1 
     step = 1024
-    slide_format= 'tif'
+    slide_format= 'tif' 
     tile_shape = (4096, 4096)
     verbose = False
     # make dirs:

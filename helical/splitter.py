@@ -427,8 +427,8 @@ def test_Splitter():
     # shutil.rmtree(path= os.path.join(dst_dir, task) )
 
     print(" ########################    TEST 2: ⏳     ########################")
-    src_dir = '/Users/marco/Downloads/try_train'
-    dst_dir = '/Users/marco/Downloads/try_train'
+    src_dir = '/Users/marco/Downloads/muw_slides'
+    dst_dir = '/Users/marco/Downloads/muw_slides'
     image_format = 'tif'
     ratio = [0.4, 0.1, 0.5]
     task = 'detection'
@@ -445,7 +445,7 @@ def test_Splitter():
     splitter()
     print(" ########################    TEST 2: ✅    ########################")
 
-    splitter.move_already_tiled(tile_root = '/Users/marco/Downloads/try_train')
+    splitter.move_already_tiled(tile_root = '/Users/marco/Downloads/muw_slides')
     splitter._remove_empty_images()
 
 
