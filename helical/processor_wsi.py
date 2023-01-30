@@ -152,8 +152,8 @@ def test_WSI_Processor():
     
     print(" ########################    TEST 1: ⏳     ########################")
     # setting:
-    src_root = '/Users/marco/Downloads/test_folders/test_processor'
-    dst_root = '/Users/marco/Downloads/test_folders/test_processor'
+    src_root = '/Users/marco/Downloads/muw_slides'
+    dst_root = '/Users/marco/Downloads/muw_slides'
     ratio = [0.7, 0.15, 0.15]
     task = 'detection'
     convert_from = 'gson_wsi_mask'

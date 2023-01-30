@@ -201,7 +201,7 @@ def test_YOLODetector():
     map_classes = {'Glo-healthy':0, 'Glo-NA':1, 'Glo-unhealthy':2, 'Tissue':3}
     tile_size = 512
     batch_size=8
-    epochs=2
+    epochs=30
     conf_thres=0.7
     detector = YOLODetector(data_folder=data_folder,
                             yolodir=yolodir,

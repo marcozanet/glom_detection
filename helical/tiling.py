@@ -332,7 +332,7 @@ class Tiler():
             assert len(rect['geometry']['coordinates'][0]) == 5, f"There seems to be more than 4 vertices annotated. "
 
             vertices = rect['geometry']['coordinates'][0][:-1]
-            print(f"vertices: {vertices}")
+            print(f" {vertices}")
             location = vertices[0]
             h =  vertices[1][1] - vertices[0][1]
             w =  vertices[2][0] - vertices[0][0]
