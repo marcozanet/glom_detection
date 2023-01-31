@@ -95,10 +95,10 @@ def pair_up(root:str,
 
 
 def test_pair_up():
-    root = '/Users/marco/converted'
+    root = '/Users/marco/converted_30_01_23'
     slide_format = '.tif_pyr.tif'
     label_format = '.mrxs.gson'
-    save_folder = '/Users/marco/Downloads/muw_slides'
+    save_folder = '/Users/marco/Downloads/muw'
 
     pair_up(root=root, 
             save_folder=save_folder,

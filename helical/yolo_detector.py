@@ -215,7 +215,6 @@ def test_YOLODetector():
     system = 'mac'
     repository_dir = '/Users/marco/yolo/code/helical' if system == 'mac' else 'C:\marco\code\glom_detection\helical'
     yolov5dir = '/Users/marco/yolov5' if system == 'mac' else 'C:\marco\yolov5'
-
     data_folder = '/Users/marco/Downloads/try_train/detection/tiles' if system == 'mac' else r'C:\marco\biopsies\muw\detection\tiles'
     map_classes = {'Glo-healthy':0, 'Glo-NA':1, 'Glo-unhealthy':2, 'Tissue':3}
     tile_size = 512
@@ -248,5 +247,3 @@ def test_YOLODetector():
 if __name__ == '__main__':
     
     test_YOLODetector()
-
-    

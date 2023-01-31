@@ -451,15 +451,15 @@ class Tiler():
 def test_Tiler():
 
     print(" ########################    TEST 1: ⏳    ########################")
-    folder = '/Users/marco/Downloads/try_train'
-    save_root = '/Users/marco/Downloads/try_train'
+    folder = '/Users/marco/Downloads/muw_slides'
+    save_root = '/Users/marco/Downloads/muw_slides'
     tiler = Tiler(folder = folder, 
                   tile_shape= (4096, 4096), 
                   step=2048, 
                   save_root= save_root, 
                   verbose = True)
     # tiler._split_multisample_annotation(txt_file=)
-    tiler(target_format='txt')
+    tiler(target_format='tif')
     # tiler(target_format='txt')
     print(" ########################    TEST 1: ✅    ########################")
 

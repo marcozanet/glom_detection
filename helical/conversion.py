@@ -97,7 +97,10 @@ class Converter():
         # access polygon vertices of each glom
         for glom in data:
             vertices = glom['geometry']['coordinates']
-            class_name = glom['properties']['classification']['name']
+            try: 
+                class_name = glom['properties']['classification']['name']
+            except:
+                class_name = 'Glo-NA'
             class_value = self.map_classes[class_name]
             
             # saving outer coords (bounding boxes) for each glom
@@ -262,11 +265,11 @@ class Converter():
 
 
 def test_Converter():
-    folder = '/Users/marco/Downloads/try_train'
+    folder = '/Users/marco/Downloads/muw_slides'
     converter = Converter(folder = folder, 
                           convert_from='gson_wsi_mask', 
                           convert_to='txt_wsi_bboxes',
-                          save_folder= '/Users/marco/Downloads/try_train', 
+                          save_folder= '/Users/marco/Downloads/heeee', 
                           verbose=False)
     converter()
 
