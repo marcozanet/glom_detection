@@ -18,6 +18,7 @@ from skimage import io, draw
 import cv2
 import geojson
 from typing import Literal
+import random
 
 
 class Tiler():
@@ -455,7 +456,7 @@ def test_Tiler():
     save_root = '/Users/marco/Downloads/muw_slides'
     tiler = Tiler(folder = folder, 
                   tile_shape= (4096, 4096), 
-                  step=2048, 
+                  step=1024, 
                   save_root= save_root, 
                   verbose = True)
     # tiler._split_multisample_annotation(txt_file=)

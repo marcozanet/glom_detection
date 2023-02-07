@@ -25,6 +25,7 @@ class YOLODetector():
                 repository_dir:str,
                 map_classes: dict = {'Glo-healthy':0, 'Glo-NA':1, 'Glo-unhealthy':2, 'Tissue':3},
                 # system = 'mac',
+                save_features: bool = False,
                 tile_size = 512,
                 batch_size = 8,
                 epochs = 3,
@@ -42,6 +43,7 @@ class YOLODetector():
         self.conf_thres = conf_thres
         self.repository_dir = repository_dir
         self.yolov5dir = yolov5dir
+        self.save_features = save_features
         # self.system = system
 
 
@@ -68,9 +70,48 @@ class YOLODetector():
         # 3) save:
         self.save_training_data(weights=weights, start_time=start_time)
 
-
         return  
 
+
+    def _prepare_inference(self, yolo_weights:str = None) -> str:
+        """ Prepares inference with YOLO. """
+
+        # get model:
+        os.chdir(self.yolov5dir)
+        if yolo_weights is None:
+            weights_dir = utils_yolo.get_last_weights()
+        else:
+            weights_dir = os.path.dirname(yolo_weights)
+
+        self.log.info(f"Prepared YOLO for inference ✅ .")
+
+        return weights_dir
+
+
+    def infere(self, images_dir: str, yolo_weights:str = None, infere_augment:bool = False) -> None:
+        """ Predicts bounding boxes for images in dir and outputs txt labels for those boxes. """
+
+        assert os.path.isdir(images_dir), ValueError(f"'images_dir': {images_dir} is not a valid dirpath.")
+
+        # 1) prepare inference:
+        weights_dir = self._prepare_inference(yolo_weights=yolo_weights)
+
+        # 2) define command:
+        command = f'python detect.py --source {images_dir} --weights {weights_dir} --data data/helical.yaml --device cpu --save-txt '
+        if infere_augment is True:
+            command += " --augment"
+        if self.conf_thres is not None:
+            command += f" --conf_thres {self.conf_thres}" 
+        if self.save_features is True:
+            command += f" --visualize" 
+
+        # 3) infere (e.g. predict):
+        self.log.info(f"Start inference YOLO: ⏳")
+        os.system(command)
+        os.chdir(self.repository_dir)
+        self.log.info(f"Inference YOLO done ✅ .")
+
+        return
 
     def _prepare_testing(self, yolo_weights:bool = False ) -> str:
         """ Prepares testing with YOLO. """
@@ -109,43 +150,7 @@ class YOLODetector():
         return
 
 
-    def _prepare_inference(self, yolo_weights:str = None) -> str:
-        """ Prepares inference with YOLO. """
 
-        # get model:
-        os.chdir(self.yolov5dir)
-        if yolo_weights is None:
-            weights_dir = utils_yolo.get_last_weights()
-        else:
-            weights_dir = os.path.dirname(yolo_weights)
-
-        self.log.info(f"Prepared YOLO for inference ✅ .")
-
-        return weights_dir
-
-
-    def infere(self, images_dir: str, yolo_weights:str = None, infere_augment:bool = False) -> None:
-        """ Predicts bounding boxes for images in dir and outputs txt labels for those boxes. """
-
-        assert os.path.isdir(images_dir), ValueError(f"'images_dir': {images_dir} is not a valid dirpath.")
-
-        # 1) prepare inference:
-        weights_dir = self._prepare_inference(yolo_weights=yolo_weights)
-
-        # 2) define command:
-        command = f'python detect.py --source {images_dir} --weights {weights_dir} --data data/hubmap.yaml --device cpu --save-txt '
-        if infere_augment is True:
-            command += " --augment"
-        if self.conf_thres is not None:
-            command += f" --conf_thres {self.conf_thres}" 
-
-        # 3) infere (e.g. predict):
-        self.log.info(f"Start inference YOLO: ⏳")
-        os.system(command)
-        os.chdir(self.repository_dir)
-        self.log.info(f"Inference YOLO done ✅ .")
-
-        return
 
 
     def _edit_yaml(self) -> None:
@@ -217,6 +222,7 @@ def test_YOLODetector():
     yolov5dir = '/Users/marco/yolov5' if system == 'mac' else 'C:\marco\yolov5'
     data_folder = '/Users/marco/Downloads/try_train/detection/tiles' if system == 'mac' else r'C:\marco\biopsies\muw\detection\tiles'
     map_classes = {'Glo-healthy':0, 'Glo-NA':1, 'Glo-unhealthy':2, 'Tissue':3}
+    save_features = True
     tile_size = 512
     batch_size=8
     epochs=1
@@ -228,6 +234,7 @@ def test_YOLODetector():
                             tile_size = tile_size,
                             batch_size=batch_size,
                             epochs=epochs,
+                            save_features=save_features,
                             conf_thres=conf_thres)
     # ON MAC DO:
     detector.train()

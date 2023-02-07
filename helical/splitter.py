@@ -17,7 +17,7 @@ class Splitter():
                 #  label_format: Literal['txt', 'gson', 'json'],
                  empty_perc: float = 0.1,
                  ratio = [0.7, 0.15, 0.15], 
-                 task = Literal['detection', 'segmentation', 'both'],
+                 task = Literal['detection', 'segmentation', 'MIL', 'mil', 'both'],
                  safe_copy:bool = True,
                  verbose:bool = False) -> None:
 
@@ -25,12 +25,13 @@ class Splitter():
 
         ALLOWED_IMAGE_FORMATS = ['tif', 'tiff', 'png']
         ALLOWED_LABEL_FORMATS = ['txt', 'gson', 'json']
+        ALLOWED_TASKS = ['detection', 'segmentation', 'MIL', 'mil', 'both']
 
         assert image_format in ALLOWED_IMAGE_FORMATS, f"'image_format':{image_format} should be one of {ALLOWED_IMAGE_FORMATS}"
         # assert label_format in ALLOWED_LABEL_FORMATS, f"'label_format':{label_format} should be one of {ALLOWED_LABEL_FORMATS}"
         assert os.path.isdir(dst_dir), f"'dst_dir':{dst_dir} is not a valid filepath."
         assert os.path.isdir(src_dir), f"'src_dir':{src_dir} is not a valid filepath."
-        assert task in ['segmentation', 'detection', 'both'], ValueError(f"'task'= {task} should be either segmentation, detection or both. ")
+        assert task in ALLOWED_TASKS, ValueError(f"'task'= {task} should be one of {ALLOWED_TASKS}. ")
         assert isinstance(ratio, List), TypeError(f"'ratio' should be left empty or be a list. ")
         try:    
             ratio = [float(value) if isinstance(value, str) else value for value in ratio]
@@ -443,11 +444,33 @@ def test_Splitter():
                         verbose = verbose, 
                         safe_copy = safe_copy)
     splitter()
+    # splitter.move_already_tiled(tile_root = '/Users/marco/Downloads/muw_slides')
+    # splitter._remove_empty_images()
     print(" ########################    TEST 2: ✅    ########################")
 
-    splitter.move_already_tiled(tile_root = '/Users/marco/Downloads/muw_slides')
-    splitter._remove_empty_images()
 
+    print(" ########################    TEST 3: ⏳     ########################")
+    src_dir = '/Users/marco/Downloads/test_folders/test_featureextractor/images'
+    dst_dir = '/Users/marco/Downloads/test_folders/test_milsplitter'
+    image_format = 'png'
+    ratio = [0.4, 0.1, 0.5]
+    task = 'detection'
+    verbose = True
+    safe_copy = True
+
+    splitter = Splitter(src_dir=src_dir,
+                        dst_dir=dst_dir,
+                        image_format=image_format,
+                        ratio=ratio,
+                        task=task,
+                        verbose = verbose, 
+                        safe_copy = safe_copy)
+    splitter()
+    # splitter.move_already_tiled(tile_root = '/Users/marco/Downloads/muw_slides')
+    # splitter._remove_empty_images()
+    print(" ########################    TEST 3: ✅    ########################")
+
+    
 
     return
 

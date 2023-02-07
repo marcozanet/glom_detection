@@ -1,6 +1,2 @@
-30/01 15:59 INFO - _edit_yaml: ⏳ Setting configurations for YOLO: 
-30/01 15:59 INFO - _edit_yaml: ✅ YOLO set up completed YOLO ✅ .
-30/01 15:59 INFO - train: ⏳ Start training YOLO:
-30/01 16:02 INFO - save_training_data: Training YOLO done ✅ . Training duration: 0:02:39.577146
-30/01 16:02 INFO - _edit_yaml: ⏳ Setting configurations for YOLO: 
-30/01 16:02 INFO - _edit_yaml: ✅ YOLO set up completed YOLO ✅ .
+06/02 15:20 INFO - infere: Start inference YOLO: ⏳
+06/02 17:29 INFO - infere: Inference YOLO done ✅ .
