@@ -2,7 +2,7 @@ import sys
 sys.path.append("/Users/marco/yolo/code")
 import unittest
 
-from helical.conversion import Converter
+from helical.converter import Converter
 
 def test_Converter():
     """ Tests converter class. """

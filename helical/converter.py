@@ -4,7 +4,7 @@ from typing import List
 import geojson
 from glob import glob
 import json
-from dirtyparser import JsonLikeParser
+# from dirtyparser import JsonLikeParser
 from typing import Literal
 import numpy as np
 
@@ -209,6 +209,7 @@ class Converter():
 
     def _convert_jsonliketxt2txt(self, jsonliketxt_file:str) -> None:
         """ Saves into a file the bbox in YOLO format. NB values are NOT normalized."""
+        raise NotImplementedError()
 
         parser = JsonLikeParser(fp = jsonliketxt_file, 
                                 save_folder=self.save_folder, 

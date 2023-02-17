@@ -37,7 +37,6 @@ class Profiler():
         self.samples_slides = list(map(self._get_nsamples_inslide, self.data['wsi_images']))
         self.gloms_slides = self._get_gloms_samples()
         # print(self.gloms_slides)
-        self.show_summary()
 
         return
     
@@ -50,7 +49,6 @@ class Profiler():
         tile_images = glob(os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like))
         tile_labels = glob(os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like))
         data = {'wsi_images':wsi_images, 'wsi_labels':wsi_labels, 'tile_images':tile_images,  'tile_labels':tile_labels }
-
 
         return data
     
@@ -103,7 +101,26 @@ class Profiler():
 
         return new_list
     
+    def _get_empty_images(self):
+
+        tile_images = self.data['tile_images']
+        tile_labels = self.data['tile_labels']
+
+        empty_images = [file for file in tile_images if os.path.join(os.path.dirname(file).replace('images', 'labels'), os.path.basename(file).replace(self.tiles_image_format,self.tiles_label_format)) not in tile_labels]
+        empty_images = [file for file in empty_images if "DS" not in empty_images and self.tiles_image_format in file]
+        empty_images = [file for file in empty_images if os.path.isfile(file)]
+
+        full_images = [file for file in tile_images if os.path.join(os.path.dirname(file).replace('images', 'labels'), os.path.basename(file).replace(self.tiles_image_format,self.tiles_label_format)) in tile_labels]
+        unpaired_labels = [file for file in tile_labels if os.path.join(os.path.dirname(file).replace('labels', 'images'), os.path.basename(file).replace(self.tiles_label_format, self.tiles_image_format)) not in tile_images]
+        
+        if len(unpaired_labels) > 2:
+            print(f"❗️ Found {len(unpaired_labels)} labels that don't have a matching image. Maybe deleting based on size also deleted images with objects?")
+
+        return full_images, empty_images
+    
     def show_summary(self): 
+
+        self._get_empty_images()
         
         # 1) Gloms per tissue sample:
         df = pd.DataFrame(data = self.gloms_slides, columns = ['sample', 'n_gloms'])
@@ -112,19 +129,15 @@ class Profiler():
         plt.title('Barplot #gloms per tissue sample')
         plt.xlabel('#gloms_per_sample')
 
+        plt.show()
+
 
         return
+    
+    def __call__(self) -> None:
+        self.show_summary()
 
-
-    # def get_glom_per_sample(self):
-
-    #     # 1) get correspondent label
-    #     for wsi_fn, n_sample in 
-
-
-
-    #     return
- 
+        return
 
 
 
@@ -132,6 +145,7 @@ def test_Profiler():
     system = 'mac'
     data_root = '/Users/marco/Downloads/try_train/detection' if system == 'mac' else r'C:\marco\biopsies\muw\detection'
     profiler = Profiler(data_root=data_root)
+    profiler()
 
     return
 

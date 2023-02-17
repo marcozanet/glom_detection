@@ -33,6 +33,7 @@ class BagCreator():
 
         # get #samples per slide: 
         wsi_fnames = list(set([os.path.basename(file).split('_SFOG')[0] for file in images]))
+        # print(wsi_fnames)
         wsi_samples = {}
         for wsi in wsi_fnames:
             samples = [int(file.split('sample')[1].split('_')[0]) for file in images if wsi in file]
@@ -47,15 +48,15 @@ class BagCreator():
         for wsi, n_samples in wsi_samples.items():
             for i in range(n_samples):
                 files = sorted([os.path.basename(file) for file in images if f"{wsi}_SFOG_sample{i}" in file])
-                # print(f"files: {len(files)}")
+                # print(f"files: {(files)}")
                 somma += len(files)
 
                 # fill bags:
                 n_bags = len(files) // 9 
-                remaining = files
+                remaining = [os.path.join(self.instances_folders, file) for file in files]
                 for _ in range(n_bags):
                     selected = random.sample(remaining, k = 9)
-                    remaining = [os.path.join(self.instances_folders, file) for file in remaining if file not in selected ]
+                    remaining = [file for file in remaining if file not in selected ]
                     bags[bag_n] = selected
                     bag_n += 1
                 if len(remaining) > 0:
@@ -102,19 +103,26 @@ class BagCreator():
 
         bag_features = {}
         for bag, instances in bags_instances.items():
-            samples = [file.replace('.png', '') for file in instances]
-            print(samples)
-            print((os.path.join(self.exp_folder, samples[0], "*.npy")))
+            # print(instances)
+            samples = [os.path.basename(file).replace('.png', '') for file in instances]
+            # print(samples)
+            # print((os.path.join(self.exp_folder, samples[0], "*.npy")))
             np_features = sorted([glob(os.path.join(self.exp_folder, sample, "*.npy")) for sample in samples])
-            print(np_features)
+            # print(np_features)s
+            # print([os.path.isfile(feat) for feat in np_features])
+            # assert all([os.path.isfile(feat) for feat in np_features]), f"Not all of the np_features:{np_features} are valid/existing filepaths."
+            # print(np_features)
+            assert all([len(np_feat) > 0 for np_feat in np_features]), f"Not all of the np_features:{np_features} are valid/existing filepaths."
             np_features = [feat_ls[-1] for feat_ls in np_features]
             bag_features[bag] = np_features
 
-            raise NotImplementedError()
+            # raise NotImplementedError()
 
-        print(bag_features)
+        # print('feautures:')
+        # print(bag_features)
+        # raise NotImplementedError()
         
-        return
+        return bag_features
 
     
     def summary(self, bags_instances:dict, bags_labels:dict):
@@ -130,11 +138,19 @@ class BagCreator():
     def __call__(self):
 
         bags_instances = self.get_bags_instances()
+        # print(f"bags instances: {bags_instances}")
         bags_labels = self.get_bags_labels(bags = bags_instances)
         bags_labels = self._fake_labels_(bag_labels=bags_labels)
+
         bags_features = self._get_bag_features(bags_instances=bags_instances)
+        # print(f"bags labels: {bags_labels}")
+        # raise NotImplementedError()
 
         self.summary(bags_instances=bags_instances, bags_labels=bags_labels)
+        assert len(bags_instances) == len(bags_features) == len(bags_labels), f"Instances, features and labels don't have same length: instances: {len(bags_instances)}, features: {len(bags_features)}, labels: {len(bags_labels)}"
+        # print(f"instances: {len(bags_instances)}, features: {len(bags_features)}, labels: {len(bags_labels)}")
+        print(f"instances: {type(bags_instances[0])}, features: {type(bags_features[0])}, labels: {type(bags_labels[0])}")
+
 
         return bags_instances, bags_features, bags_labels
 
@@ -154,12 +170,12 @@ class BagCreator():
 
 
 def test_BagCreator():
-    instances_folder = '/Users/marco/Downloads/try_train/detection/tiles/test/images'
-    exp_folder = '/Users/marco/yolov5/runs/detect/exp2'
+    instances_folder = '/Users/marco/Downloads/test_folders/test_bagcreator/images'
+    exp_folder = '/Users/marco/yolov5/runs/detect/exp7'
     sclerosed_idx=2
     creator = BagCreator(instances_folder=instances_folder, 
-                        sclerosed_idx=sclerosed_idx, 
-                        exp_folder=exp_folder)
+                         sclerosed_idx=sclerosed_idx, 
+                         exp_folder=exp_folder)
     creator()
 
     return

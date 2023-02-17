@@ -32,7 +32,8 @@ class MILDataset(Dataset):
         creator = BagCreator(instances_folder=instances_folder, 
                             sclerosed_idx=sclerosed_idx, 
                             exp_folder=exp_folder)
-        self.bags_instances, self.bags_features, self.bags_labels = creator()   
+        self.bags_instances, self.bags_features, self.bags_labels = creator()  
+        print('kskhsd') 
 
         return 
 
@@ -45,10 +46,32 @@ class MILDataset(Dataset):
         
         bag_features: np.ndarray
         bag_label: int
-        bag_features = np.load(file=self.bags_features[idx])
+        bag_features = self.bags_features[idx]
         bag_label = self.bags_labels[idx]
 
-        print(f"'bag_features', shape: {bag_features.shape}. Bag label: {bag_label}")
+        print(f"'bag_features':{len(bag_features)}, bag_instances:{len(self.bags_instances[idx])}. Bag label: {bag_label}")
 
         return bag_features, bag_label
+
+
+def test_MILDataset():
+    import random
+    instances_folder = '/Users/marco/Downloads/test_folders/test_bagcreator/images'
+    exp_folder = '/Users/marco/yolov5/runs/detect/exp7'
+    sclerosed_idx=2
+    dataset = MILDataset(instances_folder=instances_folder,
+                         exp_folder=exp_folder, 
+                         sclerosed_idx=sclerosed_idx)
     
+    print(f"Dataset has {len(dataset)} bags.")
+    num = random.randint(0,len(dataset)-1)
+    print(f"trying to get num {num}")
+    dataset[num]
+
+
+    return
+    
+
+
+if __name__ == '__main__':
+    test_MILDataset()

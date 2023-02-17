@@ -6,8 +6,12 @@ from MIL_dataset import MILDataset
 
 
 def get_loaders(train_img_dir, 
+                train_detect_dir,
                 val_img_dir, 
-                test_img_dir, 
+                val_detect_dir,
+                test_img_dir,
+                test_detect_dir,
+                sclerosed_idx:int,
                 batch = 2, 
                 num_workers = 8, 
                 # resize = False, 
@@ -24,9 +28,15 @@ def get_loaders(train_img_dir,
     assert isinstance(mapping, dict), f"'mapping':{mapping} should be dict."
 
     # get train, val, test set:
-    trainset = MILDataset(img_dir=train_img_dir, classes = classes) #resize = resize, )
-    valset = MILDataset(img_dir=val_img_dir,  classes = classes) #resize = resize, )
-    testset = MILDataset(img_dir=test_img_dir,  classes = classes) #resize = resize, )
+    trainset = MILDataset(instances_folder=train_img_dir, 
+                          exp_folder = train_img_dir,
+                          sclerosed_idx=sclerosed_idx)
+    valset = MILDataset(instances_folder=val_img_dir, 
+                          exp_folder = val_detect_dir,
+                          sclerosed_idx=sclerosed_idx)
+    testset = MILDataset(instances_folder=test_img_dir, 
+                          exp_folder = test_detect_dir,
+                          sclerosed_idx=sclerosed_idx)
 
     print(f"Train size: {len(trainset)} images.")
     print(f"Valid size: {len(valset)} images." )
@@ -42,3 +52,27 @@ def get_loaders(train_img_dir,
     
 
     return train_dataloader, valid_dataloader, test_dataloader
+
+def test_get_loaders():
+
+    train_img_dir = '/Users/marco/Downloads/test_folders/test_bagcreator/images'
+    val_img_dir = train_img_dir
+    test_img_dir = train_img_dir
+    batch = 2
+    num_workers = 8
+    classes = 1
+    mapping = {(0, 0, 0): 0, (0, 255, 0): 1, (255, 0, 0): 2}
+        
+    get_loaders(train_img_dir=train_img_dir, 
+                val_img_dir=val_img_dir,
+                test_img_dir=test_img_dir,
+                batch=batch,
+                num_workers=num_workers,
+                classes=classes,
+                mapping=mapping)
+
+    return
+
+
+if __name__ == '__main__':
+    test_get_loaders()
