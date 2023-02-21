@@ -211,19 +211,11 @@ def test_YOLODetector():
                             device=device,
                             save_features=save_features,
                             conf_thres=conf_thres)
-    # ON MAC DO:
     detector.train()
-
-    # ON WINDOWS DO:
-    # 1) edit yaml:
-    # detector._edit_yaml()
-    # 2) open the terminal and run:
-    # cd C:\marco\yolov5
-    # conda activate success_model 
-    # python train.py --epochs 3 --device cuda:0
 
     return
         
+
 
 
 if __name__ == '__main__':

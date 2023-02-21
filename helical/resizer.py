@@ -49,6 +49,7 @@ class Resizer():
 
         return files
     
+
     def _create_dirs(self) -> None:
 
         # prepare for saving
@@ -59,14 +60,17 @@ class Resizer():
         else: #copy entire tree except images
             print(os.path.dirname(self.image_dir))
             new_tree = os.path.join(os.path.dirname(self.image_dir), f"tiles_{self.out_shape[0]}")
+            
+            if os.path.isdir(new_tree):
+                print(f"Tree already existing. Skipping copy.")
 
-            shutil.copytree(src = self.image_dir, dst=new_tree, ignore = shutil.ignore_patterns("*.png"))
-            # raise NotImplementedError()
+            else:
+                shutil.copytree(src = self.image_dir, dst=new_tree, ignore = shutil.ignore_patterns("*.png"))
+
             self.save_dir = new_tree
 
-        
-
         return 
+
 
     def _resize(self, files: List[str]) -> None:
 
@@ -120,8 +124,8 @@ class Resizer():
     
 
 def test_resizer():
-        
-        image_dir = '/Users/marco/Downloads/try_train/detection/tiles'
+        system = 'windows'
+        image_dir = '/Users/marco/Downloads/try_train/detection/tiles' if system == 'mac' else r'D:\marco\datasets\muw\tiles_512'
         out_shape = (512,512)
         verbose = True
         copy_dataset = True
