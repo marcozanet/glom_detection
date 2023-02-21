@@ -143,7 +143,7 @@ class Plotter(Profiler):
 
 def test_Plotter():
     system = 'mac'
-    data_root = '/Users/marco/Downloads/train_20feb23' if system == 'mac' else r'C:\marco\biopsies\muw\detection'
+    data_root = '/Users/marco/Downloads/train_20feb23' if system == 'mac' else r'D:\marco\datasets\muw\detection'
     profiler = Plotter(data_root=data_root, )
     profiler()
 

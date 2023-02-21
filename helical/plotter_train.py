@@ -63,7 +63,8 @@ class TrainPlotter():
 
 
 def test_TrainPlotter():
-    yolov5_root = '/Users/marco/yolov5'
+    system = 'mac'
+    yolov5_root = '/Users/marco/yolov5' if system == 'mac' else r'C:\marco\code\glom_detection\helical'
     plotter = TrainPlotter(yolov5_root=yolov5_root)
     plotter()
 

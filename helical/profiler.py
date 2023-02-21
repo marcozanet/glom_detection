@@ -276,7 +276,7 @@ class Profiler():
 
 def test_Profiler():
     system = 'mac'
-    data_root = '/Users/marco/Downloads/train_20feb23' if system == 'mac' else r'C:\marco\biopsies\muw\detection'
+    data_root = '/Users/marco/Downloads/train_20feb23' if system == 'mac' else r'D:\marco\datasets\muw\detection'
     profiler = Profiler(data_root=data_root)
     profiler()
 

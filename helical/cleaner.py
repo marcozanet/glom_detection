@@ -268,7 +268,7 @@ class Cleaner(Profiler):
 def test_Cleaner():
     system = 'mac'
     safe_copy = False
-    data_root = '/Users/marco/Downloads/train_20feb23/' if system == 'mac' else r'C:\marco\biopsies\muw\detection'
+    data_root = '/Users/marco/Downloads/train_20feb23/' if system == 'mac' else r'D:\marco\datasets\muw\detection'
     cleaner = Cleaner(data_root=data_root, safe_copy=safe_copy)
     cleaner()
 
