@@ -57,7 +57,7 @@ class YOLODetector():
         self.log.info(f"⏳ Start training YOLO:")
         os.chdir(self.yolov5dir)
         prompt = f'python train.py --img {self.tile_size} --batch {self.batch_size} --epochs {self.epochs} --data {yaml_fn} --weights {weights} --workers {self.workers}'
-        prompt += f" --device {self.device}"
+        prompt = prompt+f" --device {self.device}" if self.device is not None else prompt 
         os.system(prompt)
         os.chdir(self.repository_dir)
 
