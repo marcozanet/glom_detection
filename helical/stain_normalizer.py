@@ -113,7 +113,7 @@ class Normalizer():
         # 1) get new_images: 
         new_images = glob(os.path.join(self.save_folder, f"*{self.image_format}"))
         # 2) pick random new_images to show: 
-        show_images = random.sample(new_images, k = K)
+        show_images = random.sample(new_images, k = 5)
 
         # 3) show them in subplots
         K = 5
@@ -182,7 +182,8 @@ def test_Normalizer():
     verbose = True 
     show = True
     save_folder = None
-    normalizer = Normalizer(target_path=target_path, to_transform_path=to_transform_path, verbose = verbose, show = show, save_folder=save_folder)
+    normalizer = Normalizer(target_path=target_path, to_transform_path=to_transform_path, 
+                            verbose = verbose, show = show, save_folder=save_folder)
     normalizer()
     print(" ########################    TEST folder: ✅    ########################")
     return

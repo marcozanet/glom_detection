@@ -33,7 +33,6 @@ class MILDataset(Dataset):
                             sclerosed_idx=sclerosed_idx, 
                             exp_folder=exp_folder)
         self.bags_instances, self.bags_features, self.bags_labels = creator()  
-        print('kskhsd') 
 
         return 
 
@@ -47,9 +46,23 @@ class MILDataset(Dataset):
         bag_features: np.ndarray
         bag_label: int
         bag_features = self.bags_features[idx]
+        # print(type(bag_features))
+        # print(bag_features)
+        
+        features = np.load(bag_features[0])
+        features = np.expand_dims(features, axis= 0)
+        # print(type(features))
+        # print(features.shape)
+
+        for i in range(1, len(bag_features)):
+            new_feats = np.load(bag_features[i]) # load np file
+            new_feats = np.expand_dims(new_feats, axis= 0)
+            features = np.concatenate([features, new_feats], axis = 0) # accumulate instance feats
+
+        bag_features = features
         bag_label = self.bags_labels[idx]
 
-        print(f"'bag_features':{len(bag_features)}, bag_instances:{len(self.bags_instances[idx])}. Bag label: {bag_label}")
+        # print(f"'bag_features':{len(bag_features)}, bag_instances:{len(self.bags_instances[idx])}. Bag label: {bag_label}")
 
         return bag_features, bag_label
 

@@ -64,7 +64,7 @@ class YOLODetector():
         # 2) train:
         self.log.info(f"⏳ Start training YOLO:")
         os.chdir(self.yolov5dir)
-        os.system(f' python train.py --img {self.tile_size} --batch {self.batch_size} --epochs {self.epochs} --data {yaml_fn} --weights {weights}')
+        os.system(f'python train.py --img {self.tile_size} --batch {self.batch_size} --epochs {self.epochs} --data {yaml_fn} --weights {weights} --workers 0')
         os.chdir(self.repository_dir)
 
         # 3) save:
@@ -178,7 +178,7 @@ class YOLODetector():
             for dirname in sets: 
                 dirpath = os.path.join(self.data_folder, dirname, 'images')
                 data[dirname] = [file for file in os.listdir(dirpath) if 'DS' not in file ]
-        print(f"dictionary data: {data}")
+        # print(f"dictionary data: {data}")
         # get training duration:
         end_time = time.time()
         train_yolo_duration = datetime.timedelta(seconds = end_time - start_time)
@@ -189,28 +189,6 @@ class YOLODetector():
 
         return
 
-    # def _infere_for_UNet(self, infere_augment:bool = False) -> None:
-    #     """ Applies inference with YOLO on train, val, test sets. """
-
-    #     # 1) prepare inference:
-    #     weights_dir = self._prepare_inference()
-
-    #     # 2) infere on train, val, test sets:
-    #     dirs = [self.train_dir, self.val_dir, self.test_dir]
-    #     dirs = [os.path.join(dir, 'images') for dir in dirs]
-    #     dirnames = ['train', 'val', 'test']
-    #     for dirname, image_dir in zip(dirnames, dirs):
-    #         command = f'python detect.py --source {image_dir} --weights {weights_dir} --data data/hubmap.yaml --device cpu --save-txt '
-    #         if infere_augment is True:
-    #             command += " --augment"
-    #         self.log.info(f"Start inference YOLO on {dirname}: ⏳")
-    #         os.system(command)
-    #         self.log.info(f"Inference YOLO done on {dirname} ✅ .")
-
-    #     os.chdir(self.repository_dir)
-
-    #     return
-
 
 
 
@@ -218,13 +196,13 @@ class YOLODetector():
 def test_YOLODetector(): 
 
     system = 'mac'
-    repository_dir = '/Users/marco/yolo/code/helical' if system == 'mac' else 'C:\marco\code\glom_detection\helical'
-    yolov5dir = '/Users/marco/yolov5' if system == 'mac' else 'C:\marco\yolov5'
-    data_folder = '/Users/marco/Downloads/try_train/detection/tiles' if system == 'mac' else r'C:\marco\biopsies\muw\detection\tiles'
-    map_classes = {'Glo-healthy':0, 'Glo-NA':1, 'Glo-unhealthy':2, 'Tissue':3}
+    repository_dir = '/Users/marco/yolo/code/helical' if system == 'mac' else r'C:\marco\code\glom_detection\helical'
+    yolov5dir = '/Users/marco/yolov5' if system == 'mac' else r'C:\marco\yolov5'
+    data_folder = '/Users/marco/Downloads/train_20feb23/tiles' if system == 'mac' else r'D:\marco\datasets\muw\detection\tiles'
+    map_classes = {'Glo-healthy':0, 'Glo-unhealthy':1}
     save_features = True
     tile_size = 512
-    batch_size=8
+    batch_size=4
     epochs=1
     conf_thres=0.7
     detector = YOLODetector(data_folder=data_folder,
@@ -241,7 +219,7 @@ def test_YOLODetector():
 
     # ON WINDOWS DO:
     # 1) edit yaml:
-    detector._edit_yaml()
+    # detector._edit_yaml()
     # 2) open the terminal and run:
     # cd C:\marco\yolov5
     # conda activate success_model 

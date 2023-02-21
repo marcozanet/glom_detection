@@ -29,7 +29,7 @@ def get_loaders(train_img_dir,
 
     # get train, val, test set:
     trainset = MILDataset(instances_folder=train_img_dir, 
-                          exp_folder = train_img_dir,
+                          exp_folder = train_detect_dir,
                           sclerosed_idx=sclerosed_idx)
     valset = MILDataset(instances_folder=val_img_dir, 
                           exp_folder = val_detect_dir,
@@ -42,30 +42,42 @@ def get_loaders(train_img_dir,
     print(f"Valid size: {len(valset)} images." )
     print(f"Test size: {len(testset)} images.")
 
+    print(f"Getting Loaders:")
     train_dataloader = DataLoader(trainset, batch_size=batch, shuffle=True, num_workers=num_workers, pin_memory=True)
     valid_dataloader = DataLoader(valset, batch_size=batch, shuffle=False, num_workers=num_workers, pin_memory=True)
     test_dataloader = DataLoader(testset, batch_size=batch, shuffle=False, num_workers=num_workers, pin_memory=True)
 
-    data = next(iter(train_dataloader))
-    image = data['image']
-    print(f"image shape: {image.shape}")
-    
+    bag_features, bag_label = next(iter(train_dataloader))
+    print(f"Trainloader:'bag_features':{bag_features.shape}. Bag label: {bag_label}")
+    bag_features, bag_label = next(iter(valid_dataloader))
+    print(f"Valloader:'bag_features':{bag_features.shape}. Bag label: {bag_label}")
+    bag_features, bag_label = next(iter(test_dataloader))
+    print(f"Testloader:'bag_features':{bag_features.shape}. Bag label: {bag_label}")
 
     return train_dataloader, valid_dataloader, test_dataloader
+    
 
 def test_get_loaders():
 
     train_img_dir = '/Users/marco/Downloads/test_folders/test_bagcreator/images'
     val_img_dir = train_img_dir
     test_img_dir = train_img_dir
-    batch = 2
+    train_detect_dir = '/Users/marco/yolov5/runs/detect/exp7'
+    val_detect_dir = '/Users/marco/yolov5/runs/detect/exp7'
+    test_detect_dir = '/Users/marco/yolov5/runs/detect/exp7'
+    batch = 3
+    sclerosed_idx = 2
     num_workers = 8
     classes = 1
     mapping = {(0, 0, 0): 0, (0, 255, 0): 1, (255, 0, 0): 2}
         
-    get_loaders(train_img_dir=train_img_dir, 
+    get_loaders(train_img_dir=train_img_dir,
+                train_detect_dir=train_detect_dir, 
                 val_img_dir=val_img_dir,
+                val_detect_dir=val_detect_dir,
                 test_img_dir=test_img_dir,
+                test_detect_dir=test_detect_dir,
+                sclerosed_idx=sclerosed_idx,
                 batch=batch,
                 num_workers=num_workers,
                 classes=classes,

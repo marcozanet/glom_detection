@@ -5,6 +5,7 @@ import seaborn as sns
 from typing import List
 import numpy as np
 import pandas as pd 
+from tqdm import tqdm
 
 
 class Profiler(): 
@@ -34,11 +35,10 @@ class Profiler():
         self.tiles_image_format = tile_images_like.split('.')[-1]
         self.tiles_label_format = tile_labels_like.split('.')[-1]
         self.data = self._get_data()
-        self.samples_slides = list(map(self._get_nsamples_inslide, self.data['wsi_images']))
-        self.gloms_slides = self._get_gloms_samples()
-        # print(self.gloms_slides)
 
         return
+
+
     
     def _get_data(self) -> dict:
         """ From a roots like root -> wsi/tiles->train,val,test->images/labels, 
@@ -51,7 +51,144 @@ class Profiler():
         data = {'wsi_images':wsi_images, 'wsi_labels':wsi_labels, 'tile_images':tile_images,  'tile_labels':tile_labels }
 
         return data
+
+
     
+    def _get_unique_labels(self, verbose = False) -> dict:
+        """ Returns unique label values from the dataset. """
+
+        unique_labels = []
+        for label_fp in self.data['tile_labels']:
+            with open(label_fp, mode ='r') as f:
+                rows = f.readlines()
+                labels = [row[0] for row in rows]
+                unique_labels.extend(labels)
+        unique_labels = list(set(unique_labels))
+        
+        if verbose is True:
+            print(f"Unique classes: {unique_labels}")
+
+        return unique_labels
+
+
+    
+    def _get_class_freq(self) -> dict:
+        
+        class_freq = {'0':0, '1':0, '2':0, '3':0}
+        for label_fp in self.data['tile_labels']:
+            with open(label_fp, mode ='r') as f:
+                rows = f.readlines()
+                labels = [row[0] for row in rows]
+                for label in labels:
+                    class_freq[label] += 1
+        print(f"class_freq: {class_freq}")
+
+        return class_freq
+    
+    
+    def _get_df(self): 
+
+        df = pd.DataFrame(columns=['class_n','width','height','area', 'obj_n', 'tile', 'fold', 'sample', 'wsi', 'fn' ])
+
+        # open all labels: 
+        label_f = self.data['tile_labels']
+        i = 0
+        for file in tqdm(label_f, desc = 'Scanning data'):
+
+            fn = os.path.basename(file)
+            
+            with open(file, 'r') as f:
+                rows = f.readlines()
+            
+            assert len(rows) <= 30, f"❗️ Warning: File label has more than 30 instances. Maybe redundancy? "
+            class_n = [row[0] for row in rows]
+            rows = [row.replace('\n', '') for row in rows]
+
+            for row in rows:
+                items = row.split(' ')
+                class_n = items[0]
+                width = float(items[3])
+                height = float(items[-1])
+                instance_n = f"obj_{i}"
+                tile_n = fn.split('sample')[1][1:].split('.')[0]
+                sample_n = fn.split('sample')[1][0]
+                wsi_n = fn.split('_sample')[0]
+                fold = os.path.split(os.path.split(os.path.dirname(file))[0])[1]
+                info_dict = {'class_n':class_n, 'width':round((width), 4), 'height':round(height,4), 
+                            'area':round(width*height, 4), 'obj_n':instance_n, 'fold':fold, 'tile':tile_n, 
+                            'sample':sample_n,'wsi':{wsi_n}, 'fn':{fn.split('.')[0]}}
+                df.loc[i] = pd.Series(info_dict)
+                i += 1
+        print(df.head())
+        # self._add_empty2df()
+
+        return  df
+    
+
+    def _add_empty2df(self): 
+
+        _, empty = self._get_empty_images()
+
+        # add empty tiles as new rows to self.df:
+        i = len(self.df)
+        for file in tqdm(empty, desc = 'Scanning empty tiles'):
+
+            fn = os.path.basename(file)
+            tile_n = fn.split('sample')[1][1:].split('.')[0]
+            sample_n = fn.split('sample')[1][0]
+            wsi_n = fn.split('_sample')[0]
+            fold = os.path.split(os.path.split(os.path.dirname(file))[0])[1]
+            info_dict = {'class_n':np.nan, 'width':np.nan, 'height':np.nan, 
+                        'area':np.nan, 'obj_n':np.nan, 'fold':fold, 'tile':tile_n, 
+                        'sample':sample_n,'wsi':{wsi_n}} # all empty values set to nan
+            self.df.loc[i] = pd.Series(info_dict)
+
+            i+=1
+
+        
+        return  
+
+
+    def _get_tile_df(self): 
+
+        full, empty = self._get_empty_images()
+
+        df = pd.DataFrame(columns=['class_n','width','height','area', 'obj_n', 'tile', 'fold', 'sample', 'wsi', 'fn' ])
+
+        # open all labels: 
+        label_f = self.data['tile_labels']
+        i = 0
+        for file in tqdm(label_f, desc = 'Scanning data'):
+
+            fn = os.path.basename(file)
+            
+            with open(file, 'r') as f:
+                rows = f.readlines()
+            
+            assert len(rows) <= 30, f"❗️ Warning: File label has more than 30 instances. Maybe redundancy? "
+            class_n = [row[0] for row in rows]
+            rows = [row.replace('\n', '') for row in rows]
+
+            for row in rows:
+                items = row.split(' ')
+                class_n = items[0]
+                width = float(items[3])
+                height = float(items[-1])
+                instance_n = f"obj_{i}"
+                tile_n = fn.split('sample')[1][1:].split('.')[0]
+                sample_n = fn.split('sample')[1][0]
+                wsi_n = fn.split('_sample')[0]
+                fold = os.path.split(os.path.split(os.path.dirname(file))[0])[1]
+                info_dict = {'class_n':class_n, 'width':round((width), 4), 'height':round(height,4), 
+                            'area':round(width*height, 4), 'obj_n':instance_n, 'fold':fold, 'tile':tile_n, 
+                            'sample':sample_n,'wsi':{wsi_n}, 'fn':{fn.split('.')[0]}}
+                df.loc[i] = pd.Series(info_dict)
+                i += 1
+        print(df.head())
+
+        
+        return  
+
     def _get_nsamples_inslide(self, wsi_fp:str, verbose:bool = False) -> tuple: 
         """ Computes number of samples of a given slide. """
         assert os.path.isfile(wsi_fp), f"'wsi_fp':{wsi_fp} is not a valid filepath."
@@ -64,6 +201,7 @@ class Profiler():
             print(f"wsi_fn: '{wsi_fn}.{self.wsi_image_format}' has {n_samples} samples.")
 
         return (wsi_fn, n_samples)
+
 
     def _get_ngloms_inslide(self, wsi_fp:str, verbose:bool = False) -> list: 
         """ Computes number of samples of a given slide. """
@@ -86,6 +224,7 @@ class Profiler():
             samples_gloms.append((sample_fn, n_gloms))
         
         return samples_gloms     
+
     
     def _get_gloms_samples(self):
 
@@ -100,7 +239,8 @@ class Profiler():
                 new_list.extend(el)
 
         return new_list
-    
+
+
     def _get_empty_images(self):
 
         tile_images = self.data['tile_images']
@@ -118,24 +258,18 @@ class Profiler():
 
         return full_images, empty_images
     
+    
     def show_summary(self): 
-
-        self._get_empty_images()
-        
-        # 1) Gloms per tissue sample:
-        df = pd.DataFrame(data = self.gloms_slides, columns = ['sample', 'n_gloms'])
-        fig = sns.barplot(df, x = df.index, y = 'n_gloms')
-        # fig = sns.displot(n_gloms, bins = range(np.array(n_gloms).max()), kde = True)
-        plt.title('Barplot #gloms per tissue sample')
-        plt.xlabel('#gloms_per_sample')
-
-        plt.show()
 
 
         return
+
     
     def __call__(self) -> None:
-        self.show_summary()
+
+        self.df = self._get_df()
+        self._get_tile_df()
+
 
         return
 
@@ -143,7 +277,7 @@ class Profiler():
 
 def test_Profiler():
     system = 'mac'
-    data_root = '/Users/marco/Downloads/try_train/detection' if system == 'mac' else r'C:\marco\biopsies\muw\detection'
+    data_root = '/Users/marco/Downloads/train_20feb23' if system == 'mac' else r'C:\marco\biopsies\muw\detection'
     profiler = Profiler(data_root=data_root)
     profiler()
 

@@ -9,7 +9,7 @@ else:
 from typing import List, Tuple, Literal
 import numpy as np
 import random
-from conversion import Converter
+from converter import Converter
 from tiling import Tiler
 from loggers import get_logger
 from processor_tile import TileProcessor
