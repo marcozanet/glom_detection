@@ -5,8 +5,6 @@ from skimage import transform, io
 from tqdm import tqdm
 import numpy as np
 import shutil
-# from shutil import ignore
-
 from typing import List, Tuple
 
 class Resizer():
