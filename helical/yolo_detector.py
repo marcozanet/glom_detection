@@ -21,6 +21,8 @@ class YOLODetector():
                 save_features: bool = False,
                 tile_size = 512,
                 batch_size = 8,
+                workers = 1,
+                device = None,
                 epochs = 3,
                 conf_thres = None,
                 ) -> None: 
@@ -37,14 +39,11 @@ class YOLODetector():
         self.repository_dir = repository_dir
         self.yolov5dir = yolov5dir
         self.save_features = save_features
+        self.workers = workers
+        self.device = device
         # self.system = system
-
-
         return
     
-
-
-
 
     def train(self, weights: str = None) -> None:
         """   Runs the YOLO detection model. """
@@ -57,7 +56,9 @@ class YOLODetector():
         # 2) train:
         self.log.info(f"⏳ Start training YOLO:")
         os.chdir(self.yolov5dir)
-        os.system(f'python train.py --img {self.tile_size} --batch {self.batch_size} --epochs {self.epochs} --data {yaml_fn} --weights {weights} --workers 0')
+        prompt = f'python train.py --img {self.tile_size} --batch {self.batch_size} --epochs {self.epochs} --data {yaml_fn} --weights {weights} --workers {self.workers}'
+        prompt += f" --device {self.device}"
+        os.system(prompt)
         os.chdir(self.repository_dir)
 
         # 3) save:
@@ -106,6 +107,7 @@ class YOLODetector():
 
         return
 
+
     def _prepare_testing(self, yolo_weights:bool = False ) -> str:
         """ Prepares testing with YOLO. """
 
@@ -143,9 +145,6 @@ class YOLODetector():
         return
 
 
-
-
-
     def _edit_yaml(self) -> None:
         """ Edits YAML data file from yolov5. """
 
@@ -161,6 +160,7 @@ class YOLODetector():
 
         return yaml_fp
     
+
     def save_training_data(self, weights:str, start_time:str) -> None:
         """ Saves training data into a json file in the runs folder from YOLO. """
 
@@ -192,6 +192,8 @@ def test_YOLODetector():
     repository_dir = '/Users/marco/yolo/code/helical' if system == 'mac' else r'C:\marco\code\glom_detection\helical'
     yolov5dir = '/Users/marco/yolov5' if system == 'mac' else r'C:\marco\yolov5'
     data_folder = '/Users/marco/Downloads/train_20feb23/tiles' if system == 'mac' else r'D:\marco\datasets\muw\detection\tiles'
+    device = None if system == 'mac' else 'cuda:0'
+    workers = 0 if system == 'mac' else 1
     map_classes = {'Glo-healthy':0, 'Glo-unhealthy':1}
     save_features = True
     tile_size = 512
@@ -205,6 +207,8 @@ def test_YOLODetector():
                             tile_size = tile_size,
                             batch_size=batch_size,
                             epochs=epochs,
+                            workers=workers,
+                            device=device,
                             save_features=save_features,
                             conf_thres=conf_thres)
     # ON MAC DO:
