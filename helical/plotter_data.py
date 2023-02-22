@@ -93,7 +93,7 @@ class Plotter(Profiler):
                 start_point = (x0, y0)
                 end_point = (x1,y1)
                 color = (0,255,0) if class_n == 0 else (255,0,0)
-                text = f'{round(w_true,2), round(h_true,2)}' if class_n == 0 else f'{round(w_true,2), round(h_true,2)}' # healthy, unhealthy
+                text = 'unhealthy' if class_n == 0 else 'healthy'
                 font = cv2.FONT_HERSHEY_SIMPLEX
                 image = cv2.rectangle(img = image, pt1 = start_point, pt2 = end_point, color = color, thickness=2)
                 image = cv2.putText(image, text, org = (x0,y0-H//50), color=color, thickness=2, fontFace=font, fontScale=1)

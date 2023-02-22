@@ -190,13 +190,13 @@ def test_YOLODetector():
 
     import sys 
     system = 'mac' if sys.platform == 'darwin' else 'windows'
-    
+
     repository_dir = '/Users/marco/yolo/code/helical' if system == 'mac' else r'C:\marco\code\glom_detection\helical'
     yolov5dir = '/Users/marco/yolov5' if system == 'mac' else r'C:\marco\yolov5'
     data_folder = '/Users/marco/Downloads/train_20feb23/tiles' if system == 'mac' else r'D:\marco\datasets\muw\detection\tiles'
     device = None if system == 'mac' else 'cuda:0'
     workers = 0 if system == 'mac' else 1
-    map_classes = {'Glo-healthy':0, 'Glo-unhealthy':1}
+    map_classes = {'Glo-healthy':1, 'Glo-unhealthy':0}
     save_features = True
     tile_size = 512
     batch_size=4
