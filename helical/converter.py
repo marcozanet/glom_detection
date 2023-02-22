@@ -7,14 +7,15 @@ import json
 # from dirtyparser import JsonLikeParser
 from typing import Literal
 import numpy as np
+from tqdm import tqdm
 
 
 class Converter():
 
     def __init__(self, 
                 folder: str, 
-                convert_from: Literal['json_wsi_mask', 'jsonliketxt_wsi_mask'], 
-                convert_to: Literal['json_wsi_bboxes', 'txt_wsi_bboxes'],
+                convert_from: Literal['json_wsi_mask', 'jsonliketxt_wsi_mask', 'gson_wsi_mask'], 
+                convert_to: Literal['json_wsi_bboxes', 'txt_wsi_bboxes', 'geojson_wsi_mask'],
                 save_folder = None,
                 map_classes: dict = {'Glo-unhealthy':0, 'Glo-NA':1, 'Glo-healthy':2, 'Tissue':3},
                 verbose: bool = False) -> None:
@@ -23,7 +24,7 @@ class Converter():
 
         assert os.path.isdir(folder), ValueError(f"'folder': {folder} is not a dir.")
         assert convert_from in ['json_wsi_mask', 'jsonliketxt_wsi_mask', 'gson_wsi_mask'], f"'convert_from'{convert_from} should be in ['json_wsi_mask', 'jsonliketxt_wsi_mask', 'gson_wsi_mask']. '"
-        assert convert_to in ['json_wsi_bboxes', 'txt_wsi_bboxes']
+        assert convert_to in ['json_wsi_bboxes', 'txt_wsi_bboxes', 'geojson_wsi_mask']
         assert save_folder is None or os.path.isdir(save_folder), ValueError(f"'save_folder':{save_folder} should be either None or a valid dirpath. ")
         assert isinstance(verbose, bool), f"'verbose' should be a boolean."  
 
@@ -73,6 +74,10 @@ class Converter():
             f.close()
 
         return txt_fp
+    
+
+
+
     
 
     def _get_bboxes_from_mask(self, fp:str) -> List:
@@ -176,6 +181,35 @@ class Converter():
 
         return  converted_file
     
+
+    def _convert_gson2geojson(self, gson_file:str) -> str:
+        """ Converts file in gson format to geojson for visualization purposes. """
+
+        # 1) read in binary and remove extra chars:
+        with open(gson_file, encoding='utf-8', errors='ignore', mode = 'r') as f:
+            text = f.read()
+        text = '[' + text[text.index('{'):]
+        json_obj = text.replace("\\", '').replace("/", '')
+        # print(text)
+
+
+        # convert text to geojson obj:
+        json_obj = json.loads(json_obj)
+        print(json_obj)
+        # geojson_obj = geojson.dumps(json_obj)
+
+        # save:
+        gson_file = gson_file.replace('.mrxs', '')
+        geojson_file = gson_file.replace('.gson', '_viz.geojson')
+        with open(geojson_file, 'w') as fs:
+            geojson.dump(obj = json_obj, fp = fs)
+
+        print("Converter: WSI .gson annotation converted to WSI .geojson annotation. ")
+
+        return  geojson_file
+    
+
+    
     def _clear_ROI_objs_(self, txt_file:str):
         assert os.path.isfile(txt_file), f"'txt_file':{txt_file} is not a valid filepath."
 
@@ -197,15 +231,6 @@ class Converter():
 
         return
 
-    
-    # def _converttxt2txt(self, txt_file:str) -> None:
-    #     """ Converts .txt file with mask annotations on a WSI to bboxes annotations in .txt format """
-    #     # 1) get bounding boxes values:
-    #     bboxes = self._get_bboxes_from_mask(fp = txt_file)
-    #     # 2) save to txt 
-    #     self._write_txt(bboxes, fp = txt_file)
-    #     print("Converter: WSi .json annotation converted to WSI .txt annotation. ")
-    #     return
 
     def _convert_jsonliketxt2txt(self, jsonliketxt_file:str) -> None:
         """ Saves into a file the bbox in YOLO format. NB values are NOT normalized."""
@@ -218,7 +243,6 @@ class Converter():
 
         return
     
-
 
     def _check_already_converted(self, file: str) -> bool:
         """ Checks whether conversion has already been computed. """
@@ -235,12 +259,13 @@ class Converter():
 
         return computed
     
+
     def __call__(self) -> None:
         """ Converts using the proper function depending on the conversion task of choice. """
 
         files = self._get_files()
-        for file in files:
-            print(f"⏳ Converting: {os.path.basename(file)}")
+        for file in tqdm(files, desc = f"Converting to {self.format_to}"):
+            # print(f"⏳ Converting: {os.path.basename(file)}")
             if self.convert_to == 'txt_wsi_bboxes':
                 if self.convert_from == 'json_wsi_mask':
                     if self._check_already_converted(file=file):
@@ -254,8 +279,10 @@ class Converter():
                     if self._check_already_converted(file=file):
                         continue
                     converted_file = self._convert_gson2txt(gson_file=file)
-            print(f"✅ Converted to: {os.path.basename(converted_file)}")
-                    
+            elif self.convert_to == 'geojson_wsi_mask':
+                converted_file = self._convert_gson2geojson(gson_file=file)
+            # print(f"✅ Converted to: {os.path.basename(converted_file)}")
+        print(f"✅ Converted files saved in: {os.path.dirname(converted_file)}")
  
         return
 
@@ -266,10 +293,10 @@ class Converter():
 
 
 def test_Converter():
-    folder = '/Users/marco/Downloads/muw_slides'
+    folder = '/Users/marco/Downloads/train_20feb23/wsi/val/labels'
     converter = Converter(folder = folder, 
                           convert_from='gson_wsi_mask', 
-                          convert_to='txt_wsi_bboxes',
+                          convert_to='geojson_wsi_mask',
                           save_folder= '/Users/marco/Downloads/heeee', 
                           verbose=False)
     converter()

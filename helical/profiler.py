@@ -14,7 +14,8 @@ class Profiler():
                 wsi_images_like:str = '*.tif', 
                 wsi_labels_like:str = '*_sample?.txt',
                 tile_images_like:str = '*sample*.png',
-                tile_labels_like:str = '*sample*.txt') -> None:
+                tile_labels_like:str = '*sample*.txt',
+                verbose:bool=False) -> None:
         """ Data Profiler to help visualize a data overview. 
             Needs a root folder structured like: root -> wsi/tiles->train,val,test->images/labels.
             wsi_image_like= e.g. '*.tif'
@@ -33,6 +34,7 @@ class Profiler():
         self.wsi_label_format = wsi_labels_like.split('.')[-1]
         self.tiles_image_format = tile_images_like.split('.')[-1]
         self.tiles_label_format = tile_labels_like.split('.')[-1]
+        self.verbose = verbose
         self.data = self._get_data()
 
         return
@@ -80,7 +82,9 @@ class Profiler():
                 labels = [row[0] for row in rows]
                 for label in labels:
                     class_freq[label] += 1
-        print(f"class_freq: {class_freq}")
+
+        if self.verbose is True:
+            print(f"class_freq: {class_freq}")
 
         return class_freq
     
@@ -118,7 +122,9 @@ class Profiler():
                             'sample':sample_n,'wsi':{wsi_n}, 'fn':{fn.split('.')[0]}}
                 df.loc[i] = pd.Series(info_dict)
                 i += 1
-        print(df.head())
+
+        if self.verbose is True:
+            print(df.head())
         # self._add_empty2df()
 
         return  df
@@ -183,7 +189,9 @@ class Profiler():
                             'sample':sample_n,'wsi':{wsi_n}, 'fn':{fn.split('.')[0]}}
                 df.loc[i] = pd.Series(info_dict)
                 i += 1
-        print(df.head())
+                
+        if self.verbose is True:
+            print(df.head())
 
         
         return  
@@ -223,6 +231,7 @@ class Profiler():
             samples_gloms.append((sample_fn, n_gloms))
         
         return samples_gloms     
+
 
     
     def _get_gloms_samples(self):
@@ -268,6 +277,7 @@ class Profiler():
 
         self.df = self._get_df()
         self._get_tile_df()
+        self._get_class_freq()
 
 
         return

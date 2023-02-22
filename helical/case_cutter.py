@@ -22,13 +22,10 @@ def split_multisample_annotation(txt_file:str, multiple_loc_file:str) -> None:
         class_label, xc, yc, w, h = row.split(' ')
         print(f"class_label, xc, yc, w, h: {class_label, xc, yc, w, h}")
 
-        
-
-
-
-
 
     return
+
+    
 
 def test_split_multisample_annotation():
     
