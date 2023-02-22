@@ -188,7 +188,9 @@ class YOLODetector():
 
 def test_YOLODetector(): 
 
-    system = 'mac'
+    import sys 
+    system = 'mac' if sys.platform == 'darwin' else 'windows'
+    
     repository_dir = '/Users/marco/yolo/code/helical' if system == 'mac' else r'C:\marco\code\glom_detection\helical'
     yolov5dir = '/Users/marco/yolov5' if system == 'mac' else r'C:\marco\yolov5'
     data_folder = '/Users/marco/Downloads/train_20feb23/tiles' if system == 'mac' else r'D:\marco\datasets\muw\detection\tiles'

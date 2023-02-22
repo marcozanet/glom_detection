@@ -285,7 +285,9 @@ class Profiler():
 
 
 def test_Profiler():
-    system = 'mac'
+    import sys 
+    system = 'mac' if sys.platform == 'darwin' else 'windows'
+    
     data_root = '/Users/marco/Downloads/train_20feb23' if system == 'mac' else r'D:\marco\datasets\muw\detection'
     profiler = Profiler(data_root=data_root)
     profiler()

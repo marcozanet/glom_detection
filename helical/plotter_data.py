@@ -163,7 +163,9 @@ class Plotter(Profiler):
 
 
 def test_Plotter():
-    system = 'mac'
+    import sys 
+    system = 'mac' if sys.platform == 'darwin' else 'windows'
+    
     data_root = '/Users/marco/Downloads/train_20feb23' if system == 'mac' else r'D:\marco\datasets\muw\detection'
     files = ['/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_31_18.png',
             '/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_52_12.png',

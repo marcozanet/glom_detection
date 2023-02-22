@@ -5,7 +5,7 @@ from shutil import copytree
 import os
 from tqdm import tqdm
 import random 
-
+import sys
 
 class Cleaner(Profiler):
 
@@ -124,11 +124,11 @@ class Cleaner(Profiler):
 
         return
     
-    def _merge_NA_randomly(self, NA_class:int = 1):
+    def _assign_NA_randomly(self, NA_class:int = 1):
         """ Randomly assings NA values to either class 0 or class 2"""
 
         unique_classes = self._get_unique_labels(verbose=True)
-        assert all([val in unique_classes for val in [0,1,2]]), f"Merging NA_class:{NA_class}, but unique classes are:{unique_classes}"
+        assert NA_class in [int(el) for el in unique_classes], f"Merging NA_class:{NA_class}, but unique classes are:{unique_classes}"
         assert str(NA_class) in unique_classes, f"'NA_class':{NA_class} not found in unique classes: {unique_classes}"
 
         # look into each label file:
@@ -164,7 +164,8 @@ class Cleaner(Profiler):
         unique_classes = self._get_unique_labels()
         assert str(NA_class) not in unique_classes, f"Replaced class:{NA_class} still appears in 'unique_classes':{unique_classes}"
 
-        print(f"New unique classes: unique_classes = {self._get_unique_labels()} ")
+        if self.verbose is True:
+            print(f"New unique classes: unique_classes = {self._get_unique_labels()} ")
 
 
         return
@@ -258,6 +259,7 @@ class Cleaner(Profiler):
         return
 
     
+
     def _del_redundant_labels(self):
         """ Removes redundancy in labels, e.g. same rows within label 
             files (happens due to the a+ file writing mode)."""
@@ -291,8 +293,13 @@ class Cleaner(Profiler):
         tot = round(num_full / (1 - self.empty_perc))
         num_desired_empty = tot - num_full
         to_del = num_empty - num_desired_empty
+        if to_del <= 0: 
+            print(f"❗️ Empty images are already <= {self.empty_perc*100}% of tot images. Skipping removal of empty images.")
+            return
         
         # select k random empty samples to del:
+        print(len(empty))
+        print(to_del)
         img_empty2del = random.sample(empty, k = to_del)
 
         # check that no labels are deleted:
@@ -327,6 +334,7 @@ class Cleaner(Profiler):
 
         return
 
+
     
     def __call__(self) -> None:
 
@@ -335,34 +343,28 @@ class Cleaner(Profiler):
         
         # 1) delete labels where image doesn't exist
         self._del_unpaired_labels()
-
         # 2) remove label redundancies
         self._del_redundant_labels()
-
         # 3) remove small annotations: 
         self._remove_small_objs()
-
         # 4) remove empty images (leave self.perc% of empty images)
+        # super().__init__(data_root=self.data_root)
         self._remove_perc_()
-
-        # 5) remove tissue class
+        # # 5) remove tissue class
         self._remove_class_(class_num=3)
-
-
-        # NB DONT RUN WHEN THERE'S ONLY 0 AND 1 OR YOU'LL GET JUST ONE CLASS
-        # self._merge_classes(class_1=0, class_2=1)
-
-        # self._merge_NA_randomly()
-
-        # self._replacing_class(class_old=2, class_new=1)
-
+        # # 6) assign randomly the NA class (int=1) to either class 0 or 2:
+        self._assign_NA_randomly()
+        # # 7) replace class 2 with class 1 ({0:healthy, 1:NA, 2:unhealthy} -> {0:healthy, 2:unhealthy})
+        self._replacing_class(class_old=2, class_new=1)
 
         return 
 
 
 
 def test_Cleaner():
-    system = 'mac'
+    import sys 
+    system = 'mac' if sys.platform == 'darwin' else 'windows'
+    
     safe_copy = False
     data_root = '/Users/marco/Downloads/train_20feb23/' if system == 'mac' else r'D:\marco\datasets\muw\detection'
     cleaner = Cleaner(data_root=data_root, safe_copy=safe_copy)
