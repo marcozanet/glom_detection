@@ -1,4 +1,13 @@
-20/02 18:19 INFO - _edit_yaml: ⏳ Setting configurations for YOLO: 
-20/02 18:19 INFO - _edit_yaml: ✅ YOLO set up completed YOLO ✅ .
-20/02 18:19 INFO - train: ⏳ Start training YOLO:
-20/02 18:20 INFO - save_training_data: Training YOLO done ✅ . Training duration: 0:00:44.296912
+27/02 18:39:31|INFO|Tiler.__call__: ⏳ Start tiling from folder:/Users/marco/Downloads/test_folders/test_tiler. Results will be saved in /Users/marco/Downloads/test_folders/test_tiler/images.
+27/02 18:39:31|WARNING|Tiler._check_already_computed: ❗️ Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/images' for 201322507_09_SFOG.png. Skipping slide.
+27/02 18:39:31|WARNING|Tiler._check_already_computed: ❗️ Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/images' for 200822954_09_SFOG.png. Skipping slide.
+27/02 18:39:31|INFO|Tiler._get_tile_images: ⏳ Tiling: '200104066_09_SFOG.tif'
+27/02 18:39:31|INFO|Tiler._get_tile_images: ⏳ Opening 200104066_09_SFOG.tif:
+27/02 18:39:31|INFO|Tiler._get_tile_images: ✅ Opening 200104066_09_SFOG.tif:
+27/02 18:39:31|INFO|Tiler._get_tile_images: ⏳ Reading region ((28328, 54455)) of sample_0:
+27/02 18:39:41|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+27/02 18:39:48|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+27/02 18:39:48|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+27/02 18:39:48|INFO|Tiler._get_tile_images: ✅ Patchifying.
+27/02 18:39:48|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+27/02 18:39:57|ERROR|Tiler._get_tile_images: ❌ Tiling: '200104066_09_SFOG.tif'

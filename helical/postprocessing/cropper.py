@@ -71,7 +71,7 @@ class Cropper():
 
         assert isinstance(last3folds, list) and len(last3folds) == 3,  f"'last3folders' should be a list of 3 dirs."
 
-        print(f"Loading data from {self.detect_dir}: {[os.path.split(fold)[1] for fold in last3folds]}")
+        self.log.info(f"Loading data from {self.detect_dir}: {[os.path.split(fold)[1] for fold in last3folds]}")
 
         return last3folds
     
@@ -112,7 +112,7 @@ class Cropper():
             plt.title('Histogram bbox dim.')
 
         max_box = int(perc90 * self.W)
-        print(f"max box: {(max_box, max_box)}")
+        self.log.info(f"Max box found: {(max_box, max_box)}")
 
         return max_box
     
@@ -148,7 +148,7 @@ class Cropper():
             try:
                 image = io.imread(file)
             except:
-                print(f"Warning: couldn't open {file}. Skipped.")
+                self.log.info(f"❌ Warning: couldn't open {file}. Skipped.")
                 continue
             W, H, C = image.shape
             assert W == H == self.W == self.H, f"'image_shape' is set to {self.W, self.H}, but opened image has shape ({W, H}). "

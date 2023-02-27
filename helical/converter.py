@@ -8,6 +8,7 @@ import json
 from typing import Literal
 import numpy as np
 from tqdm import tqdm
+from loggers import get_logger
 
 
 class Converter():
@@ -21,6 +22,8 @@ class Converter():
                 verbose: bool = False) -> None:
         """ Offers conversion capabilities from/to a variety of formats. 
             json_wsi_mask"""
+        
+        self.log = get_logger()
 
         assert os.path.isdir(folder), ValueError(f"'folder': {folder} is not a dir.")
         assert convert_from in ['json_wsi_mask', 'jsonliketxt_wsi_mask', 'gson_wsi_mask'], f"'convert_from'{convert_from} should be in ['json_wsi_mask', 'jsonliketxt_wsi_mask', 'gson_wsi_mask']. '"
@@ -45,7 +48,7 @@ class Converter():
         files = glob(os.path.join(self.folder, f'*.{self.format_from}' ))
 
         if self.verbose is True:
-            print(files)
+            self.log.info(f"First 5 files: {files[:5]}", extra={'className': self.__class__.__name__})
 
         assert len(files)>0, f"No file like {os.path.join(self.folder, f'*.{self.format_from}')} found"
 
@@ -63,7 +66,7 @@ class Converter():
             txt_fp = os.path.join(self.save_folder, fname)
         
         if self.verbose is True:
-            print(f" Writing {txt_fp}")
+            self.log.info(f" Writing {txt_fp}", extra={'className': self.__class__.__name__})
 
         with open(txt_fp, 'w') as f:
             text = ''
@@ -85,7 +88,7 @@ class Converter():
             Output = if 'convert_to' == 'txt_wsi_bboxes':  [class, x_center, y_center, box_w, box_y] (not normalized)
                      if 'convert_to' == 'json_wsi_bboxes':  [x_min, y_min], [x_max, y_min], [x_max, y_max], [x_min, y_max], [x_min, y_min]. '''
 
-        assert os.path.isfile(fp), ValueError(f"Annotation file '{fp}' is not a valid filepath.")
+        assert os.path.isfile(fp), ValueError(f"Annotation file '{fp}' is not a valid filepath.", extra={'className': self.__class__.__name__})
         
         # read annotation file
         with open(fp, 'r') as f:
@@ -119,10 +122,10 @@ class Converter():
                 if isinstance(xy[0], list):
                     X = np.array([pair[0] for pair in xy])
                     x_min, x_max = X.min(), X.max()
-                    print(x_min, x_max)
+                    # print(x_min, x_max)
                     Y = np.array([pair[1] for pair in xy])
                     y_min, y_max = Y.min(), Y.max()
-                    print(y_min, y_max)
+                    # self.log.info(y_min, y_max)
                 
                 
                 # normal polygon case:
@@ -144,6 +147,7 @@ class Converter():
             elif self.convert_to == 'json_wsi_bboxes':
                 return_obj = new_coords
             else:
+                self.log.error(f"Not implemented error", extra={'className': self.__class__.__name__})
                 raise NotImplementedError("_get_bboxes function should be used to get either txt bboxes or json wsi bboxes. ")
 
 
@@ -157,7 +161,7 @@ class Converter():
         bboxes = self._get_bboxes_from_mask(fp = json_file)
         # 2) save to txt 
         converted_file= self._write_txt(bboxes, fp = json_file)
-        print("Converter: WSi .json annotation converted to WSI .txt annotation. ")
+        self.log.info("✅ Converter: WSi .json annotation converted to WSI .txt annotation. ", extra={'className': self.__class__.__name__})
             
         return converted_file
     
@@ -173,7 +177,7 @@ class Converter():
         text = json.loads(text)
         with open(save_file, 'w') as fs:
             json.dump(obj = text, fp = fs)
-        print("Converter: WSI .gson annotation converted to WSI .json annotation. ")
+        self.log.info("✅ Converter: WSI .gson annotation converted to WSI .json annotation. ", extra={'className': self.__class__.__name__})
         # 3) convert using json converter:
         converted_file = self._convert_json2txt(json_file=save_file)
         # 4) clear txt annotations from ROI objects
@@ -195,7 +199,7 @@ class Converter():
 
         # convert text to geojson obj:
         json_obj = json.loads(json_obj)
-        print(json_obj)
+        # print(json_obj)
         # geojson_obj = geojson.dumps(json_obj)
 
         # save:
@@ -204,7 +208,7 @@ class Converter():
         with open(geojson_file, 'w') as fs:
             geojson.dump(obj = json_obj, fp = fs)
 
-        print("Converter: WSI .gson annotation converted to WSI .geojson annotation. ")
+        self.log.info("✅ Converter: WSI .gson annotation converted to WSI .geojson annotation. ", extra={'className': self.__class__.__name__})
 
         return  geojson_file
     
@@ -252,7 +256,7 @@ class Converter():
         files = [file for file in files if fname in file]
 
         if len(files) > 0:
-            print(f"✅ Already converted: found txt WSI annotation in {self.folder} for {fname}.tiff. Skipping slide.")
+            self.log.info(f"✅ Already converted: found txt WSI annotation in {self.folder} for {fname}.tiff. Skipping slide.", extra={'className': self.__class__.__name__})
             computed = True
         else:
             computed = False
@@ -282,7 +286,7 @@ class Converter():
             elif self.convert_to == 'geojson_wsi_mask':
                 converted_file = self._convert_gson2geojson(gson_file=file)
             # print(f"✅ Converted to: {os.path.basename(converted_file)}")
-        print(f"✅ Converted files saved in: {os.path.dirname(converted_file)}")
+        self.log.info(f"✅ Converted files saved in: {os.path.dirname(converted_file)}", extra={'className': self.__class__.__name__})
  
         return
 

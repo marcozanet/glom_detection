@@ -1,14 +1,13 @@
 import os
 os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
 import utils_yolo, utils_manager
-from typing import List
 import time
 import datetime
-from loggers import get_logger
 from typing import Literal, List
 import yaml
 from glob import glob
-
+from loggers import get_logger
+from decorators import log_start_finish
 
 class YOLODetector():
 
@@ -56,7 +55,8 @@ class YOLODetector():
         # 2) train:
         self.log.info(f"⏳ Start training YOLO:")
         os.chdir(self.yolov5dir)
-        prompt = f'python train.py --img {self.tile_size} --batch {self.batch_size} --epochs {self.epochs} --data {yaml_fn} --weights {weights} --workers {self.workers}'
+        prompt = f"python train.py --img {self.tile_size} --batch {self.batch_size} --epochs {self.epochs}"
+        prompt += f"--data {yaml_fn} --weights {weights} --workers {self.workers}"
         prompt = prompt+f" --device {self.device}" if self.device is not None else prompt 
         os.system(prompt)
         os.chdir(self.repository_dir)

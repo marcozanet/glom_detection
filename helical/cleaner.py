@@ -319,6 +319,24 @@ class Cleaner(Profiler):
 
         return
     
+    def _remove_empty_labels(self):
+        """ Reads through label files and deletes the empty ones. """
+
+        tile_labels = self.data['tile_labels']  
+        for file in tqdm(tile_labels, desc="Removing empty labels"): 
+            
+            #open file
+            with open(file, 'r') as f:
+                text = f.readlines()
+
+            # check if empty and remove
+            if len(text) == 0:
+                if self.verbose is True:
+                    print(f"Removing: {file}")
+                os.remove(file)
+
+        return
+    
 
 
     def _copy_tree(self) -> None:
@@ -338,6 +356,25 @@ class Cleaner(Profiler):
     
     def __call__(self) -> None:
 
+        # if self.safe_copy is True:
+        #     self._copy_tree()
+        # self._remove_empty_labels()
+        # # 1) delete labels where image doesn't exist
+        # self._del_unpaired_labels()
+        # # 2) remove label redundancies
+        # self._del_redundant_labels()
+        # # 3) remove small annotations: 
+        # self._remove_small_objs()
+        # # 4) remove empty images (leave self.perc% of empty images)
+        # # super().__init__(data_root=self.data_root)
+        # self._remove_perc_()
+        # # # 5) remove tissue class
+        # self._remove_class_(class_num=3)
+        # # # 6) assign randomly the NA class (int=1) to either class 0 or 2:
+        # self._assign_NA_randomly()
+        # # # 7) replace class 2 with class 1 ({0:healthy, 1:NA, 2:unhealthy} -> {0:healthy, 2:unhealthy})
+        # self._replacing_class(class_old=2, class_new=1)
+        
         if self.safe_copy is True:
             self._copy_tree()
         
@@ -346,7 +383,7 @@ class Cleaner(Profiler):
         # 2) remove label redundancies
         self._del_redundant_labels()
         # 3) remove small annotations: 
-        self._remove_small_objs()
+        self._remove_small_objs(h_thr=0.15, w_thr=0.15)
         # 4) remove empty images (leave self.perc% of empty images)
         # super().__init__(data_root=self.data_root)
         self._remove_perc_()
@@ -356,7 +393,6 @@ class Cleaner(Profiler):
         self._assign_NA_randomly()
         # # 7) replace class 2 with class 1 ({0:healthy, 1:NA, 2:unhealthy} -> {0:healthy, 2:unhealthy})
         self._replacing_class(class_old=2, class_new=1)
-
         return 
 
 
@@ -366,7 +402,8 @@ def test_Cleaner():
     system = 'mac' if sys.platform == 'darwin' else 'windows'
     
     safe_copy = False
-    data_root = '/Users/marco/Downloads/train_20feb23/' if system == 'mac' else r'D:\marco\datasets\muw\detection'
+    data_root = '/Users/marco/Downloads/train_20feb23_copy'
+    # data_root = '/Users/marco/Downloads/train_20feb23/' if system == 'mac' else r'D:\marco\datasets\muw\detection'
     cleaner = Cleaner(data_root=data_root, safe_copy=safe_copy)
     cleaner()
 

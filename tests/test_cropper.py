@@ -1,7 +1,7 @@
 import sys
 sys.path.append("/Users/marco/yolo/code")
 import unittest
-from helical.cropper import Cropper
+from helical.postprocessing.cropper import Cropper
 
 
 def test_Cropper():
