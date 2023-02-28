@@ -7,7 +7,7 @@ if hasattr(os, 'add_dll_directory'):
 else:
     import openslide
 from glob import glob
-from typing import List
+from typing import List, Tuple
 import warnings
 from patchify import patchify
 import numpy as np 
@@ -80,7 +80,7 @@ class Tiler():
             files = [file for file in os.listdir(tile_images_fp) if '.png' in file and wsi_fn in file]
             num_x_tiles = [int(file.split('_')[-2]) for file in files]
             if len(num_x_tiles) == 0: 
-                self.log.warning(f"{class_name}.{func_name}: ❌ No tile images found. Skipping tiling of annotations for {wsi_fn}", )
+                self.log.warning(f"{class_name}.{func_name}: ❌ No tile images found. Skipping tiling of annotations for '{wsi_fn}'", )
                 return
             x_max = max(num_x_tiles)
 
@@ -139,7 +139,7 @@ class Tiler():
                                     save_fp = os.path.join(save_folder, fname)
                                 self._write_txt(clss, tile_xc, tile_yc, tile_w, tile_h, save_fp)
 
-            self.log.info(f"{class_name}.{func_name}: ✅ Tile labels saved in {save_folder}." )
+            self.log.info(f"{class_name}.{func_name}: ✅ Tile labels saved in '{save_folder}'." )
 
             return
         
@@ -171,13 +171,13 @@ class Tiler():
 
             # 1) read slide:
             try:
-                self.log.info(f"{class_name}.{func_name}: ⏳ Opening {os.path.basename(fp)}:" )
+                self.log.info(f"{class_name}.{func_name}: ⏳ Opening '{os.path.basename(fp)}':" )
                 # print(f"Opening {os.path.basename(fp)}.")
                 slide = openslide.OpenSlide(fp)
             except:
-                self.log.error(f"{class_name}.{func_name}: ❌ Couldn t open file: {os.path.basename(fp)}. Skipping." )
+                self.log.error(f"{class_name}.{func_name}: ❌ Couldn t open file: '{os.path.basename(fp)}'. Skipping." )
                 return
-            self.log.info(f"{class_name}.{func_name}: ✅ Opening {os.path.basename(fp)}:" )
+            self.log.info(f"{class_name}.{func_name}: ✅ Opening '{os.path.basename(fp)}':" )
             W, H = slide.dimensions
 
             # 2) if file has multi_samples -> region = sample:
@@ -242,6 +242,53 @@ class Tiler():
         do()
 
         return
+    
+    def _get_completed_files(self, files:list, format: str, save_folder:str ) -> Tuple[list, list]:
+        """ Returns a list of computed and not-computed files. """
+
+        completed = []
+        uncompleted = []
+        for file in files:
+            if self._check_already_computed(file,  format = format, save_folder= save_folder):
+                completed.append(file)
+            else:
+                uncompleted.append(file)
+        
+        self.log.info(f"{self.__class__.__name__}.{'_get_completed_files'}: Completed {len(completed)}/{len(completed)+len(uncompleted)} files.")
+        
+        return completed, uncompleted
+    
+    def _remove_small_files(self, files:list, mem_size_min: int = 100_000): # min size: 100kB
+        
+        image_folder = os.path.join(self.save_root, 'images')
+        files = [os.path.join(image_folder, file) for file in os.listdir(image_folder) if "DS" not in file]
+        # min = 100_000_000
+        deleted = 0
+        for file in tqdm(files, desc = "Removing small files"): 
+            # min = os.path.getsize(file) if os.path.getsize(file) < min else min
+            if os.path.getsize(file) < mem_size_min: 
+                os.remove(path = file)
+                deleted += 1
+        
+        self.log.info(f"{self.__class__.__name__}.{'_remove_small_files'}: Removed {deleted} small files (< {int(mem_size_min/1000)}kB)")
+
+
+
+            
+
+        # print( min)
+            # print(os.path.getsize(file))
+        
+        # print(self.save_root)s
+        # files = os.listdir(self.save_root)
+
+
+
+
+
+
+        return
+
 
     
     def __call__(self, target_format: str, save_folder: str = None) -> None:
@@ -258,7 +305,7 @@ class Tiler():
         default_folder = 'images' if (target_format == 'tiff' or target_format == 'tif') else 'labels'
         save_folder = os.path.join(self.save_root, default_folder) if save_folder is None else save_folder
         self.format = target_format
-        self.log.info(f"{class_name}.{func_name}: ⏳ Start tiling from folder:{self.folder}. Results will be saved in {save_folder}.")
+        self.log.info(f"{class_name}.{func_name}: ⏳ Start tiling from folder:'{self.folder}'. Results will be saved in '{save_folder}'.")
         
         # 1) make save folders:
         os.makedirs(save_folder, exist_ok=True)
@@ -270,11 +317,21 @@ class Tiler():
         if len(files) == 0: 
             self.log.error(f"{class_name}.{func_name}: ❌ No file in format '{target_format}' was found in '{self.folder}'.")
 
+        fnames = [os.path.split(file)[1].split('.')[0] for file in files]
         for file in files:
-            # check if already tiled:
+            
+            # clean folder from small files: 
+            self._remove_small_files(files=files)
+            # check if all tiling is complete:
+            _, uncompleted = self._get_completed_files(fnames, target_format, save_folder)
+            if len(uncompleted) == 0: 
+                self.log.info(f"{class_name}.{func_name}: 🎉 All files in folder '{os.path.dirname(file)}' have been tiled and saved in '{save_folder}'.  ")
+                return
+            # check if this tile is already tiled:
             fname = os.path.split(file)[1].split('.')[0]
             if self._check_already_computed(fname, target_format, save_folder= save_folder):
                 continue
+            # tile:
             if target_format == 'txt':
                 if self.multiple_samples is True: 
                     multisample_loc_file = os.path.join(self.folder, fname + f".geojson")
@@ -362,28 +419,19 @@ class Tiler():
             multisample_loc_file = self._get_multisample_loc_file(fp, file_format='geojson')
             sample_locations = self._get_location_w_h(fp = multisample_loc_file) if multisample_loc_file is not None else [{'location':(0,0), 'w':W, 'h':H}]
             n_samples = len(sample_locations)
-            # print(f"Checking {n_samples} samples:")
 
         # checking if tiles are already computed for each sample:
         format = 'png' if (format == 'tiff' or format == 'tif') else format
         files = glob(os.path.join(save_folder, f'*.{format}'))
-        # print(f"Checking already computed files with name like: {os.path.join(save_folder, f'*.{format}')}")
         computed = True
         for i in range(n_samples):
-            # print(f"sample {i}")
-            # print(computed)
             name_like = fname + f"_sample{i}"
-            # print(name_like)
-            files = [file for file in files if name_like in file ]
-            # print(f"Filtering for files that contain {name_like}")
-            computed = False if len(files) <= 2 else computed
+            matching_files = [file for file in files if name_like in file ]
+            computed = False if len(matching_files) <= 2 else computed
 
         if computed:
             self.log.warning(f"{class_name}.{func_name}: ❗️ Tiler: found .{format} tiles in '{save_folder}' for {fname}.{format}. Skipping slide.")
 
-        # print(f"computed: {computed}")
-        # if n_samples > 1:
-        #     raise NotImplementedError
         return computed
 
     
@@ -529,7 +577,7 @@ def test_Tiler():
     level = 2
     tiler = Tiler(folder = folder, 
                   tile_shape= (2048, 2048), 
-                  step=256, 
+                  step=1024, 
                   save_root= save_root, 
                   level = level,
                   verbose = True)
