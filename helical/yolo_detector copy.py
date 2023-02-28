@@ -23,15 +23,18 @@ class YOLODetector():
                 workers = 1,
                 device = None,
                 epochs = 3,
+                conf_thres = None,
                 ) -> None: 
 
         self.log = get_logger()
+        assert isinstance(conf_thres, float) or conf_thres is None, TypeError(f"conf_thres is {type(conf_thres)}, but should be either None or float.")
 
         self.map_classes = map_classes
         self.data_folder = data_folder
         self.tile_size = tile_size
         self.batch_size = batch_size
         self.epochs = epochs
+        self.conf_thres = conf_thres
         self.repository_dir = repository_dir
         self.yolov5dir = yolov5dir
         self.save_features = save_features
@@ -43,34 +46,106 @@ class YOLODetector():
 
     def train(self, weights: str = None) -> None:
         """   Runs the YOLO detection model. """
-        class_name = self.__class__.__name__
         
-        @log_start_finish(class_name=class_name, func_name='train', msg = f" YOLO training:" )
-        def do():
-            # 1) prepare training:
-            start_time = time.time()
-            yaml_fn = os.path.basename(self._edit_yaml())
-            weights = weights if weights is not None else 'yolov5s.pt'
+        # 1) prepare training:
+        start_time = time.time()
+        yaml_fn = os.path.basename(self._edit_yaml())
+        weights = weights if weights is not None else 'yolov5s.pt'
 
-            # 2) train:
-            self.log.info(f"⏳ Start training YOLO:")
-            os.chdir(self.yolov5dir)
-            prompt = f"python train.py --img {self.tile_size} --batch {self.batch_size} --epochs {self.epochs}"
-            prompt += f"--data {yaml_fn} --weights {weights} --workers {self.workers}"
-            prompt = prompt+f" --device {self.device}" if self.device is not None else prompt 
-            os.system(prompt)
-            os.chdir(self.repository_dir)
+        # 2) train:
+        self.log.info(f"⏳ Start training YOLO:")
+        os.chdir(self.yolov5dir)
+        prompt = f"python train.py --img {self.tile_size} --batch {self.batch_size} --epochs {self.epochs}"
+        prompt += f"--data {yaml_fn} --weights {weights} --workers {self.workers}"
+        prompt = prompt+f" --device {self.device}" if self.device is not None else prompt 
+        os.system(prompt)
+        os.chdir(self.repository_dir)
 
-            # 3) save:
-            self.save_training_data(weights=weights, start_time=start_time)
-        
-            return
-        
-        do()
+        # 3) save:
+        self.save_training_data(weights=weights, start_time=start_time)
 
         return  
 
-           
+
+    def _prepare_inference(self, yolo_weights:str = None) -> str:
+        """ Prepares inference with YOLO. """
+
+        # get model:
+        os.chdir(self.yolov5dir)
+        if yolo_weights is None:
+            weights_dir = utils_yolo.get_last_weights()
+        else:
+            weights_dir = os.path.dirname(yolo_weights)
+
+        self.log.info(f"Prepared YOLO for inference ✅ .")
+
+        return weights_dir
+
+
+    def infere(self, images_dir: str, yolo_weights:str = None, infere_augment:bool = False) -> None:
+        """ Predicts bounding boxes for images in dir and outputs txt labels for those boxes. """
+
+         raise NotImplementedError()
+
+        assert os.path.isdir(images_dir), ValueError(f"'images_dir': {images_dir} is not a valid dirpath.")
+
+        # 1) prepare inference:
+        weights_dir = self._prepare_inference(yolo_weights=yolo_weights)
+
+        # 2) define command:
+        command = f'python detect.py --source {images_dir} --weights {weights_dir} --data data/helical.yaml --device cpu --save-txt '
+        if infere_augment is True:
+            command += " --augment"
+        if self.conf_thres is not None:
+            command += f" --conf_thres {self.conf_thres}" 
+        if self.save_features is True:
+            command += f" --visualize" 
+
+        # 3) infere (e.g. predict):
+        self.log.info(f"Start inference YOLO: ⏳")
+        os.system(command)
+        os.chdir(self.repository_dir)
+        self.log.info(f"Inference YOLO done ✅ .")
+
+        return
+
+
+    def _prepare_testing(self, yolo_weights:bool = False ) -> str:
+        """ Prepares testing with YOLO. """
+
+        # get model
+        os.chdir(self.yolov5dir)
+        if yolo_weights is False:
+            weights_dir = utils_yolo.get_last_weights()
+        else:
+            weights_dir = yolo_weights
+
+        self.log.info(f"Prepared YOLO testing ✅ .")
+
+        return weights_dir
+
+    
+    def test(self, val_augment:bool = False) -> None:
+        """ Tests YOLO on the test set and returns performance metrics. """
+        
+        # 1) prepare testing:
+        weights_dir = self._prepare_testing()
+
+        # 2) define command:
+        command = f'python val.py --task test --weights {weights_dir} --data data/hubmap.yaml --device cpu'
+        if val_augment is True:
+            command += " --augment"
+        if self.conf_thres is not None:
+            command += f" --conf_thres {self.conf_thres}" 
+
+        # 3) test (e.g. validate):
+        self.log.info(f"Start testing YOLO: ⏳")
+        os.system(command)
+        os.chdir(self.repository_dir)
+        self.log.info(f"Testing YOLO done ✅ .")
+
+        return
+
 
     def _edit_yaml(self) -> None:
         """ Edits YAML data file from yolov5. """
@@ -108,7 +183,6 @@ class YOLODetector():
         self.log.info(f"Training YOLO done ✅ . Training duration: {train_yolo_duration}")
 
         return
-    
 
 
 
@@ -129,6 +203,7 @@ def test_YOLODetector():
     tile_size = 512
     batch_size=4
     epochs=1
+    conf_thres=0.7
     detector = YOLODetector(data_folder=data_folder,
                             repository_dir=repository_dir,
                             yolov5dir=yolov5dir,
@@ -138,7 +213,8 @@ def test_YOLODetector():
                             epochs=epochs,
                             workers=workers,
                             device=device,
-                            save_features=save_features)
+                            save_features=save_features,
+                            conf_thres=conf_thres)
     detector.train()
 
     return

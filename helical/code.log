@@ -1,7 +1,7 @@
-28/02 11:17:10|INFO|Tiler.__call__: ⏳ Start tiling from folder:'/Users/marco/Downloads/test_folders/test_tiler'. Results will be saved in '/Users/marco/Downloads/test_folders/test_tiler/images'.
-28/02 11:17:10|INFO|Tiler._remove_small_files: Removed 0 small files (< 100kB)
-28/02 11:17:10|WARNING|Tiler._check_already_computed: ❗️ Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/images' for 201322507_09_SFOG.png. Skipping slide.
-28/02 11:17:10|WARNING|Tiler._check_already_computed: ❗️ Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/images' for 200822954_09_SFOG.png. Skipping slide.
-28/02 11:17:10|WARNING|Tiler._check_already_computed: ❗️ Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/images' for 200104066_09_SFOG.png. Skipping slide.
-28/02 11:17:10|INFO|Tiler._get_completed_files: Completed 3/3 files.
-28/02 11:17:10|INFO|Tiler.__call__: 🎉 All files in folder '/Users/marco/Downloads/test_folders/test_tiler' have been tiled and saved in '/Users/marco/Downloads/test_folders/test_tiler/images'.  
+28/02 11:44:34|INFO|Tiler.__call__: ⏳ Start tiling from folder:'/Users/marco/Downloads/test_folders/test_tiler'. Results will be saved in '/Users/marco/Downloads/test_folders/test_tiler/images'.
+28/02 11:44:34|INFO|Tiler._remove_small_files: Removed 0 small files (< 500kB)
+28/02 11:44:34|WARNING|Tiler._check_already_computed: ❗️ Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/images' for 201322507_09_SFOG.png. Skipping slide.
+28/02 11:44:34|WARNING|Tiler._check_already_computed: ❗️ Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/images' for 200822954_09_SFOG.png. Skipping slide.
+28/02 11:44:34|WARNING|Tiler._check_already_computed: ❗️ Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/images' for 200104066_09_SFOG.png. Skipping slide.
+28/02 11:44:34|INFO|Tiler._get_completed_files: Completed 3/3 files.
+28/02 11:44:34|INFO|Tiler.__call__: 🎉 All files in folder '/Users/marco/Downloads/test_folders/test_tiler' have been tiled and saved in '/Users/marco/Downloads/test_folders/test_tiler/images'.  

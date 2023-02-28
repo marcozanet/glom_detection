@@ -258,7 +258,7 @@ class Tiler():
         
         return completed, uncompleted
     
-    def _remove_small_files(self, files:list, mem_size_min: int = 100_000): # min size: 100kB
+    def _remove_small_files(self, files:list, mem_size_min: int = 500_000): # min size: 500kB
         
         image_folder = os.path.join(self.save_root, 'images')
         files = [os.path.join(image_folder, file) for file in os.listdir(image_folder) if "DS" not in file]
@@ -342,8 +342,12 @@ class Tiler():
                     self.test_show_image_labels()
             else:
                 self._get_tile_images(fp = file, save_folder=save_folder )
-            
-
+                
+            # check if all tiling is complete:
+            _, uncompleted = self._get_completed_files(fnames, target_format, save_folder)
+            if len(uncompleted) == 0: 
+                self.log.info(f"{class_name}.{func_name}: 🎉 All files in folder '{os.path.dirname(file)}' have been tiled and saved in '{save_folder}'.  ")
+                return
 
 
 
@@ -577,7 +581,7 @@ def test_Tiler():
     level = 2
     tiler = Tiler(folder = folder, 
                   tile_shape= (2048, 2048), 
-                  step=1024, 
+                  step=512, 
                   save_root= save_root, 
                   level = level,
                   verbose = True)
