@@ -316,10 +316,18 @@ class Converter():
 
         return
     
+    
     def _rename_gson2mrxsgson(self):
 
+        # print(f"caalllelllelelleeeelldddd")
+        
         files = [os.path.join(self.folder,file) for file in os.listdir(self.folder) if '.gson' in file]
-        files = [file.replace('.gson', '.mrxs.gson') for file in files if '.mrxs' not in file ]
+        # self.log.info(f"files:{files}")
+
+        old_new_names = [(file, file.replace('.gson', '.mrxs.gson')) for file in files if '.mrxs' not in file ]
+        # self.log.info(f"files:{old_new_names}")
+        for old_fp, new_fp in old_new_names: 
+            os.rename(old_fp, new_fp)
 
 
         return
@@ -359,7 +367,7 @@ class Converter():
         # rename all gson to mrxs.gson 
         self._rename_gson2mrxsgson()
 
-        
+
         files = self._get_files()
         for file in tqdm(files, desc = f"Converting to {self.format_to}"):
             # print(f"⏳ Converting: {os.path.basename(file)}")

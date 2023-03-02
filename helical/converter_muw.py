@@ -68,6 +68,9 @@ class ConverterMuW(Converter):
     def __call__(self) -> None:
         """ Converts using the proper function depending on the conversion task of choice. """
 
+        self._rename_gson2mrxsgson()
+
+
         base_names = self._get_files()
         LEVEL = self.level
 
