@@ -21,7 +21,7 @@ from typing import Literal
 import random
 from loggers import get_logger
 from decorators import log_start_finish
-
+import json
 
 class Tiler():
 
@@ -83,7 +83,9 @@ class Tiler():
             wsi_fn = os.path.split(fp)[1].split('.')[0]
             files = [file for file in os.listdir(tile_images_fp) if '.png' in file and wsi_fn in file]
 
-
+            self.log.info(f"trying to open self.ntiles[{wsi_fn}]")
+            ret = self.n_tiles[wsi_fn]
+            self.log.info(f"ret: {ret}, type: {type(ret)}")
             x_max, y_max  = self.n_tiles[wsi_fn]
             # x_max, y_max = x_max -1 , y_max -1
             # num_x_tiles = [int(file.split('_')[-2]) for file in files]
@@ -150,78 +152,46 @@ class Tiler():
 
         return
     
-    def _get_n_tiles(self,
-                     files: list, 
-                     overlapping: bool = False,
-                     save_folder: str = None) -> None:
-        """ Returns the number of x and y tiles that are computed by patchifying the file. """
+    
+    def _write_ntiles(self, sample_fn:str, dims:tuple):
 
-        class_name = self.__class__.__name__
-        func_name = '_get_n_tiles'
-        files = [fp.replace(self.format, 'tif') for fp in files]
-        assert all([os.path.isfile(fp) for fp in files]), ValueError(f"some path in {files} is not a valid filepath.")
-        save_folder = os.path.join(self.save_root, 'images') if save_folder is None else save_folder
-
-        @log_start_finish(class_name=class_name, func_name=func_name, msg = f" Getting n_tiles:" )
-        def do():        
-            
-            n_tiles = {}
-            for fp in files:
-                w, h = self.tile_shape
-
-                # 1) read slide:
-                try:
-                    slide = openslide.OpenSlide(fp)
-                except:
-                    self.log.error(f"{class_name}.{func_name}: ❌ Couldn t open file: '{os.path.basename(fp)}'. Skipping." )
-                    continue
-                W, H = slide.dimensions
-
-                # 2) if file has multi_samples -> region = sample:
-                if self.multiple_samples is True:
-                    # get file with location of image/label samples within the slide:
-                    multisample_loc_file = self._get_multisample_loc_file(fp, file_format='geojson', mode='labels')
-                    sample_locations = self._get_location_w_h(fp = multisample_loc_file) if multisample_loc_file is not None else [{'location':(0,0), 'w':W, 'h':H}]
-                else:
-                    multisample_loc_file = None
-                    sample_locations = [{'location':(0,0), 'w':W, 'h':H}]
-
-
-                for sample_n, sample in enumerate(tqdm(sample_locations, desc= "Samples")):
-                    
-                    location, W, H = sample['location'], sample['w'], sample['h']
-                    
-                    # 1) reading region:
-                    self.log.info(f"{class_name}.{func_name}: ⏳ Reading region ({W, H}) of sample_{sample_n}:")
-                    try:
-                        region = slide.read_region(location = location , level = self.level, size= (W,H)).convert("RGB")
-                    except:
-                        self.log.error(f"{class_name}.{func_name}: ❌ Reading region failed")
-
-                    # 2) converting to numpy array:
-                    self.log.info(f"{class_name}.{func_name}: ⏳ Converting to numpy sample_{sample_n}:")
-                    try:
-                        np_slide = np.array(region)
-                    except:
-                        self.log.error(f"{class_name}.{func_name}: ❌ Conversion to numpy.")
-
-                    # 3) patchification:
-                    self.log.info(f"{class_name}.{func_name}: ⏳ Patchifying sample_{sample_n}:")
-                    try:
-                        if overlapping is False:
-                            patches = patchify(np_slide, (w, h, 3), step =  self.step )
-                            sample_fname = os.path.basename(fp).split('.')[0] + f"_sample{sample_n}"
-                            n_tiles[sample_fname] = (patches.shape[0], patches.shape[1])
-                        else:
-                            raise NotImplementedError()
-                    except:
-                        self.log.error(f"{class_name}.{func_name}: ❌ Patchifying.")
-                    self.log.info(f"{class_name}.{func_name}: n_tiles = {n_tiles}")
-            return n_tiles
+        new_data = {sample_fn:list(dims)}
+        to_json = {}
+        if os.path.isfile(self.json_ntile):
+            with open(self.json_ntile, 'r') as f:
+                self.log.info('OPNEEEEEEEEEE')
+                from_json = json.load(f)
+            self.log.info(f"type: {from_json}")
+            to_json.update(from_json)
         
-        ret_obj = do()
+        to_json.update(new_data)
+        self.log.info(to_json)
+        with open(self.json_ntile, 'w') as f: 
+            json.dump(to_json, fp = f)
 
-        return ret_obj
+        
+        return
+    
+    def _get_n_tiles(self): 
+
+        assert os.path.isfile(self.json_ntile), f"'json_ntile':{self.json_ntile} file is not a valid filepath."
+        self.log.info("assert passed")
+        with open(self.json_ntile, 'r') as f:
+            n_tiles = json.load(f)
+        self.log.info("get_n_tiles opened")
+        
+        # files = [os.path.split(fp.split('.')[0])[1] for fp in files]
+        # assert all([os.path.isfile(fp) for fp in files]), ValueError(f"some path in {files} is not a valid filepath.")
+        # txt_files = glob(os.path.join(self.folder, '*_sample*.txt'))
+        # keys = [os.path.split(file)[1].split('.')[0] for file in txt_files]
+
+        # for key in keys:
+
+
+        return n_tiles
+    
+
+
 
 
 
@@ -273,6 +243,7 @@ class Tiler():
                 location, W, H = sample['location'], sample['w'], sample['h']
                 
                 # 1) reading region:
+                # self.log.info(f"fp:{fp}")
                 self.log.info(f"{class_name}.{func_name}: ⏳ Reading region ({W, H}) of sample_{sample_n}:")
                 try:
                     region = slide.read_region(location = location , level = self.level, size= (W,H)).convert("RGB")
@@ -292,6 +263,11 @@ class Tiler():
                 try:
                     if overlapping is False:
                         patches = patchify(np_slide, (w, h, 3), step =  self.step )
+                        w_tiles,h_tiles = patches.shape[0],patches.shape[1]
+                        # self.log.info(f"dims:{(w_tiles,h_tiles)}")
+                        sample_fn = os.path.split(fp.replace('.tif', f"_sample{sample_n}"))[1]
+                        # self.log.info(f"sample_fn:{sample_fn}")
+                        self._write_ntiles(sample_fn=sample_fn, dims=(w_tiles,h_tiles))
                     else:
                         raise NotImplementedError()
                 except:
@@ -381,6 +357,7 @@ class Tiler():
         assert target_format in SLIDE_FORMATS or target_format in LABEL_FORMATS, ValueError(f"Patchification target format = {target_format} should be either an image in 'tiff', 'tif' format or an annotation in 'txt' format. ")
         assert save_folder is None or os.path.isdir(save_folder), ValueError(f"'save_folder':{save_folder} should be either None or a valid dirpath. ")
         
+        self.json_ntile = os.path.join(self.folder, 'n_tiles.json')
         default_folder = 'images' if (target_format == 'tiff' or target_format == 'tif') else 'labels'
         save_folder = os.path.join(self.save_root, default_folder) if save_folder is None else save_folder
         self.format = target_format
@@ -409,7 +386,9 @@ class Tiler():
         
 
         if target_format == 'txt':
-            self.n_tiles = self._get_n_tiles(files, overlapping=False, save_folder=save_folder)
+            self.log.info(f"calling get_n_tiles")
+            self.n_tiles = self._get_n_tiles() #(files, overlapping=False, save_folder=save_folder)
+            self.log.info(f"self.n_tiles:{self.n_tiles}")
         
 
         for file in files:
