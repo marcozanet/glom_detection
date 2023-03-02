@@ -1,5 +1,11 @@
-
-import os
+import os 
+OPENSLIDE_PATH = r'C:\Users\hp\Documents\Downloads\openslide-win64-20220811\openslide-win64-20220811\bin'
+if hasattr(os, 'add_dll_directory'):
+    # Python >= 3.8 on Windows
+    with os.add_dll_directory(OPENSLIDE_PATH):
+        import openslide
+else:
+    import openslide
 from typing import List
 import geojson
 from glob import glob
@@ -15,6 +21,7 @@ class Converter():
 
     def __init__(self, 
                 folder: str, 
+                level:int,
                 convert_from: Literal['json_wsi_mask', 'jsonliketxt_wsi_mask', 'gson_wsi_mask'], 
                 convert_to: Literal['json_wsi_bboxes', 'txt_wsi_bboxes', 'geojson_wsi_mask'],
                 save_folder = None,
@@ -39,6 +46,9 @@ class Converter():
         self.save_folder = save_folder if save_folder is not None else folder
         self.verbose = verbose
         self.map_classes = map_classes
+        self.level = level
+
+        return
 
 
     def _get_files(self) -> List[str]:
@@ -79,6 +89,16 @@ class Converter():
         return txt_fp
     
 
+    def _get_dimensions(self, basename:str):
+        """ Gets slide dimensions based on the level."""
+
+        slide_fp = basename + ".tif"
+        assert os.path.isfile(slide_fp), f"'slide_fp':{slide_fp} is not a valid filepath."
+        slide = openslide.OpenSlide(slide_fp)
+        W_orig, H_orig = slide.level_dimensions[0]
+        W_lev, H_lev = slide.level_dimensions[self.level]
+
+        return W_orig, H_orig,W_lev, H_lev
 
 
     
@@ -136,11 +156,20 @@ class Converter():
                 y_max = y if y > y_max else y_max 
                 y_min = y if y < y_min else y_min
 
-            x_c = round((x_max + x_min) / 2, 2)
-            y_c = round((y_max + y_min) / 2, 2)  
-            box_w, box_y = round((x_max - x_min), 2) , round((y_max - y_min), 2)
+            x_c = (x_max + x_min) / 2
+            y_c = (y_max + y_min) / 2
+            box_w, box_y = x_max - x_min, y_max - y_min
+
+            # NEW: normalize by level dimensions: 
+            basename = fp.split('.')[0]
+            w_orig, h_orig, w_lev, h_lev = self._get_dimensions(basename=basename)
+            x_c, y_c = x_c/w_orig*w_lev, y_c/h_orig*h_lev
+            box_w, box_y= box_w/w_orig*w_lev, box_y/h_orig*h_lev
+
             new_coords.append([[x_min, y_min], [x_max, y_min], [x_max, y_max], [x_min, y_max], [x_min, y_min]]) 
             boxes.append([class_value, x_c, y_c, box_w, box_y])
+
+            # self.log.info(f"boxes: {boxes}")
 
             if self.convert_to == 'txt_wsi_bboxes':
                 return_obj = boxes 
@@ -161,7 +190,7 @@ class Converter():
         bboxes = self._get_bboxes_from_mask(fp = json_file)
         # 2) save to txt 
         converted_file= self._write_txt(bboxes, fp = json_file)
-        self.log.info("✅ Converter: WSi .json annotation converted to WSI .txt annotation. ", extra={'className': self.__class__.__name__})
+        self.log.info(f"{self.__class__.__name__}.{'_convert_json2txt'} Converter: ✅ WSi .json annotation converted to WSI .txt annotation. ", extra={'className': self.__class__.__name__})
             
         return converted_file
     
@@ -177,7 +206,7 @@ class Converter():
         text = json.loads(text)
         with open(save_file, 'w') as fs:
             json.dump(obj = text, fp = fs)
-        self.log.info("✅ Converter: WSI .gson annotation converted to WSI .json annotation. ", extra={'className': self.__class__.__name__})
+        self.log.info(f"{self.__class__.__name__}.{'_convert_gson2txt'} Converter: ✅ WSi .json annotation converted to WSI .txt annotation. ", extra={'className': self.__class__.__name__})
         # 3) convert using json converter:
         converted_file = self._convert_json2txt(json_file=save_file)
         # 4) clear txt annotations from ROI objects
@@ -212,7 +241,59 @@ class Converter():
 
         return  geojson_file
     
+    def _split_multisample_annotation(self, txt_file:str, multisample_loc_file:str) -> None:
+        """ Given a WSI txt (not normalised) annotation for samples or ROIs, it splits the annotation file 
+            into one file for each sample/ROI within the slide."""
+        
+        assert os.path.isfile(txt_file), f"'label_file':{txt_file} is not a valid filepath."
+        assert os.path.isfile(multisample_loc_file), f"'label_file':{multisample_loc_file} is not a valid filepath."
+        assert txt_file.split(".")[-1] == 'txt', f"'txt_file':{txt_file} should have '.txt' format. "
 
+        with open(txt_file, 'r') as f:
+            rows = f.readlines()
+        
+        with open(multisample_loc_file, 'r') as f:
+            data = geojson.load(f)
+        
+
+        txt_files = []
+        txt_fnames = []
+        for row in rows:
+            clss, xc, yc, box_w, box_h = row.replace(',', '').split(' ')
+            clss, xc, yc, box_w, box_h = float(clss), float(xc), float(yc), float(box_w), float(box_h)
+            for sample_n, rect in enumerate(data['features']):
+                assert len(rect['geometry']['coordinates'][0]) == 5, f"There seems to be more than 4 vertices annotated. "
+                save_fp = txt_file.replace('.txt', f"_sample{sample_n}.txt")
+                txt_files.append(save_fp)
+                txt_fnames.append(f"_sample{sample_n}.txt")
+                vertices = rect['geometry']['coordinates'][0][:-1]
+                x0, y0 = vertices[0]
+                x1, y1 = vertices[2]
+
+
+                if x0<xc<x1 and y0<yc<y1:
+                    xc_new, yc_new = xc-x0, yc-y0 # new ROI coords
+                    boxw_new, boxh_new = box_w, box_h # new ROI coords
+
+                    # NEW: normalize by level dimensions:
+                    basename = multisample_loc_file.split('.')[0]
+                    w_orig, h_orig, w_lev, h_lev = self._get_dimensions(basename=basename)
+                    xc_new, yc_new = xc_new/w_orig*w_lev, yc_new/h_orig*h_lev
+                    boxw_new, boxh_new = boxw_new/w_orig*w_lev, boxh_new/h_orig*h_lev
+
+                    text = f'{clss}, {xc_new}, {yc_new}, {boxw_new}, {boxh_new}\n'  
+                    # save txt file:
+                    with open(save_fp, 'a+') as f:
+                        f.write(text)
+
+        
+        # return a list of txt files for each sample:
+        txt_files = list(set(txt_files))
+        txt_fnames = list(set(txt_fnames))
+        self.log.info(f"{self.__class__.__name__}.{'_split_multisample_annotation'}: ✅ Splitted into {txt_fnames}.")
+
+
+        return txt_files
     
     def _clear_ROI_objs_(self, txt_file:str):
         assert os.path.isfile(txt_file), f"'txt_file':{txt_file} is not a valid filepath."
@@ -223,7 +304,7 @@ class Converter():
         for i, line in enumerate(lines):
             objs = line.replace('\n', '').split(', ')
             h_obj, w_obj = round(float(objs[3])), round(float(objs[4]))
-            if h_obj > 10000 or w_obj>10000:
+            if h_obj > 5000 or w_obj>5000:
                 del_rows.append(i)
         lines = [line for (i, line) in enumerate(lines) if i not in del_rows]
         # print(lines)
@@ -291,6 +372,7 @@ class Converter():
         return
 
 
+
         
 
 
@@ -300,7 +382,7 @@ def test_Converter():
     folder = '/Users/marco/Downloads/train_20feb23/wsi/val/labels'
     converter = Converter(folder = folder, 
                           convert_from='gson_wsi_mask', 
-                          convert_to='geojson_wsi_mask',
+                          convert_to='',
                           save_folder= '/Users/marco/Downloads/heeee', 
                           verbose=False)
     converter()
