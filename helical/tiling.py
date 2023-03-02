@@ -86,7 +86,8 @@ class Tiler():
             self.log.info(f"trying to open self.ntiles[{wsi_fn}]")
             ret = self.n_tiles[wsi_fn]
             self.log.info(f"ret: {ret}, type: {type(ret)}")
-            x_max, y_max  = self.n_tiles[wsi_fn]
+            x_max, y_max  = self.n_tiles[wsi_fn][0], self.n_tiles[wsi_fn][1]
+            self.log.info(f"x_max:{x_max}, y_max:{y_max}")
             # x_max, y_max = x_max -1 , y_max -1
             # num_x_tiles = [int(file.split('_')[-2]) for file in files]
             # num_y_tiles = [int(file.split('_')[-1].split('.')[0]) for file in files]
