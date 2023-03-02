@@ -1,22 +1,22 @@
-02/03 15:05:25|INFO|Tiler.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/Downloads/test_folders/test_tiler/test_manyslide'. Results will be saved in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/images'.
-02/03 15:05:25|WARNING|Tiler._is_sample_computed: 😪 Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/images' for .png. Skipping sample.
-02/03 15:05:25|WARNING|Tiler._is_slide_computed: 😪😪 Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/images' for .png. Skipping slide.
-02/03 15:05:25|WARNING|Tiler._is_sample_computed: 😪 Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/images' for .png. Skipping sample.
-02/03 15:05:25|WARNING|Tiler._is_slide_computed: 😪😪 Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/images' for .png. Skipping slide.
-02/03 15:05:25|WARNING|Tiler._is_sample_computed: 😪 Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/images' for .png. Skipping sample.
-02/03 15:05:25|WARNING|Tiler._is_sample_computed: 😪 Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/images' for .png. Skipping sample.
-02/03 15:05:25|WARNING|Tiler._is_slide_computed: 😪😪 Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/images' for .png. Skipping slide.
-02/03 15:05:25|INFO|Tiler._get_completed_files: Completed 3/3 files.
-02/03 15:05:25|INFO|Tiler.__call__: 🎉 All files in folder '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide' have been tiled and saved in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/images'.  
-02/03 15:05:25|INFO|Tiler.__call__: ⏳ START TILING LABELS from folder:'/Users/marco/Downloads/test_folders/test_tiler/test_manyslide'. Results will be saved in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/labels'.
-02/03 15:05:25|WARNING|Tiler._is_sample_computed: 😪 Tiler: found .txt tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/labels' for .txt. Skipping sample.
-02/03 15:05:25|WARNING|Tiler._is_sample_computed: 😪 Tiler: found .txt tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/labels' for .txt. Skipping sample.
-02/03 15:05:25|WARNING|Tiler._is_slide_computed: 😪😪 Tiler: found .txt tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/labels' for .txt. Skipping slide.
-02/03 15:05:25|WARNING|Tiler._is_sample_computed: 😪 Tiler: found .txt tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/labels' for .txt. Skipping sample.
-02/03 15:05:25|WARNING|Tiler._is_slide_computed: 😪😪 Tiler: found .txt tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/labels' for .txt. Skipping slide.
-02/03 15:05:25|WARNING|Tiler._is_sample_computed: 😪 Tiler: found .txt tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/labels' for .txt. Skipping sample.
-02/03 15:05:25|WARNING|Tiler._is_slide_computed: 😪😪 Tiler: found .txt tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/labels' for .txt. Skipping slide.
-02/03 15:05:25|INFO|Tiler._get_completed_files: Completed 3/3 files.
-02/03 15:05:25|INFO|Tiler.__call__: 🎉 All files in folder '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide' have been tiled and saved in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/labels'.  
-02/03 15:05:25|INFO|Tiler.test_show_image_labels: ⏳ Showing 6 random tiles:'
-02/03 15:05:31|INFO|Tiler.test_show_image_labels: ✅ Showing 6 random tiles:'
+02/03 15:25:33|INFO|Tiler.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/Downloads/test_folders/test_tiler/test_manyslide'. Results will be saved in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/images'.
+02/03 15:25:33|WARNING|Tiler._is_sample_computed: 😪 Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/images' for .png. Skipping sample.
+02/03 15:25:33|WARNING|Tiler._is_slide_computed: 😪😪 Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/images' for .png. Skipping slide.
+02/03 15:25:33|WARNING|Tiler._is_sample_computed: 😪 Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/images' for .png. Skipping sample.
+02/03 15:25:33|WARNING|Tiler._is_slide_computed: 😪😪 Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/images' for .png. Skipping slide.
+02/03 15:25:33|WARNING|Tiler._is_sample_computed: 😪 Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/images' for .png. Skipping sample.
+02/03 15:25:33|WARNING|Tiler._is_sample_computed: 😪 Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/images' for .png. Skipping sample.
+02/03 15:25:33|WARNING|Tiler._is_slide_computed: 😪😪 Tiler: found .png tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/images' for .png. Skipping slide.
+02/03 15:25:33|INFO|Tiler._get_completed_files: Completed 3/3 files.
+02/03 15:25:33|INFO|Tiler.__call__: 🎉 All files in folder '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide' have been tiled and saved in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/images'.  
+02/03 15:25:33|INFO|Tiler.__call__: ⏳ START TILING LABELS from folder:'/Users/marco/Downloads/test_folders/test_tiler/test_manyslide'. Results will be saved in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/labels'.
+02/03 15:25:33|WARNING|Tiler._is_sample_computed: 😪 Tiler: found .txt tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/labels' for .txt. Skipping sample.
+02/03 15:25:33|WARNING|Tiler._is_sample_computed: 😪 Tiler: found .txt tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/labels' for .txt. Skipping sample.
+02/03 15:25:33|WARNING|Tiler._is_slide_computed: 😪😪 Tiler: found .txt tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/labels' for .txt. Skipping slide.
+02/03 15:25:33|WARNING|Tiler._is_sample_computed: 😪 Tiler: found .txt tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/labels' for .txt. Skipping sample.
+02/03 15:25:33|WARNING|Tiler._is_slide_computed: 😪😪 Tiler: found .txt tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/labels' for .txt. Skipping slide.
+02/03 15:25:33|WARNING|Tiler._is_sample_computed: 😪 Tiler: found .txt tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/labels' for .txt. Skipping sample.
+02/03 15:25:33|WARNING|Tiler._is_slide_computed: 😪😪 Tiler: found .txt tiles in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/labels' for .txt. Skipping slide.
+02/03 15:25:33|INFO|Tiler._get_completed_files: Completed 3/3 files.
+02/03 15:25:33|INFO|Tiler.__call__: 🎉 All files in folder '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide' have been tiled and saved in '/Users/marco/Downloads/test_folders/test_tiler/test_manyslide/labels'.  
+02/03 15:25:33|INFO|Tiler.test_show_image_labels: ⏳ Showing 6 random tiles:'
+02/03 15:25:40|INFO|Tiler.test_show_image_labels: ✅ Showing 6 random tiles:'

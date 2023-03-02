@@ -315,6 +315,14 @@ class Converter():
             f.writelines(lines)
 
         return
+    
+    def _rename_gson2mrxsgson(self):
+
+        files = [os.path.join(self.folder,file) for file in os.listdir(self.folder) if '.gson' in file]
+        files = [file.replace('.gson', '.mrxs.gson') for file in files if '.mrxs' not in file ]
+
+
+        return
 
 
     def _convert_jsonliketxt2txt(self, jsonliketxt_file:str) -> None:
@@ -348,6 +356,10 @@ class Converter():
     def __call__(self) -> None:
         """ Converts using the proper function depending on the conversion task of choice. """
 
+        # rename all gson to mrxs.gson 
+        self._rename_gson2mrxsgson()
+
+        
         files = self._get_files()
         for file in tqdm(files, desc = f"Converting to {self.format_to}"):
             # print(f"⏳ Converting: {os.path.basename(file)}")
