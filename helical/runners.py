@@ -7,9 +7,9 @@ from tqdm import tqdm
 def prepare_muw_data():
     import sys 
     system = 'mac' if sys.platform == 'darwin' else 'windows'
-    folder = '/Users/marco/Downloads/test_folders/test_tiler/test_1slide' if system == 'mac' else  r'D:\marco\datasets\muw_retiled\wsi\val\labels'
-    save_folder = '/Users/marco/Downloads/test_folders/test_tiler/test_1slide' if system == 'mac' else  r'D:\marco\datasets\muw_retiled\wsi\val\labels'
-    save_root = '/Users/marco/Downloads/test_folders/test_tiler/test_1slide' if system == 'mac' else  r'D:\marco\datasets\muw_retiled\wsi\val\labels'
+    folder = '/Users/marco/Downloads/test_folders/test_tiler/test_1slide' if system == 'mac' else  r'D:\marco\datasets\muw_retiled\wsi\test\labels'
+    save_folder = '/Users/marco/Downloads/test_folders/test_tiler/test_1slide' if system == 'mac' else  r'D:\marco\datasets\muw_retiled\wsi\test\labels'
+    save_root = '/Users/marco/Downloads/test_folders/test_tiler/test_1slide' if system == 'mac' else  r'D:\marco\datasets\muw_retiled\wsi\test\labels'
     level = 2
     show = False
     
