@@ -11,9 +11,9 @@ import shutil
 def prepare_muw_data():
     import sys 
     system = 'mac' if sys.platform == 'darwin' else 'windows'
-    folder = '/Users/marco/Downloads/test_folders/test_tiler/test_1slide' if system == 'mac' else  r'D:\marco\datasets\muw_retiled\wsi\test\labels'
-    save_folder = '/Users/marco/Downloads/test_folders/test_tiler/test_1slide' if system == 'mac' else  r'D:\marco\datasets\muw_retiled\wsi\test\labels'
-    save_root = '/Users/marco/Downloads/test_folders/test_tiler/test_1slide' if system == 'mac' else  r'D:\marco\datasets\muw_retiled\wsi\test\labels'
+    folder = '/Users/marco/Downloads/test_folders/test_tiler/test_1slide' if system == 'mac' else  r'D:\marco\datasets\tests\test_TilerConverter\labels'
+    save_folder = '/Users/marco/Downloads/test_folders/test_tiler/test_1slide' if system == 'mac' else  r'D:\marco\datasets\tests\test_TilerConverter\labels'
+    save_root = '/Users/marco/Downloads/test_folders/test_tiler/test_1slide' if system == 'mac' else r'D:\marco\datasets\tests\test_TilerConverter\labels'
     level = 2
     show = False
     
@@ -67,7 +67,7 @@ def split_data():
     ratio = [0.6, 0.2, 0.2]
     task = 'detection'
     verbose = True
-    safe_copy = True
+    safe_copy = False
 
     splitter = Splitter(src_dir=src_dir,
                         dst_dir=dst_dir,
@@ -98,4 +98,5 @@ def pipeline():
 if __name__ == '__main__':
     # wsi_folder = '/Users/marco/Downloads/test_folders/test_process_data_and_train/detection/wsi'
     # move_slides_back_from_tiling(wsi_folder=wsi_folder, slide_format='tif')
-    prepare_muw_data()
+    # prepare_muw_data()
+    pipeline()

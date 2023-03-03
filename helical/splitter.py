@@ -19,7 +19,8 @@ class Splitter():
                  ratio = [0.7, 0.15, 0.15], 
                  task = Literal['detection', 'segmentation', 'MIL', 'mil', 'both'],
                  safe_copy:bool = True,
-                 verbose:bool = False) -> None:
+                 verbose:bool = False,
+                 reproducibility = True) -> None:
 
         self.log = get_logger()
 
@@ -40,6 +41,7 @@ class Splitter():
         assert (len(ratio) == 3 or len(ratio) == 2) and round(np.sum(np.array(ratio)), 2) == 1.0, ValueError(f"'ratio' should be a list of floats with sum 1, but has sum {np.sum(np.array(ratio))}." )
         assert isinstance(verbose, bool), f"'verbose' should be a boolean."
         assert isinstance(safe_copy, bool), f"safe_copy should be boolean."
+        assert isinstance(reproducibility, bool), f"'reproducibility':{reproducibility} should be boolean."
 
         self.empty_perc = 0.1 if empty_perc is None else empty_perc
         self.src_dir = src_dir
@@ -52,6 +54,7 @@ class Splitter():
         self.verbose = verbose
         self.ratio = ratio
         self.safe_copy = safe_copy
+        self.reproducibility =reproducibility
 
         
         return
@@ -93,6 +96,7 @@ class Splitter():
         """ Splits images in train, val and test. 
             Returns: tuple containing lists of train, val, test images and labels"""
 
+        SEED = 10
         n_images = len(image_list)
         n_val_imgs = round(self.ratio[1] * n_images) 
         n_test_imgs = int(self.ratio[2] * n_images) if self.splitting_mode == 'wtest' else None
@@ -100,6 +104,8 @@ class Splitter():
         # 1) randomly pick val images:
         val_imgs = []
         for _ in range(n_val_imgs):
+            if self.reproducibility is True:
+                random.seed(SEED)
             rand_img = random.choice(image_list)
             val_imgs.append(rand_img)
             image_list.remove(rand_img)
@@ -109,6 +115,8 @@ class Splitter():
         if self.splitting_mode == 'wtest':
             test_imgs = []
             for _ in range(n_test_imgs):
+                if self.reproducibility is True:
+                    random.seed(SEED)                
                 rand_img = random.choice(image_list)
                 test_imgs.append(rand_img)
                 image_list.remove(rand_img)

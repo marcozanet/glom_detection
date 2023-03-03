@@ -1,35 +1,3 @@
-03/03 15:48:21|INFO|ConverterMuW._convert_gson2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
-03/03 15:48:21|INFO|ConverterMuW._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
-03/03 15:48:21|INFO|ConverterMuW._split_multisample_annotation: ✅ Splitted into ['_sample0.txt'].
-03/03 15:48:21|INFO|Tiler.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/Downloads/test_folders/test_tiler/test_1slide'. Results will be saved in '/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images'.
-03/03 15:48:21|INFO|Tiler._get_completed_files: Completed 0/1 files.
-03/03 15:48:21|INFO|Tiler._remove_small_files: Removed 0 small files (< 500kB)
-03/03 15:48:21|INFO|Tiler._get_tile_images: ⏳ Tiling image: '200822954_09_SFOG.tif'
-03/03 15:48:21|INFO|Tiler._get_tile_images: ⏳ Opening '200822954_09_SFOG.tif':
-03/03 15:48:21|INFO|Tiler._get_tile_images: ✅ Opening '200822954_09_SFOG.tif':
-03/03 15:48:21|INFO|Tiler._get_tile_images: ⏳ Reading region ((65425, 27841)) of sample_0:
-03/03 15:48:35|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
-03/03 15:48:43|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
-03/03 15:48:43|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
-03/03 15:48:43|INFO|{'200822954_09_SFOG_sample0': [51, 124]}
-03/03 15:48:43|INFO|Tiler._get_tile_images: ✅ Patchifying.
-03/03 15:48:43|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
-03/03 15:50:50|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/test_folders/test_tiler/test_1slide/images.
-03/03 15:50:50|INFO|Tiler._get_tile_images: ✅ Tiling image: '200822954_09_SFOG.tif'
-03/03 15:50:50|INFO|Tiler.__call__: ⏳ START TILING LABELS from folder:'/Users/marco/Downloads/test_folders/test_tiler/test_1slide'. Results will be saved in '/Users/marco/Downloads/test_folders/test_tiler/test_1slide/labels'.
-03/03 15:50:50|INFO|Tiler._get_completed_files: Completed 0/1 files.
-03/03 15:50:50|INFO|calling get_n_tiles
-03/03 15:50:50|INFO|assert passed
-03/03 15:50:50|INFO|get_n_tiles opened
-03/03 15:50:50|INFO|self.n_tiles:{'200822954_09_SFOG_sample0': [51, 124]}
-03/03 15:50:51|INFO|Tiler._remove_small_files: Removed 5994 small files (< 500kB)
-03/03 15:50:51|INFO|Tiler._get_tile_labels: ⏳ Tiling label: '200822954_09_SFOG_sample0.txt'
-03/03 15:50:51|INFO|Tiliing label /Users/marco/Downloads/test_folders/test_tiler/test_1slide/200822954_09_SFOG_sample0.txt
-03/03 15:50:51|INFO|trying to open self.ntiles[200822954_09_SFOG_sample0]
-03/03 15:50:51|INFO|ret: [51, 124], type: <class 'list'>
-03/03 15:50:51|INFO|x_max:51, y_max:124
-03/03 15:50:51|INFO|opened label file
-03/03 15:50:51|INFO|Tiler._get_tile_labels: ✅ Tile labels saved in '/Users/marco/Downloads/test_folders/test_tiler/test_1slide/labels'.
-03/03 15:50:51|INFO|Tiler._get_tile_labels: ✅ Tiling label: '200822954_09_SFOG_sample0.txt'
-03/03 15:50:51|INFO|Tiler.test_show_image_labels: ⏳ Showing 6 random tiles:'
-03/03 15:51:02|INFO|Tiler.test_show_image_labels: ✅ Showing 6 random tiles:'
+03/03 16:59:30|INFO|Splitter._move_files: trainset: ['201404358_09_SFOG.tif', '201410900_09_SFOG.tif', '201420222_09_SFOG.tif', '201325292_9_SFOG.tif', '201413736_09_SFOG.tif', '201413789_09_SFOG.tif']
+03/03 16:59:30|INFO|Splitter._move_files: valset: ['201423479_09_SFOG.tif', '201414036_9_SFOG.tif']
+03/03 16:59:30|INFO|Splitter._move_files: testset: ['201409661_09_SFOG.tif', '201404292_09_SFOG.tif']
