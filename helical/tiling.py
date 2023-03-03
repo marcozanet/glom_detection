@@ -22,6 +22,7 @@ import random
 from loggers import get_logger
 from decorators import log_start_finish
 import json
+import cv2
 
 class Tiler():
 
@@ -583,7 +584,7 @@ class Tiler():
     
 
     
-    def test_show_image_labels(self):
+    def test_show_image_labels(self, save = True):
         """ Shows K random images/labels. """
         class_name = self.__class__.__name__
         func_name = 'test_show_image_labels'
@@ -601,7 +602,7 @@ class Tiler():
             pairs = random.sample(pairs, k = 6)
 
             # show image + rectangles on labels:
-            plt.figure(figsize=(40,60))
+            fig = plt.figure(figsize=(40,60))
             for i, (image_fp, label_fp) in enumerate(pairs):
 
                 image = cv2.imread(image_fp)
@@ -632,6 +633,10 @@ class Tiler():
             # title = [os.path.basename(img).replace('.png', '') for (img, _) in pairs ]
             # plt.suptitle(title)
             plt.show()
+
+            fig.savefig(fname = os.path.join(self.save_root, 'show_tiles.png'))
+
+                        
 
             return
         do()

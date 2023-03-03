@@ -1,49 +1,49 @@
-03/03 09:22:25|INFO|ConverterMuW._convert_gson2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
-03/03 09:22:25|INFO|ConverterMuW._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
-03/03 09:22:25|INFO|ConverterMuW._split_multisample_annotation: ✅ Splitted into ['_sample1.txt', '_sample0.txt'].
-03/03 09:22:25|INFO|Tiler.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/Downloads/test_folders/test_tiler/test_1slide'. Results will be saved in '/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images'.
-03/03 09:22:25|INFO|Tiler._get_completed_files: Completed 0/1 files.
-03/03 09:22:25|INFO|Tiler._remove_small_files: Removed 0 small files (< 500kB)
-03/03 09:22:25|INFO|Tiler._get_tile_images: ⏳ Tiling image: '200104066_09_SFOG.tif'
-03/03 09:22:25|INFO|Tiler._get_tile_images: ⏳ Opening '200104066_09_SFOG.tif':
-03/03 09:22:25|INFO|Tiler._get_tile_images: ✅ Opening '200104066_09_SFOG.tif':
-03/03 09:22:25|INFO|Tiler._get_tile_images: ⏳ Reading region ((28328, 54455)) of sample_0:
-03/03 09:22:38|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
-03/03 09:22:45|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
-03/03 09:22:45|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
-03/03 09:22:45|INFO|{'200104066_09_SFOG_sample0': [103, 52]}
-03/03 09:22:45|INFO|Tiler._get_tile_images: ✅ Patchifying.
-03/03 09:22:45|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
-03/03 09:24:52|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/test_folders/test_tiler/test_1slide/images.
-03/03 09:24:52|INFO|Tiler._get_tile_images: ⏳ Reading region ((35840, 65606)) of sample_1:
-03/03 09:25:09|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_1:
-03/03 09:25:21|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
-03/03 09:25:21|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_1:
-03/03 09:25:21|INFO|OPNEEEEEEEEEE
-03/03 09:25:21|INFO|type: {'200104066_09_SFOG_sample0': [103, 52]}
-03/03 09:25:21|INFO|{'200104066_09_SFOG_sample0': [103, 52], '200104066_09_SFOG_sample1': [125, 67]}
-03/03 09:25:21|INFO|Tiler._get_tile_images: ✅ Patchifying.
-03/03 09:25:21|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_1:
-03/03 09:28:05|INFO|Tiler._get_tile_images: ✅ Saved sample_1 patches in /Users/marco/Downloads/test_folders/test_tiler/test_1slide/images.
-03/03 09:28:05|INFO|Tiler._get_tile_images: ✅ Tiling image: '200104066_09_SFOG.tif'
-03/03 09:28:05|INFO|Tiler.__call__: ⏳ START TILING LABELS from folder:'/Users/marco/Downloads/test_folders/test_tiler/test_1slide'. Results will be saved in '/Users/marco/Downloads/test_folders/test_tiler/test_1slide/labels'.
-03/03 09:28:05|INFO|Tiler._get_completed_files: Completed 0/1 files.
-03/03 09:28:05|INFO|calling get_n_tiles
-03/03 09:28:05|INFO|assert passed
-03/03 09:28:05|INFO|get_n_tiles opened
-03/03 09:28:05|INFO|self.n_tiles:{'200104066_09_SFOG_sample0': [103, 52], '200104066_09_SFOG_sample1': [125, 67]}
-03/03 09:28:06|INFO|Tiler._remove_small_files: Removed 13107 small files (< 500kB)
-03/03 09:28:06|INFO|Tiler._get_tile_labels: ⏳ Tiling label: '200104066_09_SFOG_sample1.txt'
-03/03 09:28:06|INFO|trying to open self.ntiles[200104066_09_SFOG_sample1]
-03/03 09:28:06|INFO|ret: [125, 67], type: <class 'list'>
-03/03 09:28:06|INFO|x_max:125, y_max:67
-03/03 09:28:06|INFO|Tiler._get_tile_labels: ✅ Tile labels saved in '/Users/marco/Downloads/test_folders/test_tiler/test_1slide/labels'.
-03/03 09:28:06|INFO|Tiler._get_tile_labels: ✅ Tiling label: '200104066_09_SFOG_sample1.txt'
-03/03 09:28:06|INFO|Tiler._get_tile_labels: ⏳ Tiling label: '200104066_09_SFOG_sample0.txt'
-03/03 09:28:06|INFO|trying to open self.ntiles[200104066_09_SFOG_sample0]
-03/03 09:28:06|INFO|ret: [103, 52], type: <class 'list'>
-03/03 09:28:06|INFO|x_max:103, y_max:52
-03/03 09:28:06|INFO|Tiler._get_tile_labels: ✅ Tile labels saved in '/Users/marco/Downloads/test_folders/test_tiler/test_1slide/labels'.
-03/03 09:28:06|INFO|Tiler._get_tile_labels: ✅ Tiling label: '200104066_09_SFOG_sample0.txt'
-03/03 09:28:06|INFO|Tiler.test_show_image_labels: ⏳ Showing 6 random tiles:'
-03/03 09:28:12|INFO|Tiler.test_show_image_labels: ✅ Showing 6 random tiles:'
+03/03 10:07:47|INFO|ConverterMuW._convert_gson2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
+03/03 10:07:48|INFO|ConverterMuW._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
+03/03 10:07:48|INFO|ConverterMuW._split_multisample_annotation: ✅ Splitted into ['_sample1.txt', '_sample0.txt'].
+03/03 10:07:48|INFO|Tiler.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/Downloads/test_folders/test_tiler/test_1slide'. Results will be saved in '/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images'.
+03/03 10:07:48|INFO|Tiler._get_completed_files: Completed 0/1 files.
+03/03 10:07:48|INFO|Tiler._remove_small_files: Removed 0 small files (< 500kB)
+03/03 10:07:48|INFO|Tiler._get_tile_images: ⏳ Tiling image: '200104066_09_SFOG.tif'
+03/03 10:07:48|INFO|Tiler._get_tile_images: ⏳ Opening '200104066_09_SFOG.tif':
+03/03 10:07:48|INFO|Tiler._get_tile_images: ✅ Opening '200104066_09_SFOG.tif':
+03/03 10:07:48|INFO|Tiler._get_tile_images: ⏳ Reading region ((28328, 54455)) of sample_0:
+03/03 10:08:00|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+03/03 10:08:09|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+03/03 10:08:09|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+03/03 10:08:09|INFO|{'200104066_09_SFOG_sample0': [103, 52]}
+03/03 10:08:09|INFO|Tiler._get_tile_images: ✅ Patchifying.
+03/03 10:08:09|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+03/03 10:10:09|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/test_folders/test_tiler/test_1slide/images.
+03/03 10:10:09|INFO|Tiler._get_tile_images: ⏳ Reading region ((35840, 65606)) of sample_1:
+03/03 10:10:26|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_1:
+03/03 10:10:40|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+03/03 10:10:40|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_1:
+03/03 10:10:40|INFO|OPNEEEEEEEEEE
+03/03 10:10:40|INFO|type: {'200104066_09_SFOG_sample0': [103, 52]}
+03/03 10:10:40|INFO|{'200104066_09_SFOG_sample0': [103, 52], '200104066_09_SFOG_sample1': [125, 67]}
+03/03 10:10:40|INFO|Tiler._get_tile_images: ✅ Patchifying.
+03/03 10:10:40|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_1:
+03/03 10:13:27|INFO|Tiler._get_tile_images: ✅ Saved sample_1 patches in /Users/marco/Downloads/test_folders/test_tiler/test_1slide/images.
+03/03 10:13:27|INFO|Tiler._get_tile_images: ✅ Tiling image: '200104066_09_SFOG.tif'
+03/03 10:13:27|INFO|Tiler.__call__: ⏳ START TILING LABELS from folder:'/Users/marco/Downloads/test_folders/test_tiler/test_1slide'. Results will be saved in '/Users/marco/Downloads/test_folders/test_tiler/test_1slide/labels'.
+03/03 10:13:27|INFO|Tiler._get_completed_files: Completed 0/1 files.
+03/03 10:13:27|INFO|calling get_n_tiles
+03/03 10:13:27|INFO|assert passed
+03/03 10:13:27|INFO|get_n_tiles opened
+03/03 10:13:27|INFO|self.n_tiles:{'200104066_09_SFOG_sample0': [103, 52], '200104066_09_SFOG_sample1': [125, 67]}
+03/03 10:13:28|INFO|Tiler._remove_small_files: Removed 13107 small files (< 500kB)
+03/03 10:13:28|INFO|Tiler._get_tile_labels: ⏳ Tiling label: '200104066_09_SFOG_sample1.txt'
+03/03 10:13:28|INFO|trying to open self.ntiles[200104066_09_SFOG_sample1]
+03/03 10:13:28|INFO|ret: [125, 67], type: <class 'list'>
+03/03 10:13:28|INFO|x_max:125, y_max:67
+03/03 10:13:28|INFO|Tiler._get_tile_labels: ✅ Tile labels saved in '/Users/marco/Downloads/test_folders/test_tiler/test_1slide/labels'.
+03/03 10:13:28|INFO|Tiler._get_tile_labels: ✅ Tiling label: '200104066_09_SFOG_sample1.txt'
+03/03 10:13:28|INFO|Tiler._get_tile_labels: ⏳ Tiling label: '200104066_09_SFOG_sample0.txt'
+03/03 10:13:28|INFO|trying to open self.ntiles[200104066_09_SFOG_sample0]
+03/03 10:13:28|INFO|ret: [103, 52], type: <class 'list'>
+03/03 10:13:28|INFO|x_max:103, y_max:52
+03/03 10:13:28|INFO|Tiler._get_tile_labels: ✅ Tile labels saved in '/Users/marco/Downloads/test_folders/test_tiler/test_1slide/labels'.
+03/03 10:13:28|INFO|Tiler._get_tile_labels: ✅ Tiling label: '200104066_09_SFOG_sample0.txt'
+03/03 10:13:28|INFO|Tiler.test_show_image_labels: ⏳ Showing 6 random tiles:'
+03/03 10:13:41|INFO|Tiler.test_show_image_labels: ✅ Showing 6 random tiles:'
