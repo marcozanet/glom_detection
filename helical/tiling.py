@@ -609,7 +609,10 @@ class Tiler():
             labels_fold = os.path.join(self.save_root, 'labels')
             labels = [os.path.join(labels_fold, file) for file in os.listdir(labels_fold)]
             labels = [file for file in labels if os.path.isfile(file)] # check labels exist
-            images = [file.replace('labels', 'images').replace('.txt', '.png') for file in labels]
+            
+            images_fold = os.path.join(self.save_root, 'images')
+            images = [os.path.join(images_fold, os.path.basename(file).replace('.txt', '.png')) for file in labels]
+
             pairs = list(zip(images, labels))
             pairs = [(img, lbl) for (img, lbl) in pairs if os.path.isfile(img) and os.path.isfile(lbl)]
             pairs = random.sample(pairs, k = 6)
