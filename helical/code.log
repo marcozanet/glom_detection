@@ -1,124 +1,35 @@
-03/03 15:44:58|INFO|ConverterMuW._convert_gson2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
-03/03 15:44:58|INFO|ConverterMuW._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
-03/03 15:44:58|INFO|ConverterMuW._split_multisample_annotation: ✅ Splitted into ['_sample0.txt'].
-03/03 15:44:58|INFO|Tiler.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/Downloads/test_folders/test_tiler/test_1slide'. Results will be saved in '/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images'.
-03/03 15:44:58|INFO|Tiler._get_completed_files: Completed 0/1 files.
-03/03 15:44:58|INFO|Tiler._remove_small_files: Removed 0 small files (< 500kB)
-03/03 15:44:58|INFO|Tiler._get_tile_images: ⏳ Tiling image: '200822954_09_SFOG.tif'
-03/03 15:44:58|INFO|Tiler._get_tile_images: ⏳ Opening '200822954_09_SFOG.tif':
-03/03 15:44:58|INFO|Tiler._get_tile_images: ✅ Opening '200822954_09_SFOG.tif':
-03/03 15:44:58|INFO|Tiler._get_tile_images: ⏳ Reading region ((65425, 27841)) of sample_0:
-03/03 15:45:12|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
-03/03 15:45:20|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
-03/03 15:45:20|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
-03/03 15:45:20|INFO|{'200822954_09_SFOG_sample0': [51, 124]}
-03/03 15:45:20|INFO|Tiler._get_tile_images: ✅ Patchifying.
-03/03 15:45:20|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
-03/03 15:45:20|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:20|INFO|fname:200822954_09_SFOG_sample0_0_0.png
-03/03 15:45:20|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_0.png
-03/03 15:45:20|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:20|INFO|fname:200822954_09_SFOG_sample0_0_1.png
-03/03 15:45:20|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_1.png
-03/03 15:45:20|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:20|INFO|fname:200822954_09_SFOG_sample0_0_2.png
-03/03 15:45:20|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_2.png
-03/03 15:45:20|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:20|INFO|fname:200822954_09_SFOG_sample0_0_3.png
-03/03 15:45:20|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_3.png
-03/03 15:45:20|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:20|INFO|fname:200822954_09_SFOG_sample0_0_4.png
-03/03 15:45:20|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_4.png
-03/03 15:45:20|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:20|INFO|fname:200822954_09_SFOG_sample0_0_5.png
-03/03 15:45:20|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_5.png
-03/03 15:45:20|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:20|INFO|fname:200822954_09_SFOG_sample0_0_6.png
-03/03 15:45:20|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_6.png
-03/03 15:45:20|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:20|INFO|fname:200822954_09_SFOG_sample0_0_7.png
-03/03 15:45:20|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_7.png
-03/03 15:45:20|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:20|INFO|fname:200822954_09_SFOG_sample0_0_8.png
-03/03 15:45:20|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_8.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_9.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_9.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_10.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_10.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_11.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_11.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_12.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_12.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_13.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_13.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_14.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_14.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_15.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_15.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_16.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_16.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_17.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_17.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_18.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_18.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_19.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_19.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_20.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_20.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_21.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_21.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_22.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_22.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_23.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_23.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_24.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_24.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_25.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_25.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_26.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_26.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_27.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_27.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_28.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_28.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_29.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_29.png
-03/03 15:45:21|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:21|INFO|fname:200822954_09_SFOG_sample0_0_30.png
-03/03 15:45:21|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_30.png
-03/03 15:45:22|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:22|INFO|fname:200822954_09_SFOG_sample0_0_31.png
-03/03 15:45:22|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_31.png
-03/03 15:45:22|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:22|INFO|fname:200822954_09_SFOG_sample0_0_32.png
-03/03 15:45:22|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_32.png
-03/03 15:45:22|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:22|INFO|fname:200822954_09_SFOG_sample0_0_33.png
-03/03 15:45:22|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_33.png
-03/03 15:45:22|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:22|INFO|fname:200822954_09_SFOG_sample0_0_34.png
-03/03 15:45:22|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_34.png
-03/03 15:45:22|INFO|save_folder:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images
-03/03 15:45:22|INFO|fname:200822954_09_SFOG_sample0_0_35.png
-03/03 15:45:22|INFO|save_fp:/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images/200822954_09_SFOG_sample0_0_35.png
+03/03 15:48:21|INFO|ConverterMuW._convert_gson2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
+03/03 15:48:21|INFO|ConverterMuW._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
+03/03 15:48:21|INFO|ConverterMuW._split_multisample_annotation: ✅ Splitted into ['_sample0.txt'].
+03/03 15:48:21|INFO|Tiler.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/Downloads/test_folders/test_tiler/test_1slide'. Results will be saved in '/Users/marco/Downloads/test_folders/test_tiler/test_1slide/images'.
+03/03 15:48:21|INFO|Tiler._get_completed_files: Completed 0/1 files.
+03/03 15:48:21|INFO|Tiler._remove_small_files: Removed 0 small files (< 500kB)
+03/03 15:48:21|INFO|Tiler._get_tile_images: ⏳ Tiling image: '200822954_09_SFOG.tif'
+03/03 15:48:21|INFO|Tiler._get_tile_images: ⏳ Opening '200822954_09_SFOG.tif':
+03/03 15:48:21|INFO|Tiler._get_tile_images: ✅ Opening '200822954_09_SFOG.tif':
+03/03 15:48:21|INFO|Tiler._get_tile_images: ⏳ Reading region ((65425, 27841)) of sample_0:
+03/03 15:48:35|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+03/03 15:48:43|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+03/03 15:48:43|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+03/03 15:48:43|INFO|{'200822954_09_SFOG_sample0': [51, 124]}
+03/03 15:48:43|INFO|Tiler._get_tile_images: ✅ Patchifying.
+03/03 15:48:43|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+03/03 15:50:50|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/test_folders/test_tiler/test_1slide/images.
+03/03 15:50:50|INFO|Tiler._get_tile_images: ✅ Tiling image: '200822954_09_SFOG.tif'
+03/03 15:50:50|INFO|Tiler.__call__: ⏳ START TILING LABELS from folder:'/Users/marco/Downloads/test_folders/test_tiler/test_1slide'. Results will be saved in '/Users/marco/Downloads/test_folders/test_tiler/test_1slide/labels'.
+03/03 15:50:50|INFO|Tiler._get_completed_files: Completed 0/1 files.
+03/03 15:50:50|INFO|calling get_n_tiles
+03/03 15:50:50|INFO|assert passed
+03/03 15:50:50|INFO|get_n_tiles opened
+03/03 15:50:50|INFO|self.n_tiles:{'200822954_09_SFOG_sample0': [51, 124]}
+03/03 15:50:51|INFO|Tiler._remove_small_files: Removed 5994 small files (< 500kB)
+03/03 15:50:51|INFO|Tiler._get_tile_labels: ⏳ Tiling label: '200822954_09_SFOG_sample0.txt'
+03/03 15:50:51|INFO|Tiliing label /Users/marco/Downloads/test_folders/test_tiler/test_1slide/200822954_09_SFOG_sample0.txt
+03/03 15:50:51|INFO|trying to open self.ntiles[200822954_09_SFOG_sample0]
+03/03 15:50:51|INFO|ret: [51, 124], type: <class 'list'>
+03/03 15:50:51|INFO|x_max:51, y_max:124
+03/03 15:50:51|INFO|opened label file
+03/03 15:50:51|INFO|Tiler._get_tile_labels: ✅ Tile labels saved in '/Users/marco/Downloads/test_folders/test_tiler/test_1slide/labels'.
+03/03 15:50:51|INFO|Tiler._get_tile_labels: ✅ Tiling label: '200822954_09_SFOG_sample0.txt'
+03/03 15:50:51|INFO|Tiler.test_show_image_labels: ⏳ Showing 6 random tiles:'
+03/03 15:51:02|INFO|Tiler.test_show_image_labels: ✅ Showing 6 random tiles:'

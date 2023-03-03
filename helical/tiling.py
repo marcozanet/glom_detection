@@ -107,9 +107,12 @@ class Tiler():
             # y_max = max(num_y_tiles)
 
             # Get BB from txt file:
+            assert os.path.isfile(fp), f"{class_name}.{func_name}:'fp' is not a valid filepath"
             with open(fp, 'r') as f:
                 text = f.readlines()
                 f.close()
+
+            self.log.info(f"opened label file")
             
             # raise NotImplementedError()
             for row in text:
@@ -291,11 +294,11 @@ class Tiler():
                     for j in range(patches.shape[1]):
                         save_fp = fp.replace(f'.{self.format}',f'_sample{sample_n}_{i}_{j}.png') if self.multiple_samples else fp.replace(f'.{self.format}',f'_{i}_{j}.png')
                         if save_folder is not None:
-                            self.log.info(f"save_folder:{save_folder}")
+                            # self.log.info(f"save_folder:{save_folder}")
                             fname = os.path.split(save_fp)[1]
-                            self.log.info(f"fname:{fname}")
+                            # self.log.info(f"fname:{fname}")
                             save_fp = os.path.join(save_folder, fname)
-                            self.log.info(f"save_fp:{save_fp}")
+                            # self.log.info(f"save_fp:{save_fp}")
 
                         cv2_img = cv2.cvtColor(patches[i, j], cv2.COLOR_RGB2BGR)
                         cv2.imwrite(save_fp, img = cv2_img)
