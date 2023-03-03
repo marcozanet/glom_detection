@@ -16,7 +16,6 @@ class YOLODetector():
                 yolov5dir: str,
                 repository_dir:str,
                 map_classes: dict = {'Glo-healthy':0, 'Glo-NA':1, 'Glo-unhealthy':2, 'Tissue':3},
-                # system = 'mac',
                 save_features: bool = False,
                 tile_size = 512,
                 batch_size = 8,
@@ -37,7 +36,7 @@ class YOLODetector():
         self.save_features = save_features
         self.workers = workers
         self.device = device
-        # self.system = system
+
         return
     
 
@@ -45,24 +44,26 @@ class YOLODetector():
         """   Runs the YOLO detection model. """
         class_name = self.__class__.__name__
         
+        # 1) prepare training:
+        start_time = time.time()
+        yaml_fn = os.path.basename(self._edit_yaml())
+        weights = weights if weights is not None else 'yolov5s.pt'
+        self.log.info(f"{class_name}.{'train'}: weights:{weights}")
+
         @log_start_finish(class_name=class_name, func_name='train', msg = f" YOLO training:" )
         def do():
-            # 1) prepare training:
-            start_time = time.time()
-            yaml_fn = os.path.basename(self._edit_yaml())
-            weights = weights if weights is not None else 'yolov5s.pt'
-
             # 2) train:
             self.log.info(f"⏳ Start training YOLO:")
             os.chdir(self.yolov5dir)
             prompt = f"python train.py --img {self.tile_size} --batch {self.batch_size} --epochs {self.epochs}"
             prompt += f"--data {yaml_fn} --weights {weights} --workers {self.workers}"
             prompt = prompt+f" --device {self.device}" if self.device is not None else prompt 
+            self.log.info(f"{class_name}.{'train'}: {prompt}")
             os.system(prompt)
             os.chdir(self.repository_dir)
 
             # 3) save:
-            self.save_training_data(weights=weights, start_time=start_time)
+            # self.save_training_data(weights=weights, start_time=start_time)
         
             return
         

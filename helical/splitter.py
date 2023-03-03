@@ -264,8 +264,12 @@ class Splitter():
     
     def _move_files(self, images: list, labels: list, dataset_dir:str):
 
+
         subfolds_names = ['train', 'val', 'test']
         for img_dir, label_dir, fold in zip(images, labels, subfolds_names):
+
+            self.log.info(f"{self.__class__.__name__}.{'_move_files'}: {fold}set: {[os.path.basename(file) for file in img_dir]}")
+
             for image in tqdm(img_dir, desc = f"Filling {fold}"):
                 img_fn = os.path.split(image)[1]
                 src_img, dst_img = image, os.path.join(dataset_dir, fold, 'images', img_fn)
@@ -280,8 +284,9 @@ class Splitter():
                 if self.safe_copy is True:
                     shutil.copy(src = src_label, dst = dst_label)
                 else:
-                    shutil.move(src = src_img, dst = dst_img)
+                    shutil.move(src = src_label, dst = dst_label)
     
+
 
     def move_already_tiled(self, tile_root:str):
         """ Moves tiles already tiled from root/images and root/labels to the 
@@ -428,10 +433,10 @@ def test_Splitter():
     # shutil.rmtree(path= os.path.join(dst_dir, task) )
 
     print(" ########################    TEST 2: ⏳     ########################")
-    src_dir = '/Users/marco/Downloads/muw_slides'
-    dst_dir = '/Users/marco/Downloads/muw_slides'
+    src_dir = '/Users/marco/Downloads/test_folders/test_process_data_and_train'
+    dst_dir = '/Users/marco/Downloads/test_folders/test_process_data_and_train'
     image_format = 'tif'
-    ratio = [0.4, 0.1, 0.5]
+    ratio = [0.6, 0.2, 0.2]
     task = 'detection'
     verbose = True
     safe_copy = True
@@ -449,26 +454,26 @@ def test_Splitter():
     print(" ########################    TEST 2: ✅    ########################")
 
 
-    print(" ########################    TEST 3: ⏳     ########################")
-    src_dir = '/Users/marco/Downloads/test_folders/test_featureextractor/images'
-    dst_dir = '/Users/marco/Downloads/test_folders/test_milsplitter'
-    image_format = 'png'
-    ratio = [0.4, 0.1, 0.5]
-    task = 'detection'
-    verbose = True
-    safe_copy = True
+    # print(" ########################    TEST 3: ⏳     ########################")
+    # src_dir = '/Users/marco/Downloads/test_folders/test_featureextractor/images'
+    # dst_dir = '/Users/marco/Downloads/test_folders/test_milsplitter'
+    # image_format = 'png'
+    # ratio = [0.6, 0.2, 0.2]
+    # task = 'detection'
+    # verbose = True
+    # safe_copy = True
 
-    splitter = Splitter(src_dir=src_dir,
-                        dst_dir=dst_dir,
-                        image_format=image_format,
-                        ratio=ratio,
-                        task=task,
-                        verbose = verbose, 
-                        safe_copy = safe_copy)
-    splitter()
-    # splitter.move_already_tiled(tile_root = '/Users/marco/Downloads/muw_slides')
-    # splitter._remove_empty_images()
-    print(" ########################    TEST 3: ✅    ########################")
+    # splitter = Splitter(src_dir=src_dir,
+    #                     dst_dir=dst_dir,
+    #                     image_format=image_format,
+    #                     ratio=ratio,
+    #                     task=task,
+    #                     verbose = verbose, 
+    #                     safe_copy = safe_copy)
+    # splitter()
+    # # splitter.move_already_tiled(tile_root = '/Users/marco/Downloads/muw_slides')
+    # # splitter._remove_empty_images()
+    # print(" ########################    TEST 3: ✅    ########################")
 
     
 

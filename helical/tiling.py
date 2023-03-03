@@ -78,11 +78,18 @@ class Tiler():
 
         @log_start_finish(class_name=class_name, func_name=func_name, msg = f" Tiling label: '{os.path.basename(fp)}'" )
         def do():
-
+            
+            self.log.info(f"Tiliing label {fp}") # D:\marco\datasets\muw_retiled\wsi\test\labels\200701099_09_SFOG_sample0.txt
             # from tile folder I get the x possible values and y possible values:
-            tile_images_fp = save_folder.replace('labels', 'images')
+            # dirname = os.path.split(tile_images_fp)[0].replace('labels', 'images') # i.e. label
+            # superdirname = os.path.dirname(dirname)
+            # save_folder = e.g. D:\marco\datasets\muw_retiled\wsi\test\labels 
+            # tile_images_fp = os.path.join(os.path.dirname(save_folder), save_folder.replace('labels', 'images'))
+            
+            
+            # tile_images_fp = save_folder.replace('labels', 'images')
             wsi_fn = os.path.split(fp)[1].split('.')[0]
-            files = [file for file in os.listdir(tile_images_fp) if '.png' in file and wsi_fn in file]
+            # files = [file for file in os.listdir(tile_images_fp) if '.png' in file and wsi_fn in file]
 
             self.log.info(f"trying to open self.ntiles[{wsi_fn}]")
             ret = self.n_tiles[wsi_fn]
@@ -284,9 +291,12 @@ class Tiler():
                     for j in range(patches.shape[1]):
                         save_fp = fp.replace(f'.{self.format}',f'_sample{sample_n}_{i}_{j}.png') if self.multiple_samples else fp.replace(f'.{self.format}',f'_{i}_{j}.png')
                         if save_folder is not None:
+                            self.log.info(f"save_folder:{save_folder}")
                             fname = os.path.split(save_fp)[1]
+                            self.log.info(f"fname:{fname}")
                             save_fp = os.path.join(save_folder, fname)
-                        
+                            self.log.info(f"save_fp:{save_fp}")
+
                         cv2_img = cv2.cvtColor(patches[i, j], cv2.COLOR_RGB2BGR)
                         cv2.imwrite(save_fp, img = cv2_img)
                         # pil_img = Image.fromarray(patches[i, j])
