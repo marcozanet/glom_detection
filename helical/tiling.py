@@ -79,7 +79,7 @@ class Tiler():
         @log_start_finish(class_name=class_name, func_name=func_name, msg = f" Tiling label: '{os.path.basename(fp)}'" )
         def do():
             
-            self.log.info(f"Tiliing label {fp}") # D:\marco\datasets\muw_retiled\wsi\test\labels\200701099_09_SFOG_sample0.txt
+            self.log.info(f"{class_name}.{'_get_tile_labels'}: Tiliing label '{fp}'") # D:\marco\datasets\muw_retiled\wsi\test\labels\200701099_09_SFOG_sample0.txt
             # from tile folder I get the x possible values and y possible values:
             # dirname = os.path.split(tile_images_fp)[0].replace('labels', 'images') # i.e. label
             # superdirname = os.path.dirname(dirname)
@@ -91,9 +91,9 @@ class Tiler():
             wsi_fn = os.path.split(fp)[1].split('.')[0]
             # files = [file for file in os.listdir(tile_images_fp) if '.png' in file and wsi_fn in file]
 
-            self.log.info(f"trying to open self.ntiles[{wsi_fn}]")
+            # self.log.info(f"trying to open self.ntiles[{wsi_fn}]")
             ret = self.n_tiles[wsi_fn]
-            self.log.info(f"ret: {ret}, type: {type(ret)}")
+            # self.log.info(f"ret: {ret}, type: {type(ret)}")
             x_max, y_max  = self.n_tiles[wsi_fn][0], self.n_tiles[wsi_fn][1]
             self.log.info(f"x_max:{x_max}, y_max:{y_max}")
             # x_max, y_max = x_max -1 , y_max -1
@@ -112,8 +112,6 @@ class Tiler():
                 text = f.readlines()
                 f.close()
 
-            self.log.info(f"opened label file")
-            
             # raise NotImplementedError()
             for row in text:
 
@@ -171,7 +169,6 @@ class Tiler():
         to_json = {}
         if os.path.isfile(self.json_ntile):
             with open(self.json_ntile, 'r') as f:
-                self.log.info('OPNEEEEEEEEEE')
                 from_json = json.load(f)
             self.log.info(f"type: {from_json}")
             to_json.update(from_json)

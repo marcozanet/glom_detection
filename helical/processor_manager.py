@@ -105,7 +105,6 @@ class ProcessorManager():
 
     def __call__(self) -> None:
 
-        # TODO AGGIUNGERE VERIFICA CHE CI SIANO ALMENO 3 SLIDE PRIMA DI FARE SPLITTING ? 
 
         # # 1) create tiles branch
         # self._make_tiles_branch()
@@ -115,6 +114,8 @@ class ProcessorManager():
         # self._move_slides_forth()
         # # 3) tile images and labels:
         # self.tile_dataset()
+        # #4) move slides back 
+        # self._move_slides_back()
         # 4) clean dataset, e.g. 
         self._clean_muw_dataset()
 

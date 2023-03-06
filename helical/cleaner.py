@@ -42,6 +42,9 @@ class Cleaner(Profiler):
                 os.remove(file)
                 # self.log.info(f"file removed. ")
             
+            # update self.data: 
+            self.data = self._get_data()
+            
             return
         
         do()
@@ -92,6 +95,9 @@ class Cleaner(Profiler):
             unique_classes = self._get_unique_labels()
             assert str(class_num) not in unique_classes, f"Removed class still appears in 'unique_classes':{unique_classes}"
             
+            # update self.data: 
+            self.data = self._get_data()
+
             return
         
         do()
@@ -147,6 +153,9 @@ class Cleaner(Profiler):
 
             self.log.info(f"{self.__class__.__name__}.{'_replacing_class'}: New unique classes: unique_classes = {self._get_unique_labels()} ")
 
+            # update self.data: 
+            self.data = self._get_data()
+
             return
 
         do()
@@ -199,6 +208,9 @@ class Cleaner(Profiler):
             if self.verbose is True:
                 print(f"New unique classes: unique_classes = {self._get_unique_labels()} ")
 
+            # update self.data: 
+            self.data = self._get_data()
+
             return
         
         do()
@@ -237,6 +249,9 @@ class Cleaner(Profiler):
             if self.verbose is True:      
                 print(f"✅ Instances before removal:{n_inst_pre}, post removal:{n_inst_post}")
             
+            # update self.data: 
+            self.data = self._get_data()
+
             return
         do()
         
@@ -300,6 +315,9 @@ class Cleaner(Profiler):
             if self.verbose is True:
                 print(f"✅ New unique classes: unique_classes = {self._get_unique_labels()} ")
 
+            # update self.data: 
+            self.data = self._get_data()
+
             return
         
         do()
@@ -322,6 +340,8 @@ class Cleaner(Profiler):
             with open(label_fp, 'w') as f:
                 f.writelines(unique_lines)
         
+        # update self.data: 
+        self.data = self._get_data()
 
         return
 
@@ -333,36 +353,41 @@ class Cleaner(Profiler):
         full, empty = self._get_empty_images()
         num_empty = len(empty)
         num_full = len(full)
-        if self.verbose is True:
-            print(f"empty:{num_empty}, full:{num_full}, tot:{num_empty + num_full}")
 
-        # compute num images to del:
-        tot = round(num_full / (1 - self.empty_perc))
-        num_desired_empty = tot - num_full
-        to_del = num_empty - num_desired_empty
-        if to_del <= 0: 
-            print(f"❗️ Empty images are already <= {self.empty_perc*100}% of tot images. Skipping removal of empty images.")
+        def do():
+            # if self.verbose is True:
+            #     (f"empty:{num_empty}, full:{num_full}, tot:{num_empty + num_full}")
+
+            # compute num images to del:
+            tot = round(num_full / (1 - self.empty_perc))
+            num_desired_empty = tot - num_full
+            to_del = num_empty - num_desired_empty
+            if to_del <= 0: 
+                self.log.warning(f"{self._class_name}.{'_remove_perc_'}:❗️ Empty images are already <= {self.empty_perc*100}% of tot images. Skipping removal of empty images.")
+                return
+            
+            # select k random empty samples to del:
+            # print(len(empty))
+            # print(to_del)
+            img_empty2del = random.sample(empty, k = to_del)
+
+            # check that no labels are deleted:
+            lbl_empty2del = [os.path.join(os.path.dirname(file).replace('images', 'labels'), os.path.basename(file).replace(self.tiles_image_format, self.tiles_label_format)) for file in img_empty2del]
+            lbl_empty2del = [file for file in lbl_empty2del if file in tile_labels]
+            assert len(lbl_empty2del) == 0, f"❌ some of the selected images for delete do have a corresponding label."
+
+            if self.verbose is True:
+                self.log.info(f"{self._class_name}.{'_remove_perc_'}: Deleting {len(img_empty2del)} images")
+                self.log.info(f"{self._class_name}.{'_remove_perc_'}: Deleting {len(lbl_empty2del)} labels")
+
+            for file in tqdm(img_empty2del, desc = "Removing empty images"):
+                os.remove(file)
+            
+            self.log.info(f"{self._class_name}.{'_remove_perc_'}: empty:{num_empty-len(img_empty2del)}, full:{num_full}, tot:{num_empty-len(img_empty2del) + num_full}")
+
             return
         
-        # select k random empty samples to del:
-        print(len(empty))
-        print(to_del)
-        img_empty2del = random.sample(empty, k = to_del)
-
-        # check that no labels are deleted:
-        lbl_empty2del = [os.path.join(os.path.dirname(file).replace('images', 'labels'), os.path.basename(file).replace(self.tiles_image_format, self.tiles_label_format)) for file in img_empty2del]
-        lbl_empty2del = [file for file in lbl_empty2del if file in tile_labels]
-        assert len(lbl_empty2del) == 0, f"❌ some of the selected images for delete do have a corresponding label."
-
-        if self.verbose is True:
-            print(f"Deleting {len(img_empty2del)} images")
-            print(f"Deleting {len(lbl_empty2del)} labels")
-
-        for file in tqdm(img_empty2del, desc = "Removing empty images"):
-            os.remove(file)
-        
-        if self.verbose is True:
-            print(f"empty:{num_empty-len(img_empty2del)}, full:{num_full}, tot:{num_empty-len(img_empty2del) + num_full}")
+        do()
 
         return
     
@@ -381,6 +406,9 @@ class Cleaner(Profiler):
                 if self.verbose is True:
                     print(f"Removing: {file}")
                 os.remove(file)
+        
+        # update self.data: 
+        self.data = self._get_data()
 
         return
     
@@ -413,6 +441,8 @@ class Cleaner(Profiler):
         self._assign_NA_randomly()
         # # 7) replace class 2 with class 1 ({0:healthy, 1:NA, 2:unhealthy} -> {0:healthy, 2:unhealthy})
         self._replacing_class(class_old=2, class_new=1)
+        # 8) removing empty images to only have empty_perc of images being empty
+        self._remove_perc_()
         
 
         return

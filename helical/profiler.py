@@ -5,11 +5,12 @@ from typing import List
 import numpy as np
 import pandas as pd 
 from tqdm import tqdm
-from loggers import get_logger
+# from loggers import get_logger
 from decorators import log_start_finish
+from configurator import Configurator
 
 
-class Profiler(): 
+class Profiler(Configurator): 
 
     def __init__(self, 
                 data_root:str, 
@@ -25,7 +26,8 @@ class Profiler():
             tile_image_like = e.g. '*sample*.png'
             tile_label_like = e.g. '*sample*.txt'
             '"""
-        self.log = get_logger()
+        # self.log = get_logger()
+        super().__init__()
         assert os.path.isdir(data_root), f"'data_root':{data_root} is not a valid dirpath."
 
         self.data_root = data_root
@@ -99,8 +101,7 @@ class Profiler():
         class_name = self.__class__.__name__
         func_name = '_get_class_freq'
 
-        @log_start_finish(class_name=class_name, func_name=func_name, 
-                          msg = f"Getting classes frequency:'{os.path.basename(self.data_root)}'" )
+        @log_start_finish(class_name=class_name, func_name=func_name,  msg = f" Getting classes frequency" )
         def do():
             class_freq = {'0':0, '1':0, '2':0, '3':0}
             for label_fp in self.data['tile_labels']:
@@ -367,6 +368,30 @@ class Profiler():
         returned = do()
 
         return returned
+    
+
+    def log_data_summary(self): 
+        """ Logs a summary of the data. """
+
+        self.log.info(f"{self._class_name}.{'_log_summary'}: 'Data root':{self.data_root}")
+        self.data=self._get_data()
+        slides = self.data['wsi_images']
+        train_slides = [file for file in slides if 'train' in file]
+        val_slides = [file for file in slides if 'val' in file]
+        test_slides = [file for file in slides if 'test' in file]
+        self.log.info(f"{self._class_name}.{'_log_summary'}: 'trainset':{train_slides}, 'valset':{val_slides}, 'testset':{test_slides}")
+        class_freq = self._get_class_freq()
+        self.log.info(f"{self._class_name}.{'_log_summary'}: 'class frequency':{class_freq} ")
+        unique_labels = self._get_unique_labels()
+        self.log.info(f"{self._class_name}.{'_log_summary'}: 'unique labels':{unique_labels} ")
+        returned = self._get_empty_images()
+        full_images, empty_images = returned[0], returned[1]
+        empty_perc = round(len(empty_images)/(len(full_images) + len(empty_images)), 2)
+        self.log.info(f"{self._class_name}.{'_log_summary'}: 'full_images':{len(full_images)}. 'empty_images':{len(empty_images)}. Empty perc:{empty_perc} ")
+
+        return
+
+
     
     
     def show_summary(self): 

@@ -1,5 +1,22 @@
-06/03 15:23:31|INFO|Cleaner._get_data: ⏳ Getting data from: 'detection'
-06/03 15:23:31|INFO|Cleaner._get_data: ✅ Getting data from: 'detection'
-06/03 15:23:31|INFO|Cleaner._del_unpaired_labels: ⏳ Deleting unpaired labels
-06/03 15:23:31|INFO|Cleaner._del_unpaired_labels: ✅ Deleting unpaired labels
-06/03 15:23:31|ERROR|Cleaner._replacing_class: AssertionError:'class':3 not in uniqe classes: ['1', '0']
+06/03 17:11:23|INFO|Cleaner._get_data: ⏳ Getting data from: 'detection'
+06/03 17:11:23|INFO|Cleaner._get_data: ✅ Getting data from: 'detection'
+06/03 17:11:23|INFO|Cleaner._del_unpaired_labels: ⏳ Deleting unpaired labels
+06/03 17:11:23|INFO|Cleaner._get_data: ⏳ Getting data from: 'detection'
+06/03 17:11:23|INFO|Cleaner._get_data: ✅ Getting data from: 'detection'
+06/03 17:11:23|INFO|Cleaner._del_unpaired_labels: ✅ Deleting unpaired labels
+06/03 17:11:23|INFO|Cleaner._get_data: ⏳ Getting data from: 'detection'
+06/03 17:11:23|INFO|Cleaner._get_data: ✅ Getting data from: 'detection'
+06/03 17:11:23|INFO|Cleaner._get_unique_labels: Unique classes: ['2', '0', '1']
+06/03 17:11:23|INFO|Cleaner._replacing_class: ⏳ Assigning randomly class:1 to either class:0 or class:2.
+06/03 17:11:24|INFO|Cleaner._get_data: ⏳ Getting data from: 'detection'
+06/03 17:11:24|INFO|Cleaner._get_data: ✅ Getting data from: 'detection'
+06/03 17:11:24|INFO|Cleaner._replacing_class: ✅ Assigning randomly class:1 to either class:0 or class:2.
+06/03 17:11:24|INFO|Cleaner._get_unique_labels: Unique classes: ['2', '0']
+06/03 17:11:24|INFO|Cleaner._replacing_class: ⏳ Replacing class:2 with class:1
+06/03 17:11:24|INFO|Cleaner._replacing_class: New unique classes: unique_classes = ['0', '1'] 
+06/03 17:11:24|INFO|Cleaner._get_data: ⏳ Getting data from: 'detection'
+06/03 17:11:24|INFO|Cleaner._get_data: ✅ Getting data from: 'detection'
+06/03 17:11:24|INFO|Cleaner._replacing_class: ✅ Replacing class:2 with class:1
+06/03 17:11:24|INFO|Cleaner._get_empty_images: ⏳Getting nsamples in slide:
+06/03 17:11:24|INFO|Cleaner._get_empty_images: ✅Getting nsamples in slide:
+06/03 17:11:26|INFO|Cleaner._remove_perc_: empty:315, full:2835, tot:3150

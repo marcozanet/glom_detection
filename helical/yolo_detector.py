@@ -6,10 +6,12 @@ import datetime
 from typing import Literal, List
 import yaml
 from glob import glob
-from loggers import get_logger
+# from loggers import get_logger
 from decorators import log_start_finish
+from profiler import Profiler
+from configurator import Configurator
 
-class YOLODetector():
+class YOLODetector(Configurator):
 
     def __init__(self, 
                 data_folder:str,
@@ -24,7 +26,8 @@ class YOLODetector():
                 epochs = 3,
                 ) -> None: 
 
-        self.log = get_logger()
+        super().__init__()
+        # self.log = get_logger()
 
         self.map_classes = map_classes
         self.data_folder = data_folder
@@ -37,6 +40,9 @@ class YOLODetector():
         self.workers = workers
         self.device = device
 
+
+        self._class_name = self.__class__.__name__
+
         return
     
 
@@ -45,10 +51,11 @@ class YOLODetector():
         class_name = self.__class__.__name__
         
         # 1) prepare training:
-        start_time = time.time()
+        # start_time = time.time()
         yaml_fn = os.path.basename(self._edit_yaml())
         weights = weights if weights is not None else 'yolov5s.pt'
         self.log.info(f"{class_name}.{'train'}: weights:{weights}")
+        self._log_data_pretraining()
 
         @log_start_finish(class_name=class_name, func_name='train', msg = f" YOLO training:" )
         def do():
@@ -56,7 +63,7 @@ class YOLODetector():
             self.log.info(f"⏳ Start training YOLO:")
             os.chdir(self.yolov5dir)
             prompt = f"python train.py --img {self.tile_size} --batch {self.batch_size} --epochs {self.epochs}"
-            prompt += f"--data {yaml_fn} --weights {weights} --workers {self.workers}"
+            prompt += f" --data {yaml_fn} --weights {weights} --workers {self.workers}"
             prompt = prompt+f" --device {self.device}" if self.device is not None else prompt 
             self.log.info(f"{class_name}.{'train'}: {prompt}")
             os.system(prompt)
@@ -70,6 +77,14 @@ class YOLODetector():
         do()
 
         return  
+    
+    def _log_data_pretraining(self): 
+        """ Logs a bunch of dataset info prior to training. """
+
+        profiler = Profiler(data_root=os.path.dirname(self.data_folder) )
+        profiler.log_data_summary()
+
+        return
 
            
 
@@ -122,14 +137,14 @@ def test_YOLODetector():
 
     repository_dir = '/Users/marco/yolo/code/helical' if system == 'mac' else r'C:\marco\code\glom_detection\helical'
     yolov5dir = '/Users/marco/yolov5' if system == 'mac' else r'C:\marco\yolov5'
-    data_folder = '/Users/marco/Downloads/test_folders/test_process_data_and_train/test_3_slides/tiles' if system == 'mac' else r'D:\marco\datasets\muw\detection\tiles'
+    data_folder = '/Users/marco/Downloads/test_folders/test_process_data_and_train/test_3_slides/detection/tiles' if system == 'mac' else r'D:\marco\datasets\muw\detection\tiles'
     device = None if system == 'mac' else 'cuda:0'
     workers = 0 if system == 'mac' else 1
     map_classes = {'Glo-healthy':1, 'Glo-unhealthy':0}
     save_features = True
-    tile_size = 512
+    tile_size = 640
     batch_size=4
-    epochs=1
+    epochs=2
     detector = YOLODetector(data_folder=data_folder,
                             repository_dir=repository_dir,
                             yolov5dir=yolov5dir,
