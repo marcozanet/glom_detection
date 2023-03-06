@@ -257,9 +257,9 @@ class Splitter():
         """ Clears the old dataset and creates a new one. """
 
         new_datafolder = os.path.join(self.dst_dir, self.task, self.image_type)
-        if os.path.isdir(new_datafolder):
-            shutil.rmtree(path = new_datafolder)
-            print(f"Dataset at: {new_datafolder} removed.")
+        # if os.path.isdir(new_datafolder):
+        #     shutil.rmtree(path = new_datafolder)
+        #     print(f"Dataset at: {new_datafolder} removed.")
         
         # 1) makedirs:
         subfolds_names = ['train', 'val', 'test']

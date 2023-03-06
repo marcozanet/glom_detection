@@ -1,3 +1,5 @@
-03/03 16:59:30|INFO|Splitter._move_files: trainset: ['201404358_09_SFOG.tif', '201410900_09_SFOG.tif', '201420222_09_SFOG.tif', '201325292_9_SFOG.tif', '201413736_09_SFOG.tif', '201413789_09_SFOG.tif']
-03/03 16:59:30|INFO|Splitter._move_files: valset: ['201423479_09_SFOG.tif', '201414036_9_SFOG.tif']
-03/03 16:59:30|INFO|Splitter._move_files: testset: ['201409661_09_SFOG.tif', '201404292_09_SFOG.tif']
+06/03 15:23:31|INFO|Cleaner._get_data: ⏳ Getting data from: 'detection'
+06/03 15:23:31|INFO|Cleaner._get_data: ✅ Getting data from: 'detection'
+06/03 15:23:31|INFO|Cleaner._del_unpaired_labels: ⏳ Deleting unpaired labels
+06/03 15:23:31|INFO|Cleaner._del_unpaired_labels: ✅ Deleting unpaired labels
+06/03 15:23:31|ERROR|Cleaner._replacing_class: AssertionError:'class':3 not in uniqe classes: ['1', '0']

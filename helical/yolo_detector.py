@@ -122,7 +122,7 @@ def test_YOLODetector():
 
     repository_dir = '/Users/marco/yolo/code/helical' if system == 'mac' else r'C:\marco\code\glom_detection\helical'
     yolov5dir = '/Users/marco/yolov5' if system == 'mac' else r'C:\marco\yolov5'
-    data_folder = '/Users/marco/Downloads/train_20feb23/tiles' if system == 'mac' else r'D:\marco\datasets\muw\detection\tiles'
+    data_folder = '/Users/marco/Downloads/test_folders/test_process_data_and_train/test_3_slides/tiles' if system == 'mac' else r'D:\marco\datasets\muw\detection\tiles'
     device = None if system == 'mac' else 'cuda:0'
     workers = 0 if system == 'mac' else 1
     map_classes = {'Glo-healthy':1, 'Glo-unhealthy':0}

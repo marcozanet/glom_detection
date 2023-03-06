@@ -40,6 +40,8 @@ class Profiler():
         self.verbose = verbose
         self.data = self._get_data()
 
+        self._class_name = self.__class__.__name__
+
         return
 
 
@@ -49,7 +51,7 @@ class Profiler():
             it returns a list of wsi images/labels and tiles images/labels."""
         
         @log_start_finish(class_name=self.__class__.__name__, func_name='_get_data', 
-                          msg = f"Getting data from: '{os.path.basename(self.data_root)}'" )
+                          msg = f" Getting data from: '{os.path.basename(self.data_root)}'" )
         def do():
 
             wsi_images = glob(os.path.join(self.data_root, 'wsi', '*', 'images', self.wsi_images_like))
@@ -71,7 +73,7 @@ class Profiler():
         class_name = self.__class__.__name__
         func_name = '_get_unique_labels'
 
-        @log_start_finish(class_name, func_name, msg = f"Getting unique labels:'{os.path.basename(self.data_root)} '" )
+        # @log_start_finish(class_name, func_name, msg = f"Getting unique labels:'{os.path.basename(self.data_root)} '" )
         def do():
             unique_labels = []
             for label_fp in self.data['tile_labels']:
@@ -98,7 +100,7 @@ class Profiler():
         func_name = '_get_class_freq'
 
         @log_start_finish(class_name=class_name, func_name=func_name, 
-                          msg = f"Getting unique labels:'{os.path.basename(self.data_root)}'" )
+                          msg = f"Getting classes frequency:'{os.path.basename(self.data_root)}'" )
         def do():
             class_freq = {'0':0, '1':0, '2':0, '3':0}
             for label_fp in self.data['tile_labels']:
