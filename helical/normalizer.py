@@ -11,14 +11,16 @@ from tqdm import tqdm
 import warnings
 from decorators import log_start_finish, timer
 # from loggers import get_logger
+from configurator import Configurator
 
 
-class Normalizer():
+class Normalizer(Configurator):
 
     def __init__(self, 
                 target_path:str, 
                 to_transform_path:str, 
                 save_folder:str = None,
+                replace_images:bool= True,
                 show: bool = False,
                 verbose:bool = False) -> None:
         # self.log = get_logger()
@@ -29,28 +31,32 @@ class Normalizer():
         assert isinstance(verbose, bool), f"'verbose' should be a boolean."
         assert isinstance(show, bool), f"'show' should be a boolean."
 
+        super().__init__()
+
         self.target_path = target_path
         self.to_transform_path = to_transform_path
         self.save_folder = (os.path.join(save_folder, 'normalized'))
         self.show = show
         self.verbose = verbose
         self.image_format = ".png"
+        self.replace_images = replace_images
+
+
+        self._class_name = self.__class__.__name__
 
         return
     
     
     def _normalize_file(self, file=str) -> np.ndarray:
         """ Stain normalizes a file. """
-
-        @log_start_finish(class_name='Normalizer', func_name='_normalize_file', msg = f"Normalizing file: '{os.path.basename(file)}'" )
+        
+        @log_start_finish(class_name='Normalizer', func_name='_normalize_file', msg = f" Normalizing file: '{os.path.basename(file)}'" )
         def do():
             warnings.filterwarnings("ignore")
 
-            # old_to_transform = io.imread(self.to_transform_path)
-            # target_skimage = io.imread(self.target_path)
-
             target = cv2.cvtColor(cv2.imread(self.target_path), cv2.COLOR_BGR2RGB)
             to_transform = cv2.cvtColor(cv2.imread(file), cv2.COLOR_BGR2RGB)
+            
 
             T = transforms.Compose([
                 transforms.ToTensor(),
@@ -67,35 +73,68 @@ class Normalizer():
             norm = norm.numpy().astype(np.uint8)
             norm_fp = os.path.join(self.save_folder, os.path.basename(file))
             io.imsave(fname=norm_fp, arr= norm)
-        
+
             return norm_fp
 
         ret_obj = do()
     
         return ret_obj
     
-    def _normalize_folder(self) -> None:
+    
+    def _normalize_folder(self, folder:str=None) -> None:
+        """ Stain normalizes all images within the folder. """
 
-        @log_start_finish(class_name=self.__class__.__name__, func_name='_normalize_folder', msg = f"Normalizing folder: '{os.path.basename(self.to_transform_path)}'" )
+        func_name = '_normalize_folder'
+        folder = self.to_transform_path if folder is None else folder
+        self.save_folder = self.save_folder if folder is None else folder
+
+        if self.replace_images is False:
+            self.save_folder = os.path.join(self.save_folder, 'normalized') 
+            os.makedirs(self.save_folder, exist_ok=True)
+
+
+        @log_start_finish(class_name=self.__class__.__name__, func_name=func_name, 
+                          msg = f"Normalizing folder: '{os.path.basename(folder)}'" )
         def do():
             # 1) get images in folder 
-            folder = self.to_transform_path
             images = glob(os.path.join(folder, f"*{self.image_format}"))
+            assert len(images)>0, self.log.error(f"{self._class_name}.{func_name}: no image found.")
 
             # 2) normalize all images
             for image in tqdm(images, desc= "Normalizing"): 
-                # normalize
+                assert os.path.isfile(image), self.log.error(f"{self._class_name}.{func_name}: 'image':{image} is not a valid filepath.")
                 try:
                     self._normalize_file(image)
                 except:
                     continue
-                    # print(f"could'nt {image}")
 
             return
         
         do()
         
         return 
+    
+
+    def _normalize_dataset_detection(self): 
+        """ Stain normalizes the whole dataset (train, val, set). """
+
+        func_name =  '_normalize_dataset_detection'
+
+        @log_start_finish(class_name=self._class_name, func_name=func_name, msg = f"Normalizing dataset: '{os.path.basename(self.to_transform_path)}'")
+        def do():
+            task = 'detection'
+            sets = ['train', 'val', 'test']
+            folders = [os.path.join(self.to_transform_path, task, 'tiles', fold, 'images') for fold in sets]
+            for fold in folders: 
+                assert os.path.isdir(fold), self.log.error(f"{self._class_name}.{func_name}: 'fold':{fold} is not a valid dirpath.")
+                self._normalize_folder(folder=fold)
+            
+            return 
+        
+        do()
+        
+        return
+
 
     def _show_file(self, new_image:str) -> None:
 
@@ -165,10 +204,6 @@ class Normalizer():
 
 
     def __call__(self):
-        # 0) create save folder:
-        # if self.verbose: 
-        # self.log.info(f"Creating folders: ⏳ ", extra={'className': self.__class__.__name__})
-        os.makedirs(self.save_folder, exist_ok=True)
 
         # 1) normalize: 
         # self.log.info(f"Normalizing {self.to_transform_path}: ⏳ ", extra={'className': self.__class__.__name__})
@@ -182,10 +217,15 @@ class Normalizer():
             if self.show is True:
                 self._show_file(new_image=norm_path)
         else:
-            self._normalize_folder()
-            # 2) show:
-            if self.show is True:
-                self._show_folder()
+            images_in_fold = [file for file in os.listdir(self.to_transform_path) if 'png' in file and 'DS' not in file ]
+            if len(images_in_fold) > 0:
+                self._normalize_folder()
+                # 2) show:
+                if self.show is True:
+                    self._show_folder()
+            else: # it's not a folder containing images, but a superfold
+                self._normalize_dataset_detection()
+
         # self.log.info(f"Normalizing: ✅ ", extra={'className': self.__class__.__name__})
         return
 
@@ -198,12 +238,13 @@ def test_Normalizer():
     system = 'mac' if sys.platform == 'darwin' else 'windows'
 
     target_path = '/Users/marco/Downloads/tiles/target_normalization.png'
-    to_transform_path = '/Users/marco/Downloads/test_folders/test_stainnormalizer'
+    to_transform_path = '/Users/marco/Downloads/test_folders/test_process_data_and_train/test_3_slides'
     verbose = True 
     show = True
     save_folder = None
+    replace_images = True
     normalizer = Normalizer(target_path=target_path, to_transform_path=to_transform_path, 
-                            verbose = verbose, show = show, save_folder=save_folder)
+                            verbose = verbose, show = show, save_folder=save_folder, replace_images=replace_images)
     normalizer()
     print("####### TEST normalizer: ✅ ##########")
 

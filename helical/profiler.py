@@ -120,7 +120,7 @@ class Profiler(Configurator):
         return returned
     
     
-    def _get_tiles_df(self): 
+    def _get_instances_df(self): 
         """ Creates the tiles DataFrame. """
         
         @log_start_finish(class_name=self.__class__.__name__, func_name='_get_tiles_df', msg = f"Creating instances dataframe" )
@@ -177,6 +177,7 @@ class Profiler(Configurator):
         @log_start_finish(class_name=self.__class__.__name__, func_name='_add_empty2df', msg = f"Adding empty images:" )
         def do():
             _, empty = self._get_empty_images()
+            self.log.info(f"empty: {len(empty)}")
 
             # add empty tiles as new rows to self.df:
             i = len(self.df)
@@ -201,9 +202,9 @@ class Profiler(Configurator):
 
 
 
-    def _get_tile_df(self): 
+    def _get_tiles_df(self): 
         
-        @log_start_finish(class_name=self.__class__.__name__, func_name='_get_tile_df', msg = f"Creating tile dataframe:" )
+        @log_start_finish(class_name=self.__class__.__name__, func_name='_get_tiles_df', msg = f"Creating tile dataframe:" )
         def do():
 
             full, empty = self._get_empty_images()
@@ -402,8 +403,8 @@ class Profiler(Configurator):
     
     def __call__(self) -> None:
 
-        self.df = self._get_tiles_df()
-        self._get_tile_df()
+        self.df = self._get_instances_df()
+        self._get_tiles_df()
         self._get_class_freq()
         self._get_empty_images()
 

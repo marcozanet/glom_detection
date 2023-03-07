@@ -22,8 +22,8 @@ class Plotter(Profiler):
             Super class Profiler needs a root folder structured like: root -> wsi/tiles->train,val,test->images/labels."""
 
         super().__init__(*args, **kwargs)
-        self.df_instances = self._get_df()
-        self.df_tiles = self._get_tile_df()
+        self.df_instances = self._get_instances_df()
+        self.df_tiles = self._get_tiles_df()
 
         if files is not None:
             assert all([os.path.isfile(file) for file in files])
@@ -223,7 +223,7 @@ def test_Plotter():
     import sys 
     system = 'mac' if sys.platform == 'darwin' else 'windows'
     
-    data_root = '/Users/marco/Downloads/train_20feb23' if system == 'mac' else r'D:\marco\datasets\muw\detection'
+    data_root = '/Users/marco/Downloads/test_folders/test_process_data_and_train/test_3_slides' if system == 'mac' else r'D:\marco\datasets\muw\detection'
     files = ['/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_31_18.png',
             '/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_52_12.png',
             '/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_49_24.png']

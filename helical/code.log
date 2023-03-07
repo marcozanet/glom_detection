@@ -1,22 +1,19 @@
-06/03 17:11:23|INFO|Cleaner._get_data: ⏳ Getting data from: 'detection'
-06/03 17:11:23|INFO|Cleaner._get_data: ✅ Getting data from: 'detection'
-06/03 17:11:23|INFO|Cleaner._del_unpaired_labels: ⏳ Deleting unpaired labels
-06/03 17:11:23|INFO|Cleaner._get_data: ⏳ Getting data from: 'detection'
-06/03 17:11:23|INFO|Cleaner._get_data: ✅ Getting data from: 'detection'
-06/03 17:11:23|INFO|Cleaner._del_unpaired_labels: ✅ Deleting unpaired labels
-06/03 17:11:23|INFO|Cleaner._get_data: ⏳ Getting data from: 'detection'
-06/03 17:11:23|INFO|Cleaner._get_data: ✅ Getting data from: 'detection'
-06/03 17:11:23|INFO|Cleaner._get_unique_labels: Unique classes: ['2', '0', '1']
-06/03 17:11:23|INFO|Cleaner._replacing_class: ⏳ Assigning randomly class:1 to either class:0 or class:2.
-06/03 17:11:24|INFO|Cleaner._get_data: ⏳ Getting data from: 'detection'
-06/03 17:11:24|INFO|Cleaner._get_data: ✅ Getting data from: 'detection'
-06/03 17:11:24|INFO|Cleaner._replacing_class: ✅ Assigning randomly class:1 to either class:0 or class:2.
-06/03 17:11:24|INFO|Cleaner._get_unique_labels: Unique classes: ['2', '0']
-06/03 17:11:24|INFO|Cleaner._replacing_class: ⏳ Replacing class:2 with class:1
-06/03 17:11:24|INFO|Cleaner._replacing_class: New unique classes: unique_classes = ['0', '1'] 
-06/03 17:11:24|INFO|Cleaner._get_data: ⏳ Getting data from: 'detection'
-06/03 17:11:24|INFO|Cleaner._get_data: ✅ Getting data from: 'detection'
-06/03 17:11:24|INFO|Cleaner._replacing_class: ✅ Replacing class:2 with class:1
-06/03 17:11:24|INFO|Cleaner._get_empty_images: ⏳Getting nsamples in slide:
-06/03 17:11:24|INFO|Cleaner._get_empty_images: ✅Getting nsamples in slide:
-06/03 17:11:26|INFO|Cleaner._remove_perc_: empty:315, full:2835, tot:3150
+07/03 17:49:50|INFO|Normalizer._normalize_dataset_detection: ⏳Normalizing dataset: 'test_3_slides'
+07/03 17:49:50|INFO|Normalizer._normalize_folder: ⏳Normalizing folder: 'images'
+07/03 17:49:50|INFO|Normalizer._normalize_file: ⏳ Normalizing file: '201404358_09_SFOG_sample0_1_7.png'
+07/03 17:49:51|INFO|Normalizer._normalize_file: ✅ Normalizing file: '201404358_09_SFOG_sample0_1_7.png'
+07/03 17:49:51|INFO|Normalizer._normalize_file: ⏳ Normalizing file: '201404358_09_SFOG_sample1_3_0.png'
+07/03 17:49:53|INFO|Normalizer._normalize_file: ✅ Normalizing file: '201404358_09_SFOG_sample1_3_0.png'
+07/03 17:49:53|INFO|Normalizer._normalize_file: ⏳ Normalizing file: '201404358_09_SFOG_sample0_19_7.png'
+07/03 17:49:53|ERROR|Normalizer._normalize_file: ❌ Normalizing file: '201404358_09_SFOG_sample0_19_7.png'
+07/03 17:49:53|INFO|Normalizer._normalize_file: ⏳ Normalizing file: '201410900_09_SFOG_sample1_2_21.png'
+07/03 17:49:53|ERROR|Normalizer._normalize_file: ❌ Normalizing file: '201410900_09_SFOG_sample1_2_21.png'
+07/03 17:49:53|INFO|Normalizer._normalize_file: ⏳ Normalizing file: '201420222_09_SFOG_sample0_10_18.png'
+07/03 17:49:53|ERROR|Normalizer._normalize_file: ❌ Normalizing file: '201420222_09_SFOG_sample0_10_18.png'
+07/03 17:49:53|INFO|Normalizer._normalize_file: ⏳ Normalizing file: '201410900_09_SFOG_sample0_5_14.png'
+07/03 17:49:54|INFO|Normalizer._normalize_file: ✅ Normalizing file: '201410900_09_SFOG_sample0_5_14.png'
+07/03 17:49:54|INFO|Normalizer._normalize_file: ⏳ Normalizing file: '201404358_09_SFOG_sample0_17_8.png'
+07/03 17:49:54|ERROR|Normalizer._normalize_file: ❌ Normalizing file: '201404358_09_SFOG_sample0_17_8.png'
+07/03 17:49:54|INFO|Normalizer._normalize_file: ⏳ Normalizing file: '201420222_09_SFOG_sample0_10_24.png'
+07/03 17:49:56|INFO|Normalizer._normalize_file: ✅ Normalizing file: '201420222_09_SFOG_sample0_10_24.png'
+07/03 17:49:56|INFO|Normalizer._normalize_file: ⏳ Normalizing file: '201404358_09_SFOG_sample0_57_22.png'
