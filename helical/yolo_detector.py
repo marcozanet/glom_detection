@@ -142,9 +142,9 @@ def test_YOLODetector():
     workers = 0 if system == 'mac' else 1
     map_classes = {'Glo-healthy':1, 'Glo-unhealthy':0}
     save_features = True
-    tile_size = 640
-    batch_size=4
-    epochs=2
+    tile_size = 512 
+    batch_size=10 if system == 'mac' else 2
+    epochs=10
     detector = YOLODetector(data_folder=data_folder,
                             repository_dir=repository_dir,
                             yolov5dir=yolov5dir,

@@ -436,7 +436,7 @@ class Cleaner(Profiler):
         # 2) remove label redundancies
         self._del_redundant_labels()
         # # 5) removes tissue class
-        self._remove_class_(class_num=3)
+        # self._remove_class_(class_num=3)
         # # 6) assign randomly the NA class (int=1) to either class 0 or 2:
         self._assign_NA_randomly()
         # # 7) replace class 2 with class 1 ({0:healthy, 1:NA, 2:unhealthy} -> {0:healthy, 2:unhealthy})

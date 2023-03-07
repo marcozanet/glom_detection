@@ -219,11 +219,11 @@ def test_ProcessorManager():
     # show = False    
 
     # CONFIG
-    src_root = '/Users/marco/Downloads/test_folders/test_process_data_and_train/test_3_slides' if system == 'mac' else  r'D:\marco\datasets\slides\detection\wsi\test\labels'
-    dst_root = '/Users/marco/Downloads/test_folders/test_process_data_and_train/test_3_slides' if system == 'mac' else  r'D:\marco\datasets\slides\detection\wsi\test\labels'
+    src_root = '/Users/marco/Downloads/test_folders/test_process_data_and_train/test_3_slides' if system == 'mac' else  r'D:\marco\datasets\slides'
+    dst_root = '/Users/marco/Downloads/test_folders/test_process_data_and_train/test_3_slides' if system == 'mac' else  r'D:\marco\datasets\slides'
     slide_format = 'tif'
     label_format = 'gson'
-    split_ratio = [0.34, 0.33, 0.33]
+    split_ratio = [0.7, 0.15, 0.15]    
     task = 'detection'
     verbose = True
     safe_copy = False
