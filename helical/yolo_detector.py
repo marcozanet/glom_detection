@@ -81,8 +81,18 @@ class YOLODetector(Configurator):
     def _log_data_pretraining(self): 
         """ Logs a bunch of dataset info prior to training. """
 
-        profiler = Profiler(data_root=os.path.dirname(self.data_folder) )
-        profiler.log_data_summary()
+        if 'hubmap' in self.data_folder:
+            profiler = Profiler(data_root=os.path.dirname(self.data_folder),
+                                wsi_images_like = '*.tif', 
+                                wsi_labels_like = '*.txt',
+                                tile_images_like = '*_*_*.png',
+                                tile_labels_like = '*_*_*.txt')
+            profiler.log_data_summary()
+
+        else:
+            profiler = Profiler(data_root=os.path.dirname(self.data_folder) )
+            profiler.log_data_summary()
+
 
         return
 
@@ -137,15 +147,15 @@ def test_YOLODetector():
 
     repository_dir = '/Users/marco/yolo/code/helical' if system == 'mac' else r'C:\marco\code\glom_detection\helical'
     yolov5dir = '/Users/marco/yolov5' if system == 'mac' else r'C:\marco\yolov5'
-    data_folder = '/Users/marco/Downloads/test_folders/test_process_data_and_train/test_3_slides/detection/tiles' if system == 'mac' else r'D:\marco\datasets\slides\detection\tiles'
+    data_folder = '/Users/marco/helical_tests/test_hubmap_processor/detection/tiles' if system == 'mac' else r'D:\marco\datasets\slides\detection\tiles'
     device = None if system == 'mac' else 'cuda:0'
     workers = 0 if system == 'mac' else 1
-    map_classes = {'Glo-healthy':1, 'Glo-unhealthy':0}
+    map_classes = {'glomerulus':0}  #{'Glo-healthy':1, 'Glo-unhealthy':0}
     save_features = True
     tile_size = 512 
-    batch_size=10 if system == 'mac' else 2
-    epochs=10
-    detector = YOLODetector(data_folder=data_folder,
+    batch_size=2 if system == 'mac' else 2
+    epochs=5
+    detector = YOLODetector(data_folder=data_folder, 
                             repository_dir=repository_dir,
                             yolov5dir=yolov5dir,
                             map_classes=map_classes,

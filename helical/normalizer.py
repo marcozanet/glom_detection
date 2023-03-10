@@ -237,12 +237,12 @@ def test_Normalizer():
     import sys 
     system = 'mac' if sys.platform == 'darwin' else 'windows'
 
-    target_path = '/Users/marco/Downloads/tiles/target_normalization.png'
-    to_transform_path = '/Users/marco/Downloads/test_folders/test_process_data_and_train/test_3_slides'
+    target_path = '/Users/marco/Downloads/test_folders/test_stainnormalizer/target_pas.png'
+    to_transform_path = '/Users/marco/Downloads/test_folders/test_stainnormalizer/test_sfognormalizer'
     verbose = True 
     show = True
     save_folder = None
-    replace_images = True
+    replace_images = False
     normalizer = Normalizer(target_path=target_path, to_transform_path=to_transform_path, 
                             verbose = verbose, show = show, save_folder=save_folder, replace_images=replace_images)
     normalizer()

@@ -14,16 +14,14 @@ from cleaner import Cleaner
 
 
 
-class ProcessorManager(): 
+class ManagerHubmap(): 
     def __init__(self,
-                data_source: Literal['muw', 'hubmap'],
                 src_root: str, 
                 dst_root: str, 
                 slide_format: Literal['tif', 'tiff'],
                 label_format: Literal['gson', 'mrxs.gson'],
                 tiling_shape: Tuple[int],
                 tiling_step: int,
-                tiling_level: int,
                 tiling_show: bool = True,
                 split_ratio = [0.7, 0.15, 0.15], 
                 task = Literal['detection', 'segmentation', 'both'],
@@ -38,7 +36,6 @@ class ProcessorManager():
         self.label_format = label_format
         self.tiling_shape = tiling_shape
         self.tiling_step = tiling_step
-        self.tiling_level = tiling_level
         self.tiling_show = tiling_show
         self.split_ratio = split_ratio
         self.task = task
@@ -47,7 +44,6 @@ class ProcessorManager():
         self.reproducibility = reproducibility
         self.wsi_dir = os.path.join(dst_root, self.task, 'wsi')
         self.tiles_dir = os.path.join(dst_root, self.task, 'tiles')
-        self.data_source = data_source
         
 
         self.log = get_logger()
@@ -72,8 +68,6 @@ class ProcessorManager():
             return
         
         do()
-        # splitter.move_already_tiled(tile_root = '/Users/marco/Downloads/muw_slides')
-        # splitter._remove_empty_images()
         print(" ########################    SPLITTING DATA 2: ✅    ########################")
 
         return
@@ -86,7 +80,6 @@ class ProcessorManager():
 
         return
     
-    
     def _move_slides_back(self):
 
         move_slides_back_from_tiling(wsi_folder=self.wsi_dir, slide_format=self.slide_format)
@@ -95,33 +88,38 @@ class ProcessorManager():
         return
     
     
-    def _clean_muw_dataset(self, safe_copy:bool=False) -> None: 
+    def _clean_hubmap(self, safe_copy:bool=False) -> None: 
         """ Uses the dataset cleaner to finalize the dataset, e.g. by grouping classes 
             from {0:glom_healthy, 1:glom_na, 2: glom_sclerosed, 3: tissue}
             to {0:glom_healthy, 1:glom_sclerosed} """
         
-        cleaner = Cleaner(data_root=os.path.join(self.dst_root, self.task), safe_copy=safe_copy)
-        cleaner._clean_muw()
+        cleaner = Cleaner(data_root=os.path.join(self.dst_root, self.task),
+                         safe_copy=safe_copy,
+                         wsi_images_like = '*.tif', 
+                         wsi_labels_like = '*.txt',
+                         tile_images_like = '*_*_*.png',
+                         tile_labels_like = '*_*_*.txt')
+        cleaner._clean_hubmap()
         
 
         return
-    
+
 
     def __call__(self) -> None:
 
 
         # 1) create tiles branch
-        self._make_tiles_branch()
-        # 1) split data
-        self._split_data()
-        # 2) prepare for tiling 
-        self._move_slides_forth()
+        # self._make_tiles_branch()
+        # # 1) split data
+        # self._split_data()
+        # # 2) prepare for tiling 
+        # self._move_slides_forth()
         # 3) tile images and labels:
-        self.tile_dataset()
+        # self.tile_dataset()
         #4) move slides back 
-        self._move_slides_back()
+        # self._move_slides_back()
         # 4) clean dataset, e.g. 
-        self._clean_muw_dataset()
+        self._clean_hubmap()
 
 
         return
@@ -142,10 +140,6 @@ class ProcessorManager():
     def _make_tiles_branch(self): 
         """ Creates a tree for tiles with same structures as the one for wsi: tiles -> train,val,test -> images,labels"""
 
-        # if os.path.isdir(new_datafolder):
-        #     shutil.rmtree(path = new_datafolder)
-        #     print(f"Dataset at: {new_datafolder} removed.")
-        
         # 1) makedirs:
         self.log.info(f"{self.__class__.__name__}.{'_make_tiles_branch'}: Creating new tiles branch at '{self.tiles_dir}'")
         subfolds_names = ['train', 'val', 'test']
@@ -168,43 +162,26 @@ class ProcessorManager():
 
         # 1) convert annotations to yolo format:
         self.log.info(f"{class_name}.{func_name}: ######################## CONVERTING ANNOTATIONS: ⏳    ########################")
-        if self.data_source == 'muw':
-            converter = ConverterMuW(folder = slides_labels_folder, 
-                                    convert_from='gson_wsi_mask',  
+        converter = ConverterHubmap(folder = slides_labels_folder, 
+                                    map_classes = {'glomerulus':0},
+                                    convert_from='json_wsi_mask',  
                                     convert_to='txt_wsi_bboxes',
                                     save_folder= slides_labels_folder, 
-                                    level = self.tiling_level,
+                                    level = 0,
                                     verbose=self.verbose)
-        elif self.data_source == 'hubmap':
-            converter = ConverterHubmap(folder = slides_labels_folder, 
-                                        convert_from='json_wsi_mask',  
-                                        convert_to='txt_wsi_bboxes',
-                                        save_folder= slides_labels_folder, 
-                                        level = self.tiling_level,
-                                        verbose=self.verbose)
         converter()
         self.log.info(f"{class_name}.{func_name}: ######################## CONVERTING ANNOTATIONS: ✅    ########################")
 
 
         # 2) tile images:
         self.log.info(f"{class_name}.{func_name}: ######################## TILING IMAGES: ⏳    ########################")
-        if self.data_source == 'muw':
-            tiler = Tiler(folder = slides_labels_folder, 
-                        tile_shape= self.tiling_shape, 
-                        step=self.tiling_step, 
-                        save_root= save_folder_images, 
-                        level = self.tiling_level,
-                        show = self.tiling_show,
-                        verbose = self.verbose)
-        elif self.data_source == 'hubmap': 
-            print(f"alling tiler hubmap")
-            tiler = TilerHubmap(folder = slides_labels_folder, 
-                                tile_shape= self.tiling_shape, 
-                                step=self.tiling_step, 
-                                save_root= save_folder_images, 
-                                level = self.tiling_level,
-                                show = self.tiling_show,
-                                verbose = self.verbose)
+        tiler = TilerHubmap(folder = slides_labels_folder, 
+                            tile_shape= self.tiling_shape, 
+                            step=self.tiling_step, 
+                            save_root= save_folder_images, 
+                            level = 0,
+                            show = self.tiling_show,
+                            verbose = self.verbose)
         target_format = 'tif'
         tiler(target_format=target_format)
         self.log.info(f"{class_name}.{func_name}: ######################## TILING IMAGES: ⏳    ########################")
@@ -212,15 +189,15 @@ class ProcessorManager():
         # 3) tile labels:
         self.log.info(f"{class_name}.{func_name}: ######################## TILING LABELS: ⏳    ########################")
         target_format = 'txt'
-        tiler = Tiler(folder = slides_labels_folder, 
-                    tile_shape= self.tiling_shape, 
-                    step=self.tiling_step, 
-                    save_root= save_folder_labels, 
-                    level = self.tiling_level,
-                    show = self.tiling_show,
-                    verbose = self.verbose)        
+        tiler = TilerHubmap(folder = slides_labels_folder, 
+                            tile_shape= self.tiling_shape, 
+                            step=self.tiling_step, 
+                            save_root= save_folder_labels, 
+                            level = 0,
+                            show = self.tiling_show,
+                            verbose = self.verbose)        
         tiler(target_format=target_format)
-        tiler.test_show_image_labels()
+        # tiler.test_show_image_labels()
         self.log.info(f"{class_name}.{func_name}: ######################## TILING LABELS: ✅    ########################")
 
 
@@ -234,71 +211,31 @@ def test_ProcessorManager():
 
     import sys 
     system = 'mac' if sys.platform == 'darwin' else 'windows'
-    # folder = '/Users/marco/Downloads/test_folders/test_tiler/test_1slide' if system == 'mac' else  r'D:\marco\datasets\slides\detection\wsi\test\labels'
-    # save_folder = '/Users/marco/Downloads/test_folders/test_tiler/test_1slide' if system == 'mac' else  r'D:\marco\datasets\slides\detection\wsi\test\labels'
-    # save_root = '/Users/marco/Downloads/test_folders/test_tiler/test_1slide' if system == 'mac' else r'D:\marco\datasets\slides\detection\wsi\test\labels'
-    # level = 2
-    # show = False    
-
-    # TEST TRUE DATA
-    # CONFIG
-    # src_root = '/Users/marco/Downloads/test_folders/test_process_data_and_train/test_3_slides' if system == 'mac' else  r'D:\marco\datasets\slides'
-    # dst_root = '/Users/marco/Downloads/test_folders/test_process_data_and_train/test_3_slides' if system == 'mac' else  r'D:\marco\datasets\slides'
-    # slide_format = 'tif'
-    # label_format = 'gson'
-    # split_ratio = [0.7, 0.15, 0.15]    
-    # task = 'detection'
-    # verbose = True
-    # safe_copy = False
-    # tiling_shape = (2048,2048)
-    # tiling_step = 512
-    # tiling_level = 2
-    # tiling_show = True
-
-    # manager = ProcessorManager(src_root=src_root,
-    #                            dst_root=dst_root,
-    #                            slide_format=slide_format,
-    #                            label_format=label_format,
-    #                            split_ratio=split_ratio,
-    #                            tiling_shape=tiling_shape,
-    #                            tiling_step=tiling_step,
-    #                            task=task,
-    #                            tiling_level=tiling_level,
-    #                            tiling_show=tiling_show,
-    #                            verbose=verbose,
-    #                            safe_copy=safe_copy)
-    # manager()
-
-
 
     # DEVELOPMENT 
-    src_root = '/Users/marco/Downloads/test_folders/test_hubmap_processor' if system == 'mac' else  r'D:\marco\datasets\slides'
-    dst_root = '/Users/marco/Downloads/test_folders/test_hubmap_processor' if system == 'mac' else  r'D:\marco\datasets\slides'
+    src_root = '/Users/marco/helical_tests/test_hubmap_processor' if system == 'mac' else  r'D:\marco\datasets\slides'
+    dst_root = '/Users/marco/helical_tests/test_hubmap_processor' if system == 'mac' else  r'D:\marco\datasets\slides'
     slide_format = 'tif'
     label_format = 'json'
     split_ratio = [0.7, 0.15, 0.15]    
-    data_source = 'hubmap'
     task = 'detection'
     verbose = True
     safe_copy = False
-    tiling_shape = (1024,1024)
+    tiling_shape = (2048,2048)
     tiling_step = 512
-    tiling_level = 3
-    tiling_show = True
+    tiling_show = False
 
-    manager = ProcessorManager(data_source=data_source,
-                               src_root=src_root,
-                               dst_root=dst_root,
-                               slide_format=slide_format,
-                               label_format=label_format,
-                               split_ratio=split_ratio,
-                               tiling_shape=tiling_shape,
-                               tiling_step=tiling_step,
-                               task=task,
-                               tiling_level=tiling_level,
-                               tiling_show=tiling_show,
-                               verbose=verbose,
-                               safe_copy=safe_copy)
+    manager = ManagerHubmap(src_root=src_root,
+                            dst_root=dst_root,
+                            slide_format=slide_format,
+                            label_format=label_format,
+                            split_ratio=split_ratio,
+                            tiling_shape=tiling_shape,
+                            tiling_step=tiling_step,
+                            task=task,
+                            tiling_show=tiling_show,
+                            verbose=verbose,
+                            safe_copy=safe_copy)
     manager()
 
     return

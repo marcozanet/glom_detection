@@ -121,7 +121,6 @@ class Converter():
         y_min = 10000000000
         x_max = 0
         y_max = 0
-
         # access polygon vertices of each glom
         for glom in data:
             vertices = glom['geometry']['coordinates']
@@ -331,6 +330,9 @@ class Converter():
 
 
         return
+
+
+
 
 
     def _convert_jsonliketxt2txt(self, jsonliketxt_file:str) -> None:

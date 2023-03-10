@@ -353,17 +353,22 @@ class Cleaner(Profiler):
         full, empty = self._get_empty_images()
         num_empty = len(empty)
         num_full = len(full)
+        self.log.info(f"empty: {num_empty}, full:{num_empty}")
+
+
+        assert num_full > 0, self.log.error(f"{self._class_name}.{'_remove_perc_'}: no full image found. full images:{num_full}, empty images:{num_empty}")
 
         def do():
             # if self.verbose is True:
             #     (f"empty:{num_empty}, full:{num_full}, tot:{num_empty + num_full}")
 
             # compute num images to del:
+            # self.log.info(f"round({num_full}/ (1 - {self.empty_perc})) = {tot}")
             tot = round(num_full / (1 - self.empty_perc))
             num_desired_empty = tot - num_full
             to_del = num_empty - num_desired_empty
             if to_del <= 0: 
-                self.log.warning(f"{self._class_name}.{'_remove_perc_'}:❗️ Empty images are already <= {self.empty_perc*100}% of tot images. Skipping removal of empty images.")
+                self.log.warning(f"{self._class_name}.{'_remove_perc_'}:❗️ Empty images ({num_empty}/{tot}) are already <= {self.empty_perc*100}% of tot images. Skipping removal of empty images.")
                 return
             
             # select k random empty samples to del:
@@ -444,6 +449,19 @@ class Cleaner(Profiler):
         # 8) removing empty images to only have empty_perc of images being empty
         self._remove_perc_()
         
+
+        return
+    
+    def _clean_hubmap(self):
+
+        if self.safe_copy is True:
+            self._copy_tree()
+        # 1) delete labels where image doesn't exist
+        self._del_unpaired_labels()
+        # 2) remove label redundancies
+        self._del_redundant_labels()
+        # 8) removing empty images to only have empty_perc of images being empty
+        self._remove_perc_()
 
         return
 

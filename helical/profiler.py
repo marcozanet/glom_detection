@@ -61,7 +61,10 @@ class Profiler(Configurator):
             tile_images = glob(os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like))
             tile_labels = glob(os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like))
             data = {'wsi_images':wsi_images, 'wsi_labels':wsi_labels, 'tile_images':tile_images,  'tile_labels':tile_labels }
-
+            
+            assert len(tile_images) > 0, self.log.error(f"{self._class_name}.{'_get_data'}: no tile image like {os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like)} was found.")
+            assert len(tile_labels) > 0, self.log.error(f"{self._class_name}.{'_get_data'}: no tile label like {os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like)} was found.")
+            
             return data
         
         returned = do()
@@ -257,9 +260,7 @@ class Profiler(Configurator):
 
                     
             if self.verbose is True:
-                # self.log.info(df[:1])
-                # self.log.info(df.describe())
-                print("ciao verbose")
+                self.log.info(df.describe()) 
 
             
             return df
@@ -354,6 +355,9 @@ class Profiler(Configurator):
             tile_images = self.data['tile_images']
             tile_labels = self.data['tile_labels']
 
+            assert len(tile_images)>0, self.log.error(f"{self._class_name}.{'_get_empty_images'}: 'tile_images':{len(tile_images)}. No tile image found. ")
+            assert len(tile_labels)>0, self.log.error(f"{self._class_name}.{'_get_empty_images'}: 'tile_labels':{len(tile_labels)}. No tile label found. ")
+            
             empty_images = [file for file in tile_images if os.path.join(os.path.dirname(file).replace('images', 'labels'), os.path.basename(file).replace(self.tiles_image_format,self.tiles_label_format)) not in tile_labels]
             empty_images = [file for file in empty_images if "DS" not in empty_images and self.tiles_image_format in file]
             empty_images = [file for file in empty_images if os.path.isfile(file)]
@@ -363,6 +367,8 @@ class Profiler(Configurator):
             
             if len(unpaired_labels) > 2:
                 self.log.info(f"{class_name}.{func_name}:❗️ Found {len(unpaired_labels)} labels that don't have a matching image. Maybe deleting based on size also deleted images with objects?")
+
+            assert full_images is not None, self.log.error(f"{self._class_name}.{'_get_empty_images'}: 'full_images' is None. No full image found. ")
 
             return (full_images, empty_images)
         

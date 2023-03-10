@@ -95,7 +95,7 @@ class Tiler():
             ret = self.n_tiles[wsi_fn]
             # self.log.info(f"ret: {ret}, type: {type(ret)}")
             x_max, y_max  = self.n_tiles[wsi_fn][0], self.n_tiles[wsi_fn][1]
-            self.log.info(f"x_max:{x_max}, y_max:{y_max}")
+            self.log.info(f"{self.__class__.__name__}.{'_get_tile_labels'}: x_max:{x_max}, y_max:{y_max}")
             # x_max, y_max = x_max -1 , y_max -1
             # num_x_tiles = [int(file.split('_')[-2]) for file in files]
             # num_y_tiles = [int(file.split('_')[-1].split('.')[0]) for file in files]
@@ -170,11 +170,11 @@ class Tiler():
         if os.path.isfile(self.json_ntile):
             with open(self.json_ntile, 'r') as f:
                 from_json = json.load(f)
-            self.log.info(f"type: {from_json}")
+            # self.log.info(f"type: {from_json}")
             to_json.update(from_json)
         
         to_json.update(new_data)
-        self.log.info(to_json)
+        # self.log.info(to_json)
         with open(self.json_ntile, 'w') as f: 
             json.dump(to_json, fp = f)
 
@@ -184,10 +184,10 @@ class Tiler():
     def _get_n_tiles(self): 
 
         assert os.path.isfile(self.json_ntile), f"'json_ntile':{self.json_ntile} file is not a valid filepath."
-        self.log.info("assert passed")
+        # self.log.info("assert passed")
         with open(self.json_ntile, 'r') as f:
             n_tiles = json.load(f)
-        self.log.info("get_n_tiles opened")
+        # self.log.info("get_n_tiles opened")
         
         # files = [os.path.split(fp.split('.')[0])[1] for fp in files]
         # assert all([os.path.isfile(fp) for fp in files]), ValueError(f"some path in {files} is not a valid filepath.")

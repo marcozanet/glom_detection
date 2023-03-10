@@ -1,19 +1,20 @@
-07/03 17:49:50|INFO|Normalizer._normalize_dataset_detection: ⏳Normalizing dataset: 'test_3_slides'
-07/03 17:49:50|INFO|Normalizer._normalize_folder: ⏳Normalizing folder: 'images'
-07/03 17:49:50|INFO|Normalizer._normalize_file: ⏳ Normalizing file: '201404358_09_SFOG_sample0_1_7.png'
-07/03 17:49:51|INFO|Normalizer._normalize_file: ✅ Normalizing file: '201404358_09_SFOG_sample0_1_7.png'
-07/03 17:49:51|INFO|Normalizer._normalize_file: ⏳ Normalizing file: '201404358_09_SFOG_sample1_3_0.png'
-07/03 17:49:53|INFO|Normalizer._normalize_file: ✅ Normalizing file: '201404358_09_SFOG_sample1_3_0.png'
-07/03 17:49:53|INFO|Normalizer._normalize_file: ⏳ Normalizing file: '201404358_09_SFOG_sample0_19_7.png'
-07/03 17:49:53|ERROR|Normalizer._normalize_file: ❌ Normalizing file: '201404358_09_SFOG_sample0_19_7.png'
-07/03 17:49:53|INFO|Normalizer._normalize_file: ⏳ Normalizing file: '201410900_09_SFOG_sample1_2_21.png'
-07/03 17:49:53|ERROR|Normalizer._normalize_file: ❌ Normalizing file: '201410900_09_SFOG_sample1_2_21.png'
-07/03 17:49:53|INFO|Normalizer._normalize_file: ⏳ Normalizing file: '201420222_09_SFOG_sample0_10_18.png'
-07/03 17:49:53|ERROR|Normalizer._normalize_file: ❌ Normalizing file: '201420222_09_SFOG_sample0_10_18.png'
-07/03 17:49:53|INFO|Normalizer._normalize_file: ⏳ Normalizing file: '201410900_09_SFOG_sample0_5_14.png'
-07/03 17:49:54|INFO|Normalizer._normalize_file: ✅ Normalizing file: '201410900_09_SFOG_sample0_5_14.png'
-07/03 17:49:54|INFO|Normalizer._normalize_file: ⏳ Normalizing file: '201404358_09_SFOG_sample0_17_8.png'
-07/03 17:49:54|ERROR|Normalizer._normalize_file: ❌ Normalizing file: '201404358_09_SFOG_sample0_17_8.png'
-07/03 17:49:54|INFO|Normalizer._normalize_file: ⏳ Normalizing file: '201420222_09_SFOG_sample0_10_24.png'
-07/03 17:49:56|INFO|Normalizer._normalize_file: ✅ Normalizing file: '201420222_09_SFOG_sample0_10_24.png'
-07/03 17:49:56|INFO|Normalizer._normalize_file: ⏳ Normalizing file: '201404358_09_SFOG_sample0_57_22.png'
+10/03 11:35:40|INFO|⏳ Setting configurations for YOLO: 
+10/03 11:35:40|INFO|✅ YOLO set up completed YOLO ✅ .
+10/03 11:35:40|INFO|YOLODetector.train: weights:yolov5s.pt
+10/03 11:35:40|INFO|Profiler._get_data: ⏳ Getting data from: 'detection'
+10/03 11:35:40|INFO|Profiler._get_data: ✅ Getting data from: 'detection'
+10/03 11:35:40|INFO|Profiler._log_summary: 'Data root':/Users/marco/helical_tests/test_hubmap_processor/detection
+10/03 11:35:40|INFO|Profiler._get_data: ⏳ Getting data from: 'detection'
+10/03 11:35:40|INFO|Profiler._get_data: ✅ Getting data from: 'detection'
+10/03 11:35:40|INFO|Profiler._log_summary: 'trainset':['/Users/marco/helical_tests/test_hubmap_processor/detection/wsi/train/images/b9a3865fc.tif', '/Users/marco/helical_tests/test_hubmap_processor/detection/wsi/train/images/0486052bb.tif', '/Users/marco/helical_tests/test_hubmap_processor/detection/wsi/train/images/26dc41664.tif', '/Users/marco/helical_tests/test_hubmap_processor/detection/wsi/train/images/b2dc8411c.tif', '/Users/marco/helical_tests/test_hubmap_processor/detection/wsi/train/images/8242609fa.tif', '/Users/marco/helical_tests/test_hubmap_processor/detection/wsi/train/images/c68fe75ea.tif'], 'valset':['/Users/marco/helical_tests/test_hubmap_processor/detection/wsi/val/images/cb2d976f4.tif', '/Users/marco/helical_tests/test_hubmap_processor/detection/wsi/val/images/2f6ecfcdf.tif'], 'testset':['/Users/marco/helical_tests/test_hubmap_processor/detection/wsi/test/images/1e2425f28.tif', '/Users/marco/helical_tests/test_hubmap_processor/detection/wsi/train/images/b9a3865fc.tif', '/Users/marco/helical_tests/test_hubmap_processor/detection/wsi/train/images/0486052bb.tif', '/Users/marco/helical_tests/test_hubmap_processor/detection/wsi/train/images/26dc41664.tif', '/Users/marco/helical_tests/test_hubmap_processor/detection/wsi/train/images/b2dc8411c.tif', '/Users/marco/helical_tests/test_hubmap_processor/detection/wsi/train/images/8242609fa.tif', '/Users/marco/helical_tests/test_hubmap_processor/detection/wsi/train/images/c68fe75ea.tif', '/Users/marco/helical_tests/test_hubmap_processor/detection/wsi/val/images/cb2d976f4.tif', '/Users/marco/helical_tests/test_hubmap_processor/detection/wsi/val/images/2f6ecfcdf.tif']
+10/03 11:35:40|INFO|Profiler._get_class_freq: ⏳ Getting classes frequency
+10/03 11:35:41|INFO|Profiler._get_class_freq: ✅ Getting classes frequency
+10/03 11:35:41|INFO|Profiler._log_summary: 'class frequency':{'0': 42627, '1': 0, '2': 0, '3': 0} 
+10/03 11:35:41|INFO|Profiler._log_summary: 'unique labels':['0'] 
+10/03 11:35:41|INFO|Profiler._get_empty_images: ⏳Getting nsamples in slide:
+10/03 11:35:43|INFO|Profiler._get_empty_images: ✅Getting nsamples in slide:
+10/03 11:35:43|INFO|Profiler._log_summary: 'full_images':9776. 'empty_images':1086. Empty perc:0.1 
+10/03 11:35:43|INFO|YOLODetector.train: ⏳ YOLO training:
+10/03 11:35:43|INFO|⏳ Start training YOLO:
+10/03 11:35:43|INFO|YOLODetector.train: python train.py --img 512 --batch 2 --epochs 5 --data helical.yaml --weights yolov5s.pt --workers 0
+10/03 11:36:34|INFO|YOLODetector.train: ✅ YOLO training:
