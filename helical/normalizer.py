@@ -50,7 +50,7 @@ class Normalizer(Configurator):
     def _normalize_file(self, file=str) -> np.ndarray:
         """ Stain normalizes a file. """
         
-        @log_start_finish(class_name='Normalizer', func_name='_normalize_file', msg = f" Normalizing file: '{os.path.basename(file)}'" )
+        # @log_start_finish(class_name='Normalizer', func_name='_normalize_file', msg = f" Normalizing file: '{os.path.basename(file)}'" )
         def do():
             warnings.filterwarnings("ignore")
 

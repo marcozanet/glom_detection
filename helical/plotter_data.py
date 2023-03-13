@@ -202,7 +202,7 @@ class Plotter(Profiler):
     
     def __call__(self) -> None:
 
-        self._plot_fullempty()
+        self._show_random_tiles()
 
         # self._plot_area()
         # self._plot_height_width()
