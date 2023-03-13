@@ -87,6 +87,9 @@ class Plotter(Profiler):
                 images = self.files
                 labels = [file.replace('images', 'labels').replace('.png', '.txt') for file in images]
 
+            assert [os.path.isfile(f) for f in images ], f"Some images are not a valid filepath (example of image: {images[0]})"
+            assert [os.path.isfile(f) for f in labels ], f"Some images are not a valid filepath (example of label: {labels[0]})"
+
 
             # 2) Show image/drawing rectangles as annotations:
             plt.figure(figsize=(20, 60))
@@ -223,10 +226,10 @@ def test_Plotter():
     import sys 
     system = 'mac' if sys.platform == 'darwin' else 'windows'
     
-    data_root = '/Users/marco/Downloads/test_folders/test_process_data_and_train/test_3_slides' if system == 'mac' else r'D:\marco\datasets\muw\detection'
-    files = ['/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_31_18.png',
-            '/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_52_12.png',
-            '/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_49_24.png']
+    data_root = '/Users/marco/helical_tests/test_process_data_and_train/test_3_slides/detection' if system == 'mac' else r'D:\marco\datasets\muw\detection'
+    # files = ['/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_31_18.png',
+    #         '/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_52_12.png',
+    #         '/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_49_24.png']
     plotter = Plotter(data_root=data_root, files=None, verbose = False)
     plotter()
 

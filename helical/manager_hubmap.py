@@ -72,6 +72,18 @@ class ManagerHubmap():
 
         return
     
+
+    def _rename_tiff2tif(self):
+
+        files = [os.path.join(self.src_root,file) for file in os.listdir(self.src_root) if '.tiff' in file]
+        old_new_names = [(file, file.replace('.tiff', '.tif')) for file in files ]
+        # self.log.info(f"files:{old_new_names}")
+        for old_fp, new_fp in old_new_names: 
+            os.rename(old_fp, new_fp)
+
+        return
+    
+    
     def _move_slides_forth(self): 
         """ Moves slides together with labels to be ready for tiling. """
 
@@ -107,7 +119,8 @@ class ManagerHubmap():
 
     def __call__(self) -> None:
 
-
+        # 0) rename tiff to tif:
+        self._rename_tiff2tif()
         # 1) create tiles branch
         self._make_tiles_branch()
         # 1) split data

@@ -46,7 +46,7 @@ class Profiler(Configurator):
 
 
         self.data = self._get_data()
-        self.log.info(f"len data images: {self.data['tile_images']}")
+        self.log.info(f"len data images: {len(self.data['tile_images'])}")
 
 
         return
@@ -66,7 +66,7 @@ class Profiler(Configurator):
             tile_images = glob(os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like))
             tile_labels = glob(os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like))
             self.log.info(f"looking for images like: {os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like)} ")
-            self.log.info(f"images found: {len(tile_images)}")
+            # self.log.info(f"images found: {len(tile_images)}")
             data = {'wsi_images':wsi_images, 'wsi_labels':wsi_labels, 'tile_images':tile_images,  'tile_labels':tile_labels }
             
             if self.empty_ok is False:
@@ -80,11 +80,11 @@ class Profiler(Configurator):
                 if len(tile_labels) > 0:
                     self.log.warning(f"{self._class_name}.{'_get_data'}: no tile label like {os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like)} was found.")
             
-            self.log.info(f"completed func, returning {data}")
+            # self.log.info(f"completed func, returning {data}")
             return data
         
         returned = do()
-        self.log.info(f"do called. returning {returned}")
+        # self.log.info(f"do called. returning {returned}")
 
         return returned
 
@@ -143,7 +143,7 @@ class Profiler(Configurator):
     def _get_instances_df(self): 
         """ Creates the tiles DataFrame. """
         
-        @log_start_finish(class_name=self.__class__.__name__, func_name='_get_tiles_df', msg = f"Creating instances dataframe" )
+        @log_start_finish(class_name=self.__class__.__name__, func_name='_get_instances_df', msg = f"Creating instances dataframe" )
         def do():
             df = pd.DataFrame(columns=['class_n','width','height','area', 'obj_n', 'tile', 'fold', 'sample', 'wsi', 'fn' ])
 
@@ -176,7 +176,7 @@ class Profiler(Configurator):
                                 'sample':sample_n,'wsi':{wsi_n}, 'fn':{fn.split('.')[0]}}
                     df.loc[i] = pd.Series(info_dict)
                     i += 1
-                self.df = df
+                self.df_instances = df
 
             if self.verbose is True:
                 # self.log.info(df.loc[:1])
@@ -199,8 +199,8 @@ class Profiler(Configurator):
             _, empty = self._get_empty_images()
             self.log.info(f"empty: {len(empty)}")
 
-            # add empty tiles as new rows to self.df:
-            i = len(self.df)
+            # add empty tiles as new rows to self.df_instances:
+            i = len(self.df_instances)
             for file in tqdm(empty, desc = 'Scanning empty tiles'):
 
                 fn = os.path.basename(file)
@@ -211,7 +211,7 @@ class Profiler(Configurator):
                 info_dict = {'class_n':np.nan, 'width':np.nan, 'height':np.nan, 
                             'area':np.nan, 'obj_n':np.nan, 'fold':fold, 'tile':tile_n, 
                             'sample':sample_n,'wsi':{wsi_n}} # all empty values set to nan
-                self.df.loc[i] = pd.Series(info_dict)
+                self.df_instances.loc[i] = pd.Series(info_dict)
 
                 i+=1
             return 
@@ -239,29 +239,38 @@ class Profiler(Configurator):
 
                 fn = os.path.basename(file)
                 
+                # self.log.info(f" label opening")
                 with open(file, 'r') as f:
                     rows = f.readlines()
-                
+                # self.log.info(f" label opened.")
+
                 assert len(rows) <= 30, f"❗️ Warning: File label has more than 30 instances. Maybe redundancy? "
                 rows = [row.replace('\n', '') for row in rows]
 
+                # self.log.info(f"rows:{len(rows)}")
                 for row in rows:
+                    # self.log.info(row)
                     items = row.split(' ')
-                    class_n = 'healthy' if int(items[0]) == 1 else class_n
+                    # self.log.info(items)
+                    class_n = 'healthy' if int(float(items[0])) == 1 else class_n
+                # self.log.info(f"rows done")
                 n_objs = len(rows)
                 tile_n = fn.split('sample')[1][1:].split('.')[0]
                 sample_n = fn.split('sample')[1][0]
                 wsi_n = fn.split('_sample')[0]
                 fold = os.path.split(os.path.split(os.path.dirname(file))[0])[1]
+                # self.log.info(f"paths done")
+
                 info_dict = {'class_n':class_n, 'obj_n':n_objs, 'fold':fold, 'tile':tile_n, 
                             'sample':sample_n,'wsi':{wsi_n}, 'fn':{fn.split('.')[0]}}
+                # self.log.info(f"info_dict:{info_dict}")
                 df.loc[i] = pd.Series(info_dict)
                 i += 1
             
             # TODO FIX: NOT MACHING BETWEEN DF AND EMPTY/FULL
             # assert len(df) == len(full), f"len(df):{len(df)}, len(full):{len(full)}"
             # check at least one not empty 
-
+            self.log.info(f"adding empty files:")
             # now add also all empty tiles: 
             for file in empty:
                 class_n = 'empty'
@@ -426,7 +435,7 @@ class Profiler(Configurator):
     
     def __call__(self) -> None:
 
-        self.df = self._get_instances_df()
+        self.df_instances = self._get_instances_df()
         self._get_tiles_df()
         self._get_class_freq()
         self._get_empty_images()
