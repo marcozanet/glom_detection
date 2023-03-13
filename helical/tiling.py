@@ -59,6 +59,8 @@ class Tiler():
         self.level = level
         self.show = show
 
+        self.class_name = self.__class__.__name__
+
         return
     
 
