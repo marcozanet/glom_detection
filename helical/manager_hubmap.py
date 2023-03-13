@@ -119,7 +119,7 @@ class ManagerHubmap():
 
     def __call__(self) -> None:
 
-        # 0) rename tiff to tif:
+
         self._rename_tiff2tif()
         # 1) create tiles branch
         self._make_tiles_branch()
@@ -228,8 +228,8 @@ def test_ProcessorManager():
     system = 'mac' if sys.platform == 'darwin' else 'windows'
 
     # DEVELOPMENT 
-    src_root = '/Users/marco/helical_tests/test_hubmap_manager' if system == 'mac' else  r'D:\marco\datasets\slides'
-    dst_root = '/Users/marco/helical_tests/test_hubmap_manager' if system == 'mac' else  r'D:\marco\datasets\slides'
+    src_root = '/Users/marco/helical_tests/test_hubmap_manager' if system == 'mac' else  r'D:\marco\hubmap_slides'
+    dst_root = '/Users/marco/helical_tests/test_hubmap_manager' if system == 'mac' else  r'D:\marco\hubmap_slides'
     slide_format = 'tif'
     label_format = 'json'
     split_ratio = [0.7, 0.15, 0.15]    
