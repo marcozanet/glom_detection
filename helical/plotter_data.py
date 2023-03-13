@@ -10,6 +10,7 @@ from profiler import Profiler
 import cv2
 from loggers import get_logger
 from decorators import log_start_finish
+import random
 
 
 class Plotter(Profiler): 
@@ -23,7 +24,9 @@ class Plotter(Profiler):
 
         super().__init__(*args, **kwargs)
         self.df_instances = self._get_instances_df()
+        self.log.info(self.df_instances.head())
         self.df_tiles = self._get_tiles_df()
+        self.log.info(self.df_tiles.head())
 
         if files is not None:
             assert all([os.path.isfile(file) for file in files])
@@ -68,32 +71,35 @@ class Plotter(Profiler):
         return
     
 
-    def _show_random_tiles(self, set = 'train') -> None:
+    def _show_random_tiles(self, set = 'train', k:int = 6) -> None:
         """ Shows 3 random images/labels in subplots. """
 
-        @log_start_finish(class_name=self.__class__.__name__, func_name='_show_random_tiles', msg = f"Plotting random tiles" )
-        def do():   
+        k = 3
+        # @log_start_finish(class_name=self.__class__.__name__, func_name='_show_random_tiles', msg = f"Plotting random tiles" )
+        def do(k:int):   
+            
+            if k%2 != 0:
+                self.log.error(f"{self._class_name}.{'_show_random_tiles'}: K should be divisible by 2. Using default K=6 instead")
+                k = 6
+
+            replace_dir = lambda fp, to_dir, format: os.path.join(os.path.dirname(os.path.dirname(fp)), to_dir, os.path.basename(fp).split('.')[0] + f".{format}")
 
             # 1) Picking images:
             if self.files is None: # i.e. random images
                 labels = self.data['tile_labels']
-                labels_fold = os.path.join(self.data_root, set, 'labels')
-                rand_idx_1 = np.random.randint(0, len(labels))
-                rand_idx_2 = np.random.randint(0, len(labels))
-                rand_idx_3 = np.random.randint(0, len(labels))
-                labels = os.path.join(labels_fold, labels[rand_idx_1]), os.path.join(labels_fold, labels[rand_idx_2]), os.path.join(labels_fold, labels[rand_idx_3])
-                images = labels[0].replace('labels', 'images').replace('.txt', '.png'), labels[1].replace('labels', 'images').replace('.txt', '.png'), labels[2].replace('labels', 'images').replace('.txt', '.png')
+                labels = random.sample(labels, k=k)
+                pairs = [(replace_dir(fp, to_dir='images', format='png'), fp) for fp in labels]
+                pairs = list(filter(lambda pair: (os.path.isfile(pair[0]) and os.path.isfile(pair[1])), pairs))
             else: # i.e. specified images
                 images = self.files
-                labels = [file.replace('images', 'labels').replace('.png', '.txt') for file in images]
-
-            assert [os.path.isfile(f) for f in images ], f"Some images are not a valid filepath (example of image: {images[0]})"
-            assert [os.path.isfile(f) for f in labels ], f"Some images are not a valid filepath (example of label: {labels[0]})"
-
-
+                pairs = [(replace_dir(fp, to_dir='labels', format='txt'), fp) for fp in images]
+                pairs = list(filter(lambda pair: (os.path.isfile(pair[0]) and os.path.isfile(pair[1])), pairs))
+            
             # 2) Show image/drawing rectangles as annotations:
-            plt.figure(figsize=(20, 60))
-            for i, (image_fp, label_fp) in enumerate(zip(images, labels)):
+            plt.figure(figsize=(20, k//2*10))
+            for i, (image_fp, label_fp) in enumerate(pairs):
+
+                self.log.info(f"i:{i}")
 
                 # read image
                 image = cv2.imread(image_fp)
@@ -102,10 +108,11 @@ class Plotter(Profiler):
                 with open(label_fp, 'r') as f:
                     text = f.readlines()
                     f.close()
+                self.log.info("successfully read label")
                 # draw rectangle for each glom/row:
                 for row in text: 
                     items = row.split(sep = ' ')
-                    class_n = int(items[0])
+                    class_n = int(float(items[0]))
                     xc, yc, box_w, box_h = [float(num) for num in items[1:]]
                     xc, box_w = xc * W, box_w * W
                     yc, box_h = yc * H, box_h * H
@@ -117,19 +124,28 @@ class Plotter(Profiler):
                     text = 'unhealthy' if class_n == 0 else 'healthy'
                     font = cv2.FONT_HERSHEY_SIMPLEX
                     image = cv2.rectangle(img = image, pt1 = start_point, pt2 = end_point, color = color, thickness=2)
+                    self.log.info("done rectangle")
                     image = cv2.putText(image, text, org = (x0,y0-H//50), color=color, thickness=2, fontFace=font, fontScale=1)
+                    self.log.info("successfully done text")
 
                 # add subplot with image
-                plt.subplot(1,3,i+1)
+
+                self.log.info('adding subplot')
+                self.log.info(f"k//2: {k//2}, k:{k}" )
+                plt.subplot(k//2,2,i+1)
+                self.log.info('adding title')
                 plt.title(f"Example tiles - {set} set")
-                plt.imshow(image, interpolation='nearest')
+                self.log.info('plotting image with interpolation nearest')
+                plt.imshow(image)
+                self.log.info('axis off')
+                plt.tight_layout()
                 plt.axis('off')
             
             plt.show()
         
             return
 
-        do()
+        do(k=k)
 
         return
     

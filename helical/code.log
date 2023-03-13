@@ -1,59 +1,109 @@
-13/03 15:50:18|INFO|ManagerHubmap._make_tiles_branch: Creating new tiles branch at '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles'
-13/03 15:50:18|INFO|ManagerHubmap._split_data: ⏳ Splitting slides
-13/03 15:50:18|INFO|Splitter._move_files: trainset: ['b9a3865fc.tif', '0486052bb.tif', '26dc41664.tif', 'b2dc8411c.tif', '8242609fa.tif', 'c68fe75ea.tif', '4ef6695ce.tif']
-13/03 15:50:18|INFO|Splitter._move_files: valset: ['2f6ecfcdf.tif', 'cb2d976f4.tif']
-13/03 15:50:18|INFO|Splitter._move_files: testset: ['1e2425f28.tif']
-13/03 15:50:18|INFO|ManagerHubmap._split_data: ✅ Splitting slides
-13/03 15:50:18|INFO|ManagerHubmap._move_slides_forth: Moved slides forth.
-13/03 15:50:18|INFO|ManagerHubmap.tile_dataset: Tiling dataset at '/Users/marco/helical_tests/test_hubmap_manager/detection/wsi'
-13/03 15:50:18|INFO|ManagerHubmap.tile_dataset: Tiling 'train'
-13/03 15:50:18|INFO|ManagerHubmap._tile_folder: ######################## CONVERTING ANNOTATIONS: ⏳    ########################
-13/03 15:50:18|INFO|json_files:7, json files:7
-13/03 15:50:19|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/26dc41664.txt
-13/03 15:50:19|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
-13/03 15:50:19|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/8242609fa.txt
-13/03 15:50:19|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
-13/03 15:50:19|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/4ef6695ce.txt
-13/03 15:50:19|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
-13/03 15:50:19|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/c68fe75ea.txt
-13/03 15:50:19|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
-13/03 15:50:19|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/b2dc8411c.txt
-13/03 15:50:19|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
-13/03 15:50:19|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/0486052bb.txt
-13/03 15:50:19|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
-13/03 15:50:19|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/b9a3865fc.txt
-13/03 15:50:19|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
-13/03 15:50:19|INFO|ManagerHubmap._tile_folder: ######################## CONVERTING ANNOTATIONS: ✅    ########################
-13/03 15:50:19|INFO|ManagerHubmap._tile_folder: ######################## TILING IMAGES: ⏳    ########################
-13/03 15:50:19|INFO|TilerHubmap.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/train/images'.
-13/03 15:50:19|INFO|TilerHubmap._get_completed_files: Completed 0/7 files.
-13/03 15:50:19|INFO|TilerHubmap._remove_small_files: Removed 0 small files (< 500kB)
-13/03 15:50:19|INFO|TilerHubmap._get_tile_images: ⏳ Tiling image: 'b9a3865fc.tif'
-13/03 15:50:19|INFO|TilerHubmap._get_tile_images: ⏳ Opening 'b9a3865fc.tif':
-13/03 15:50:19|INFO|TilerHubmap._get_tile_images: ✅ Opening 'b9a3865fc.tif':
-13/03 15:50:19|INFO|TilerHubmap._get_tile_images: ⏳ Reading slide with shape ((40429, 31295)):
-13/03 15:50:43|INFO|TilerHubmap._get_tile_images: ⏳ Converting to numpy:
-13/03 15:50:49|INFO|TilerHubmap._get_tile_images: ✅ Conversion to numpy.
-13/03 15:50:49|INFO|TilerHubmap._get_tile_images: ⏳ Patchifying:
-13/03 15:50:49|INFO|TilerHubmap._get_tile_images: ✅ Patchifying.
-13/03 15:50:49|INFO|TilerHubmap._get_tile_images: ⏳ Saving patches:
-13/03 15:51:04|ERROR|TilerHubmap._get_tile_images: ❌ Tiling image: 'b9a3865fc.tif'
-13/03 15:51:04|INFO|TilerHubmap._remove_small_files: Removed 0 small files (< 500kB)
-13/03 15:51:04|INFO|TilerHubmap._get_tile_images: ⏳ Tiling image: '0486052bb.tif'
-13/03 15:51:04|INFO|TilerHubmap._get_tile_images: ⏳ Opening '0486052bb.tif':
-13/03 15:51:04|INFO|TilerHubmap._get_tile_images: ✅ Opening '0486052bb.tif':
-13/03 15:51:04|INFO|TilerHubmap._get_tile_images: ⏳ Reading slide with shape ((34937, 25784)):
-13/03 15:51:18|ERROR|TilerHubmap._get_tile_images: ❌ Reading region failed
-13/03 15:51:18|INFO|TilerHubmap._get_tile_images: ⏳ Converting to numpy:
-13/03 15:51:18|ERROR|TilerHubmap._get_tile_images: ❌ Conversion to numpy.
-13/03 15:51:18|INFO|TilerHubmap._get_tile_images: ✅ Conversion to numpy.
-13/03 15:51:18|INFO|TilerHubmap._get_tile_images: ⏳ Patchifying:
-13/03 15:51:18|ERROR|TilerHubmap._get_tile_images: ❌ Patchifying.
-13/03 15:51:18|INFO|TilerHubmap._get_tile_images: ✅ Patchifying.
-13/03 15:51:18|INFO|TilerHubmap._get_tile_images: ⏳ Saving patches:
-13/03 15:51:18|ERROR|TilerHubmap._get_tile_images: ❌ Tiling image: '0486052bb.tif'
-13/03 15:51:18|INFO|TilerHubmap._remove_small_files: Removed 0 small files (< 500kB)
-13/03 15:51:18|INFO|TilerHubmap._get_tile_images: ⏳ Tiling image: '26dc41664.tif'
-13/03 15:51:18|INFO|TilerHubmap._get_tile_images: ⏳ Opening '26dc41664.tif':
-13/03 15:51:18|INFO|TilerHubmap._get_tile_images: ✅ Opening '26dc41664.tif':
-13/03 15:51:18|INFO|TilerHubmap._get_tile_images: ⏳ Reading slide with shape ((42360, 38160)):
+13/03 17:21:38|INFO|looking for images like: /Users/marco/helical_tests/test_process_data_and_train/test_3_slides/detection/tiles/*/images/*sample*.png 
+13/03 17:21:38|INFO|len data images: 3150
+13/03 17:21:38|INFO|Plotter._get_instances_df: ⏳Creating instances dataframe
+13/03 17:21:42|INFO|Plotter._add_empty2df: ⏳Adding empty images:
+13/03 17:21:42|INFO|Plotter._get_empty_images: ⏳Getting nsamples in slide:
+13/03 17:21:43|INFO|Plotter._get_empty_images: ✅Getting nsamples in slide:
+13/03 17:21:43|INFO|empty: 315
+13/03 17:21:43|INFO|Plotter._add_empty2df: ✅Adding empty images:
+13/03 17:21:43|INFO|Plotter._get_instances_df: ✅Creating instances dataframe
+13/03 17:21:43|INFO|  class_n   width  height    area  obj_n   tile  fold sample  \
+0     0.0  0.1827  0.2354   0.043  obj_0  _7_11  test      0   
+1     0.0  0.0963  0.0298  0.0029  obj_1  _7_11  test      0   
+2     0.0  0.1162  0.0834  0.0097  obj_2  _7_11  test      0   
+3     0.0  0.0798  0.1433  0.0114  obj_3   _2_1  test      0   
+4     1.0  0.1555  0.1368  0.0213  obj_4  _12_8  test      0   
+
+                   wsi                                fn  
+0  {201413789_09_SFOG}  {201413789_09_SFOG_sample0_7_11}  
+1  {201413789_09_SFOG}  {201413789_09_SFOG_sample0_7_11}  
+2  {201413789_09_SFOG}  {201413789_09_SFOG_sample0_7_11}  
+3  {201413789_09_SFOG}   {201413789_09_SFOG_sample0_2_1}  
+4  {201404292_09_SFOG}  {201404292_09_SFOG_sample0_12_8}  
+13/03 17:21:43|INFO|Plotter._get_tiles_df: ⏳Creating tile dataframe:
+13/03 17:21:43|INFO|Plotter._get_empty_images: ⏳Getting nsamples in slide:
+13/03 17:21:43|INFO|Plotter._get_empty_images: ✅Getting nsamples in slide:
+13/03 17:21:45|INFO|adding empty files:
+13/03 17:21:45|INFO|Plotter._get_tiles_df: ✅Creating tile dataframe:
+13/03 17:21:45|INFO|          class_n obj_n   tile  fold sample                  wsi  \
+0  uhealthy_gloms     3  _7_11  test      0  {201413789_09_SFOG}   
+1  uhealthy_gloms     1   _2_1  test      0  {201413789_09_SFOG}   
+2         healthy     4  _12_8  test      0  {201404292_09_SFOG}   
+3  uhealthy_gloms     1  _5_16  test      0  {201413736_09_SFOG}   
+4         healthy     4  _12_8  test      1  {201404292_09_SFOG}   
+
+                                 fn  
+0  {201413789_09_SFOG_sample0_7_11}  
+1   {201413789_09_SFOG_sample0_2_1}  
+2  {201404292_09_SFOG_sample0_12_8}  
+3  {201413736_09_SFOG_sample0_5_16}  
+4  {201404292_09_SFOG_sample1_12_8}  
+13/03 17:21:45|ERROR|Plotter._show_random_tiles: K should be divisible by 2. Using default K=6 instead
+13/03 17:21:45|INFO|i:0
+13/03 17:21:45|INFO|successfully read label
+13/03 17:21:45|INFO|done rectangle
+13/03 17:21:45|INFO|successfully done text
+13/03 17:21:45|INFO|done rectangle
+13/03 17:21:45|INFO|successfully done text
+13/03 17:21:45|INFO|adding subplot
+13/03 17:21:45|INFO|k//2: 3, k:6
+13/03 17:21:45|INFO|adding title
+13/03 17:21:45|INFO|plotting image with interpolation nearest
+13/03 17:21:45|INFO|axis off
+13/03 17:21:45|INFO|i:1
+13/03 17:21:45|INFO|successfully read label
+13/03 17:21:45|INFO|done rectangle
+13/03 17:21:45|INFO|successfully done text
+13/03 17:21:45|INFO|adding subplot
+13/03 17:21:45|INFO|k//2: 3, k:6
+13/03 17:21:45|INFO|adding title
+13/03 17:21:45|INFO|plotting image with interpolation nearest
+13/03 17:21:45|INFO|axis off
+13/03 17:21:45|INFO|i:2
+13/03 17:21:46|INFO|successfully read label
+13/03 17:21:46|INFO|done rectangle
+13/03 17:21:46|INFO|successfully done text
+13/03 17:21:46|INFO|done rectangle
+13/03 17:21:46|INFO|successfully done text
+13/03 17:21:46|INFO|done rectangle
+13/03 17:21:46|INFO|successfully done text
+13/03 17:21:46|INFO|done rectangle
+13/03 17:21:46|INFO|successfully done text
+13/03 17:21:46|INFO|done rectangle
+13/03 17:21:46|INFO|successfully done text
+13/03 17:21:46|INFO|adding subplot
+13/03 17:21:46|INFO|k//2: 3, k:6
+13/03 17:21:46|INFO|adding title
+13/03 17:21:46|INFO|plotting image with interpolation nearest
+13/03 17:21:46|INFO|axis off
+13/03 17:21:46|INFO|i:3
+13/03 17:21:46|INFO|successfully read label
+13/03 17:21:46|INFO|done rectangle
+13/03 17:21:46|INFO|successfully done text
+13/03 17:21:46|INFO|done rectangle
+13/03 17:21:46|INFO|successfully done text
+13/03 17:21:46|INFO|adding subplot
+13/03 17:21:46|INFO|k//2: 3, k:6
+13/03 17:21:46|INFO|adding title
+13/03 17:21:46|INFO|plotting image with interpolation nearest
+13/03 17:21:46|INFO|axis off
+13/03 17:21:46|INFO|i:4
+13/03 17:21:46|INFO|successfully read label
+13/03 17:21:46|INFO|done rectangle
+13/03 17:21:46|INFO|successfully done text
+13/03 17:21:46|INFO|adding subplot
+13/03 17:21:46|INFO|k//2: 3, k:6
+13/03 17:21:46|INFO|adding title
+13/03 17:21:46|INFO|plotting image with interpolation nearest
+13/03 17:21:46|INFO|axis off
+13/03 17:21:46|INFO|i:5
+13/03 17:21:46|INFO|successfully read label
+13/03 17:21:46|INFO|done rectangle
+13/03 17:21:46|INFO|successfully done text
+13/03 17:21:46|INFO|done rectangle
+13/03 17:21:46|INFO|successfully done text
+13/03 17:21:46|INFO|adding subplot
+13/03 17:21:46|INFO|k//2: 3, k:6
+13/03 17:21:46|INFO|adding title
+13/03 17:21:46|INFO|plotting image with interpolation nearest
+13/03 17:21:46|INFO|axis off
