@@ -23,7 +23,7 @@ from loggers import get_logger
 from decorators import log_start_finish
 import json
 import cv2
-
+from cleaner import Cleaner
 class Tiler():
 
     def __init__(self, 
@@ -34,6 +34,8 @@ class Tiler():
                 multiple_samples: bool = True,
                 level:int = 0,
                 show = False,
+                # clean_every_file:bool = False,
+                # cleaner_path:str = None,
                 # region_annotations: str = None,
                 verbose: bool = False) -> None:
         """ Class for patchification/tiling of WSIs and annotations. """
@@ -48,6 +50,8 @@ class Tiler():
         assert isinstance(multiple_samples, bool), f"'multiple_samples' should be a boolean."
         assert isinstance(show, bool), f"'show' should be a boolean."
         # assert os.path.isfile(fp), ValueError(f"'fp':{fp} is not a valid filepath. ")
+        # assert isinstance(clean_every_file, bool), f"'clean_every_file' should be a boolean."
+        # assert (clean_every_file is False and cleaner_path is None) or (clean_every_file is True and os.path.isdir(cleaner_path)), f"'clean_every_file':{clean_every_file} and 'cleaner_path':{cleaner_path}, but either clean_every_file is False and cleaner_path is None or clean_every_file is True and cleaner_path is a valid dir   "
 
 
         self.folder = folder 
@@ -58,12 +62,31 @@ class Tiler():
         self.multiple_samples = multiple_samples
         self.level = level
         self.show = show
+        # self.clean_every_file = clean_every_file
+        # self.cleaner_path = cleaner_path
 
         self.class_name = self.__class__.__name__
 
         return
     
+    # def _clean_hubmap_every_file(self, safe_copy:bool=False) -> None: 
+    #     """ Uses the dataset cleaner to finalize the dataset, e.g. by grouping classes 
+    #         from {0:glom_healthy, 1:glom_na, 2: glom_sclerosed, 3: tissue}
+    #         to {0:glom_healthy, 1:glom_sclerosed} """
+        
+    #     self.log.info(f"called cleaner")
+    #     cleaner = Cleaner(data_root=self.cleaner_path,
+    #                      safe_copy=safe_copy,
+    #                      wsi_images_like = '*.tif', 
+    #                      wsi_labels_like = '*.txt',
+    #                      tile_images_like = '*_*_*.png',
+    #                      tile_labels_like = '*_*_*.txt',
+    #                      empty_ok=True)
+    #     self.log.info(f"initiated cleaner")
+    #     cleaner._remove_perc_()
+        
 
+    #     return  
 
     def _get_tile_labels(self, fp: str, save_folder: str = None ):
         ''' Makes tile txt annotations in YOLO format (normalized) out of (not normalized) txt annotations for the entire image.

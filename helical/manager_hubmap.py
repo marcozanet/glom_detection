@@ -109,17 +109,17 @@ class ManagerHubmap():
 
 
         # 1) create tiles branch
-        # self._make_tiles_branch()
-        # # 1) split data
-        # self._split_data()
-        # # 2) prepare for tiling 
-        # self._move_slides_forth()
+        self._make_tiles_branch()
+        # 1) split data
+        self._split_data()
+        # 2) prepare for tiling 
+        self._move_slides_forth()
         # 3) tile images and labels:
-        # self.tile_dataset()
+        self.tile_dataset()
         #4) move slides back 
         # self._move_slides_back()
         # 4) clean dataset, e.g. 
-        self._clean_hubmap()
+        # self._clean_hubmap()
 
 
         return
@@ -179,6 +179,8 @@ class ManagerHubmap():
                             tile_shape= self.tiling_shape, 
                             step=self.tiling_step, 
                             save_root= save_folder_images, 
+                            # clean_every_file = True,
+                            # cleaner_path = os.path.join(self.dst_root, self.task),
                             level = 0,
                             show = self.tiling_show,
                             verbose = self.verbose)
@@ -213,8 +215,8 @@ def test_ProcessorManager():
     system = 'mac' if sys.platform == 'darwin' else 'windows'
 
     # DEVELOPMENT 
-    src_root = '/Users/marco/helical_tests/test_hubmap_processor' if system == 'mac' else  r'D:\marco\datasets\slides'
-    dst_root = '/Users/marco/helical_tests/test_hubmap_processor' if system == 'mac' else  r'D:\marco\datasets\slides'
+    src_root = '/Users/marco/helical_tests/test_hubmap_manager' if system == 'mac' else  r'D:\marco\datasets\slides'
+    dst_root = '/Users/marco/helical_tests/test_hubmap_manager' if system == 'mac' else  r'D:\marco\datasets\slides'
     slide_format = 'tif'
     label_format = 'json'
     split_ratio = [0.7, 0.15, 0.15]    

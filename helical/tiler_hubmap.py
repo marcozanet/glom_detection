@@ -26,6 +26,7 @@ from decorators import log_start_finish
 import json
 import cv2
 from tiling import Tiler
+from cleaner import Cleaner
 
 
 
@@ -197,6 +198,9 @@ class TilerHubmap(Tiler):
         return
     
 
+
+    
+
     def __call__(self, target_format: str, save_folder: str = None) -> None:
         """ Tiles/patchifies WSI or annotations. """
 
@@ -208,6 +212,7 @@ class TilerHubmap(Tiler):
         assert target_format in SLIDE_FORMATS or target_format in LABEL_FORMATS, ValueError(f"Patchification target format = {target_format} should be either an image in 'tiff', 'tif' format or an annotation in 'txt' format. ")
         assert save_folder is None or os.path.isdir(save_folder), ValueError(f"'save_folder':{save_folder} should be either None or a valid dirpath. ")
         
+
         self.json_ntile = os.path.join(self.folder, 'n_tiles.json')
         default_folder = 'images' if (target_format == 'tiff' or target_format == 'tif') else 'labels'
         save_folder = os.path.join(self.save_root, default_folder) if save_folder is None else save_folder
@@ -256,6 +261,8 @@ class TilerHubmap(Tiler):
             if target_format == 'tif':
                 # check if computed is inside get_tile_images func
                 self._get_tile_images(fp = file, save_folder=save_folder )
+                # if self.clean_every_file is True: 
+                #     self._clean_hubmap_every_file()
 
 
 

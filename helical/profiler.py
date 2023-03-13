@@ -18,6 +18,7 @@ class Profiler(Configurator):
                 wsi_labels_like:str = '*_sample?.txt',
                 tile_images_like:str = '*sample*.png',
                 tile_labels_like:str = '*sample*.txt',
+                empty_ok:bool = False,
                 verbose:bool=False) -> None:
         """ Data Profiler to help visualize a data overview. 
             Needs a root folder structured like: root -> wsi/tiles->train,val,test->images/labels.
@@ -30,6 +31,7 @@ class Profiler(Configurator):
         super().__init__()
         assert os.path.isdir(data_root), f"'data_root':{data_root} is not a valid dirpath."
 
+        self._class_name = self.__class__.__name__
         self.data_root = data_root
         self.wsi_images_like = wsi_images_like
         self.wsi_labels_like = wsi_labels_like
@@ -40,9 +42,12 @@ class Profiler(Configurator):
         self.tiles_image_format = tile_images_like.split('.')[-1]
         self.tiles_label_format = tile_labels_like.split('.')[-1]
         self.verbose = verbose
-        self.data = self._get_data()
+        self.empty_ok = empty_ok
 
-        self._class_name = self.__class__.__name__
+
+        self.data = self._get_data()
+        self.log.info(f"len data images: {self.data['tile_images']}")
+
 
         return
 
@@ -52,22 +57,34 @@ class Profiler(Configurator):
         """ From a roots like root -> wsi/tiles->train,val,test->images/labels, 
             it returns a list of wsi images/labels and tiles images/labels."""
         
-        @log_start_finish(class_name=self.__class__.__name__, func_name='_get_data', 
-                          msg = f" Getting data from: '{os.path.basename(self.data_root)}'" )
+        # @log_start_finish(class_name=self.__class__.__name__, func_name='_get_data', 
+                        #   msg = f" Getting data from: '{os.path.basename(self.data_root)}'" )
         def do():
 
             wsi_images = glob(os.path.join(self.data_root, 'wsi', '*', 'images', self.wsi_images_like))
             wsi_labels = glob(os.path.join(self.data_root, 'wsi', '*', 'labels', self.wsi_labels_like))
             tile_images = glob(os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like))
             tile_labels = glob(os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like))
+            self.log.info(f"looking for images like: {os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like)} ")
+            self.log.info(f"images found: {len(tile_images)}")
             data = {'wsi_images':wsi_images, 'wsi_labels':wsi_labels, 'tile_images':tile_images,  'tile_labels':tile_labels }
             
-            assert len(tile_images) > 0, self.log.error(f"{self._class_name}.{'_get_data'}: no tile image like {os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like)} was found.")
-            assert len(tile_labels) > 0, self.log.error(f"{self._class_name}.{'_get_data'}: no tile label like {os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like)} was found.")
+            if self.empty_ok is False:
+                assert len(tile_images) > 0, self.log.error(f"{self._class_name}.{'_get_data'}: no tile image like {os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like)} was found.")
+            else:
+                if len(tile_images) > 0: 
+                    self.log.warning(f"{self._class_name}.{'_get_data'}: no tile image like {os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like)} was found.")
+            if self.empty_ok is False:
+                assert len(tile_labels) > 0, self.log.error(f"{self._class_name}.{'_get_data'}: no tile label like {os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like)} was found.")
+            else:
+                if len(tile_labels) > 0:
+                    self.log.warning(f"{self._class_name}.{'_get_data'}: no tile label like {os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like)} was found.")
             
+            self.log.info(f"completed func, returning {data}")
             return data
         
         returned = do()
+        self.log.info(f"do called. returning {returned}")
 
         return returned
 
