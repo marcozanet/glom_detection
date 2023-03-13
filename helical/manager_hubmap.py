@@ -237,7 +237,7 @@ def test_ProcessorManager():
     verbose = True
     safe_copy = False
     tiling_shape = (2048,2048)
-    tiling_step = 512
+    tiling_step = 1024
     tiling_show = False
 
     manager = ManagerHubmap(src_root=src_root,

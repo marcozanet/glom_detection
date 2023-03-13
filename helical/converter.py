@@ -93,8 +93,11 @@ class Converter():
         """ Gets slide dimensions based on the level."""
 
         slide_fp = basename + ".tif"
-        assert os.path.isfile(slide_fp), f"'slide_fp':{slide_fp} is not a valid filepath."
-        slide = openslide.OpenSlide(slide_fp)
+        assert os.path.isfile(slide_fp), self.log.error(f"'slide_fp':{slide_fp} is not a valid filepath.")
+        try:
+            slide = openslide.OpenSlide(slide_fp)
+        except:
+            self.log.error(f"Failed reading slide {slide_fp} with Openslide.")
         W_orig, H_orig = slide.level_dimensions[0]
         W_lev, H_lev = slide.level_dimensions[self.level]
 

@@ -1,16 +1,59 @@
-13/03 12:39:56|INFO|looking for images like: /Users/marco/helical_tests/test_process_data_and_train/test_3_slides/detection/tiles/*/images/*sample*.png 
-13/03 12:39:56|INFO|len data images: 3150
-13/03 12:39:56|INFO|Plotter._get_instances_df: ⏳Creating instances dataframe
-13/03 12:40:00|INFO|Plotter._add_empty2df: ⏳Adding empty images:
-13/03 12:40:00|INFO|Plotter._get_empty_images: ⏳Getting nsamples in slide:
-13/03 12:40:00|INFO|Plotter._get_empty_images: ✅Getting nsamples in slide:
-13/03 12:40:00|INFO|empty: 315
-13/03 12:40:01|INFO|Plotter._add_empty2df: ✅Adding empty images:
-13/03 12:40:01|INFO|Plotter._get_instances_df: ✅Creating instances dataframe
-13/03 12:40:01|INFO|Plotter._get_tiles_df: ⏳Creating tile dataframe:
-13/03 12:40:01|INFO|Plotter._get_empty_images: ⏳Getting nsamples in slide:
-13/03 12:40:01|INFO|Plotter._get_empty_images: ✅Getting nsamples in slide:
-13/03 12:40:03|INFO|adding empty files:
-13/03 12:40:03|INFO|Plotter._get_tiles_df: ✅Creating tile dataframe:
-13/03 12:40:03|INFO|Plotter._show_random_tiles: ⏳Plotting random tiles
-13/03 12:40:03|ERROR|Plotter._show_random_tiles: ❌Plotting random tiles
+13/03 15:50:18|INFO|ManagerHubmap._make_tiles_branch: Creating new tiles branch at '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles'
+13/03 15:50:18|INFO|ManagerHubmap._split_data: ⏳ Splitting slides
+13/03 15:50:18|INFO|Splitter._move_files: trainset: ['b9a3865fc.tif', '0486052bb.tif', '26dc41664.tif', 'b2dc8411c.tif', '8242609fa.tif', 'c68fe75ea.tif', '4ef6695ce.tif']
+13/03 15:50:18|INFO|Splitter._move_files: valset: ['2f6ecfcdf.tif', 'cb2d976f4.tif']
+13/03 15:50:18|INFO|Splitter._move_files: testset: ['1e2425f28.tif']
+13/03 15:50:18|INFO|ManagerHubmap._split_data: ✅ Splitting slides
+13/03 15:50:18|INFO|ManagerHubmap._move_slides_forth: Moved slides forth.
+13/03 15:50:18|INFO|ManagerHubmap.tile_dataset: Tiling dataset at '/Users/marco/helical_tests/test_hubmap_manager/detection/wsi'
+13/03 15:50:18|INFO|ManagerHubmap.tile_dataset: Tiling 'train'
+13/03 15:50:18|INFO|ManagerHubmap._tile_folder: ######################## CONVERTING ANNOTATIONS: ⏳    ########################
+13/03 15:50:18|INFO|json_files:7, json files:7
+13/03 15:50:19|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/26dc41664.txt
+13/03 15:50:19|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
+13/03 15:50:19|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/8242609fa.txt
+13/03 15:50:19|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
+13/03 15:50:19|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/4ef6695ce.txt
+13/03 15:50:19|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
+13/03 15:50:19|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/c68fe75ea.txt
+13/03 15:50:19|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
+13/03 15:50:19|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/b2dc8411c.txt
+13/03 15:50:19|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
+13/03 15:50:19|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/0486052bb.txt
+13/03 15:50:19|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
+13/03 15:50:19|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/b9a3865fc.txt
+13/03 15:50:19|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
+13/03 15:50:19|INFO|ManagerHubmap._tile_folder: ######################## CONVERTING ANNOTATIONS: ✅    ########################
+13/03 15:50:19|INFO|ManagerHubmap._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+13/03 15:50:19|INFO|TilerHubmap.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/train/images'.
+13/03 15:50:19|INFO|TilerHubmap._get_completed_files: Completed 0/7 files.
+13/03 15:50:19|INFO|TilerHubmap._remove_small_files: Removed 0 small files (< 500kB)
+13/03 15:50:19|INFO|TilerHubmap._get_tile_images: ⏳ Tiling image: 'b9a3865fc.tif'
+13/03 15:50:19|INFO|TilerHubmap._get_tile_images: ⏳ Opening 'b9a3865fc.tif':
+13/03 15:50:19|INFO|TilerHubmap._get_tile_images: ✅ Opening 'b9a3865fc.tif':
+13/03 15:50:19|INFO|TilerHubmap._get_tile_images: ⏳ Reading slide with shape ((40429, 31295)):
+13/03 15:50:43|INFO|TilerHubmap._get_tile_images: ⏳ Converting to numpy:
+13/03 15:50:49|INFO|TilerHubmap._get_tile_images: ✅ Conversion to numpy.
+13/03 15:50:49|INFO|TilerHubmap._get_tile_images: ⏳ Patchifying:
+13/03 15:50:49|INFO|TilerHubmap._get_tile_images: ✅ Patchifying.
+13/03 15:50:49|INFO|TilerHubmap._get_tile_images: ⏳ Saving patches:
+13/03 15:51:04|ERROR|TilerHubmap._get_tile_images: ❌ Tiling image: 'b9a3865fc.tif'
+13/03 15:51:04|INFO|TilerHubmap._remove_small_files: Removed 0 small files (< 500kB)
+13/03 15:51:04|INFO|TilerHubmap._get_tile_images: ⏳ Tiling image: '0486052bb.tif'
+13/03 15:51:04|INFO|TilerHubmap._get_tile_images: ⏳ Opening '0486052bb.tif':
+13/03 15:51:04|INFO|TilerHubmap._get_tile_images: ✅ Opening '0486052bb.tif':
+13/03 15:51:04|INFO|TilerHubmap._get_tile_images: ⏳ Reading slide with shape ((34937, 25784)):
+13/03 15:51:18|ERROR|TilerHubmap._get_tile_images: ❌ Reading region failed
+13/03 15:51:18|INFO|TilerHubmap._get_tile_images: ⏳ Converting to numpy:
+13/03 15:51:18|ERROR|TilerHubmap._get_tile_images: ❌ Conversion to numpy.
+13/03 15:51:18|INFO|TilerHubmap._get_tile_images: ✅ Conversion to numpy.
+13/03 15:51:18|INFO|TilerHubmap._get_tile_images: ⏳ Patchifying:
+13/03 15:51:18|ERROR|TilerHubmap._get_tile_images: ❌ Patchifying.
+13/03 15:51:18|INFO|TilerHubmap._get_tile_images: ✅ Patchifying.
+13/03 15:51:18|INFO|TilerHubmap._get_tile_images: ⏳ Saving patches:
+13/03 15:51:18|ERROR|TilerHubmap._get_tile_images: ❌ Tiling image: '0486052bb.tif'
+13/03 15:51:18|INFO|TilerHubmap._remove_small_files: Removed 0 small files (< 500kB)
+13/03 15:51:18|INFO|TilerHubmap._get_tile_images: ⏳ Tiling image: '26dc41664.tif'
+13/03 15:51:18|INFO|TilerHubmap._get_tile_images: ⏳ Opening '26dc41664.tif':
+13/03 15:51:18|INFO|TilerHubmap._get_tile_images: ✅ Opening '26dc41664.tif':
+13/03 15:51:18|INFO|TilerHubmap._get_tile_images: ⏳ Reading slide with shape ((42360, 38160)):
