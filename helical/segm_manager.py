@@ -1,16 +1,10 @@
-
 from typing import Literal, Tuple
 import os
 from loggers import get_logger
 from decorators import log_start_finish
-from converter_muw import ConverterMuW
-from converter_hubmap import ConverterHubmap
 from splitter import Splitter
 from move_data import move_slides_for_tiling, move_slides_back_from_tiling
-from tiling import Tiler
-# from tiler_hubmap import TilerHubmap
 from tiler_segm_hub import TilerSegm
-import shutil
 from cleaner import Cleaner
 
 
@@ -261,7 +255,7 @@ def test_ProcessorManager():
     verbose = True
     safe_copy = False
     tiling_shape = (1024,1024)
-    tiling_step = 512
+    tiling_step = 1024
     tiling_level = 0
     tiling_show = True
     map_classes = {"glomerulus":0}

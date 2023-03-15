@@ -7,19 +7,14 @@ import pandas as pd
 from tqdm import tqdm
 # from loggers import get_logger
 from decorators import log_start_finish
-from configurator import Configurator
+from profiler import Profiler
 
 
-class Profiler(Configurator): 
+class ProfilerHubmap(Profiler): 
 
     def __init__(self, 
-                data_root:str, 
-                wsi_images_like:str = '*.tif', 
-                wsi_labels_like:str = '*_sample?.txt',
-                tile_images_like:str = '*sample*.png',
-                tile_labels_like:str = '*sample*.txt',
-                empty_ok:bool = False,
-                verbose:bool=False) -> None:
+                *args,
+                **kwargs) -> None:
         """ Data Profiler to help visualize a data overview. 
             Needs a root folder structured like: root -> wsi/tiles->train,val,test->images/labels.
             wsi_image_like= e.g. '*.tif'
@@ -28,66 +23,9 @@ class Profiler(Configurator):
             tile_label_like = e.g. '*sample*.txt'
             '"""
         # self.log = get_logger()
-        super().__init__()
-        assert os.path.isdir(data_root), f"'data_root':{data_root} is not a valid dirpath."
-
-        self._class_name = self.__class__.__name__
-        self.data_root = data_root
-        self.wsi_images_like = wsi_images_like
-        self.wsi_labels_like = wsi_labels_like
-        self.tile_images_like = tile_images_like
-        self.tile_labels_like = tile_labels_like
-        self.wsi_image_format = wsi_images_like.split('.')[-1]
-        self.wsi_label_format = wsi_labels_like.split('.')[-1]
-        self.tiles_image_format = tile_images_like.split('.')[-1]
-        self.tiles_label_format = tile_labels_like.split('.')[-1]
-        self.verbose = verbose
-        self.empty_ok = empty_ok
-
-
-        # self.data = self._get_data()
-        # self.log.info(f"len data images: {len(self.data['tile_images'])}")
-
+        super().__init__(*args, **kwargs)
 
         return
-
-
-    
-    def _get_data(self) -> dict:
-        """ From a roots like root -> wsi/tiles->train,val,test->images/labels, 
-            it returns a list of wsi images/labels and tiles images/labels."""
-        
-        # @log_start_finish(class_name=self.__class__.__name__, func_name='_get_data', 
-                        #   msg = f" Getting data from: '{os.path.basename(self.data_root)}'" )
-        def do():
-
-            wsi_images = glob(os.path.join(self.data_root, 'wsi', '*', 'images', self.wsi_images_like))
-            wsi_labels = glob(os.path.join(self.data_root, 'wsi', '*', 'labels', self.wsi_labels_like))
-            tile_images = glob(os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like))
-            tile_labels = glob(os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like))
-            self.log.info(f"looking for images like: {os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like)} ")
-            # self.log.info(f"images found: {len(tile_images)}")
-            data = {'wsi_images':wsi_images, 'wsi_labels':wsi_labels, 'tile_images':tile_images,  'tile_labels':tile_labels }
-            
-            if self.empty_ok is False:
-                assert len(tile_images) > 0, self.log.error(f"{self._class_name}.{'_get_data'}: no tile image like {os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like)} was found.")
-            else:
-                if len(tile_images) > 0: 
-                    self.log.warning(f"{self._class_name}.{'_get_data'}: no tile image like {os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like)} was found.")
-            if self.empty_ok is False:
-                assert len(tile_labels) > 0, self.log.error(f"{self._class_name}.{'_get_data'}: no tile label like {os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like)} was found.")
-            else:
-                if len(tile_labels) > 0:
-                    self.log.warning(f"{self._class_name}.{'_get_data'}: no tile label like {os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like)} was found.")
-            
-            # self.log.info(f"completed func, returning {data}")
-            return data
-        
-        returned = do()
-        # self.log.info(f"do called. returning {returned}")
-
-        return returned
-
 
     
     def _get_unique_labels(self, verbose = False) -> dict:
@@ -155,34 +93,40 @@ class Profiler(Configurator):
                 fn = os.path.basename(file)
                 with open(file, 'r') as f:
                     rows = f.readlines()
-                self.log.info(f'file opened')
+                # self.log.info(f'file opened')
                 
-                assert len(rows) <= 30, f"❗️ Warning: File label has more than 30 instances. Maybe redundancy? "
-                self.log.info(f'assertion passed ')
-                class_n = [row[0] for row in rows]
+                assert len(rows) <= 30, self.log.warning(f"❗️ Warning: File label has more than 30 instances. Maybe redundancy? ")
+
                 rows = [row.replace('\n', '') for row in rows]
                 for row in rows:
+
+                    # self.log.info(f'assertion passed ')
                     items = row.split(' ')
                     class_n = items[0]
-                    width = float(items[3])
-                    height = float(items[-1])
+                    items = items[1:]
+                    assert len(items)%2 == 0, self.log.error(f"{self._class_name}.{'_get_instances_df'}: items in row are not even.")
+                    x = [float(el) for (j,el) in enumerate(items) if j%2 == 0]
+                    y = [float(el) for (j,el) in enumerate(items) if j%2 != 0]
+                    # vertices = list(zip(x,y))
                     instance_n = f"obj_{i}"
-                    tile_n = fn.split('sample')[1][1:].split('.')[0]
-                    sample_n = fn.split('sample')[1][0]
-                    wsi_n = fn.split('_sample')[0]
+                    # self.log.info(f"fn:{fn}")
+                    tile_n = fn.split('_',1)[-1].split('.')[0]
+                    # self.log.info(f"'tile_n':{tile_n}")
+                    wsi_n = fn.split('_', 1)[0]
                     fold = os.path.split(os.path.split(os.path.dirname(file))[0])[1]
-
+                    width = np.array(x).max() - np.array(x).min()
+                    height = np.array(y).max() - np.array(y).min()
                     info_dict = {'class_n':class_n, 'width':round((width), 4), 'height':round(height,4), 
                                 'area':round(width*height, 4), 'obj_n':instance_n, 'fold':fold, 'tile':tile_n, 
-                                'sample':sample_n,'wsi':{wsi_n}, 'fn':{fn.split('.')[0]}}
-                    self.log.info(f'info dict: {info_dict} ')
+                                'wsi':{wsi_n}, 'fn':{fn.split('.')[0]}}
+                    # self.log.info(f'info dict: {info_dict} ')
                     
                     df.loc[i] = pd.Series(info_dict)
                     i += 1
                 self.df_instances = df
 
             if self.verbose is True:
-                # self.log.info(df.loc[:1])
+                self.log.info(f"{self._class_name}.{'_get_instances_df'}: Plotting df_instances:")
                 df.describe()
 
             self._add_empty2df()
@@ -207,13 +151,12 @@ class Profiler(Configurator):
             for file in tqdm(empty, desc = 'Scanning empty tiles'):
 
                 fn = os.path.basename(file)
-                tile_n = fn.split('sample')[1][1:].split('.')[0]
-                sample_n = fn.split('sample')[1][0]
-                wsi_n = fn.split('_sample')[0]
+                tile_n = fn.split('_',1)[-1].split('.')[0]
+                wsi_n = fn.split('_', 1)[0]
                 fold = os.path.split(os.path.split(os.path.dirname(file))[0])[1]
                 info_dict = {'class_n':np.nan, 'width':np.nan, 'height':np.nan, 
-                            'area':np.nan, 'obj_n':np.nan, 'fold':fold, 'tile':tile_n, 
-                            'sample':sample_n,'wsi':{wsi_n}} # all empty values set to nan
+                            'area':np.nan, 'obj_n':np.nan, 'fold':fold, 
+                            'tile':tile_n,'wsi':{wsi_n}} # all empty values set to nan
                 self.df_instances.loc[i] = pd.Series(info_dict)
 
                 i+=1
@@ -227,47 +170,48 @@ class Profiler(Configurator):
 
     def _get_tiles_df(self): 
         
-        @log_start_finish(class_name=self.__class__.__name__, func_name='_get_tiles_df', msg = f"Creating tile dataframe:" )
+        # @log_start_finish(class_name=self.__class__.__name__, func_name='_get_tiles_df', msg = f"Creating tile dataframe:" )
         def do():
 
             full, empty = self._get_empty_images()
 
             df = pd.DataFrame(columns=['class_n', 'obj_n', 'tile', 'fold', 'sample', 'wsi', 'fn' ])
+            # self.log.info(f"empty df created")
 
             # open all labels: 
             label_f = self.data['tile_labels']
             i = 0
             for file in tqdm(label_f, desc = 'Creating tile_df'):
                 class_n = 'uhealthy_gloms'
-
                 fn = os.path.basename(file)
-                
-                # self.log.info(f" label opening")
+                # self.log.info(f"opneing {file}")
+
                 with open(file, 'r') as f:
                     rows = f.readlines()
-                # self.log.info(f" label opened.")
 
-                assert len(rows) <= 30, f"❗️ Warning: File label has more than 30 instances. Maybe redundancy? "
+                assert len(rows) <= 30, self.log.warning(f"❗️ Warning: File label has more than 30 instances. Maybe redundancy? ")
                 rows = [row.replace('\n', '') for row in rows]
 
-                # self.log.info(f"rows:{len(rows)}")
                 for row in rows:
-                    # self.log.info(row)
                     items = row.split(' ')
-                    # self.log.info(items)
                     class_n = 'healthy' if int(float(items[0])) == 1 else class_n
+                
+                # self.log.info(f"scanned through rows")
+
                 # self.log.info(f"rows done")
                 n_objs = len(rows)
-                tile_n = fn.split('sample')[1][1:].split('.')[0]
-                sample_n = fn.split('sample')[1][0]
+                tile_n = fn.split('_',1)[-1].split('.')[0]
                 wsi_n = fn.split('_sample')[0]
                 fold = os.path.split(os.path.split(os.path.dirname(file))[0])[1]
                 # self.log.info(f"paths done")
+                # self.log.info(f"info dict:")
 
                 info_dict = {'class_n':class_n, 'obj_n':n_objs, 'fold':fold, 'tile':tile_n, 
-                            'sample':sample_n,'wsi':{wsi_n}, 'fn':{fn.split('.')[0]}}
+                             'wsi':{wsi_n}, 'fn':{fn.split('.')[0]}}
                 # self.log.info(f"info_dict:{info_dict}")
                 df.loc[i] = pd.Series(info_dict)
+                # self.log.info(f"filling df")
+
                 i += 1
             
             # TODO FIX: NOT MACHING BETWEEN DF AND EMPTY/FULL
@@ -278,12 +222,11 @@ class Profiler(Configurator):
             for file in empty:
                 class_n = 'empty'
                 n_objs = 0
-                tile_n = fn.split('sample')[1][1:].split('.')[0]
-                sample_n = fn.split('sample')[1][0]
-                wsi_n = fn.split('_sample')[0]
+                tile_n = fn.split('_',1)[-1].split('.')[0]
+                wsi_n = fn.split('_', 1)[0]
                 fold = os.path.split(os.path.split(os.path.dirname(file))[0])[1]
-                info_dict = {'class_n':class_n, 'obj_n':n_objs, 'fold':fold, 'tile':tile_n, 
-                            'sample':sample_n,'wsi':{wsi_n}, 'fn':{fn.split('.')[0]}}
+                info_dict = {'class_n':class_n, 'obj_n':n_objs, 'fold':fold, 
+                             'tile':tile_n,'wsi':{wsi_n}, 'fn':{fn.split('.')[0]}}
                 df.loc[i] = pd.Series(info_dict)
                 i += 1
 
@@ -303,9 +246,9 @@ class Profiler(Configurator):
         class_name = self.__class__.__name__
         func_name = '_get_nsamples_inslide'
        
-        @log_start_finish(class_name=class_name, func_name=func_name, msg = f"Getting nsamples in slide:" )
+        # @log_start_finish(class_name=class_name, func_name=func_name, msg = f"Getting nsamples in slide:" )
         def do():
-            assert os.path.isfile(wsi_fp), f"'wsi_fp':{wsi_fp} is not a valid filepath."
+            assert os.path.isfile(wsi_fp), self.log.error(f"'wsi_fp':{wsi_fp} is not a valid filepath.")
 
             wsi_fn = os.path.basename(wsi_fp).replace(f'.{self.wsi_image_format}', '')
             labels = [label for label in self.data['wsi_labels'] if wsi_fn in label]
@@ -387,15 +330,18 @@ class Profiler(Configurator):
             assert len(tile_images)>0, self.log.error(f"{self._class_name}.{'_get_empty_images'}: 'tile_images':{len(tile_images)}. No tile image found. ")
             assert len(tile_labels)>0, self.log.error(f"{self._class_name}.{'_get_empty_images'}: 'tile_labels':{len(tile_labels)}. No tile label found. ")
             
-            empty_images = [file for file in tile_images if os.path.join(os.path.dirname(file).replace('images', 'labels'), os.path.basename(file).replace(self.tiles_image_format,self.tiles_label_format)) not in tile_labels]
+            rename_img2lbl = lambda fp_img: os.path.join(os.path.dirname(fp_img).replace('images', 'labels'), os.path.basename(fp_img).replace(self.tiles_image_format, self.tiles_label_format))
+            rename_lbl2img = lambda fp_lbl: os.path.join(os.path.dirname(fp_lbl).replace('labels', 'images'), os.path.basename(fp_lbl).replace(self.tiles_label_format,self.tiles_image_format))
+            
+            empty_images = [file for file in tile_images if rename_img2lbl(file) not in tile_labels]
             empty_images = [file for file in empty_images if "DS" not in empty_images and self.tiles_image_format in file]
             empty_images = [file for file in empty_images if os.path.isfile(file)]
 
-            full_images = [file for file in tile_images if os.path.join(os.path.dirname(file).replace('images', 'labels'), os.path.basename(file).replace(self.tiles_image_format,self.tiles_label_format)) in tile_labels]
-            unpaired_labels = [file for file in tile_labels if os.path.join(os.path.dirname(file).replace('labels', 'images'), os.path.basename(file).replace(self.tiles_label_format, self.tiles_image_format)) not in tile_images]
+            full_images = [file for file in tile_images if rename_img2lbl(file) in tile_labels]
+            unpaired_labels = [file for file in tile_labels if rename_lbl2img(file) not in tile_images]
             
             if len(unpaired_labels) > 2:
-                self.log.info(f"{class_name}.{func_name}:❗️ Found {len(unpaired_labels)} labels that don't have a matching image. Maybe deleting based on size also deleted images with objects?")
+                self.log.warning(f"{class_name}.{func_name}:❗️ Found {len(unpaired_labels)} labels that don't have a matching image. (Ex:{unpaired_labels[0]}). Maybe deleting based on size also deleted images with objects?")
 
             assert full_images is not None, self.log.error(f"{self._class_name}.{'_get_empty_images'}: 'full_images' is None. No full image found. ")
 

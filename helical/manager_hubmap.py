@@ -130,7 +130,7 @@ class ManagerHubmap():
         # 3) tile images and labels:
         self.tile_dataset()
         #4) move slides back 
-        # self._move_slides_back()
+        self._move_slides_back()
         # 4) clean dataset, e.g. 
         # self._clean_hubmap()
 

@@ -150,11 +150,16 @@ def test_YOLODetector():
     data_folder = '/Users/marco/helical_tests/test_hubmap_processor/detection/tiles' if system == 'mac' else r'D:\marco\datasets\slides\detection\tiles'
     device = None if system == 'mac' else 'cuda:0'
     workers = 0 if system == 'mac' else 1
-    map_classes = {'glomerulus':0}  #{'Glo-healthy':1, 'Glo-unhealthy':0}
-    save_features = True
-    tile_size = 512 
-    batch_size=2 if system == 'mac' else 2
-    epochs=5
+    # map_classes = {'glomerulus':0}  #{'Glo-healthy':1, 'Glo-unhealthy':0}
+    # save_features = True
+    # tile_size = 512 
+    # batch_size=2 if system == 'mac' else 2
+    # epochs=5
+    map_classes = {'Glo-healthy':1, 'Glo-unhealthy':0} #{'glomerulus':0}  
+    save_features = False
+    tile_size = 1024 
+    batch_size=2 if system == 'mac' else 4
+    epochs=30    
     detector = YOLODetector(data_folder=data_folder, 
                             repository_dir=repository_dir,
                             yolov5dir=yolov5dir,

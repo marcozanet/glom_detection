@@ -97,7 +97,8 @@ class Converter():
         try:
             slide = openslide.OpenSlide(slide_fp)
         except:
-            self.log.error(f"Failed reading slide {slide_fp} with Openslide.")
+            os.remove(slide_fp)
+            raise Exception(self.log.error(f"❌ Failed reading slide {slide_fp} with Openslide. Removed slide."))           
         W_orig, H_orig = slide.level_dimensions[0]
         W_lev, H_lev = slide.level_dimensions[self.level]
 

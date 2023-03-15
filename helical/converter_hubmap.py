@@ -119,7 +119,7 @@ class ConverterHubmap(Converter):
 def test_Converter():
     folder = '/Users/marco/Downloads/test_folders/test_hubmap_processor'
     save_folder = '/Users/marco/Downloads/test_folders/test_hubmap_processor'
-    level = 2
+    level = 0
     map_classes = {'glomerulus':0}   
     converter = ConverterHubmap(folder = folder, 
                                 convert_from='json_wsi_mask', 

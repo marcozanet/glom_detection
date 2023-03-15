@@ -38,6 +38,10 @@ class TilerSegm(Tiler):
 
         super().__init__(*args, **kwargs)
         self.map_classes = map_classes
+        self.label_format = 'json'
+        self.slide_format = 'tif'
+        self.tile_image_format = 'png'
+        self.tile_label_format = 'txt'
         return
     
     def _get_tile_images(self, 
@@ -95,6 +99,7 @@ class TilerSegm(Tiler):
             try:
                 if overlapping is False:
                     patches = patchify(np_slide, (w, h, 3), step =  self.step )
+                    self.log.info(f"image {fp} patches shape: {patches.shape}")
                     w_tiles,h_tiles = patches.shape[0],patches.shape[1]
                     sample_fn = os.path.split(fp.replace('.tif', ''))[1]
                     self._write_ntiles(sample_fn=sample_fn, dims=(w_tiles,h_tiles))
@@ -124,7 +129,9 @@ class TilerSegm(Tiler):
         self.log.info(f"returninnnnng {W,H}")
         return (W, H)
     
+
     def get_class_mask(self, json_file:str, region_dims:tuple) -> tuple: 
+        """ Creates a mask which is all zeros except for vertices of gloms that are of value = glom unique id (increasing number)"""
         
         # self.log.info('data reading')
         with open(json_file, mode='r') as f: 
@@ -132,8 +139,9 @@ class TilerSegm(Tiler):
         
         # self.log.info('data read')
         vertex_mask = np.zeros(shape=region_dims)
-        # self.log.info(f"created array of shape {region_dims}")
+        self.log.info(f"created array of shape {region_dims}")
         class_mask = np.zeros_like(vertex_mask)
+        order_mask = np.zeros_like(vertex_mask)
         # self.log.info('np arrays created')
         for i, glom in enumerate(data):
             label_name = glom['properties']['classification']['name']
@@ -144,42 +152,157 @@ class TilerSegm(Tiler):
             # self.log.info('got label val')
             vertices = glom['geometry']['coordinates'][0]
             # self.log.info('got vertices')
-            for x,y in vertices:
+            for k,(x,y) in enumerate(vertices):
                 # self.log.info(f'got x:{x}, got y:{y}')
                 x, y = int(x), int(y) # slice values must be int 
                 vertex_mask[x,y] = i # assigning to each vertex a unique value (one for glom)
                 # self.log.info('assigned val to vertex')
                 class_mask[x,y] = label_val
-                # self.log.info('assigned class to vertex')
-        self.log.info(f" done with the masks")
-        return  vertex_mask, class_mask
+                order_mask[x,y] = k
+                # self.log.info(f"adding {k}")
+            self.log.info(f"{k} verteces in this glom")
+        self.log.info(f" done with the mask. Assigned {i} unique values to this mask")
+
+        return  vertex_mask, class_mask, order_mask
     
-    def _tile_class_mask(self, vertex_mask:np.ndarray, class_mask:np.ndarray): 
 
+    def inflate_annotation_points(self, label_fp:str) -> None: 
+        """ Interpolates between annotation points so as to inflate the number of points for a given label file. """
+
+        assert os.path.isfile(label_fp), self.log.error(f"{self.class_name}.{'inflate_annotation_points'}: 'label_fp':{label_fp} is not a valid filepath.")
+
+        with open(label_fp, 'r') as f:
+            text = f.readlines()
+        self.log.info("read text file inflation")
+        
+        new_rows = []
+        for row in text: 
+            row = row.replace('\n','')
+            items = row.split(sep = ' ')
+            class_n = items[0]
+            items = items[1:]
+            x = [float(el) for (i, el) in enumerate(items) if i%2==0] # even idcs = x coords
+            y = [float(el) for (i, el) in enumerate(items) if i%2!=0] # uneven idcs = y coords
+            self.log.info(f"got x y from text: x:{len(x)}, y:{len(y)}")
+
+            new_row = f"{class_n} "
+            for i in range(len(x)-1): 
+                x_middle = (x(i+1) + x(i))/2
+                self.log.info(f"x_middle: {x_middle}")
+                y_middle = (y(i+1) + y(i))/2
+                new_row += f"{x(i)} {y(i)} {x_middle} {y_middle} {x(i+1)} {y(i+1)}"
+                self.log.info(f"new_row: {new_row}")
+            self.log.info(f"changed row")
+            # new_row+= '\n'
+            new_rows.append(new_row)
+
+        self.log.info(f"writing file")
+        with open(label_fp, 'w') as f:
+            f.writelines(new_rows)
+        self.log.info(f"File written ")
+        
+        return
+    
+
+
+
+    
+
+
+    def _tile_class_mask(self, vertex_mask:np.ndarray, class_mask:np.ndarray,
+                        order_mask:np.ndarray, save_folder:str, label_fp:str): 
+        
+        self.log.info(f"tile class")
+        assert os.path.isdir(save_folder), self.log.error(f"{self.class_name}.{'_tile_class_mask'}: 'save_folder':{save_folder} is not a valid dirpath.")
+        self.log.info(f"tile class2")
         w, h = self.tile_shape
+
         label_patches = patchify(vertex_mask, (w, h), step =  self.step )
-        self.log.info(f"{self.class_name}.{'_tile_class_mask'}: patches shape:{label_patches.shape}")
-        for i in range(label_patches.shape[0]):
+        order_patches = patchify(order_mask, (w, h), step =  self.step )
+        self.log.info(f"tile class3")
+        self.log.info(f"label {label_fp} patches shape: {label_patches.shape}")
+        # self.log.info(f"{self.class_name}.{'_tile_class_mask'}: patches shape:{label_patches.shape}")
+        for i in tqdm(range(label_patches.shape[0])):
             for j in range(label_patches.shape[1]):
-                unique_values = np.unique(label_patches[i,j])
+                self.log.info(f"unique class2")
+                unique_values = np.unique(label_patches[i,j,:,:])
                 unique_values = [val for val in unique_values if val != 0]
-                self.log.info(f"unique_values:{unique_values}, type: {type(unique_values)}")
-
+                self.log.info(f"unique_values for this tile:{unique_values}, type: {type(unique_values)}")
+                
+                if len(unique_values)==0: 
+                    continue
+                self.log.info('boh')
+                text = ''
+                # for each glom:
                 for glom in unique_values: # each unique val corresponds to a glom
-                    self.log.info(f"glom:")
-                    positions = np.where(label_patches[i,j] == glom)
-                    self.log.info(f"positions:{positions}")
-                    text = "0"
-                    for pos in positions:
-                        self.log.info(f"pos: {pos}")
-                        x,y = pos
-                        self.log.info(f"x: {x}, y:{y}")
-                        text+= " pos"
-                self.log.info(f"text: {text}")
+                    # self.log.info(f"glom: {glom}")
+
+                    # self.log.info(f"label patches[i,j,:,:] shape: {label_patches[i,j,:,:].shape}")
+                    # self.log.info(f"order patches: {order_patches[i,j,:,:]}")
+                    # self.log.info(f"shape: {order_patches[i,j,:,:].shape}")
+                    # self.log.info(f"type: {type(order_patches[i,j,:,:])}")
+                    positions = np.argwhere(label_patches[i,j,:,:] == (glom)) # [(x3,y3), (x1,y1), (x5,y5)...]
+                    self.log.info(f"positions pre {positions}")
+                    # [
+                    #       1
+                    #   0       2
+                    #      3     ]
+                    # [
+                    #       0
+                    #   0       0
+                    #      0    ]
+                    order = []
+                    # self.log.info(f"got pre loop")
+                    for x,y in positions:
+                        # self.log.info(f"xy: {x,y}")
+                        order.append(order_patches[i,j,x,y] ) # e.g. 5th -> [2nd, 5th, 8th..]
+                        # self.log.info(f"order: {order}")
+                        # self.log.info(f"appending")
+                    self.log.info(f"got out loop")
+                    # self.log.info(order)
+                    # self.log.info(positions)
+                    # self.log.info(len(order))
+                    # self.log.info(len(positions))
+
+                    positions = [pos for (_, pos) in sorted(zip(order, positions)) ]
+                    self.log.info(f"positions post {positions}")
+                    # self.log.info(f"reordered")
+
+                    # self.log.info(f"positions:{positions}")
 
 
-                raise NotImplementedError()
+                    text += "0"
+                    for x_indices, y_indices in positions:
+                        # self.log.info(f"x_indices: {x_indices}")
+                        # self.log.info(f"y_indices: {y_indices}")
 
+                        text+= f" {x_indices} {y_indices}"
+                    self.log.info(f"added  'x_indices' 'y_indices'")
+                    text += '\n'
+                    
+                
+                # save in .txt file:
+                if len(unique_values) > 0:
+                    # self.log.info(f"text: {text}")
+                    save_fn = os.path.basename(label_fp.replace(f".{self.label_format}",f'_{j}_{i}.{self.tile_label_format}'))
+                    replace_fold = lambda fp: os.path.join(os.path.dirname(fp).replace('images', 'labels'), os.path.basename(fp))
+                    save_fp = os.path.join(save_folder, save_fn)
+                    # self.log.info(f"save_fp before: {save_fp}")
+                    save_fp = replace_fold(save_fp)
+                    self.log.info(f"save_fp : {save_fp}")
+                    with open(save_fp, 'w') as f:
+                        f.write(text)
+                    self.log.info(f"inflating:")
+                    self.inflate_annotation_points(save_fp)
+        return
+    
+    
+    def _write_tiled_label(self, text:str, label_fp:str, save_folder:str):
+
+        #### CONTINUEEEEEEEEE HEREEEEEEEE ######
+
+
+        
 
         return
     
@@ -200,9 +323,9 @@ class TilerSegm(Tiler):
             
             self.log.info(f"{class_name}.{'_get_tile_labels'}: Tiliing label '{fp}'") # D:\marco\datasets\muw_retiled\wsi\test\labels\200701099_09_SFOG_sample0.json
             self.log.info(f"{class_name}.{'_get_tile_labels'}: creating class_mask:") # D:\marco\datasets\muw_retiled\wsi\test\labels\200701099_09_SFOG_sample0.json
-            vertex_mask, class_mask = self.get_class_mask(json_file=fp, region_dims=region_dims)
+            vertex_mask, class_mask, order_mask = self.get_class_mask(json_file=fp, region_dims=region_dims)
             self.log.info(f"{class_name}.{'_get_tile_labels'}: patchifying class_mask:") # D:\marco\datasets\muw_retiled\wsi\test\labels\200701099_09_SFOG_sample0.json
-            self._tile_class_mask(vertex_mask=vertex_mask, class_mask=class_mask)
+            self._tile_class_mask(vertex_mask=vertex_mask, class_mask=class_mask, order_mask=order_mask, save_folder=save_folder, label_fp=fp)
             
 
             return
@@ -211,83 +334,6 @@ class TilerSegm(Tiler):
         return    
 
 
-
-    # def _get_tile_labels(self, fp: str, save_folder: str = None ):
-    #     ''' Makes tile txt annotations in YOLO format (normalized) out of (not normalized) txt annotations for the entire image.
-    #         Annotations tiles are of shape 'tile_shape' and are only made around each object contained in the WSI annotation, since YOLO doesn't 
-    #         need annotations for empty images. 
-    #         fp = path to WSI (not normalized) annotation in .txt format '''
-        
-    #     assert os.path.isfile(fp), ValueError(f"'fp':{fp} is not a valid filepath. ")
-        
-    #     class_name = self.__class__.__name__
-    #     func_name = '_get_tile_labels'
-    #     save_folder = os.path.join(self.save_root, 'labels') if save_folder is None else save_folder
-
-    #     @log_start_finish(class_name=class_name, func_name=func_name, msg = f" Tiling label: '{os.path.basename(fp)}'" )
-    #     def do():
-            
-    #         self.log.info(f"{class_name}.{'_get_tile_labels'}: Tiliing label '{fp}'") # D:\marco\datasets\muw_retiled\wsi\test\labels\200701099_09_SFOG_sample0.txt
-    #         wsi_fn = os.path.split(fp)[1].split('.')[0]
-    #         ret = self.n_tiles[wsi_fn]
-    #         x_max, y_max  = self.n_tiles[wsi_fn][0], self.n_tiles[wsi_fn][1]
-    #         self.log.info(f"{self.__class__.__name__}.{'_get_tile_labels'}: x_max:{x_max}, y_max:{y_max}")
-
-    #         # Get BB from txt file:
-    #         assert os.path.isfile(fp), f"{class_name}.{func_name}:'fp' is not a valid filepath"
-    #         with open(fp, 'r') as f:
-    #             text = f.readlines()
-    #             f.close()
-
-    #         for row in text:
-
-    #             # get values:
-    #             items = row.split(sep = ',')
-    #             xc, yc, box_w, box_h = [float(num) for num in items[1:]]
-
-    #             clss = items[0]
-    #             W, H = self.tile_shape[0], self.tile_shape[1]
-                
-    #             x_start = xc - box_w / 2 # e.g. 0 - 
-    #             x_end = xc + box_w / 2
-    #             y_start = yc - box_h / 2
-    #             y_end = yc + box_h / 2
-
-    #             for i in range(0, x_max*W, self.step):
-    #                 if i <=  x_start <=  i + W or i <=  x_end <=  i + W:
-    #                     for j in range(0, y_max*H, self.step):
-    #                         if j <=  y_start <=  j + H or j <=  y_end <=  j + H:
-    #                             x0 = i if x_start <= i else x_start
-    #                             x1 = i + W if x_end >= i + W else x_end
-    #                             y0 = j if y_start <= j else y_start
-    #                             y1 = j + H if y_end >= j + H else y_end 
-
-    #                             tile_xc = (x0 + x1)/2 - i  # no need to normalize, self._write_txt does that
-    #                             tile_yc = (y0 + y1)/2 - j 
-    #                             tile_w = (x1 - x0) 
-    #                             tile_h = (y1 - y0) 
-
-    #                             assert 0 <= tile_xc <=W, f"{x0, x1, i, tile_xc}"
-    #                             assert 0 <= tile_xc <=W, f"'tile_xc'={tile_xc}, but should be in  (0,{W})."
-    #                             assert 0 <= tile_yc <=H, f"'tile_yc'={tile_yc}, but should be in  (0,{H})."
-    #                             assert 0 <= tile_w <=W, f"'tile_w'={tile_w}, but should be in  (0,{W})."
-    #                             assert 0 <= tile_h <=H, f"'tile_h'={tile_h}, but should be in  (0,{H})."
-
-    #                             # save
-    #                             save_fp = fp.replace('.txt', f'_{j//self.step}_{i//self.step}.txt') # img that contains a part of the glom
-    #                             if save_folder is not None:
-    #                                 fname = os.path.split(save_fp)[1]
-    #                                 save_fp = os.path.join(save_folder, fname)
-    #                             self._write_txt(clss, tile_xc, tile_yc, tile_w, tile_h, save_fp)
-
-    #         self.log.info(f"{class_name}.{func_name}: ✅ Tile labels saved in '{save_folder}'." )
-
-    #         return
-        
-    #     do()
-
-    #     return
-    
 
     def __call__(self, target_format: str, save_folder: str = None) -> None:
         """ Tiles/patchifies WSI or annotations. """
@@ -336,7 +382,7 @@ class TilerSegm(Tiler):
         for file in files:
             
             # clean folder from small files: 
-            self._remove_small_files(files=files)
+            # self._remove_small_files(files=files)
             W, H = self._get_tile_images(fp = file, save_folder=save_folder )
             self._get_tile_labels(fp = file.replace('.tif', '.json'), region_dims=(W,H), save_folder=save_folder )
 
