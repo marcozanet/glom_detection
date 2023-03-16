@@ -1,1477 +1,178 @@
-15/03 15:54:40|INFO|ProcessorManager._make_tiles_branch: Creating new tiles branch at '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles'
-15/03 15:54:40|INFO|ProcessorManager._split_data: ⏳ Splitting slides
-15/03 15:54:40|INFO|Splitter._move_files: trainset: ['0486052bb.tif', 'b2dc8411c.tif']
-15/03 15:54:40|INFO|Splitter._move_files: valset: ['8242609fa.tif']
-15/03 15:54:40|INFO|Splitter._move_files: testset: []
-15/03 15:54:40|INFO|ProcessorManager._split_data: ✅ Splitting slides
-15/03 15:54:40|INFO|ProcessorManager._move_slides_forth: Moved slides forth.
-15/03 15:54:40|INFO|ProcessorManager.tile_dataset: Tiling dataset at '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi'
-15/03 15:54:40|INFO|ProcessorManager.tile_dataset: Tiling 'train'
-15/03 15:54:40|INFO|ProcessorManager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
-15/03 15:54:40|INFO|TilerSegm.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/train/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/train/images'.
-15/03 15:54:40|INFO|TilerSegm._get_completed_files: Completed 0/2 files.
-15/03 15:54:40|INFO|TilerSegm._get_tile_images: ⏳ Tiling image: '0486052bb.tif'
-15/03 15:54:40|INFO|TilerSegm._get_tile_images: ⏳ Opening '0486052bb.tif':
-15/03 15:54:40|INFO|TilerSegm._get_tile_images: ✅ Opening '0486052bb.tif':
-15/03 15:54:40|INFO|SLIDE DIMENSIONSSS ARE:(34937, 25784)
-15/03 15:54:40|INFO|TilerSegm._get_tile_images: ⏳ Reading slide with shape ((34937, 25784)):
-15/03 15:54:59|INFO|TilerSegm._get_tile_images: ⏳ Converting to numpy:
-15/03 15:55:02|INFO|TilerSegm._get_tile_images: ✅ Conversion to numpy.
-15/03 15:55:02|INFO|TilerSegm._get_tile_images: ⏳ Patchifying:
-15/03 15:55:02|INFO|image /Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/train/labels/0486052bb.tif patches shape: (25, 34, 1, 1024, 1024, 3)
-15/03 15:55:02|INFO|TilerSegm._get_tile_images: ✅ Patchifying.
-15/03 15:55:02|INFO|TilerSegm._get_tile_images: ⏳ Saving patches:
-15/03 15:55:22|INFO|TilerSegm._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/train/images.
-15/03 15:55:22|INFO|TilerSegm._get_tile_images: ✅ Tiling image: '0486052bb.tif'
-15/03 15:55:22|INFO|returninnnnng (34937, 25784)
-15/03 15:55:22|INFO|TilerSegm._get_tile_labels: ⏳ Tiling label: '0486052bb.json'
-15/03 15:55:22|INFO|TilerSegm._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/train/labels/0486052bb.json'
-15/03 15:55:22|INFO|TilerSegm._get_tile_labels: creating class_mask:
-15/03 15:55:22|INFO|created array of shape (34937, 25784)
-15/03 15:55:24|INFO|229 verteces in this glom
-15/03 15:55:24|INFO|12 verteces in this glom
-15/03 15:55:24|INFO|94 verteces in this glom
-15/03 15:55:24|INFO|13 verteces in this glom
-15/03 15:55:24|INFO|13 verteces in this glom
-15/03 15:55:24|INFO|12 verteces in this glom
-15/03 15:55:24|INFO|28 verteces in this glom
-15/03 15:55:24|INFO|12 verteces in this glom
-15/03 15:55:24|INFO|288 verteces in this glom
-15/03 15:55:24|INFO|9 verteces in this glom
-15/03 15:55:24|INFO|324 verteces in this glom
-15/03 15:55:24|INFO|9 verteces in this glom
-15/03 15:55:24|INFO|25 verteces in this glom
-15/03 15:55:24|INFO|260 verteces in this glom
-15/03 15:55:24|INFO|40 verteces in this glom
-15/03 15:55:24|INFO|11 verteces in this glom
-15/03 15:55:24|INFO|290 verteces in this glom
-15/03 15:55:24|INFO|11 verteces in this glom
-15/03 15:55:24|INFO|34 verteces in this glom
-15/03 15:55:24|INFO|63 verteces in this glom
-15/03 15:55:24|INFO|116 verteces in this glom
-15/03 15:55:24|INFO|38 verteces in this glom
-15/03 15:55:24|INFO|12 verteces in this glom
-15/03 15:55:24|INFO|32 verteces in this glom
-15/03 15:55:24|INFO|25 verteces in this glom
-15/03 15:55:24|INFO|28 verteces in this glom
-15/03 15:55:24|INFO|11 verteces in this glom
-15/03 15:55:24|INFO|24 verteces in this glom
-15/03 15:55:24|INFO|12 verteces in this glom
-15/03 15:55:24|INFO|12 verteces in this glom
-15/03 15:55:24|INFO|28 verteces in this glom
-15/03 15:55:24|INFO|11 verteces in this glom
-15/03 15:55:24|INFO|148 verteces in this glom
-15/03 15:55:24|INFO|410 verteces in this glom
-15/03 15:55:24|INFO|12 verteces in this glom
-15/03 15:55:24|INFO|12 verteces in this glom
-15/03 15:55:24|INFO|28 verteces in this glom
-15/03 15:55:24|INFO|10 verteces in this glom
-15/03 15:55:24|INFO|133 verteces in this glom
-15/03 15:55:24|INFO|192 verteces in this glom
-15/03 15:55:24|INFO|26 verteces in this glom
-15/03 15:55:24|INFO|30 verteces in this glom
-15/03 15:55:24|INFO|156 verteces in this glom
-15/03 15:55:24|INFO|98 verteces in this glom
-15/03 15:55:24|INFO|25 verteces in this glom
-15/03 15:55:24|INFO|37 verteces in this glom
-15/03 15:55:24|INFO|26 verteces in this glom
-15/03 15:55:24|INFO|216 verteces in this glom
-15/03 15:55:24|INFO|28 verteces in this glom
-15/03 15:55:24|INFO|11 verteces in this glom
-15/03 15:55:24|INFO|13 verteces in this glom
-15/03 15:55:24|INFO|23 verteces in this glom
-15/03 15:55:24|INFO|11 verteces in this glom
-15/03 15:55:24|INFO|10 verteces in this glom
-15/03 15:55:24|INFO|10 verteces in this glom
-15/03 15:55:24|INFO|10 verteces in this glom
-15/03 15:55:24|INFO|10 verteces in this glom
-15/03 15:55:24|INFO|10 verteces in this glom
-15/03 15:55:24|INFO|25 verteces in this glom
-15/03 15:55:24|INFO|220 verteces in this glom
-15/03 15:55:24|INFO|32 verteces in this glom
-15/03 15:55:24|INFO|24 verteces in this glom
-15/03 15:55:24|INFO|40 verteces in this glom
-15/03 15:55:24|INFO|10 verteces in this glom
-15/03 15:55:24|INFO|10 verteces in this glom
-15/03 15:55:24|INFO|345 verteces in this glom
-15/03 15:55:24|INFO|38 verteces in this glom
-15/03 15:55:24|INFO|12 verteces in this glom
-15/03 15:55:24|INFO|25 verteces in this glom
-15/03 15:55:24|INFO|261 verteces in this glom
-15/03 15:55:24|INFO|26 verteces in this glom
-15/03 15:55:24|INFO|38 verteces in this glom
-15/03 15:55:24|INFO|33 verteces in this glom
-15/03 15:55:24|INFO|19 verteces in this glom
-15/03 15:55:24|INFO|31 verteces in this glom
-15/03 15:55:24|INFO|12 verteces in this glom
-15/03 15:55:24|INFO|13 verteces in this glom
-15/03 15:55:24|INFO|9 verteces in this glom
-15/03 15:55:24|INFO|9 verteces in this glom
-15/03 15:55:24|INFO|26 verteces in this glom
-15/03 15:55:24|INFO|188 verteces in this glom
-15/03 15:55:24|INFO|307 verteces in this glom
-15/03 15:55:24|INFO|26 verteces in this glom
-15/03 15:55:24|INFO|221 verteces in this glom
-15/03 15:55:24|INFO|27 verteces in this glom
-15/03 15:55:24|INFO|27 verteces in this glom
-15/03 15:55:24|INFO|13 verteces in this glom
-15/03 15:55:24|INFO|33 verteces in this glom
-15/03 15:55:24|INFO|23 verteces in this glom
-15/03 15:55:24|INFO|264 verteces in this glom
-15/03 15:55:24|INFO|41 verteces in this glom
-15/03 15:55:24|INFO|35 verteces in this glom
-15/03 15:55:24|INFO|23 verteces in this glom
-15/03 15:55:24|INFO|236 verteces in this glom
-15/03 15:55:24|INFO|213 verteces in this glom
-15/03 15:55:24|INFO|150 verteces in this glom
-15/03 15:55:24|INFO|24 verteces in this glom
-15/03 15:55:24|INFO|28 verteces in this glom
-15/03 15:55:24|INFO|11 verteces in this glom
-15/03 15:55:24|INFO|10 verteces in this glom
-15/03 15:55:24|INFO|28 verteces in this glom
-15/03 15:55:24|INFO|205 verteces in this glom
-15/03 15:55:24|INFO|12 verteces in this glom
-15/03 15:55:24|INFO|27 verteces in this glom
-15/03 15:55:24|INFO|19 verteces in this glom
-15/03 15:55:24|INFO|35 verteces in this glom
-15/03 15:55:24|INFO|9 verteces in this glom
-15/03 15:55:24|INFO|24 verteces in this glom
-15/03 15:55:24|INFO|11 verteces in this glom
-15/03 15:55:24|INFO|107 verteces in this glom
-15/03 15:55:24|INFO|13 verteces in this glom
-15/03 15:55:24|INFO|13 verteces in this glom
-15/03 15:55:24|INFO|40 verteces in this glom
-15/03 15:55:24|INFO|235 verteces in this glom
-15/03 15:55:24|INFO|11 verteces in this glom
-15/03 15:55:24|INFO|27 verteces in this glom
-15/03 15:55:24|INFO|11 verteces in this glom
-15/03 15:55:24|INFO|155 verteces in this glom
-15/03 15:55:24|INFO|12 verteces in this glom
-15/03 15:55:24|INFO|71 verteces in this glom
-15/03 15:55:24|INFO|35 verteces in this glom
-15/03 15:55:24|INFO|21 verteces in this glom
-15/03 15:55:24|INFO|11 verteces in this glom
-15/03 15:55:24|INFO|218 verteces in this glom
-15/03 15:55:24|INFO|25 verteces in this glom
-15/03 15:55:24|INFO|25 verteces in this glom
-15/03 15:55:24|INFO|420 verteces in this glom
-15/03 15:55:24|INFO|28 verteces in this glom
-15/03 15:55:24|INFO|157 verteces in this glom
-15/03 15:55:24|INFO|33 verteces in this glom
-15/03 15:55:24|INFO| done with the mask. Assigned 129 unique values to this mask
-15/03 15:55:24|INFO|TilerSegm._get_tile_labels: patchifying class_mask:
-15/03 15:55:24|INFO|tile class
-15/03 15:55:24|INFO|tile class2
-15/03 15:55:24|INFO|tile class3
-15/03 15:55:24|INFO|label /Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/train/labels/0486052bb.json patches shape: (34, 25, 1024, 1024)
-15/03 15:55:24|INFO|unique class2
-15/03 15:55:24|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:24|INFO|unique class2
-15/03 15:55:24|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:24|INFO|unique class2
-15/03 15:55:24|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:24|INFO|unique class2
-15/03 15:55:24|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:24|INFO|unique class2
-15/03 15:55:24|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:24|INFO|unique class2
-15/03 15:55:24|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:24|INFO|unique class2
-15/03 15:55:24|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:24|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:25|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:25|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:26|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:26|INFO|unique class2
-15/03 15:55:27|INFO|unique_values for this tile:[41.0], type: <class 'list'>
-15/03 15:55:27|INFO|boh
-15/03 15:55:27|INFO|positions pre [[871 475]
- [871 477]
- [871 480]
- [873 480]
- [881 574]
- [881 579]
- [893 504]
- [900 695]
- [903 430]
- [903 703]
- [905 705]
- [908 430]
- [923 738]
- [950 445]
- [960 750]
- [962 750]
- [962 752]
- [992 368]
- [997 368]]
-15/03 15:55:27|INFO|got out loop
-15/03 15:55:27|INFO|positions post [array([997, 368]), array([992, 368]), array([950, 445]), array([908, 430]), array([903, 430]), array([871, 475]), array([871, 477]), array([871, 480]), array([873, 480]), array([893, 504]), array([881, 574]), array([881, 579]), array([900, 695]), array([903, 703]), array([905, 705]), array([923, 738]), array([960, 750]), array([962, 750]), array([962, 752])]
-15/03 15:55:27|INFO|added  'x_indices' 'y_indices'
-15/03 15:55:27|INFO|save_fp : /Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/train/labels/0486052bb_9_3.txt
-15/03 15:55:27|INFO|inflating:
-15/03 15:55:27|INFO|read text file inflation
-15/03 15:55:27|INFO|got x y from text: x:19, y:19
-15/03 15:55:27|ERROR|TilerSegm._get_tile_labels: ❌ Tiling label: '0486052bb.json'
-15/03 15:55:27|INFO|TilerSegm._get_tile_images: ⏳ Tiling image: 'b2dc8411c.tif'
-15/03 15:55:27|INFO|TilerSegm._get_tile_images: ⏳ Opening 'b2dc8411c.tif':
-15/03 15:55:27|INFO|TilerSegm._get_tile_images: ✅ Opening 'b2dc8411c.tif':
-15/03 15:55:27|INFO|SLIDE DIMENSIONSSS ARE:(31262, 14844)
-15/03 15:55:27|INFO|TilerSegm._get_tile_images: ⏳ Reading slide with shape ((31262, 14844)):
-15/03 15:55:35|INFO|TilerSegm._get_tile_images: ⏳ Converting to numpy:
-15/03 15:55:35|INFO|TilerSegm._get_tile_images: ✅ Conversion to numpy.
-15/03 15:55:35|INFO|TilerSegm._get_tile_images: ⏳ Patchifying:
-15/03 15:55:35|INFO|image /Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/train/labels/b2dc8411c.tif patches shape: (14, 30, 1, 1024, 1024, 3)
-15/03 15:55:35|INFO|TilerSegm._get_tile_images: ✅ Patchifying.
-15/03 15:55:35|INFO|TilerSegm._get_tile_images: ⏳ Saving patches:
-15/03 15:55:46|INFO|TilerSegm._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/train/images.
-15/03 15:55:46|INFO|TilerSegm._get_tile_images: ✅ Tiling image: 'b2dc8411c.tif'
-15/03 15:55:46|INFO|returninnnnng (31262, 14844)
-15/03 15:55:46|INFO|TilerSegm._get_tile_labels: ⏳ Tiling label: 'b2dc8411c.json'
-15/03 15:55:46|INFO|TilerSegm._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/train/labels/b2dc8411c.json'
-15/03 15:55:46|INFO|TilerSegm._get_tile_labels: creating class_mask:
-15/03 15:55:46|INFO|created array of shape (31262, 14844)
-15/03 15:55:47|INFO|99 verteces in this glom
-15/03 15:55:47|INFO|11 verteces in this glom
-15/03 15:55:47|INFO|11 verteces in this glom
-15/03 15:55:47|INFO|27 verteces in this glom
-15/03 15:55:47|INFO|10 verteces in this glom
-15/03 15:55:47|INFO|260 verteces in this glom
-15/03 15:55:47|INFO|23 verteces in this glom
-15/03 15:55:47|INFO|11 verteces in this glom
-15/03 15:55:47|INFO|36 verteces in this glom
-15/03 15:55:47|INFO|21 verteces in this glom
-15/03 15:55:47|INFO|10 verteces in this glom
-15/03 15:55:47|INFO|11 verteces in this glom
-15/03 15:55:47|INFO|11 verteces in this glom
-15/03 15:55:47|INFO|190 verteces in this glom
-15/03 15:55:47|INFO|9 verteces in this glom
-15/03 15:55:47|INFO|147 verteces in this glom
-15/03 15:55:47|INFO|12 verteces in this glom
-15/03 15:55:47|INFO|37 verteces in this glom
-15/03 15:55:47|INFO|101 verteces in this glom
-15/03 15:55:47|INFO|20 verteces in this glom
-15/03 15:55:47|INFO|32 verteces in this glom
-15/03 15:55:47|INFO|22 verteces in this glom
-15/03 15:55:47|INFO|220 verteces in this glom
-15/03 15:55:47|INFO|125 verteces in this glom
-15/03 15:55:47|INFO|10 verteces in this glom
-15/03 15:55:47|INFO|34 verteces in this glom
-15/03 15:55:47|INFO|12 verteces in this glom
-15/03 15:55:47|INFO|31 verteces in this glom
-15/03 15:55:47|INFO|28 verteces in this glom
-15/03 15:55:47|INFO|26 verteces in this glom
-15/03 15:55:47|INFO|203 verteces in this glom
-15/03 15:55:47|INFO|25 verteces in this glom
-15/03 15:55:47|INFO|33 verteces in this glom
-15/03 15:55:47|INFO|23 verteces in this glom
-15/03 15:55:47|INFO|31 verteces in this glom
-15/03 15:55:47|INFO|77 verteces in this glom
-15/03 15:55:47|INFO|11 verteces in this glom
-15/03 15:55:47|INFO|32 verteces in this glom
-15/03 15:55:47|INFO|32 verteces in this glom
-15/03 15:55:47|INFO|10 verteces in this glom
-15/03 15:55:47|INFO|249 verteces in this glom
-15/03 15:55:47|INFO|183 verteces in this glom
-15/03 15:55:47|INFO|24 verteces in this glom
-15/03 15:55:47|INFO|32 verteces in this glom
-15/03 15:55:47|INFO|259 verteces in this glom
-15/03 15:55:47|INFO|31 verteces in this glom
-15/03 15:55:47|INFO|35 verteces in this glom
-15/03 15:55:47|INFO|141 verteces in this glom
-15/03 15:55:47|INFO|183 verteces in this glom
-15/03 15:55:47|INFO|29 verteces in this glom
-15/03 15:55:47|INFO|120 verteces in this glom
-15/03 15:55:47|INFO|11 verteces in this glom
-15/03 15:55:47|INFO|12 verteces in this glom
-15/03 15:55:47|INFO|11 verteces in this glom
-15/03 15:55:47|INFO|512 verteces in this glom
-15/03 15:55:47|INFO|126 verteces in this glom
-15/03 15:55:47|INFO|12 verteces in this glom
-15/03 15:55:47|INFO|10 verteces in this glom
-15/03 15:55:47|INFO|29 verteces in this glom
-15/03 15:55:47|INFO|245 verteces in this glom
-15/03 15:55:47|INFO|75 verteces in this glom
-15/03 15:55:47|INFO|97 verteces in this glom
-15/03 15:55:47|INFO|67 verteces in this glom
-15/03 15:55:47|INFO|66 verteces in this glom
-15/03 15:55:47|INFO|42 verteces in this glom
-15/03 15:55:47|INFO|12 verteces in this glom
-15/03 15:55:47|INFO|12 verteces in this glom
-15/03 15:55:47|INFO|28 verteces in this glom
-15/03 15:55:47|INFO|27 verteces in this glom
-15/03 15:55:47|INFO|27 verteces in this glom
-15/03 15:55:47|INFO|23 verteces in this glom
-15/03 15:55:47|INFO|25 verteces in this glom
-15/03 15:55:47|INFO|275 verteces in this glom
-15/03 15:55:47|INFO|11 verteces in this glom
-15/03 15:55:47|INFO|13 verteces in this glom
-15/03 15:55:47|INFO|11 verteces in this glom
-15/03 15:55:47|INFO|30 verteces in this glom
-15/03 15:55:47|INFO|283 verteces in this glom
-15/03 15:55:47|INFO|24 verteces in this glom
-15/03 15:55:47|INFO|31 verteces in this glom
-15/03 15:55:47|INFO|8 verteces in this glom
-15/03 15:55:47|INFO|35 verteces in this glom
-15/03 15:55:47|INFO|10 verteces in this glom
-15/03 15:55:47|INFO|11 verteces in this glom
-15/03 15:55:47|INFO|27 verteces in this glom
-15/03 15:55:47|INFO|22 verteces in this glom
-15/03 15:55:47|INFO|36 verteces in this glom
-15/03 15:55:47|INFO|29 verteces in this glom
-15/03 15:55:47|INFO|12 verteces in this glom
-15/03 15:55:47|INFO|29 verteces in this glom
-15/03 15:55:47|INFO|25 verteces in this glom
-15/03 15:55:47|INFO|122 verteces in this glom
-15/03 15:55:47|INFO|156 verteces in this glom
-15/03 15:55:47|INFO|162 verteces in this glom
-15/03 15:55:47|INFO|9 verteces in this glom
-15/03 15:55:47|INFO|32 verteces in this glom
-15/03 15:55:47|INFO|30 verteces in this glom
-15/03 15:55:47|INFO|29 verteces in this glom
-15/03 15:55:47|INFO|12 verteces in this glom
-15/03 15:55:47|INFO|39 verteces in this glom
-15/03 15:55:47|INFO|40 verteces in this glom
-15/03 15:55:47|INFO|25 verteces in this glom
-15/03 15:55:47|INFO|60 verteces in this glom
-15/03 15:55:47|INFO|216 verteces in this glom
-15/03 15:55:47|INFO|12 verteces in this glom
-15/03 15:55:47|INFO|26 verteces in this glom
-15/03 15:55:47|INFO|100 verteces in this glom
-15/03 15:55:47|INFO|37 verteces in this glom
-15/03 15:55:47|INFO|326 verteces in this glom
-15/03 15:55:47|INFO|116 verteces in this glom
-15/03 15:55:47|INFO|32 verteces in this glom
-15/03 15:55:47|INFO|61 verteces in this glom
-15/03 15:55:47|INFO|28 verteces in this glom
-15/03 15:55:47|INFO|11 verteces in this glom
-15/03 15:55:47|INFO|12 verteces in this glom
-15/03 15:55:47|INFO|20 verteces in this glom
-15/03 15:55:47|INFO|214 verteces in this glom
-15/03 15:55:47|INFO|8 verteces in this glom
-15/03 15:55:47|INFO|160 verteces in this glom
-15/03 15:55:47|INFO|11 verteces in this glom
-15/03 15:55:47|INFO|190 verteces in this glom
-15/03 15:55:47|INFO|33 verteces in this glom
-15/03 15:55:47|INFO|94 verteces in this glom
-15/03 15:55:47|INFO|11 verteces in this glom
-15/03 15:55:47|INFO|22 verteces in this glom
-15/03 15:55:47|INFO|33 verteces in this glom
-15/03 15:55:47|INFO|30 verteces in this glom
-15/03 15:55:47|INFO|27 verteces in this glom
-15/03 15:55:47|INFO|36 verteces in this glom
-15/03 15:55:47|INFO|181 verteces in this glom
-15/03 15:55:47|INFO|27 verteces in this glom
-15/03 15:55:47|INFO|33 verteces in this glom
-15/03 15:55:47|INFO|185 verteces in this glom
-15/03 15:55:47|INFO|12 verteces in this glom
-15/03 15:55:47|INFO|196 verteces in this glom
-15/03 15:55:47|INFO|12 verteces in this glom
-15/03 15:55:47|INFO|35 verteces in this glom
-15/03 15:55:48|INFO|31 verteces in this glom
-15/03 15:55:48|INFO| done with the mask. Assigned 137 unique values to this mask
-15/03 15:55:48|INFO|TilerSegm._get_tile_labels: patchifying class_mask:
-15/03 15:55:48|INFO|tile class
-15/03 15:55:48|INFO|tile class2
-15/03 15:55:48|INFO|tile class3
-15/03 15:55:48|INFO|label /Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/train/labels/b2dc8411c.json patches shape: (30, 14, 1024, 1024)
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:48|INFO|unique class2
-15/03 15:55:48|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:55:49|INFO|unique class2
-15/03 15:55:49|INFO|unique_values for this tile:[125.0], type: <class 'list'>
-15/03 15:55:49|INFO|boh
-15/03 15:55:49|INFO|positions pre [[711 832]
- [712 828]
- [712 829]
- [712 871]
- [714 821]
- [726 789]
- [728 787]
- [730 784]
- [756 933]
- [769 761]
- [829 724]
- [839 721]
- [843 938]
- [843 939]
- [845 939]
- [846 718]
- [850 934]
- [851 719]
- [867 716]
- [892 725]
- [893 727]
- [895 907]
- [897 728]
- [918 876]
- [925 769]
- [928 782]
- [931 786]
- [931 793]
- [932 865]
- [933 857]
- [936 832]
- [939 818]
- [939 850]]
-15/03 15:55:49|INFO|got out loop
-15/03 15:55:49|INFO|positions post [array([851, 719]), array([846, 718]), array([839, 721]), array([829, 724]), array([769, 761]), array([730, 784]), array([728, 787]), array([726, 789]), array([714, 821]), array([712, 828]), array([712, 829]), array([711, 832]), array([712, 871]), array([756, 933]), array([843, 939]), array([843, 938]), array([845, 939]), array([850, 934]), array([895, 907]), array([918, 876]), array([932, 865]), array([933, 857]), array([939, 850]), array([936, 832]), array([939, 818]), array([931, 793]), array([931, 786]), array([928, 782]), array([925, 769]), array([897, 728]), array([893, 727]), array([892, 725]), array([867, 716])]
-15/03 15:55:49|INFO|added  'x_indices' 'y_indices'
-15/03 15:55:49|INFO|save_fp : /Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/train/labels/b2dc8411c_2_3.txt
-15/03 15:55:49|INFO|inflating:
-15/03 15:55:49|INFO|read text file inflation
-15/03 15:55:49|INFO|got x y from text: x:33, y:33
-15/03 15:55:49|ERROR|TilerSegm._get_tile_labels: ❌ Tiling label: 'b2dc8411c.json'
-15/03 15:55:49|INFO|ProcessorManager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
-15/03 15:55:49|INFO|ProcessorManager.tile_dataset: Tiling 'val'
-15/03 15:55:49|INFO|ProcessorManager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
-15/03 15:55:49|INFO|TilerSegm.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/val/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/val/images'.
-15/03 15:55:49|INFO|TilerSegm._get_completed_files: Completed 0/1 files.
-15/03 15:55:49|INFO|TilerSegm._get_tile_images: ⏳ Tiling image: '8242609fa.tif'
-15/03 15:55:49|INFO|TilerSegm._get_tile_images: ⏳ Opening '8242609fa.tif':
-15/03 15:55:49|INFO|TilerSegm._get_tile_images: ✅ Opening '8242609fa.tif':
-15/03 15:55:49|INFO|SLIDE DIMENSIONSSS ARE:(44066, 31299)
-15/03 15:55:49|INFO|TilerSegm._get_tile_images: ⏳ Reading slide with shape ((44066, 31299)):
-15/03 15:56:15|INFO|TilerSegm._get_tile_images: ⏳ Converting to numpy:
-15/03 15:56:22|INFO|TilerSegm._get_tile_images: ✅ Conversion to numpy.
-15/03 15:56:22|INFO|TilerSegm._get_tile_images: ⏳ Patchifying:
-15/03 15:56:22|INFO|image /Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/val/labels/8242609fa.tif patches shape: (30, 43, 1, 1024, 1024, 3)
-15/03 15:56:22|INFO|TilerSegm._get_tile_images: ✅ Patchifying.
-15/03 15:56:22|INFO|TilerSegm._get_tile_images: ⏳ Saving patches:
-15/03 15:56:59|INFO|TilerSegm._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/val/images.
-15/03 15:56:59|INFO|TilerSegm._get_tile_images: ✅ Tiling image: '8242609fa.tif'
-15/03 15:56:59|INFO|returninnnnng (44066, 31299)
-15/03 15:56:59|INFO|TilerSegm._get_tile_labels: ⏳ Tiling label: '8242609fa.json'
-15/03 15:56:59|INFO|TilerSegm._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/val/labels/8242609fa.json'
-15/03 15:56:59|INFO|TilerSegm._get_tile_labels: creating class_mask:
-15/03 15:56:59|INFO|created array of shape (44066, 31299)
-15/03 15:57:02|INFO|27 verteces in this glom
-15/03 15:57:02|INFO|151 verteces in this glom
-15/03 15:57:02|INFO|24 verteces in this glom
-15/03 15:57:02|INFO|114 verteces in this glom
-15/03 15:57:02|INFO|323 verteces in this glom
-15/03 15:57:02|INFO|26 verteces in this glom
-15/03 15:57:02|INFO|37 verteces in this glom
-15/03 15:57:02|INFO|168 verteces in this glom
-15/03 15:57:02|INFO|30 verteces in this glom
-15/03 15:57:02|INFO|127 verteces in this glom
-15/03 15:57:02|INFO|11 verteces in this glom
-15/03 15:57:02|INFO|95 verteces in this glom
-15/03 15:57:02|INFO|164 verteces in this glom
-15/03 15:57:02|INFO|29 verteces in this glom
-15/03 15:57:02|INFO|194 verteces in this glom
-15/03 15:57:02|INFO|12 verteces in this glom
-15/03 15:57:02|INFO|11 verteces in this glom
-15/03 15:57:02|INFO|454 verteces in this glom
-15/03 15:57:02|INFO|12 verteces in this glom
-15/03 15:57:02|INFO|297 verteces in this glom
-15/03 15:57:02|INFO|24 verteces in this glom
-15/03 15:57:02|INFO|197 verteces in this glom
-15/03 15:57:02|INFO|10 verteces in this glom
-15/03 15:57:02|INFO|12 verteces in this glom
-15/03 15:57:02|INFO|70 verteces in this glom
-15/03 15:57:02|INFO|89 verteces in this glom
-15/03 15:57:02|INFO|43 verteces in this glom
-15/03 15:57:02|INFO|100 verteces in this glom
-15/03 15:57:02|INFO|12 verteces in this glom
-15/03 15:57:02|INFO|31 verteces in this glom
-15/03 15:57:02|INFO|39 verteces in this glom
-15/03 15:57:02|INFO|27 verteces in this glom
-15/03 15:57:02|INFO|146 verteces in this glom
-15/03 15:57:02|INFO|163 verteces in this glom
-15/03 15:57:02|INFO|238 verteces in this glom
-15/03 15:57:02|INFO|40 verteces in this glom
-15/03 15:57:02|INFO|253 verteces in this glom
-15/03 15:57:02|INFO|91 verteces in this glom
-15/03 15:57:02|INFO|98 verteces in this glom
-15/03 15:57:02|INFO|24 verteces in this glom
-15/03 15:57:02|INFO|10 verteces in this glom
-15/03 15:57:02|INFO|41 verteces in this glom
-15/03 15:57:02|INFO|33 verteces in this glom
-15/03 15:57:02|INFO|37 verteces in this glom
-15/03 15:57:02|INFO|54 verteces in this glom
-15/03 15:57:02|INFO|12 verteces in this glom
-15/03 15:57:02|INFO|12 verteces in this glom
-15/03 15:57:02|INFO|12 verteces in this glom
-15/03 15:57:02|INFO|209 verteces in this glom
-15/03 15:57:02|INFO|34 verteces in this glom
-15/03 15:57:02|INFO|87 verteces in this glom
-15/03 15:57:02|INFO|59 verteces in this glom
-15/03 15:57:02|INFO|128 verteces in this glom
-15/03 15:57:02|INFO|120 verteces in this glom
-15/03 15:57:02|INFO|23 verteces in this glom
-15/03 15:57:02|INFO|36 verteces in this glom
-15/03 15:57:02|INFO|33 verteces in this glom
-15/03 15:57:02|INFO|124 verteces in this glom
-15/03 15:57:02|INFO|12 verteces in this glom
-15/03 15:57:02|INFO|59 verteces in this glom
-15/03 15:57:02|INFO|33 verteces in this glom
-15/03 15:57:02|INFO|156 verteces in this glom
-15/03 15:57:03|INFO|25 verteces in this glom
-15/03 15:57:03|INFO|31 verteces in this glom
-15/03 15:57:03|INFO|33 verteces in this glom
-15/03 15:57:03|INFO|12 verteces in this glom
-15/03 15:57:03|INFO|113 verteces in this glom
-15/03 15:57:03|INFO|9 verteces in this glom
-15/03 15:57:03|INFO|74 verteces in this glom
-15/03 15:57:03|INFO|38 verteces in this glom
-15/03 15:57:03|INFO|11 verteces in this glom
-15/03 15:57:03|INFO|23 verteces in this glom
-15/03 15:57:03|INFO|24 verteces in this glom
-15/03 15:57:03|INFO|89 verteces in this glom
-15/03 15:57:03|INFO|33 verteces in this glom
-15/03 15:57:03|INFO|189 verteces in this glom
-15/03 15:57:03|INFO|149 verteces in this glom
-15/03 15:57:03|INFO|40 verteces in this glom
-15/03 15:57:03|INFO|11 verteces in this glom
-15/03 15:57:03|INFO|34 verteces in this glom
-15/03 15:57:03|INFO|94 verteces in this glom
-15/03 15:57:03|INFO|132 verteces in this glom
-15/03 15:57:03|INFO|87 verteces in this glom
-15/03 15:57:03|INFO|334 verteces in this glom
-15/03 15:57:03|INFO|25 verteces in this glom
-15/03 15:57:03|INFO|32 verteces in this glom
-15/03 15:57:03|INFO|23 verteces in this glom
-15/03 15:57:03|INFO|107 verteces in this glom
-15/03 15:57:03|INFO|120 verteces in this glom
-15/03 15:57:03|INFO|184 verteces in this glom
-15/03 15:57:03|INFO|113 verteces in this glom
-15/03 15:57:03|INFO|168 verteces in this glom
-15/03 15:57:03|INFO|96 verteces in this glom
-15/03 15:57:03|INFO|10 verteces in this glom
-15/03 15:57:03|INFO|292 verteces in this glom
-15/03 15:57:03|INFO|89 verteces in this glom
-15/03 15:57:03|INFO|29 verteces in this glom
-15/03 15:57:03|INFO|26 verteces in this glom
-15/03 15:57:03|INFO|18 verteces in this glom
-15/03 15:57:03|INFO|314 verteces in this glom
-15/03 15:57:03|INFO|204 verteces in this glom
-15/03 15:57:03|INFO|12 verteces in this glom
-15/03 15:57:03|INFO|133 verteces in this glom
-15/03 15:57:03|INFO|193 verteces in this glom
-15/03 15:57:03|INFO|334 verteces in this glom
-15/03 15:57:03|INFO|11 verteces in this glom
-15/03 15:57:03|INFO|31 verteces in this glom
-15/03 15:57:03|INFO|147 verteces in this glom
-15/03 15:57:03|INFO|12 verteces in this glom
-15/03 15:57:03|INFO|383 verteces in this glom
-15/03 15:57:03|INFO|110 verteces in this glom
-15/03 15:57:03|INFO|8 verteces in this glom
-15/03 15:57:03|INFO|185 verteces in this glom
-15/03 15:57:03|INFO|161 verteces in this glom
-15/03 15:57:03|INFO|293 verteces in this glom
-15/03 15:57:03|INFO|117 verteces in this glom
-15/03 15:57:03|INFO|173 verteces in this glom
-15/03 15:57:03|INFO|27 verteces in this glom
-15/03 15:57:03|INFO|135 verteces in this glom
-15/03 15:57:03|INFO|145 verteces in this glom
-15/03 15:57:03|INFO|32 verteces in this glom
-15/03 15:57:03|INFO|112 verteces in this glom
-15/03 15:57:03|INFO|11 verteces in this glom
-15/03 15:57:03|INFO|26 verteces in this glom
-15/03 15:57:03|INFO|30 verteces in this glom
-15/03 15:57:03|INFO|82 verteces in this glom
-15/03 15:57:03|INFO|30 verteces in this glom
-15/03 15:57:03|INFO|43 verteces in this glom
-15/03 15:57:03|INFO|10 verteces in this glom
-15/03 15:57:03|INFO|9 verteces in this glom
-15/03 15:57:03|INFO|13 verteces in this glom
-15/03 15:57:03|INFO|79 verteces in this glom
-15/03 15:57:03|INFO|26 verteces in this glom
-15/03 15:57:03|INFO|12 verteces in this glom
-15/03 15:57:03|INFO|45 verteces in this glom
-15/03 15:57:03|INFO|11 verteces in this glom
-15/03 15:57:03|INFO|77 verteces in this glom
-15/03 15:57:03|INFO|9 verteces in this glom
-15/03 15:57:03|INFO|35 verteces in this glom
-15/03 15:57:03|INFO|185 verteces in this glom
-15/03 15:57:03|INFO|33 verteces in this glom
-15/03 15:57:03|INFO|28 verteces in this glom
-15/03 15:57:03|INFO|41 verteces in this glom
-15/03 15:57:03|INFO|96 verteces in this glom
-15/03 15:57:03|INFO|250 verteces in this glom
-15/03 15:57:03|INFO|27 verteces in this glom
-15/03 15:57:03|INFO|72 verteces in this glom
-15/03 15:57:03|INFO|92 verteces in this glom
-15/03 15:57:03|INFO|29 verteces in this glom
-15/03 15:57:03|INFO|10 verteces in this glom
-15/03 15:57:03|INFO|11 verteces in this glom
-15/03 15:57:03|INFO|28 verteces in this glom
-15/03 15:57:03|INFO|112 verteces in this glom
-15/03 15:57:03|INFO|12 verteces in this glom
-15/03 15:57:03|INFO|34 verteces in this glom
-15/03 15:57:03|INFO|12 verteces in this glom
-15/03 15:57:04|INFO|29 verteces in this glom
-15/03 15:57:04|INFO|137 verteces in this glom
-15/03 15:57:04|INFO|30 verteces in this glom
-15/03 15:57:04|INFO|58 verteces in this glom
-15/03 15:57:04|INFO|10 verteces in this glom
-15/03 15:57:04|INFO|13 verteces in this glom
-15/03 15:57:04|INFO|41 verteces in this glom
-15/03 15:57:04|INFO|60 verteces in this glom
-15/03 15:57:04|INFO|11 verteces in this glom
-15/03 15:57:04|INFO|10 verteces in this glom
-15/03 15:57:04|INFO|13 verteces in this glom
-15/03 15:57:04|INFO|30 verteces in this glom
-15/03 15:57:04|INFO|38 verteces in this glom
-15/03 15:57:04|INFO|258 verteces in this glom
-15/03 15:57:04|INFO|11 verteces in this glom
-15/03 15:57:04|INFO|146 verteces in this glom
-15/03 15:57:04|INFO|245 verteces in this glom
-15/03 15:57:04|INFO|172 verteces in this glom
-15/03 15:57:04|INFO|130 verteces in this glom
-15/03 15:57:04|INFO|101 verteces in this glom
-15/03 15:57:04|INFO|269 verteces in this glom
-15/03 15:57:04|INFO|43 verteces in this glom
-15/03 15:57:04|INFO|11 verteces in this glom
-15/03 15:57:04|INFO|103 verteces in this glom
-15/03 15:57:04|INFO|52 verteces in this glom
-15/03 15:57:04|INFO|112 verteces in this glom
-15/03 15:57:04|INFO|170 verteces in this glom
-15/03 15:57:04|INFO|31 verteces in this glom
-15/03 15:57:04|INFO|30 verteces in this glom
-15/03 15:57:04|INFO|28 verteces in this glom
-15/03 15:57:04|INFO|11 verteces in this glom
-15/03 15:57:04|INFO|31 verteces in this glom
-15/03 15:57:04|INFO|90 verteces in this glom
-15/03 15:57:04|INFO|228 verteces in this glom
-15/03 15:57:04|INFO|28 verteces in this glom
-15/03 15:57:04|INFO|44 verteces in this glom
-15/03 15:57:04|INFO|359 verteces in this glom
-15/03 15:57:04|INFO|172 verteces in this glom
-15/03 15:57:04|INFO|34 verteces in this glom
-15/03 15:57:04|INFO|27 verteces in this glom
-15/03 15:57:04|INFO|26 verteces in this glom
-15/03 15:57:04|INFO|12 verteces in this glom
-15/03 15:57:04|INFO|36 verteces in this glom
-15/03 15:57:04|INFO|36 verteces in this glom
-15/03 15:57:04|INFO|105 verteces in this glom
-15/03 15:57:04|INFO|148 verteces in this glom
-15/03 15:57:04|INFO|71 verteces in this glom
-15/03 15:57:04|INFO|256 verteces in this glom
-15/03 15:57:04|INFO|159 verteces in this glom
-15/03 15:57:04|INFO|33 verteces in this glom
-15/03 15:57:04|INFO|179 verteces in this glom
-15/03 15:57:04|INFO|29 verteces in this glom
-15/03 15:57:04|INFO|12 verteces in this glom
-15/03 15:57:04|INFO|28 verteces in this glom
-15/03 15:57:04|INFO|12 verteces in this glom
-15/03 15:57:04|INFO|11 verteces in this glom
-15/03 15:57:04|INFO|76 verteces in this glom
-15/03 15:57:04|INFO|10 verteces in this glom
-15/03 15:57:04|INFO|25 verteces in this glom
-15/03 15:57:04|INFO|182 verteces in this glom
-15/03 15:57:04|INFO|37 verteces in this glom
-15/03 15:57:04|INFO|118 verteces in this glom
-15/03 15:57:04|INFO|12 verteces in this glom
-15/03 15:57:04|INFO|186 verteces in this glom
-15/03 15:57:04|INFO|26 verteces in this glom
-15/03 15:57:04|INFO|27 verteces in this glom
-15/03 15:57:04|INFO|24 verteces in this glom
-15/03 15:57:04|INFO|51 verteces in this glom
-15/03 15:57:04|INFO|149 verteces in this glom
-15/03 15:57:04|INFO|44 verteces in this glom
-15/03 15:57:04|INFO|12 verteces in this glom
-15/03 15:57:04|INFO|265 verteces in this glom
-15/03 15:57:04|INFO|166 verteces in this glom
-15/03 15:57:04|INFO|10 verteces in this glom
-15/03 15:57:04|INFO|39 verteces in this glom
-15/03 15:57:04|INFO|12 verteces in this glom
-15/03 15:57:04|INFO|26 verteces in this glom
-15/03 15:57:04|INFO|28 verteces in this glom
-15/03 15:57:04|INFO|13 verteces in this glom
-15/03 15:57:04|INFO|23 verteces in this glom
-15/03 15:57:04|INFO|42 verteces in this glom
-15/03 15:57:04|INFO|12 verteces in this glom
-15/03 15:57:04|INFO|181 verteces in this glom
-15/03 15:57:04|INFO|74 verteces in this glom
-15/03 15:57:04|INFO|190 verteces in this glom
-15/03 15:57:04|INFO|114 verteces in this glom
-15/03 15:57:04|INFO|31 verteces in this glom
-15/03 15:57:04|INFO|28 verteces in this glom
-15/03 15:57:04|INFO|35 verteces in this glom
-15/03 15:57:04|INFO|10 verteces in this glom
-15/03 15:57:04|INFO|22 verteces in this glom
-15/03 15:57:04|INFO|13 verteces in this glom
-15/03 15:57:04|INFO|23 verteces in this glom
-15/03 15:57:04|INFO|168 verteces in this glom
-15/03 15:57:04|INFO|30 verteces in this glom
-15/03 15:57:04|INFO|253 verteces in this glom
-15/03 15:57:04|INFO|13 verteces in this glom
-15/03 15:57:04|INFO|67 verteces in this glom
-15/03 15:57:04|INFO|26 verteces in this glom
-15/03 15:57:04|INFO|151 verteces in this glom
-15/03 15:57:04|INFO|96 verteces in this glom
-15/03 15:57:04|INFO|24 verteces in this glom
-15/03 15:57:04|INFO|13 verteces in this glom
-15/03 15:57:04|INFO|11 verteces in this glom
-15/03 15:57:04|INFO|27 verteces in this glom
-15/03 15:57:04|INFO|158 verteces in this glom
-15/03 15:57:05|INFO|80 verteces in this glom
-15/03 15:57:05|INFO|234 verteces in this glom
-15/03 15:57:05|INFO|28 verteces in this glom
-15/03 15:57:05|INFO|390 verteces in this glom
-15/03 15:57:05|INFO|30 verteces in this glom
-15/03 15:57:05|INFO|34 verteces in this glom
-15/03 15:57:05|INFO|25 verteces in this glom
-15/03 15:57:05|INFO|14 verteces in this glom
-15/03 15:57:05|INFO|30 verteces in this glom
-15/03 15:57:05|INFO|33 verteces in this glom
-15/03 15:57:05|INFO|31 verteces in this glom
-15/03 15:57:05|INFO|34 verteces in this glom
-15/03 15:57:05|INFO|46 verteces in this glom
-15/03 15:57:05|INFO|150 verteces in this glom
-15/03 15:57:05|INFO|151 verteces in this glom
-15/03 15:57:05|INFO|23 verteces in this glom
-15/03 15:57:05|INFO|26 verteces in this glom
-15/03 15:57:05|INFO|267 verteces in this glom
-15/03 15:57:05|INFO|10 verteces in this glom
-15/03 15:57:05|INFO|11 verteces in this glom
-15/03 15:57:05|INFO|177 verteces in this glom
-15/03 15:57:05|INFO|9 verteces in this glom
-15/03 15:57:05|INFO|126 verteces in this glom
-15/03 15:57:05|INFO|124 verteces in this glom
-15/03 15:57:05|INFO|211 verteces in this glom
-15/03 15:57:05|INFO|34 verteces in this glom
-15/03 15:57:05|INFO|10 verteces in this glom
-15/03 15:57:05|INFO|66 verteces in this glom
-15/03 15:57:05|INFO|81 verteces in this glom
-15/03 15:57:05|INFO|26 verteces in this glom
-15/03 15:57:05|INFO|12 verteces in this glom
-15/03 15:57:05|INFO|92 verteces in this glom
-15/03 15:57:05|INFO|86 verteces in this glom
-15/03 15:57:05|INFO|20 verteces in this glom
-15/03 15:57:05|INFO|420 verteces in this glom
-15/03 15:57:05|INFO|200 verteces in this glom
-15/03 15:57:05|INFO|31 verteces in this glom
-15/03 15:57:05|INFO|77 verteces in this glom
-15/03 15:57:05|INFO|82 verteces in this glom
-15/03 15:57:05|INFO|31 verteces in this glom
-15/03 15:57:05|INFO|12 verteces in this glom
-15/03 15:57:05|INFO|157 verteces in this glom
-15/03 15:57:05|INFO|36 verteces in this glom
-15/03 15:57:05|INFO|10 verteces in this glom
-15/03 15:57:05|INFO|284 verteces in this glom
-15/03 15:57:05|INFO|25 verteces in this glom
-15/03 15:57:05|INFO|178 verteces in this glom
-15/03 15:57:05|INFO|11 verteces in this glom
-15/03 15:57:05|INFO|36 verteces in this glom
-15/03 15:57:05|INFO|23 verteces in this glom
-15/03 15:57:05|INFO|10 verteces in this glom
-15/03 15:57:05|INFO|229 verteces in this glom
-15/03 15:57:05|INFO|34 verteces in this glom
-15/03 15:57:05|INFO|11 verteces in this glom
-15/03 15:57:05|INFO|175 verteces in this glom
-15/03 15:57:05|INFO|107 verteces in this glom
-15/03 15:57:05|INFO|10 verteces in this glom
-15/03 15:57:05|INFO|32 verteces in this glom
-15/03 15:57:05|INFO|120 verteces in this glom
-15/03 15:57:05|INFO|29 verteces in this glom
-15/03 15:57:05|INFO|24 verteces in this glom
-15/03 15:57:05|INFO|96 verteces in this glom
-15/03 15:57:05|INFO|108 verteces in this glom
-15/03 15:57:05|INFO|36 verteces in this glom
-15/03 15:57:05|INFO|10 verteces in this glom
-15/03 15:57:05|INFO|26 verteces in this glom
-15/03 15:57:05|INFO|101 verteces in this glom
-15/03 15:57:05|INFO|146 verteces in this glom
-15/03 15:57:05|INFO|134 verteces in this glom
-15/03 15:57:05|INFO|226 verteces in this glom
-15/03 15:57:05|INFO|10 verteces in this glom
-15/03 15:57:05|INFO|72 verteces in this glom
-15/03 15:57:05|INFO|290 verteces in this glom
-15/03 15:57:05|INFO|33 verteces in this glom
-15/03 15:57:05|INFO|307 verteces in this glom
-15/03 15:57:05|INFO|26 verteces in this glom
-15/03 15:57:05|INFO|12 verteces in this glom
-15/03 15:57:05|INFO|33 verteces in this glom
-15/03 15:57:05|INFO|212 verteces in this glom
-15/03 15:57:05|INFO|25 verteces in this glom
-15/03 15:57:05|INFO|31 verteces in this glom
-15/03 15:57:05|INFO|11 verteces in this glom
-15/03 15:57:05|INFO|23 verteces in this glom
-15/03 15:57:05|INFO|165 verteces in this glom
-15/03 15:57:05|INFO|39 verteces in this glom
-15/03 15:57:05|INFO|142 verteces in this glom
-15/03 15:57:05|INFO|146 verteces in this glom
-15/03 15:57:05|INFO|35 verteces in this glom
-15/03 15:57:05|INFO|94 verteces in this glom
-15/03 15:57:05|INFO|596 verteces in this glom
-15/03 15:57:05|INFO|34 verteces in this glom
-15/03 15:57:05|INFO|20 verteces in this glom
-15/03 15:57:05|INFO|11 verteces in this glom
-15/03 15:57:05|INFO|11 verteces in this glom
-15/03 15:57:05|INFO|29 verteces in this glom
-15/03 15:57:05|INFO|38 verteces in this glom
-15/03 15:57:05|INFO|12 verteces in this glom
-15/03 15:57:05|INFO|215 verteces in this glom
-15/03 15:57:05|INFO|11 verteces in this glom
-15/03 15:57:05|INFO|109 verteces in this glom
-15/03 15:57:05|INFO|25 verteces in this glom
-15/03 15:57:05|INFO|29 verteces in this glom
-15/03 15:57:05|INFO|24 verteces in this glom
-15/03 15:57:05|INFO|33 verteces in this glom
-15/03 15:57:05|INFO|14 verteces in this glom
-15/03 15:57:05|INFO|27 verteces in this glom
-15/03 15:57:05|INFO|12 verteces in this glom
-15/03 15:57:05|INFO|27 verteces in this glom
-15/03 15:57:05|INFO|347 verteces in this glom
-15/03 15:57:05|INFO|139 verteces in this glom
-15/03 15:57:05|INFO|140 verteces in this glom
-15/03 15:57:05|INFO|163 verteces in this glom
-15/03 15:57:05|INFO|194 verteces in this glom
-15/03 15:57:05|INFO|12 verteces in this glom
-15/03 15:57:05|INFO|216 verteces in this glom
-15/03 15:57:05|INFO|11 verteces in this glom
-15/03 15:57:05|INFO|13 verteces in this glom
-15/03 15:57:05|INFO|27 verteces in this glom
-15/03 15:57:05|INFO|290 verteces in this glom
-15/03 15:57:05|INFO|27 verteces in this glom
-15/03 15:57:05|INFO|40 verteces in this glom
-15/03 15:57:05|INFO|184 verteces in this glom
-15/03 15:57:05|INFO|50 verteces in this glom
-15/03 15:57:05|INFO|41 verteces in this glom
-15/03 15:57:05|INFO|134 verteces in this glom
-15/03 15:57:05|INFO|34 verteces in this glom
-15/03 15:57:05|INFO|359 verteces in this glom
-15/03 15:57:05|INFO|10 verteces in this glom
-15/03 15:57:05|INFO|126 verteces in this glom
-15/03 15:57:05|INFO|24 verteces in this glom
-15/03 15:57:05|INFO|27 verteces in this glom
-15/03 15:57:05|INFO|67 verteces in this glom
-15/03 15:57:05|INFO|195 verteces in this glom
-15/03 15:57:05|INFO|149 verteces in this glom
-15/03 15:57:05|INFO|38 verteces in this glom
-15/03 15:57:05|INFO|12 verteces in this glom
-15/03 15:57:05|INFO|155 verteces in this glom
-15/03 15:57:05|INFO|18 verteces in this glom
-15/03 15:57:05|INFO|33 verteces in this glom
-15/03 15:57:05|INFO|26 verteces in this glom
-15/03 15:57:05|INFO|329 verteces in this glom
-15/03 15:57:05|INFO|102 verteces in this glom
-15/03 15:57:05|INFO|22 verteces in this glom
-15/03 15:57:05|INFO|152 verteces in this glom
-15/03 15:57:05|INFO|76 verteces in this glom
-15/03 15:57:05|INFO|38 verteces in this glom
-15/03 15:57:05|INFO|331 verteces in this glom
-15/03 15:57:05|INFO|12 verteces in this glom
-15/03 15:57:05|INFO|264 verteces in this glom
-15/03 15:57:05|INFO|30 verteces in this glom
-15/03 15:57:05|INFO|309 verteces in this glom
-15/03 15:57:05|INFO|21 verteces in this glom
-15/03 15:57:05|INFO|23 verteces in this glom
-15/03 15:57:05|INFO|39 verteces in this glom
-15/03 15:57:05|INFO|11 verteces in this glom
-15/03 15:57:05|INFO|78 verteces in this glom
-15/03 15:57:05|INFO|11 verteces in this glom
-15/03 15:57:05|INFO|228 verteces in this glom
-15/03 15:57:05|INFO|26 verteces in this glom
-15/03 15:57:05|INFO|33 verteces in this glom
-15/03 15:57:05|INFO|118 verteces in this glom
-15/03 15:57:05|INFO|11 verteces in this glom
-15/03 15:57:05|INFO|216 verteces in this glom
-15/03 15:57:05|INFO|11 verteces in this glom
-15/03 15:57:05|INFO|159 verteces in this glom
-15/03 15:57:05|INFO|207 verteces in this glom
-15/03 15:57:05|INFO|22 verteces in this glom
-15/03 15:57:05|INFO|30 verteces in this glom
-15/03 15:57:05|INFO|13 verteces in this glom
-15/03 15:57:05|INFO|142 verteces in this glom
-15/03 15:57:05|INFO|149 verteces in this glom
-15/03 15:57:05|INFO|193 verteces in this glom
-15/03 15:57:05|INFO|12 verteces in this glom
-15/03 15:57:05|INFO|265 verteces in this glom
-15/03 15:57:05|INFO|234 verteces in this glom
-15/03 15:57:05|INFO|10 verteces in this glom
-15/03 15:57:05|INFO|38 verteces in this glom
-15/03 15:57:05|INFO|132 verteces in this glom
-15/03 15:57:05|INFO|31 verteces in this glom
-15/03 15:57:05|INFO|27 verteces in this glom
-15/03 15:57:05|INFO|12 verteces in this glom
-15/03 15:57:05|INFO|43 verteces in this glom
-15/03 15:57:05|INFO|13 verteces in this glom
-15/03 15:57:05|INFO|37 verteces in this glom
-15/03 15:57:05|INFO|109 verteces in this glom
-15/03 15:57:05|INFO|30 verteces in this glom
-15/03 15:57:05|INFO|27 verteces in this glom
-15/03 15:57:05|INFO|127 verteces in this glom
-15/03 15:57:05|INFO|301 verteces in this glom
-15/03 15:57:05|INFO|175 verteces in this glom
-15/03 15:57:05|INFO|131 verteces in this glom
-15/03 15:57:05|INFO|181 verteces in this glom
-15/03 15:57:05|INFO|219 verteces in this glom
-15/03 15:57:05|INFO|178 verteces in this glom
-15/03 15:57:05|INFO|12 verteces in this glom
-15/03 15:57:05|INFO|11 verteces in this glom
-15/03 15:57:05|INFO|167 verteces in this glom
-15/03 15:57:05|INFO|149 verteces in this glom
-15/03 15:57:05|INFO|32 verteces in this glom
-15/03 15:57:05|INFO|124 verteces in this glom
-15/03 15:57:05|INFO|21 verteces in this glom
-15/03 15:57:05|INFO|112 verteces in this glom
-15/03 15:57:05|INFO|23 verteces in this glom
-15/03 15:57:05|INFO|105 verteces in this glom
-15/03 15:57:05|INFO|12 verteces in this glom
-15/03 15:57:05|INFO|78 verteces in this glom
-15/03 15:57:05|INFO|218 verteces in this glom
-15/03 15:57:05|INFO|145 verteces in this glom
-15/03 15:57:05|INFO|112 verteces in this glom
-15/03 15:57:05|INFO|28 verteces in this glom
-15/03 15:57:05|INFO|186 verteces in this glom
-15/03 15:57:05|INFO|187 verteces in this glom
-15/03 15:57:05|INFO|24 verteces in this glom
-15/03 15:57:05|INFO|23 verteces in this glom
-15/03 15:57:05|INFO|28 verteces in this glom
-15/03 15:57:05|INFO|12 verteces in this glom
-15/03 15:57:05|INFO|31 verteces in this glom
-15/03 15:57:05|INFO|20 verteces in this glom
-15/03 15:57:06|INFO|12 verteces in this glom
-15/03 15:57:06|INFO|32 verteces in this glom
-15/03 15:57:06|INFO|28 verteces in this glom
-15/03 15:57:06|INFO|117 verteces in this glom
-15/03 15:57:06|INFO|26 verteces in this glom
-15/03 15:57:06|INFO|26 verteces in this glom
-15/03 15:57:06|INFO|157 verteces in this glom
-15/03 15:57:06|INFO|117 verteces in this glom
-15/03 15:57:06|INFO|30 verteces in this glom
-15/03 15:57:06|INFO|37 verteces in this glom
-15/03 15:57:06|INFO|76 verteces in this glom
-15/03 15:57:06|INFO|10 verteces in this glom
-15/03 15:57:06|INFO|155 verteces in this glom
-15/03 15:57:06|INFO|161 verteces in this glom
-15/03 15:57:06|INFO|11 verteces in this glom
-15/03 15:57:06|INFO|14 verteces in this glom
-15/03 15:57:06|INFO|12 verteces in this glom
-15/03 15:57:06|INFO|83 verteces in this glom
-15/03 15:57:06|INFO|223 verteces in this glom
-15/03 15:57:06|INFO|74 verteces in this glom
-15/03 15:57:06|INFO|161 verteces in this glom
-15/03 15:57:06|INFO|24 verteces in this glom
-15/03 15:57:06|INFO|301 verteces in this glom
-15/03 15:57:06|INFO|121 verteces in this glom
-15/03 15:57:06|INFO|12 verteces in this glom
-15/03 15:57:06|INFO|33 verteces in this glom
-15/03 15:57:06|INFO|345 verteces in this glom
-15/03 15:57:06|INFO|127 verteces in this glom
-15/03 15:57:06|INFO|12 verteces in this glom
-15/03 15:57:06|INFO|28 verteces in this glom
-15/03 15:57:06|INFO|101 verteces in this glom
-15/03 15:57:06|INFO|408 verteces in this glom
-15/03 15:57:06|INFO|320 verteces in this glom
-15/03 15:57:06|INFO|93 verteces in this glom
-15/03 15:57:06|INFO|11 verteces in this glom
-15/03 15:57:06|INFO|37 verteces in this glom
-15/03 15:57:06|INFO|26 verteces in this glom
-15/03 15:57:06|INFO|13 verteces in this glom
-15/03 15:57:06|INFO|107 verteces in this glom
-15/03 15:57:06|INFO|155 verteces in this glom
-15/03 15:57:06|INFO|27 verteces in this glom
-15/03 15:57:06|INFO|13 verteces in this glom
-15/03 15:57:06|INFO|105 verteces in this glom
-15/03 15:57:06|INFO|11 verteces in this glom
-15/03 15:57:06|INFO|197 verteces in this glom
-15/03 15:57:06|INFO|12 verteces in this glom
-15/03 15:57:06|INFO|264 verteces in this glom
-15/03 15:57:06|INFO|135 verteces in this glom
-15/03 15:57:06|INFO|39 verteces in this glom
-15/03 15:57:06|INFO|129 verteces in this glom
-15/03 15:57:06|INFO|195 verteces in this glom
-15/03 15:57:06|INFO|27 verteces in this glom
-15/03 15:57:06|INFO|32 verteces in this glom
-15/03 15:57:06|INFO|13 verteces in this glom
-15/03 15:57:06|INFO|30 verteces in this glom
-15/03 15:57:06|INFO|77 verteces in this glom
-15/03 15:57:06|INFO|308 verteces in this glom
-15/03 15:57:06|INFO|108 verteces in this glom
-15/03 15:57:06|INFO|114 verteces in this glom
-15/03 15:57:06|INFO|221 verteces in this glom
-15/03 15:57:06|INFO|30 verteces in this glom
-15/03 15:57:06|INFO|158 verteces in this glom
-15/03 15:57:06|INFO|38 verteces in this glom
-15/03 15:57:06|INFO|148 verteces in this glom
-15/03 15:57:06|INFO|65 verteces in this glom
-15/03 15:57:06|INFO|23 verteces in this glom
-15/03 15:57:06|INFO|171 verteces in this glom
-15/03 15:57:06|INFO|115 verteces in this glom
-15/03 15:57:06|INFO|29 verteces in this glom
-15/03 15:57:06|INFO|11 verteces in this glom
-15/03 15:57:06|INFO|105 verteces in this glom
-15/03 15:57:06|INFO|313 verteces in this glom
-15/03 15:57:06|INFO|153 verteces in this glom
-15/03 15:57:06|INFO|27 verteces in this glom
-15/03 15:57:06|INFO|151 verteces in this glom
-15/03 15:57:06|INFO|238 verteces in this glom
-15/03 15:57:06|INFO|13 verteces in this glom
-15/03 15:57:06|INFO|32 verteces in this glom
-15/03 15:57:06|INFO|36 verteces in this glom
-15/03 15:57:06|INFO|187 verteces in this glom
-15/03 15:57:06|INFO|216 verteces in this glom
-15/03 15:57:06|INFO|13 verteces in this glom
-15/03 15:57:06|INFO|36 verteces in this glom
-15/03 15:57:06|INFO|32 verteces in this glom
-15/03 15:57:06|INFO|272 verteces in this glom
-15/03 15:57:07|INFO|204 verteces in this glom
-15/03 15:57:07|INFO|34 verteces in this glom
-15/03 15:57:07|INFO|213 verteces in this glom
-15/03 15:57:07|INFO|98 verteces in this glom
-15/03 15:57:07|INFO|36 verteces in this glom
-15/03 15:57:07|INFO|112 verteces in this glom
-15/03 15:57:07|INFO|12 verteces in this glom
-15/03 15:57:07|INFO|134 verteces in this glom
-15/03 15:57:07|INFO|34 verteces in this glom
-15/03 15:57:07|INFO|77 verteces in this glom
-15/03 15:57:07|INFO|134 verteces in this glom
-15/03 15:57:07|INFO|12 verteces in this glom
-15/03 15:57:07|INFO|474 verteces in this glom
-15/03 15:57:07|INFO|144 verteces in this glom
-15/03 15:57:07|INFO|31 verteces in this glom
-15/03 15:57:07|INFO|34 verteces in this glom
-15/03 15:57:07|INFO|13 verteces in this glom
-15/03 15:57:07|INFO|42 verteces in this glom
-15/03 15:57:07|INFO|32 verteces in this glom
-15/03 15:57:07|INFO|27 verteces in this glom
-15/03 15:57:07|INFO|241 verteces in this glom
-15/03 15:57:07|INFO| done with the mask. Assigned 585 unique values to this mask
-15/03 15:57:07|INFO|TilerSegm._get_tile_labels: patchifying class_mask:
-15/03 15:57:07|INFO|tile class
-15/03 15:57:07|INFO|tile class2
-15/03 15:57:07|INFO|tile class3
-15/03 15:57:07|INFO|label /Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/val/labels/8242609fa.json patches shape: (43, 30, 1024, 1024)
-15/03 15:57:07|INFO|unique class2
-15/03 15:57:07|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:07|INFO|unique class2
-15/03 15:57:07|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:07|INFO|unique class2
-15/03 15:57:07|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:07|INFO|unique class2
-15/03 15:57:07|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:07|INFO|unique class2
-15/03 15:57:07|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:07|INFO|unique class2
-15/03 15:57:07|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:07|INFO|unique class2
-15/03 15:57:07|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:07|INFO|unique class2
-15/03 15:57:07|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:07|INFO|unique class2
-15/03 15:57:07|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:07|INFO|unique class2
-15/03 15:57:07|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:07|INFO|unique class2
-15/03 15:57:07|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:07|INFO|unique class2
-15/03 15:57:07|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:07|INFO|unique class2
-15/03 15:57:07|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:07|INFO|unique class2
-15/03 15:57:07|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:08|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:08|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:09|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:09|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:10|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:10|INFO|unique class2
-15/03 15:57:11|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:11|INFO|unique class2
-15/03 15:57:11|INFO|unique_values for this tile:[], type: <class 'list'>
-15/03 15:57:11|INFO|unique class2
-15/03 15:57:11|INFO|unique_values for this tile:[332.0], type: <class 'list'>
-15/03 15:57:11|INFO|boh
-15/03 15:57:11|INFO|positions pre [[ 990  623]
- [1007  674]
- [1017  554]]
-15/03 15:57:11|INFO|got out loop
-15/03 15:57:11|INFO|positions post [array([1017,  554]), array([990, 623]), array([1007,  674])]
-15/03 15:57:11|INFO|added  'x_indices' 'y_indices'
-15/03 15:57:11|INFO|save_fp : /Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/val/labels/8242609fa_2_3.txt
-15/03 15:57:11|INFO|inflating:
-15/03 15:57:11|INFO|read text file inflation
-15/03 15:57:11|INFO|got x y from text: x:3, y:3
-15/03 15:57:11|ERROR|TilerSegm._get_tile_labels: ❌ Tiling label: '8242609fa.json'
-15/03 15:57:11|INFO|ProcessorManager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
-15/03 15:57:11|INFO|ProcessorManager.tile_dataset: Tiling 'test'
-15/03 15:57:11|INFO|ProcessorManager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
-15/03 15:57:11|INFO|TilerSegm.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/test/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/test/images'.
-15/03 15:57:11|ERROR|TilerSegm.__call__: ❌ No file in format 'tif' was found in '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/test/labels'.
-15/03 15:57:11|INFO|TilerSegm._get_completed_files: Completed 0/0 files.
+16/03 10:12:13|INFO|ManagerHubmap._make_tiles_branch: Creating new tiles branch at '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles'
+16/03 10:12:13|INFO|ManagerHubmap._split_data: ⏳ Splitting slides
+16/03 10:12:13|INFO|Splitter._move_files: trainset: ['0486052bb.tif', '26dc41664.tif', '8242609fa.tif']
+16/03 10:12:13|INFO|Splitter._move_files: valset: ['4ef6695ce.tif', '2f6ecfcdf.tif']
+16/03 10:12:13|INFO|Splitter._move_files: testset: ['1e2425f28.tif']
+16/03 10:12:13|INFO|ManagerHubmap._split_data: ✅ Splitting slides
+16/03 10:12:13|INFO|ManagerHubmap._move_slides_forth: Moved slides forth.
+16/03 10:12:13|INFO|ManagerHubmap.tile_dataset: Tiling dataset at '/Users/marco/helical_tests/test_hubmap_manager/detection/wsi'
+16/03 10:12:13|INFO|ManagerHubmap.tile_dataset: Tiling 'train'
+16/03 10:12:13|INFO|ManagerHubmap._tile_folder: ######################## CONVERTING ANNOTATIONS: ⏳    ########################
+16/03 10:12:13|INFO|json_files:3, json files:3
+16/03 10:12:13|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/0486052bb.txt
+16/03 10:12:13|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
+16/03 10:12:13|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/8242609fa.txt
+16/03 10:12:13|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
+16/03 10:12:14|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/26dc41664.txt
+16/03 10:12:14|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
+16/03 10:12:14|INFO|ManagerHubmap._tile_folder: ######################## CONVERTING ANNOTATIONS: ✅    ########################
+16/03 10:12:14|INFO|ManagerHubmap._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+16/03 10:12:14|INFO|TilerHubmap.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/train/images'.
+16/03 10:12:14|INFO|TilerHubmap._get_completed_files: Completed 0/3 files.
+16/03 10:12:14|INFO|TilerHubmap._remove_small_files: Removed 0 small files (< 500kB)
+16/03 10:12:14|INFO|TilerHubmap._get_tile_images: ⏳ Tiling image: '0486052bb.tif'
+16/03 10:12:14|INFO|TilerHubmap._get_tile_images: ⏳ Opening '0486052bb.tif':
+16/03 10:12:14|INFO|TilerHubmap._get_tile_images: ✅ Opening '0486052bb.tif':
+16/03 10:12:14|INFO|TilerHubmap._get_tile_images: ⏳ Reading slide with shape ((34937, 25784)):
+16/03 10:12:30|INFO|TilerHubmap._get_tile_images: ⏳ Converting to numpy:
+16/03 10:12:33|INFO|TilerHubmap._get_tile_images: ✅ Conversion to numpy.
+16/03 10:12:33|INFO|TilerHubmap._get_tile_images: ⏳ Patchifying:
+16/03 10:12:33|INFO|TilerHubmap._get_tile_images: ✅ Patchifying.
+16/03 10:12:33|INFO|TilerHubmap._get_tile_images: ⏳ Saving patches:
+16/03 10:12:53|INFO|TilerHubmap._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_manager/detection/tiles/train/images.
+16/03 10:12:53|INFO|TilerHubmap._get_tile_images: ✅ Tiling image: '0486052bb.tif'
+16/03 10:12:53|INFO|TilerHubmap._remove_small_files: Removed 24 small files (< 500kB)
+16/03 10:12:53|INFO|TilerHubmap._get_tile_images: ⏳ Tiling image: '26dc41664.tif'
+16/03 10:12:53|INFO|TilerHubmap._get_tile_images: ⏳ Opening '26dc41664.tif':
+16/03 10:12:53|INFO|TilerHubmap._get_tile_images: ✅ Opening '26dc41664.tif':
+16/03 10:12:53|INFO|TilerHubmap._get_tile_images: ⏳ Reading slide with shape ((42360, 38160)):
+16/03 10:13:14|INFO|TilerHubmap._get_tile_images: ⏳ Converting to numpy:
+16/03 10:13:22|INFO|TilerHubmap._get_tile_images: ✅ Conversion to numpy.
+16/03 10:13:22|INFO|TilerHubmap._get_tile_images: ⏳ Patchifying:
+16/03 10:13:22|INFO|TilerHubmap._get_tile_images: ✅ Patchifying.
+16/03 10:13:22|INFO|TilerHubmap._get_tile_images: ⏳ Saving patches:
+16/03 10:13:50|INFO|TilerHubmap._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_manager/detection/tiles/train/images.
+16/03 10:13:50|INFO|TilerHubmap._get_tile_images: ✅ Tiling image: '26dc41664.tif'
+16/03 10:13:50|INFO|TilerHubmap._remove_small_files: Removed 33 small files (< 500kB)
+16/03 10:13:50|INFO|TilerHubmap._get_tile_images: ⏳ Tiling image: '8242609fa.tif'
+16/03 10:13:50|INFO|TilerHubmap._get_tile_images: ⏳ Opening '8242609fa.tif':
+16/03 10:13:50|INFO|TilerHubmap._get_tile_images: ✅ Opening '8242609fa.tif':
+16/03 10:13:50|INFO|TilerHubmap._get_tile_images: ⏳ Reading slide with shape ((44066, 31299)):
+16/03 10:14:16|INFO|TilerHubmap._get_tile_images: ⏳ Converting to numpy:
+16/03 10:14:23|INFO|TilerHubmap._get_tile_images: ✅ Conversion to numpy.
+16/03 10:14:23|INFO|TilerHubmap._get_tile_images: ⏳ Patchifying:
+16/03 10:14:23|INFO|TilerHubmap._get_tile_images: ✅ Patchifying.
+16/03 10:14:23|INFO|TilerHubmap._get_tile_images: ⏳ Saving patches:
+16/03 10:15:01|INFO|TilerHubmap._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_manager/detection/tiles/train/images.
+16/03 10:15:01|INFO|TilerHubmap._get_tile_images: ✅ Tiling image: '8242609fa.tif'
+16/03 10:15:01|INFO|ManagerHubmap._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+16/03 10:15:01|INFO|ManagerHubmap._tile_folder: ######################## TILING LABELS: ⏳    ########################
+16/03 10:15:01|INFO|TilerHubmap.__call__: ⏳ START TILING LABELS from folder:'/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/train/labels'.
+16/03 10:15:01|INFO|TilerHubmap._get_completed_files: Completed 0/3 files.
+16/03 10:15:01|INFO|calling get_n_tiles
+16/03 10:15:01|INFO|self.n_tiles:{'0486052bb': [12, 17], '26dc41664': [18, 20], '8242609fa': [15, 21]}
+16/03 10:15:01|INFO|TilerHubmap._remove_small_files: Removed 15 small files (< 500kB)
+16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: ⏳ Tiling label: '0486052bb.txt'
+16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/0486052bb.txt'
+16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: x_max:12, y_max:17
+16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: ✅ Tile labels saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/train/labels'.
+16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: ✅ Tiling label: '0486052bb.txt'
+16/03 10:15:01|INFO|TilerHubmap._remove_small_files: Removed 0 small files (< 500kB)
+16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: ⏳ Tiling label: '26dc41664.txt'
+16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/26dc41664.txt'
+16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: x_max:18, y_max:20
+16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: ✅ Tile labels saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/train/labels'.
+16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: ✅ Tiling label: '26dc41664.txt'
+16/03 10:15:01|INFO|TilerHubmap._remove_small_files: Removed 0 small files (< 500kB)
+16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: ⏳ Tiling label: '8242609fa.txt'
+16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/8242609fa.txt'
+16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: x_max:15, y_max:21
+16/03 10:15:02|INFO|TilerHubmap._get_tile_labels: ✅ Tile labels saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/train/labels'.
+16/03 10:15:02|INFO|TilerHubmap._get_tile_labels: ✅ Tiling label: '8242609fa.txt'
+16/03 10:15:02|INFO|ManagerHubmap._tile_folder: ######################## TILING LABELS: ✅    ########################
+16/03 10:15:02|INFO|ManagerHubmap.tile_dataset: Tiling 'val'
+16/03 10:15:02|INFO|ManagerHubmap._tile_folder: ######################## CONVERTING ANNOTATIONS: ⏳    ########################
+16/03 10:15:02|INFO|json_files:2, json files:2
+16/03 10:15:02|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/val/labels/4ef6695ce.txt
+16/03 10:15:02|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
+16/03 10:15:02|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/val/labels/2f6ecfcdf.txt
+16/03 10:15:02|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
+16/03 10:15:02|INFO|ManagerHubmap._tile_folder: ######################## CONVERTING ANNOTATIONS: ✅    ########################
+16/03 10:15:02|INFO|ManagerHubmap._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+16/03 10:15:02|INFO|TilerHubmap.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/val/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/val/images'.
+16/03 10:15:02|INFO|TilerHubmap._get_completed_files: Completed 0/2 files.
+16/03 10:15:02|INFO|TilerHubmap._remove_small_files: Removed 0 small files (< 500kB)
+16/03 10:15:02|INFO|TilerHubmap._get_tile_images: ⏳ Tiling image: '4ef6695ce.tif'
+16/03 10:15:02|INFO|TilerHubmap._get_tile_images: ⏳ Opening '4ef6695ce.tif':
+16/03 10:15:02|INFO|TilerHubmap._get_tile_images: ✅ Opening '4ef6695ce.tif':
+16/03 10:15:02|INFO|TilerHubmap._get_tile_images: ⏳ Reading slide with shape ((50680, 39960)):
+16/03 10:15:30|INFO|TilerHubmap._get_tile_images: ⏳ Converting to numpy:
+16/03 10:15:57|INFO|TilerHubmap._get_tile_images: ✅ Conversion to numpy.
+16/03 10:15:57|INFO|TilerHubmap._get_tile_images: ⏳ Patchifying:
+16/03 10:15:57|INFO|TilerHubmap._get_tile_images: ✅ Patchifying.
+16/03 10:15:57|INFO|TilerHubmap._get_tile_images: ⏳ Saving patches:
+16/03 10:16:39|INFO|TilerHubmap._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_manager/detection/tiles/val/images.
+16/03 10:16:39|INFO|TilerHubmap._get_tile_images: ✅ Tiling image: '4ef6695ce.tif'
+16/03 10:16:39|INFO|TilerHubmap._remove_small_files: Removed 16 small files (< 500kB)
+16/03 10:16:39|INFO|TilerHubmap._get_tile_images: ⏳ Tiling image: '2f6ecfcdf.tif'
+16/03 10:16:39|INFO|TilerHubmap._get_tile_images: ⏳ Opening '2f6ecfcdf.tif':
+16/03 10:16:39|INFO|TilerHubmap._get_tile_images: ✅ Opening '2f6ecfcdf.tif':
+16/03 10:16:39|INFO|TilerHubmap._get_tile_images: ⏳ Reading slide with shape ((25794, 31278)):
+16/03 10:16:53|INFO|TilerHubmap._get_tile_images: ⏳ Converting to numpy:
+16/03 10:16:54|INFO|TilerHubmap._get_tile_images: ✅ Conversion to numpy.
+16/03 10:16:54|INFO|TilerHubmap._get_tile_images: ⏳ Patchifying:
+16/03 10:16:54|INFO|TilerHubmap._get_tile_images: ✅ Patchifying.
+16/03 10:16:54|INFO|TilerHubmap._get_tile_images: ⏳ Saving patches:
+16/03 10:17:12|INFO|TilerHubmap._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_manager/detection/tiles/val/images.
+16/03 10:17:12|INFO|TilerHubmap._get_tile_images: ✅ Tiling image: '2f6ecfcdf.tif'
+16/03 10:17:12|INFO|ManagerHubmap._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+16/03 10:17:12|INFO|ManagerHubmap._tile_folder: ######################## TILING LABELS: ⏳    ########################
+16/03 10:17:12|INFO|TilerHubmap.__call__: ⏳ START TILING LABELS from folder:'/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/val/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/val/labels'.
+16/03 10:17:12|INFO|TilerHubmap._get_completed_files: Completed 0/2 files.
+16/03 10:17:12|INFO|calling get_n_tiles
+16/03 10:17:12|INFO|self.n_tiles:{'4ef6695ce': [19, 24], '2f6ecfcdf': [15, 12]}
+16/03 10:17:12|INFO|TilerHubmap._remove_small_files: Removed 15 small files (< 500kB)
+16/03 10:17:12|INFO|TilerHubmap._get_tile_labels: ⏳ Tiling label: '4ef6695ce.txt'
+16/03 10:17:12|INFO|TilerHubmap._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/val/labels/4ef6695ce.txt'
+16/03 10:17:12|INFO|TilerHubmap._get_tile_labels: x_max:19, y_max:24
+16/03 10:17:12|INFO|TilerHubmap._get_tile_labels: ✅ Tile labels saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/val/labels'.
+16/03 10:17:12|INFO|TilerHubmap._get_tile_labels: ✅ Tiling label: '4ef6695ce.txt'
+16/03 10:17:12|INFO|TilerHubmap._remove_small_files: Removed 0 small files (< 500kB)
+16/03 10:17:12|INFO|TilerHubmap._get_tile_labels: ⏳ Tiling label: '2f6ecfcdf.txt'
+16/03 10:17:12|INFO|TilerHubmap._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/val/labels/2f6ecfcdf.txt'
+16/03 10:17:12|INFO|TilerHubmap._get_tile_labels: x_max:15, y_max:12
+16/03 10:17:12|INFO|TilerHubmap._get_tile_labels: ✅ Tile labels saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/val/labels'.
+16/03 10:17:12|INFO|TilerHubmap._get_tile_labels: ✅ Tiling label: '2f6ecfcdf.txt'
+16/03 10:17:12|INFO|ManagerHubmap._tile_folder: ######################## TILING LABELS: ✅    ########################
+16/03 10:17:12|INFO|ManagerHubmap.tile_dataset: Tiling 'test'
+16/03 10:17:12|INFO|ManagerHubmap._tile_folder: ######################## CONVERTING ANNOTATIONS: ⏳    ########################
+16/03 10:17:12|INFO|json_files:1, json files:1
+16/03 10:17:13|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/test/labels/1e2425f28.txt
+16/03 10:17:13|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
+16/03 10:17:13|INFO|ManagerHubmap._tile_folder: ######################## CONVERTING ANNOTATIONS: ✅    ########################
+16/03 10:17:13|INFO|ManagerHubmap._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+16/03 10:17:13|INFO|TilerHubmap.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/test/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/test/images'.
+16/03 10:17:13|INFO|TilerHubmap._get_completed_files: Completed 0/1 files.
+16/03 10:17:13|INFO|TilerHubmap._remove_small_files: Removed 0 small files (< 500kB)
+16/03 10:17:13|INFO|TilerHubmap._get_tile_images: ⏳ Tiling image: '1e2425f28.tif'
+16/03 10:17:13|INFO|TilerHubmap._get_tile_images: ⏳ Opening '1e2425f28.tif':
+16/03 10:17:13|INFO|TilerHubmap._get_tile_images: ✅ Opening '1e2425f28.tif':
+16/03 10:17:13|INFO|TilerHubmap._get_tile_images: ⏳ Reading slide with shape ((32220, 26780)):
+16/03 10:17:24|INFO|TilerHubmap._get_tile_images: ⏳ Converting to numpy:
+16/03 10:17:26|INFO|TilerHubmap._get_tile_images: ✅ Conversion to numpy.
+16/03 10:17:26|INFO|TilerHubmap._get_tile_images: ⏳ Patchifying:
+16/03 10:17:26|INFO|TilerHubmap._get_tile_images: ✅ Patchifying.
+16/03 10:17:26|INFO|TilerHubmap._get_tile_images: ⏳ Saving patches:
+16/03 10:17:43|INFO|TilerHubmap._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_manager/detection/tiles/test/images.
+16/03 10:17:44|INFO|TilerHubmap._get_tile_images: ✅ Tiling image: '1e2425f28.tif'
+16/03 10:17:44|INFO|ManagerHubmap._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+16/03 10:17:44|INFO|ManagerHubmap._tile_folder: ######################## TILING LABELS: ⏳    ########################
+16/03 10:17:44|INFO|TilerHubmap.__call__: ⏳ START TILING LABELS from folder:'/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/test/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/test/labels'.
+16/03 10:17:44|INFO|TilerHubmap._get_completed_files: Completed 0/1 files.
+16/03 10:17:44|INFO|calling get_n_tiles
+16/03 10:17:44|INFO|self.n_tiles:{'1e2425f28': [13, 15]}
+16/03 10:17:44|INFO|TilerHubmap._remove_small_files: Removed 15 small files (< 500kB)
+16/03 10:17:44|INFO|TilerHubmap._get_tile_labels: ⏳ Tiling label: '1e2425f28.txt'
+16/03 10:17:44|INFO|TilerHubmap._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/test/labels/1e2425f28.txt'
+16/03 10:17:44|INFO|TilerHubmap._get_tile_labels: x_max:13, y_max:15
+16/03 10:17:44|INFO|TilerHubmap._get_tile_labels: ✅ Tile labels saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/test/labels'.
+16/03 10:17:44|INFO|TilerHubmap._get_tile_labels: ✅ Tiling label: '1e2425f28.txt'
+16/03 10:17:44|INFO|ManagerHubmap._tile_folder: ######################## TILING LABELS: ✅    ########################
+16/03 10:17:44|INFO|ManagerHubmap._move_slides_back: Moved slides forth.
+16/03 10:17:44|INFO|CleanerHubmap._get_data: Found 6 slides with 6 annotations and 6 tiles with 6 annotations. 
+16/03 10:17:44|INFO|CleanerHubmap._del_unpaired_labels: deleted 0 labels without matching image. Updating self.data. 
+16/03 10:17:44|INFO|CleanerHubmap._get_data: Found 6 slides with 6 annotations and 6 tiles with 6 annotations. 
+16/03 10:17:44|INFO|CleanerHubmap._get_data: Found 6 slides with 6 annotations and 6 tiles with 6 annotations. 
+16/03 10:17:44|INFO|CleanerHubmap._get_empty_images: found 1040 empty images and 552 full images. 
+16/03 10:17:44|INFO|empty: 1040, full:1040
+16/03 10:17:44|INFO|CleanerHubmap._remove_perc_: empty:61, full:552, tot:613

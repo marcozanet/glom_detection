@@ -10,7 +10,7 @@ from decorators import log_start_finish
 from configurator import Configurator
 
 
-class Profiler(Configurator): 
+class ProfilerBase(Configurator): 
 
     def __init__(self, 
                 data_root:str, 
@@ -45,10 +45,6 @@ class Profiler(Configurator):
         self.empty_ok = empty_ok
 
 
-        # self.data = self._get_data()
-        # self.log.info(f"len data images: {len(self.data['tile_images'])}")
-
-
         return
 
 
@@ -65,7 +61,12 @@ class Profiler(Configurator):
             wsi_labels = glob(os.path.join(self.data_root, 'wsi', '*', 'labels', self.wsi_labels_like))
             tile_images = glob(os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like))
             tile_labels = glob(os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like))
-            # self.log.info(f"looking for images like: {os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like)} ")
+
+            if self.verbose is True:
+                self.log.info(f"looking for wsi_images like: {os.path.join(self.data_root, 'wsi', '*', 'images', self.wsi_images_like)} ")
+                self.log.info(f"looking for wsi_labels like: {os.path.join(self.data_root, 'wsi', '*', 'labels', self.wsi_labels_like)} ")
+                self.log.info(f"looking for tile_images like: {os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like)} ")
+                self.log.info(f"looking for tile_labels like: {os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like)} ")
             # self.log.info(f"images found: {len(tile_images)}")
             data = {'wsi_images':wsi_images, 'wsi_labels':wsi_labels, 'tile_images':tile_images,  'tile_labels':tile_labels }
             
@@ -81,7 +82,7 @@ class Profiler(Configurator):
                     self.log.warning(f"{self._class_name}.{'_get_data'}: no tile label like {os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like)} was found.")
             
             # self.log.info(f"completed func, returning {data}")
-            self.log.info(f"{self._class_name}.{'_get_data'}: Found {len(wsi_images)} slides with {len(wsi_labels)} annotations and {wsi_images} tiles with {wsi_labels} annotations. ")
+            self.log.info(f"{self._class_name}.{'_get_data'}: Found {len(wsi_images)} slides with {len(wsi_labels)} annotations and {len(wsi_images)} tiles with {len(wsi_labels)} annotations. ")
             return data
         
         returned = do()
@@ -156,7 +157,6 @@ class Profiler(Configurator):
                 fn = os.path.basename(file)
                 with open(file, 'r') as f:
                     rows = f.readlines()
-                self.log.info(f'file opened')
                 
                 assert len(rows) <= 30, f"❗️ Warning: File label has more than 30 instances. Maybe redundancy? "
                 self.log.info(f'assertion passed ')
@@ -176,7 +176,6 @@ class Profiler(Configurator):
                     info_dict = {'class_n':class_n, 'width':round((width), 4), 'height':round(height,4), 
                                 'area':round(width*height, 4), 'obj_n':instance_n, 'fold':fold, 'tile':tile_n, 
                                 'sample':sample_n,'wsi':{wsi_n}, 'fn':{fn.split('.')[0]}}
-                    self.log.info(f'info dict: {info_dict} ')
                     
                     df.loc[i] = pd.Series(info_dict)
                     i += 1
@@ -380,7 +379,7 @@ class Profiler(Configurator):
         class_name = self.__class__.__name__
         func_name = '_get_empty_images'
 
-        @log_start_finish(class_name=self.__class__.__name__, func_name=func_name, msg = f"Getting nsamples in slide:" )
+        # @log_start_finish(class_name=self.__class__.__name__, func_name=func_name, msg = f"Getting nsamples in slide:" )
         def do():
             tile_images = self.data['tile_images']
             tile_labels = self.data['tile_labels']
@@ -388,15 +387,19 @@ class Profiler(Configurator):
             assert len(tile_images)>0, self.log.error(f"{self._class_name}.{'_get_empty_images'}: 'tile_images':{len(tile_images)}. No tile image found. ")
             assert len(tile_labels)>0, self.log.error(f"{self._class_name}.{'_get_empty_images'}: 'tile_labels':{len(tile_labels)}. No tile label found. ")
             
-            empty_images = [file for file in tile_images if os.path.join(os.path.dirname(file).replace('images', 'labels'), os.path.basename(file).replace(self.tiles_image_format,self.tiles_label_format)) not in tile_labels]
+            rename_img2lbl = lambda fp_img: os.path.join(os.path.dirname(fp_img).replace('images', 'labels'), os.path.basename(fp_img).replace(self.tiles_image_format, self.tiles_label_format))
+            rename_lbl2img = lambda fp_lbl: os.path.join(os.path.dirname(fp_lbl).replace('labels', 'images'), os.path.basename(fp_lbl).replace(self.tiles_label_format,self.tiles_image_format))
+            
+            empty_images = [file for file in tile_images if rename_img2lbl(file) not in tile_labels]
             empty_images = [file for file in empty_images if "DS" not in empty_images and self.tiles_image_format in file]
             empty_images = [file for file in empty_images if os.path.isfile(file)]
+            full_images = [file for file in tile_images if rename_img2lbl(file) in tile_labels]
+            unpaired_labels = [file for file in tile_labels if rename_lbl2img(file) not in tile_images]
 
-            full_images = [file for file in tile_images if os.path.join(os.path.dirname(file).replace('images', 'labels'), os.path.basename(file).replace(self.tiles_image_format,self.tiles_label_format)) in tile_labels]
-            unpaired_labels = [file for file in tile_labels if os.path.join(os.path.dirname(file).replace('labels', 'images'), os.path.basename(file).replace(self.tiles_label_format, self.tiles_image_format)) not in tile_images]
+            self.log.info(f"{self._class_name}.{'_get_empty_images'}: found {len(empty_images)} empty images and {len(full_images)} full images. ")
             
             if len(unpaired_labels) > 2:
-                self.log.info(f"{class_name}.{func_name}:❗️ Found {len(unpaired_labels)} labels that don't have a matching image. Maybe deleting based on size also deleted images with objects?")
+                self.log.warning(f"{class_name}.{func_name}:❗️ Found {len(unpaired_labels)} labels that don't have a matching image. (Ex:{unpaired_labels[0]}). Maybe deleting based on size also deleted images with objects?")
 
             assert full_images is not None, self.log.error(f"{self._class_name}.{'_get_empty_images'}: 'full_images' is None. No full image found. ")
 
@@ -440,7 +443,7 @@ class Profiler(Configurator):
     def __call__(self) -> None:
 
         self.df_instances = self._get_instances_df()
-        self._get_tiles_df()
+        self.df_tiles = self._get_tiles_df()
         self._get_class_freq()
         self._get_empty_images()
 
@@ -455,7 +458,7 @@ def test_Profiler():
 
     verbose = True
     data_root = '/Users/marco/Downloads/train_20feb23_copy' if system == 'mac' else r'D:\marco\datasets\muw\detection'
-    profiler = Profiler(data_root=data_root, verbose=True)
+    profiler = ProfilerBase(data_root=data_root, verbose=True)
     profiler()
 
     return

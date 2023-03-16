@@ -13,7 +13,7 @@ from decorators import log_start_finish
 import random
 
 
-class Plotter(ProfilerHubmap): 
+class PlotterHubmap(ProfilerHubmap): 
 
     def __init__(self,
                 files:list = None,
@@ -25,17 +25,16 @@ class Plotter(ProfilerHubmap):
         super().__init__(*args, **kwargs)
         self.data = self._get_data()
         self.log.info(f"len data images: {len(self.data['tile_images'])}")
-
+        
         self.df_instances = self._get_instances_df()
-        self.df_tiles = self._get_tiles_df()
         self.log.info(self.df_instances.head())
+        self.df_tiles = self._get_tiles_df()
         self.log.info(self.df_tiles.head())
 
         if files is not None:
             assert all([os.path.isfile(file) for file in files])
             assert all(['png' in file for file in files])
         self.files = files
-
 
         return
     
@@ -84,17 +83,13 @@ class Plotter(ProfilerHubmap):
             if k%2 != 0:
                 self.log.error(f"{self._class_name}.{'_show_random_tiles'}: K should be divisible by 2. Using default K=6 instead")
                 k = 6
-            self.log.info('boh')
+
             replace_dir = lambda fp, to_dir, format: os.path.join(os.path.dirname(os.path.dirname(fp)), to_dir, os.path.basename(fp).split('.')[0] + f".{format}")
 
             # 1) Picking images:
             if self.files is None: # i.e. random images
                 labels = self.data['tile_labels']
-                try:
-                    labels = random.sample(labels, k=k)
-                except ValueError: 
-                    return self.log.error(f"k:{k}, but labels:{len(labels)}")
-                    
+                labels = random.sample(labels, k=k)
                 pairs = [(replace_dir(fp, to_dir='images', format='png'), fp) for fp in labels]
                 pairs = list(filter(lambda pair: (os.path.isfile(pair[0]) and os.path.isfile(pair[1])), pairs))
             else: # i.e. specified images
@@ -118,21 +113,51 @@ class Plotter(ProfilerHubmap):
                 self.log.info("successfully read label")
                 # draw rectangle for each glom/row:
                 for row in text: 
+                    row = row.replace('/n', '')
                     items = row.split(sep = ' ')
                     class_n = int(float(items[0]))
-                    xc, yc, box_w, box_h = [float(num) for num in items[1:]]
-                    xc, box_w = xc * W, box_w * W
-                    yc, box_h = yc * H, box_h * H
-                    x0, x1 = int(xc - box_w // 2), int(xc + box_w // 2)
-                    y0, y1 = int(yc - box_h//2), int(yc + box_h//2)
-                    start_point = (x0, y0)
-                    end_point = (x1,y1)
-                    color = (0,255,0) if class_n == 0 else (255,0,0) 
-                    text = 'glomerulus' if class_n == 0 else 'None'
+
+                    x = [el for (j,el) in enumerate(items[1:]) if j%2 == 0]
+                    self.log.info(f"x:{x}")
+                    # x.append(x[0])
+                    self.log.info(f"x:{x}")
+                    x = [np.int32(float(el)) for el in x]
+                    self.log.info(f"x:{x}")
+
+
+                    y = [el for (j,el) in enumerate(items[1:]) if j%2 != 0]
+                    # y.append(y[0])
+                    y = [np.int32(float(el)) for el in y]
+
+                    vertices = list(zip(x,y)) 
+                    vertices = [list(pair) for pair in vertices]
+                    vertices = np.array(vertices, np.int32)
+                    vertices = vertices.reshape((-1,1,2))
+                    self.log.info(f"vertices:{vertices}")
+                    # xc, yc, box_w, box_h = [float(num) for num in items[1:]]
+                    # xc, box_w = xc * W, box_w * W
+                    # yc, box_h = yc * H, box_h * H
+                    x0 = np.array(x).min()
+                    y0 = np.array(y).min()                    
+                    # x0, x1 = int(xc - box_w // 2), int(xc + box_w // 2)
+                    # y0, y1 = int(yc - box_h//2), int(yc + box_h//2)
+                    # start_point = (x0, y0)
+                    # end_point = (x1,y1)
+
+                    color = (255,0,0) if class_n == 0 else (0,255,0) 
+                    self.log.info(vertices[0])  
+                    self.log.info(type(vertices[0]))
+                    # image = cv2.fillPoly(image, pts = [vertices], color=(0,255,0))
+                    image = cv2.polylines(img=image,pts=[vertices], isClosed=True, color=(0,255,0), thickness=4)
+                    # image = cv2.drawContours(image = image, contours = vertices, contourIdx=-1, color = (0,255,0))
+                    self.log.info("filled poly done")
                     font = cv2.FONT_HERSHEY_SIMPLEX
-                    image = cv2.rectangle(img = image, pt1 = start_point, pt2 = end_point, color = color, thickness=4)
+                    text = 'unhealthy' if class_n == 1 else 'healthy'
+                    image = cv2.putText(image, text, org = (x0,y0-H//50), color=color, thickness=3, fontFace=font, fontScale=2)
+
+                    
+                    # image = cv2.rectangle(img = image, pt1 = start_point, pt2 = end_point, color = color, thickness=2)
                     self.log.info("done rectangle")
-                    image = cv2.putText(image, text, org = (x0,y0-H//50), color=color, thickness=2, fontFace=font, fontScale=2)
                     self.log.info("successfully done text")
 
                 # add subplot with image
@@ -244,20 +269,17 @@ class Plotter(ProfilerHubmap):
         return
 
 
-
-
-
 def test_Plotter_hubmap():
     import sys 
     system = 'mac' if sys.platform == 'darwin' else 'windows'
     
-    data_root = '/Users/marco/helical_tests/test_hubmap_manager/detection' if system == 'mac' else r'D:\marco\datasets\muw\detection'
+    data_root = '/Users/marco/helical_tests/test_hubmap_segm_manager/detection' if system == 'mac' else r'D:\marco\datasets\muw\detection'
     # files = ['/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_31_18.png',
     #         '/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_52_12.png',
     #         '/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_49_24.png']
-    plotter = Plotter(data_root=data_root, 
+    plotter = PlotterHubmap(data_root=data_root, 
                       files=None, 
-                      verbose = True,
+                      verbose = False,
                       wsi_images_like = '*.tif', 
                       wsi_labels_like = '*.json',
                       tile_images_like = '*.png',

@@ -1,15 +1,16 @@
 ### cleans dataset from e.g. duplicates and from having too many empty images -> removes majority of them.
 
-from profiler import Profiler
+from profiler_hubmap import ProfilerHubmap
 from shutil import copytree
 import os
 from tqdm import tqdm
 import random 
 import sys
 from decorators import log_start_finish
+from cleaner_base import CleanerBase
 
 
-class Cleaner(Profiler):
+class CleanerHubmap(ProfilerHubmap):
 
     def __init__(self, 
                 empty_perc:float = 0.1,  
@@ -22,38 +23,10 @@ class Cleaner(Profiler):
         self.empty_perc = empty_perc
         self.safe_copy = safe_copy
 
+        self.data = self._get_data()
 
         return
     
-
-    # def _del_unpaired_labels(self):
-    #     """ Removes labels that don't have a corresponding image (the opposite is fine). """
-
-    #     tile_images = self.data['tile_images']
-    #     tile_labels = self.data['tile_labels']        
-    #     unpaired_labels = [file for file in tile_labels if os.path.join(os.path.dirname(file).replace('labels', 'images'), os.path.basename(file).replace(self.tiles_label_format, self.tiles_image_format)) not in tile_images]
-       
-    #     @log_start_finish(class_name=self._class_name, func_name='_del_unpaired_labels', msg = f" Deleting unpaired labels" )
-    #     def do():
-    #         # self.log.info(f"len unpaired: {len(unpaired_labels)}")
-    #         for file in tqdm(unpaired_labels, desc = "Removing unpaired label"):
-    #             # self.log.info(f"file: {file}")
-    #             assert os.path.isfile(file), self.log.error(f"{self._class_name}.{'_replacing_class'}: AssertionError:'file':{file} is not a valid filepath.")
-    #             # self.log.info(f"assert passed")
-    #             os.remove(file)
-    #             # self.log.info(f"file removed. ")
-            
-    #         # update self.data: 
-    #         self.data = self._get_data()
-            
-    #         return
-        
-    #     do()
-        
-
-    #     return
-
-
 
     def _del_unpaired_labels(self):
         """ Removes labels that don't have a corresponding image (the opposite is fine). """
@@ -365,7 +338,6 @@ class Cleaner(Profiler):
         do()
 
         return
-
     
 
     def _del_redundant_labels(self):
@@ -395,7 +367,7 @@ class Cleaner(Profiler):
         full, empty = self._get_empty_images()
         num_empty = len(empty)
         num_full = len(full)
-        self.log.info(f"empty: {num_empty}, full:{num_empty}")
+        self.log.info(f"empty:{num_empty}, full:{num_full}")
 
 
         assert num_full > 0, self.log.error(f"{self._class_name}.{'_remove_perc_'}: no full image found. full images:{num_full}, empty images:{num_empty}")
@@ -474,82 +446,34 @@ class Cleaner(Profiler):
 
         return
     
-    def _clean_muw(self): 
 
-        if self.safe_copy is True:
-            self._copy_tree()
-        # 1) delete labels where image doesn't exist
-        self._del_unpaired_labels()
-        # 2) remove label redundancies
-        self._del_redundant_labels()
-        # # 5) removes tissue class
-        # self._remove_class_(class_num=3)
-        # # 6) assign randomly the NA class (int=1) to either class 0 or 2:
-        self._assign_NA_randomly()
-        # # 7) replace class 2 with class 1 ({0:healthy, 1:NA, 2:unhealthy} -> {0:healthy, 2:unhealthy})
-        self._replacing_class(class_old=2, class_new=1)
-        # 8) removing empty images to only have empty_perc of images being empty
-        self._remove_perc_()
-        
-
-        return
     
-    def _clean_hubmap(self):
+    # def _clean_hubmap(self):
 
-        if self.safe_copy is True:
-            self._copy_tree()
-        # 1) delete labels where image doesn't exist
-        self._del_unpaired_labels()
-        # 2) remove label redundancies
-        self._del_redundant_labels()
-        # 8) removing empty images to only have empty_perc of images being empty
-        self._remove_perc_()
+    #     if self.safe_copy is True:
+    #         self._copy_tree()
+    #     # 1) delete labels where image doesn't exist
+    #     self._del_unpaired_labels()
+    #     # 2) remove label redundancies
+    #     self._del_redundant_labels()
+    #     # 8) removing empty images to only have empty_perc of images being empty
+    #     self._remove_perc_()
 
-        return
+    #     return
 
 
     
     def __call__(self) -> None:
         
-        raise NotImplementedError()
-        print(f"Nothing to do in this call")
-        # if self.safe_copy is True:
-        #     self._copy_tree()
-        # self._remove_empty_labels()
-        # # 1) delete labels where image doesn't exist
-        # self._del_unpaired_labels()
-        # # 2) remove label redundancies
-        # self._del_redundant_labels()
-        # # 3) remove small annotations: 
-        # self._remove_small_objs()
-        # # 4) remove empty images (leave self.perc% of empty images)
-        # # super().__init__(data_root=self.data_root)
-        # self._remove_perc_()
-        # # # 5) remove tissue class
-        # self._remove_class_(class_num=3)
-        # # # 6) assign randomly the NA class (int=1) to either class 0 or 2:
-        # self._assign_NA_randomly()
-        # # # 7) replace class 2 with class 1 ({0:healthy, 1:NA, 2:unhealthy} -> {0:healthy, 2:unhealthy})
-        # self._replacing_class(class_old=2, class_new=1)
-        
-        # if self.safe_copy is True:
-        #     self._copy_tree()
-        
-        # # 1) delete labels where image doesn't exist
-        # self._del_unpaired_labels()
-        # # 2) remove label redundancies
-        # self._del_redundant_labels()
-        # # 3) remove small annotations: 
-        # # self._remove_small_objs(h_thr=0.15, w_thr=0.15)
-        # # 4) remove empty images (leave self.perc% of empty images)
-        # # super().__init__(data_root=self.data_root)
-        # # self._remove_perc_()
-        # # # 5) removes tissue class
-        # self._remove_class_(class_num=3)
-        # # # 6) assign randomly the NA class (int=1) to either class 0 or 2:
-        # self._assign_NA_randomly()
-        # # # 7) replace class 2 with class 1 ({0:healthy, 1:NA, 2:unhealthy} -> {0:healthy, 2:unhealthy})
-        # self._replacing_class(class_old=2, class_new=1)
+        if self.safe_copy is True:
+            self._copy_tree()
+        # 1) delete labels where image doesn't exist
+        self._del_unpaired_labels()
+        # 2) remove label redundancies
+        self._del_redundant_labels()
+        # 8) removing empty images to only have empty_perc of images being empty
+        self._remove_perc_()        
+
         return 
 
 
@@ -561,7 +485,7 @@ def test_Cleaner():
     safe_copy = False
     data_root = '/Users/marco/Downloads/train_20feb23_copy'
     # data_root = '/Users/marco/Downloads/train_20feb23/' if system == 'mac' else r'D:\marco\datasets\muw\detection'
-    cleaner = Cleaner(data_root=data_root, safe_copy=safe_copy)
+    cleaner = CleanerHubmap(data_root=data_root, safe_copy=safe_copy)
     cleaner()
 
     return

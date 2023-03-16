@@ -7,9 +7,10 @@ from tqdm import tqdm
 import random 
 import sys
 from decorators import log_start_finish
+from profiler_base import ProfilerBase
 
 
-class Cleaner(Profiler):
+class CleanerBase(ProfilerBase):
 
     def __init__(self, 
                 empty_perc:float = 0.1,  
@@ -561,7 +562,7 @@ def test_Cleaner():
     safe_copy = False
     data_root = '/Users/marco/Downloads/train_20feb23_copy'
     # data_root = '/Users/marco/Downloads/train_20feb23/' if system == 'mac' else r'D:\marco\datasets\muw\detection'
-    cleaner = Cleaner(data_root=data_root, safe_copy=safe_copy)
+    cleaner = CleanerBase(data_root=data_root, safe_copy=safe_copy)
     cleaner()
 
     return

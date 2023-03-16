@@ -175,6 +175,7 @@ class ProcessorManager():
                               tile_shape= self.tiling_shape, 
                               step=self.tiling_step, 
                               save_root= save_folder_images, 
+                              inflate_points_ntimes=2,
                               level = self.tiling_level,
                               show = self.tiling_show,
                               verbose = self.verbose) 

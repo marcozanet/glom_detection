@@ -10,7 +10,7 @@ from move_data import move_slides_for_tiling, move_slides_back_from_tiling
 from tiling import Tiler
 from tiler_hubmap import TilerHubmap
 import shutil
-from cleaner import Cleaner
+from cleaner_hubmap import CleanerHubmap
 
 
 
@@ -105,13 +105,13 @@ class ManagerHubmap():
             from {0:glom_healthy, 1:glom_na, 2: glom_sclerosed, 3: tissue}
             to {0:glom_healthy, 1:glom_sclerosed} """
         
-        cleaner = Cleaner(data_root=os.path.join(self.dst_root, self.task),
+        cleaner = CleanerHubmap(data_root=os.path.join(self.dst_root, self.task),
                          safe_copy=safe_copy,
                          wsi_images_like = '*.tif', 
                          wsi_labels_like = '*.txt',
                          tile_images_like = '*_*_*.png',
                          tile_labels_like = '*_*_*.txt')
-        cleaner._clean_hubmap()
+        cleaner()
         
 
         return
@@ -129,10 +129,10 @@ class ManagerHubmap():
         self._move_slides_forth()
         # 3) tile images and labels:
         self.tile_dataset()
-        #4) move slides back 
+        # 4) move slides back 
         self._move_slides_back()
-        # 4) clean dataset, e.g. 
-        # self._clean_hubmap()
+        # 5) clean dataset, e.g. 
+        self._clean_hubmap()
 
 
         return
@@ -232,12 +232,12 @@ def test_ProcessorManager():
     dst_root = '/Users/marco/helical_tests/test_hubmap_manager' if system == 'mac' else  r'D:\marco\hubmap_slides'
     slide_format = 'tif'
     label_format = 'json'
-    split_ratio = [0.7, 0.15, 0.15]    
+    split_ratio = [0.34, 0.33, 0.33]  # TODO CAMBIAAAAAAA
     task = 'detection'
     verbose = True
     safe_copy = False
     tiling_shape = (2048,2048)
-    tiling_step = 1024
+    tiling_step = 2048  # TODO CAMBIAAAAAAA
     tiling_show = False
 
     manager = ManagerHubmap(src_root=src_root,
