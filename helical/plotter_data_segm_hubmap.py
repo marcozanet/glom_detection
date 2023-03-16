@@ -98,7 +98,7 @@ class PlotterHubmap(ProfilerHubmap):
                 pairs = list(filter(lambda pair: (os.path.isfile(pair[0]) and os.path.isfile(pair[1])), pairs))
             
             # 2) Show image/drawing rectangles as annotations:
-            plt.figure(figsize=(20, k//2*10))
+            fig = plt.figure(figsize=(20, k//2*10))
             for i, (image_fp, label_fp) in enumerate(pairs):
 
                 self.log.info(f"i:{i}")
@@ -148,11 +148,11 @@ class PlotterHubmap(ProfilerHubmap):
                     self.log.info(vertices[0])  
                     self.log.info(type(vertices[0]))
                     # image = cv2.fillPoly(image, pts = [vertices], color=(0,255,0))
-                    image = cv2.polylines(img=image,pts=[vertices], isClosed=True, color=(0,255,0), thickness=4)
+                    image = cv2.polylines(img=image,pts=[vertices], isClosed=True, color=color, thickness=4)
                     # image = cv2.drawContours(image = image, contours = vertices, contourIdx=-1, color = (0,255,0))
-                    self.log.info("filled poly done")
+                    # self.log.info("filled poly done")
                     font = cv2.FONT_HERSHEY_SIMPLEX
-                    text = 'unhealthy' if class_n == 1 else 'healthy'
+                    text = 'glomerulus' if class_n == 0 else 'None'
                     image = cv2.putText(image, text, org = (x0,y0-H//50), color=color, thickness=3, fontFace=font, fontScale=2)
 
                     
@@ -174,7 +174,7 @@ class PlotterHubmap(ProfilerHubmap):
                 plt.axis('off')
             
             plt.show()
-        
+            fig.savefig('segm_hub_data.png')
             return
 
         do(k=k)

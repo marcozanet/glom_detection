@@ -20,6 +20,7 @@ class ProcessorManager():
                 tiling_shape: Tuple[int],
                 tiling_step: int,
                 tiling_level: int,
+                inflate_points_ntimes:int = None,
                 tiling_show: bool = True,
                 split_ratio = [0.7, 0.15, 0.15], 
                 task = Literal['detection', 'segmentation', 'both'],
@@ -45,7 +46,7 @@ class ProcessorManager():
         self.tiles_dir = os.path.join(dst_root, self.task, 'tiles')
         self.data_source = data_source
         self.map_classes = map_classes
-        
+        self.inflate_points_ntimes = inflate_points_ntimes
 
         self.log = get_logger()
 
@@ -175,7 +176,7 @@ class ProcessorManager():
                               tile_shape= self.tiling_shape, 
                               step=self.tiling_step, 
                               save_root= save_folder_images, 
-                              inflate_points_ntimes=2,
+                              inflate_points_ntimes=self.inflate_points_ntimes,
                               level = self.tiling_level,
                               show = self.tiling_show,
                               verbose = self.verbose) 
@@ -260,12 +261,15 @@ def test_ProcessorManager():
     tiling_level = 0
     tiling_show = True
     map_classes = {"glomerulus":0}
+    inflate_points_ntimes=4
+
 
     manager = ProcessorManager(data_source=data_source,
                                map_classes=map_classes,
                                src_root=src_root,
                                dst_root=dst_root,
                                slide_format=slide_format,
+                               inflate_points_ntimes=inflate_points_ntimes,
                                label_format=label_format,
                                split_ratio=split_ratio,
                                tiling_shape=tiling_shape,

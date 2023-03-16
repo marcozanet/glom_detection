@@ -355,6 +355,7 @@ class CleanerHubmap(ProfilerHubmap):
                 f.writelines(unique_lines)
         
         # update self.data: 
+        self.log.info(f"{self._class_name}.{'_del_redundant_labels'}: Deleted redundant labels. Updating self.data.")
         self.data = self._get_data()
 
         return

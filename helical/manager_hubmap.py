@@ -120,17 +120,17 @@ class ManagerHubmap():
     def __call__(self) -> None:
 
 
-        self._rename_tiff2tif()
-        # 1) create tiles branch
-        self._make_tiles_branch()
-        # 1) split data
-        self._split_data()
-        # 2) prepare for tiling 
-        self._move_slides_forth()
-        # 3) tile images and labels:
-        self.tile_dataset()
-        # 4) move slides back 
-        self._move_slides_back()
+        # self._rename_tiff2tif()
+        # # 1) create tiles branch
+        # self._make_tiles_branch()
+        # # 1) split data
+        # self._split_data()
+        # # 2) prepare for tiling 
+        # self._move_slides_forth()
+        # # 3) tile images and labels:
+        # self.tile_dataset()
+        # # 4) move slides back 
+        # self._move_slides_back()
         # 5) clean dataset, e.g. 
         self._clean_hubmap()
 

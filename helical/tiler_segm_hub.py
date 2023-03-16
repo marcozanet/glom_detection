@@ -129,231 +129,112 @@ class TilerSegm(Tiler):
             return W, H
         
         W, H = do()
-        # self.log.info(f"returninnnnng {W,H}")
         return (W, H)
     
 
     def get_class_mask(self, json_file:str, region_dims:tuple) -> tuple: 
         """ Creates a mask which is all zeros except for vertices of gloms that are of value = glom unique id (increasing number)"""
         
-        # self.log.info('data reading')
         with open(json_file, mode='r') as f: 
             data = json.load(f)
         
-        # self.log.info('data read')
         vertex_mask = np.zeros(shape=region_dims)
-        # self.log.info(f"created array of shape {region_dims}")
         class_mask = np.zeros_like(vertex_mask)
         order_mask = np.zeros_like(vertex_mask)
-        # self.log.info('np arrays created')
-        for i, glom in enumerate(data):
+        for i, glom in enumerate(data, start=1):
             label_name = glom['properties']['classification']['name']
-            # self.log.info('got label name')
             assert label_name in self.map_classes.keys(), self.log.error(f"{self.class_name}.{'read_label'}: class {label_name} not in 'map_classes': {self.map_classes}")
-            # self.log.info('assert passed')
             label_val = self.map_classes[label_name]
-            # self.log.info('got label val')
             vertices = glom['geometry']['coordinates'][0]
-            # self.log.info('got vertices')
-
-            # self.log.info(f"vertices pre: {len(vertices)}")
-            # self.log.info(f"vertices pre: {vertices[0]}")
 
             def _inflate(old_vertices:list):
                 # with inflation:
-                new_vertices = []
                 assert len(old_vertices)>=3, self.log.error(f"{self.class_name}.{'_inflate'}: label {json_file} has a glom with only {len(old_vertices)} vertices")
-                for i in range(len(old_vertices)-1):
-                    # self.log.info(f"vertex: {vertices[i]}")
-                    x_i,y_i = (old_vertices[i])
-                    # self.log.info(x_i,y_i)
-
-                    x_l,y_l = (old_vertices[i+1])
-                    x_middle = (x_l + x_i)/2
-                    # self.log.info(f"x_middle: {x_middle}")
-                    y_middle = (y_l+ y_i)/2
-                    new_vertices.extend([[x_i, y_i], [x_middle, y_middle]])
-                    # new_row += f" {x[i]} {y[i]} {x_middle} {y_middle} {x[i+1]} {y[i+1]}"
+                new_vertices = []
+                for j in range(len(old_vertices)-1):
+                    x_j, y_j = (old_vertices[j])
+                    x_l, y_l = (old_vertices[j+1])
+                    x_middle = (x_l + x_j)/2
+                    y_middle = (y_l + y_j)/2
+                    if int(x_middle) != int(x_j) and int(y_middle) != int(y_j): # makes sure there's no same key for slicing after
+                        new_vertices.extend([[x_j, y_j], [x_middle, y_middle]])
+                    else: 
+                        new_vertices.extend([[x_j, y_j]]) # e.g. don't inflate any additional points
                 
                 return new_vertices
             
-            # for i in range()
-            
             if self.inflate_points_ntimes is not None:
-                for i in range(self.inflate_points_ntimes):
-                    self.log.info(f"inflation number {i}. Vertices: {len(vertices)}")
+                for _ in range(self.inflate_points_ntimes):
                     vertices = _inflate(old_vertices=vertices)
-            # self.log.info(f"vertices post: {len(vertices)}")
-            # self.log.info(f"vertices post: {vertices[0]}")
 
+            assert all([len(vertex)==2 for vertex in vertices]), self.log.error(f"All vertices should be pairs of coordinates")
 
-            # without inflation
-            assert len(vertices)%2 ==0, self.log.error(f"Vertices should be even, but are {len(vertices)}")
             for k,(x,y) in enumerate(vertices):
-                # self.log.info(f'got x:{x}, got y:{y}')
                 x, y = int(x), int(y) # slice values must be int 
                 vertex_mask[x,y] = i # assigning to each vertex a unique value (one for glom)
-
-                # self.log.info('assigned val to vertex')
                 class_mask[x,y] = label_val
                 order_mask[x,y] = k
-            
-                # self.log.info(f"adding {k}")
-            # self.log.info(f"{k} verteces in this glom")
-        # self.log.info(f" done with the mask. Assigned {i} unique values to this mask")
 
+        assert len(np.unique(vertex_mask).tolist()) > 1, self.log.error(f"{self.class_name}.{'get_class_mask'}: Vertex mask looks empty. Unique values: {np.unique(vertex_mask)}")
+        # assert len(np.unique(class)) > 0, self.log.error(f"{self.class_name}.{'get_class_mask'}: Vertex mask looks empty. Unique values: {np.unique(vertex_mask)}")
+        assert len(np.unique(vertex_mask).tolist()) > 1, self.log.error(f"{self.class_name}.{'get_class_mask'}: Order mask looks empty. Unique values: {np.unique(order_mask)}")
         return  vertex_mask, class_mask, order_mask
     
 
-    # def inflate_annotation_points(self, label_fp:str) -> None: 
-    #     """ Interpolates between annotation points so as to inflate the number of points for a given label file. """
-
-    #     assert os.path.isfile(label_fp), self.log.error(f"{self.class_name}.{'inflate_annotation_points'}: 'label_fp':{label_fp} is not a valid filepath.")
-
-    #     self.log.info(f"{self.class_name}.{'inflate_annotation_points'}: Inflating:")
-
-    #     with open(label_fp, 'r') as f:
-    #         text = f.readlines()
-    #     # self.log.info("read text file inflation")
-        
-    #     new_rows = []
-    #     for row in text: 
-    #         row = row.replace('\n','')
-    #         items = row.split(sep = ' ')
-    #         class_n = items[0]
-    #         items = items[1:]
-    #         x = [float(el) for (i, el) in enumerate(items) if i%2==0] # even idcs = x coords
-    #         y = [float(el) for (i, el) in enumerate(items) if i%2!=0] # uneven idcs = y coords
-    #         # self.log.info(f"got x y from text: x:{len(x)}, y:{len(y)}")
-
-    #         new_row = f"{class_n}"
-    #         for i in range(len(x)-1): 
-    #             x_middle = (x[i+1] + x[i])/2
-    #             # self.log.info(f"x_middle: {x_middle}")
-    #             y_middle = (y[i+1] + y[i])/2
-    #             new_row += f" {x[i]} {y[i]} {x_middle} {y_middle} {x[i+1]} {y[i+1]}"
-    #             # self.log.info(f"new_row: {new_row}")
-    #         # self.log.info(f"changed row")
-    #         # new_row+= '\n'
-    #         new_rows.append(new_row)
-
-    #     # self.log.info(f"writing file")
-    #     with open(label_fp, 'w') as f:
-    #         f.writelines(new_rows)
-    #     # self.log.info(f"File written ")
-        
-    #     return
     
-
-
-
-    
-
 
     def _tile_class_mask(self, vertex_mask:np.ndarray, class_mask:np.ndarray,
                         order_mask:np.ndarray, save_folder:str, label_fp:str): 
         
-        # self.log.info(f"tile class")
         assert os.path.isdir(save_folder), self.log.error(f"{self.class_name}.{'_tile_class_mask'}: 'save_folder':{save_folder} is not a valid dirpath.")
-        # self.log.info(f"tile class2")
+        
         w, h = self.tile_shape
 
+        # patchify masks:
         label_patches = patchify(vertex_mask, (w, h), step =  self.step )
         order_patches = patchify(order_mask, (w, h), step =  self.step )
-        # self.log.info(f"tile class3")
-        # self.log.info(f"label {label_fp} patches shape: {label_patches.shape}")
-        # self.log.info(f"{self.class_name}.{'_tile_class_mask'}: patches shape:{label_patches.shape}")
+
+        # loop through patches and write/save label_patch:
         for i in tqdm(range(label_patches.shape[0])):
             for j in range(label_patches.shape[1]):
-                # self.log.info(f"unique class2")
                 unique_values = np.unique(label_patches[i,j,:,:])
                 unique_values = [val for val in unique_values if val != 0]
-                # self.log.info(f"unique_values for this tile:{unique_values}, type: {type(unique_values)}")
                 
                 if len(unique_values)==0: 
                     continue
-                # self.log.info('boh')
                 text = ''
                 # for each glom:
                 for glom in unique_values: # each unique val corresponds to a glom
-                    # self.log.info(f"glom: {glom}")
-
-                    # self.log.info(f"label patches[i,j,:,:] shape: {label_patches[i,j,:,:].shape}")
-                    # self.log.info(f"order patches: {order_patches[i,j,:,:]}")
-                    # self.log.info(f"shape: {order_patches[i,j,:,:].shape}")
-                    # self.log.info(f"type: {type(order_patches[i,j,:,:])}")
                     positions = np.argwhere(label_patches[i,j,:,:] == (glom)) # [(x3,y3), (x1,y1), (x5,y5)...]
-                    # self.log.info(f"positions pre {positions}")
-                    # [
-                    #       1
-                    #   0       2
-                    #      3     ]
-                    # [
-                    #       0
-                    #   0       0
-                    #      0    ]
-                    order = []
-                    self.log.info(f"got pre loop")
+
+                    # reorder positions based on order_patches:
+                    order = [] # order of vertices is encoded in order_patches: in each vertex position (x,y) is stored the vertex order (to draw the polygon)
                     for x,y in positions:
-                        # self.log.info(f"xy: {x,y}")
-                        order.append(order_patches[i,j,x,y] ) # e.g. 5th -> [2nd, 5th, 8th..]
-                        # self.log.info(f"order: {order}")
-                        # self.log.info(f"appending")
-                    self.log.info(f"got out loop")
-                    # self.log.info(order)
-                    # self.log.info(positions)
-                    # self.log.info(len(order))
-                    self.log.info(len(positions))
-
-                    positions = [pos for (_, pos) in sorted(zip(order, positions)) ]
-                    self.log.info(f"positions post {positions}")
-                    # self.log.info(f"reordered")
-
-                    # self.log.info(f"positions:{positions}")
-
-
+                        order.append(order_patches[i,j,x,y] )
+                    positions = [pos for (_, pos) in sorted(zip(order, positions), key=lambda tup: tup[0]) ]
+                    
+                    # write text:
                     text += "0"
                     for x_indices, y_indices in positions:
-                        # self.log.info(f"x_indices: {x_indices}")
-                        # self.log.info(f"y_indices: {y_indices}")
-
                         text+= f" {x_indices} {y_indices}"
-                    self.log.info(f"added  'x_indices' 'y_indices'")
                     text += '\n'
-                    
                 
                 # save in .txt file:
                 if len(unique_values) > 0:
-                    # self.log.info(f"text: {text}")
                     save_fn = os.path.basename(label_fp.replace(f".{self.label_format}",f'_{j}_{i}.{self.tile_label_format}'))
                     replace_fold = lambda fp: os.path.join(os.path.dirname(fp).replace('images', 'labels'), os.path.basename(fp))
                     save_fp = os.path.join(save_folder, save_fn)
-                    # self.log.info(f"save_fp before: {save_fp}")
                     save_fp = replace_fold(save_fp)
-                    # self.log.info(f"save_fp : {save_fp}")
                     with open(save_fp, 'w') as f:
                         f.write(text)
-                    # self.log.info(f"inflating:")
-                    # self.inflate_annotation_points(save_fp)
-        return
-    
-    
-    def _write_tiled_label(self, text:str, label_fp:str, save_folder:str):
-
-        #### CONTINUEEEEEEEEE HEREEEEEEEE ######
-
-
-        
 
         return
     
-
+    
     def _get_tile_labels(self, fp: str, region_dims:tuple, save_folder: str = None):
 
         assert os.path.isfile(fp), self.log.error(ValueError(f"'fp':{fp} is not a valid filepath. "))
         assert 'json' in fp, self.log.error(ValueError(f"'fp':{fp} is not a json file. "))
-
-
         
         class_name = self.__class__.__name__
         func_name = '_get_tile_labels'

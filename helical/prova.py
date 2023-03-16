@@ -1,17 +1,4 @@
-import numpy as np
+a = [1, 2, 3, 1]
+b = ['a', 'b', 'c', 'a']
 
-
-fp = '/Users/marco/prova.txt'
-text = '8 9 10'
-with open(fp, 'w') as f:
-    f.writelines(text)
-
-with open(fp, 'r') as f:
-    text = f.readlines()
-
-for row in text: 
-    print(row)
-
-print(type(text))
-print(type(text[0]))
-print(text)
+print(sorted(zip(a,b)))

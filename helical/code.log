@@ -1,178 +1,71 @@
-16/03 10:12:13|INFO|ManagerHubmap._make_tiles_branch: Creating new tiles branch at '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles'
-16/03 10:12:13|INFO|ManagerHubmap._split_data: ⏳ Splitting slides
-16/03 10:12:13|INFO|Splitter._move_files: trainset: ['0486052bb.tif', '26dc41664.tif', '8242609fa.tif']
-16/03 10:12:13|INFO|Splitter._move_files: valset: ['4ef6695ce.tif', '2f6ecfcdf.tif']
-16/03 10:12:13|INFO|Splitter._move_files: testset: ['1e2425f28.tif']
-16/03 10:12:13|INFO|ManagerHubmap._split_data: ✅ Splitting slides
-16/03 10:12:13|INFO|ManagerHubmap._move_slides_forth: Moved slides forth.
-16/03 10:12:13|INFO|ManagerHubmap.tile_dataset: Tiling dataset at '/Users/marco/helical_tests/test_hubmap_manager/detection/wsi'
-16/03 10:12:13|INFO|ManagerHubmap.tile_dataset: Tiling 'train'
-16/03 10:12:13|INFO|ManagerHubmap._tile_folder: ######################## CONVERTING ANNOTATIONS: ⏳    ########################
-16/03 10:12:13|INFO|json_files:3, json files:3
-16/03 10:12:13|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/0486052bb.txt
-16/03 10:12:13|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
-16/03 10:12:13|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/8242609fa.txt
-16/03 10:12:13|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
-16/03 10:12:14|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/26dc41664.txt
-16/03 10:12:14|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
-16/03 10:12:14|INFO|ManagerHubmap._tile_folder: ######################## CONVERTING ANNOTATIONS: ✅    ########################
-16/03 10:12:14|INFO|ManagerHubmap._tile_folder: ######################## TILING IMAGES: ⏳    ########################
-16/03 10:12:14|INFO|TilerHubmap.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/train/images'.
-16/03 10:12:14|INFO|TilerHubmap._get_completed_files: Completed 0/3 files.
-16/03 10:12:14|INFO|TilerHubmap._remove_small_files: Removed 0 small files (< 500kB)
-16/03 10:12:14|INFO|TilerHubmap._get_tile_images: ⏳ Tiling image: '0486052bb.tif'
-16/03 10:12:14|INFO|TilerHubmap._get_tile_images: ⏳ Opening '0486052bb.tif':
-16/03 10:12:14|INFO|TilerHubmap._get_tile_images: ✅ Opening '0486052bb.tif':
-16/03 10:12:14|INFO|TilerHubmap._get_tile_images: ⏳ Reading slide with shape ((34937, 25784)):
-16/03 10:12:30|INFO|TilerHubmap._get_tile_images: ⏳ Converting to numpy:
-16/03 10:12:33|INFO|TilerHubmap._get_tile_images: ✅ Conversion to numpy.
-16/03 10:12:33|INFO|TilerHubmap._get_tile_images: ⏳ Patchifying:
-16/03 10:12:33|INFO|TilerHubmap._get_tile_images: ✅ Patchifying.
-16/03 10:12:33|INFO|TilerHubmap._get_tile_images: ⏳ Saving patches:
-16/03 10:12:53|INFO|TilerHubmap._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_manager/detection/tiles/train/images.
-16/03 10:12:53|INFO|TilerHubmap._get_tile_images: ✅ Tiling image: '0486052bb.tif'
-16/03 10:12:53|INFO|TilerHubmap._remove_small_files: Removed 24 small files (< 500kB)
-16/03 10:12:53|INFO|TilerHubmap._get_tile_images: ⏳ Tiling image: '26dc41664.tif'
-16/03 10:12:53|INFO|TilerHubmap._get_tile_images: ⏳ Opening '26dc41664.tif':
-16/03 10:12:53|INFO|TilerHubmap._get_tile_images: ✅ Opening '26dc41664.tif':
-16/03 10:12:53|INFO|TilerHubmap._get_tile_images: ⏳ Reading slide with shape ((42360, 38160)):
-16/03 10:13:14|INFO|TilerHubmap._get_tile_images: ⏳ Converting to numpy:
-16/03 10:13:22|INFO|TilerHubmap._get_tile_images: ✅ Conversion to numpy.
-16/03 10:13:22|INFO|TilerHubmap._get_tile_images: ⏳ Patchifying:
-16/03 10:13:22|INFO|TilerHubmap._get_tile_images: ✅ Patchifying.
-16/03 10:13:22|INFO|TilerHubmap._get_tile_images: ⏳ Saving patches:
-16/03 10:13:50|INFO|TilerHubmap._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_manager/detection/tiles/train/images.
-16/03 10:13:50|INFO|TilerHubmap._get_tile_images: ✅ Tiling image: '26dc41664.tif'
-16/03 10:13:50|INFO|TilerHubmap._remove_small_files: Removed 33 small files (< 500kB)
-16/03 10:13:50|INFO|TilerHubmap._get_tile_images: ⏳ Tiling image: '8242609fa.tif'
-16/03 10:13:50|INFO|TilerHubmap._get_tile_images: ⏳ Opening '8242609fa.tif':
-16/03 10:13:50|INFO|TilerHubmap._get_tile_images: ✅ Opening '8242609fa.tif':
-16/03 10:13:50|INFO|TilerHubmap._get_tile_images: ⏳ Reading slide with shape ((44066, 31299)):
-16/03 10:14:16|INFO|TilerHubmap._get_tile_images: ⏳ Converting to numpy:
-16/03 10:14:23|INFO|TilerHubmap._get_tile_images: ✅ Conversion to numpy.
-16/03 10:14:23|INFO|TilerHubmap._get_tile_images: ⏳ Patchifying:
-16/03 10:14:23|INFO|TilerHubmap._get_tile_images: ✅ Patchifying.
-16/03 10:14:23|INFO|TilerHubmap._get_tile_images: ⏳ Saving patches:
-16/03 10:15:01|INFO|TilerHubmap._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_manager/detection/tiles/train/images.
-16/03 10:15:01|INFO|TilerHubmap._get_tile_images: ✅ Tiling image: '8242609fa.tif'
-16/03 10:15:01|INFO|ManagerHubmap._tile_folder: ######################## TILING IMAGES: ⏳    ########################
-16/03 10:15:01|INFO|ManagerHubmap._tile_folder: ######################## TILING LABELS: ⏳    ########################
-16/03 10:15:01|INFO|TilerHubmap.__call__: ⏳ START TILING LABELS from folder:'/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/train/labels'.
-16/03 10:15:01|INFO|TilerHubmap._get_completed_files: Completed 0/3 files.
-16/03 10:15:01|INFO|calling get_n_tiles
-16/03 10:15:01|INFO|self.n_tiles:{'0486052bb': [12, 17], '26dc41664': [18, 20], '8242609fa': [15, 21]}
-16/03 10:15:01|INFO|TilerHubmap._remove_small_files: Removed 15 small files (< 500kB)
-16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: ⏳ Tiling label: '0486052bb.txt'
-16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/0486052bb.txt'
-16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: x_max:12, y_max:17
-16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: ✅ Tile labels saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/train/labels'.
-16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: ✅ Tiling label: '0486052bb.txt'
-16/03 10:15:01|INFO|TilerHubmap._remove_small_files: Removed 0 small files (< 500kB)
-16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: ⏳ Tiling label: '26dc41664.txt'
-16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/26dc41664.txt'
-16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: x_max:18, y_max:20
-16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: ✅ Tile labels saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/train/labels'.
-16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: ✅ Tiling label: '26dc41664.txt'
-16/03 10:15:01|INFO|TilerHubmap._remove_small_files: Removed 0 small files (< 500kB)
-16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: ⏳ Tiling label: '8242609fa.txt'
-16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/train/labels/8242609fa.txt'
-16/03 10:15:01|INFO|TilerHubmap._get_tile_labels: x_max:15, y_max:21
-16/03 10:15:02|INFO|TilerHubmap._get_tile_labels: ✅ Tile labels saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/train/labels'.
-16/03 10:15:02|INFO|TilerHubmap._get_tile_labels: ✅ Tiling label: '8242609fa.txt'
-16/03 10:15:02|INFO|ManagerHubmap._tile_folder: ######################## TILING LABELS: ✅    ########################
-16/03 10:15:02|INFO|ManagerHubmap.tile_dataset: Tiling 'val'
-16/03 10:15:02|INFO|ManagerHubmap._tile_folder: ######################## CONVERTING ANNOTATIONS: ⏳    ########################
-16/03 10:15:02|INFO|json_files:2, json files:2
-16/03 10:15:02|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/val/labels/4ef6695ce.txt
-16/03 10:15:02|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
-16/03 10:15:02|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/val/labels/2f6ecfcdf.txt
-16/03 10:15:02|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
-16/03 10:15:02|INFO|ManagerHubmap._tile_folder: ######################## CONVERTING ANNOTATIONS: ✅    ########################
-16/03 10:15:02|INFO|ManagerHubmap._tile_folder: ######################## TILING IMAGES: ⏳    ########################
-16/03 10:15:02|INFO|TilerHubmap.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/val/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/val/images'.
-16/03 10:15:02|INFO|TilerHubmap._get_completed_files: Completed 0/2 files.
-16/03 10:15:02|INFO|TilerHubmap._remove_small_files: Removed 0 small files (< 500kB)
-16/03 10:15:02|INFO|TilerHubmap._get_tile_images: ⏳ Tiling image: '4ef6695ce.tif'
-16/03 10:15:02|INFO|TilerHubmap._get_tile_images: ⏳ Opening '4ef6695ce.tif':
-16/03 10:15:02|INFO|TilerHubmap._get_tile_images: ✅ Opening '4ef6695ce.tif':
-16/03 10:15:02|INFO|TilerHubmap._get_tile_images: ⏳ Reading slide with shape ((50680, 39960)):
-16/03 10:15:30|INFO|TilerHubmap._get_tile_images: ⏳ Converting to numpy:
-16/03 10:15:57|INFO|TilerHubmap._get_tile_images: ✅ Conversion to numpy.
-16/03 10:15:57|INFO|TilerHubmap._get_tile_images: ⏳ Patchifying:
-16/03 10:15:57|INFO|TilerHubmap._get_tile_images: ✅ Patchifying.
-16/03 10:15:57|INFO|TilerHubmap._get_tile_images: ⏳ Saving patches:
-16/03 10:16:39|INFO|TilerHubmap._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_manager/detection/tiles/val/images.
-16/03 10:16:39|INFO|TilerHubmap._get_tile_images: ✅ Tiling image: '4ef6695ce.tif'
-16/03 10:16:39|INFO|TilerHubmap._remove_small_files: Removed 16 small files (< 500kB)
-16/03 10:16:39|INFO|TilerHubmap._get_tile_images: ⏳ Tiling image: '2f6ecfcdf.tif'
-16/03 10:16:39|INFO|TilerHubmap._get_tile_images: ⏳ Opening '2f6ecfcdf.tif':
-16/03 10:16:39|INFO|TilerHubmap._get_tile_images: ✅ Opening '2f6ecfcdf.tif':
-16/03 10:16:39|INFO|TilerHubmap._get_tile_images: ⏳ Reading slide with shape ((25794, 31278)):
-16/03 10:16:53|INFO|TilerHubmap._get_tile_images: ⏳ Converting to numpy:
-16/03 10:16:54|INFO|TilerHubmap._get_tile_images: ✅ Conversion to numpy.
-16/03 10:16:54|INFO|TilerHubmap._get_tile_images: ⏳ Patchifying:
-16/03 10:16:54|INFO|TilerHubmap._get_tile_images: ✅ Patchifying.
-16/03 10:16:54|INFO|TilerHubmap._get_tile_images: ⏳ Saving patches:
-16/03 10:17:12|INFO|TilerHubmap._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_manager/detection/tiles/val/images.
-16/03 10:17:12|INFO|TilerHubmap._get_tile_images: ✅ Tiling image: '2f6ecfcdf.tif'
-16/03 10:17:12|INFO|ManagerHubmap._tile_folder: ######################## TILING IMAGES: ⏳    ########################
-16/03 10:17:12|INFO|ManagerHubmap._tile_folder: ######################## TILING LABELS: ⏳    ########################
-16/03 10:17:12|INFO|TilerHubmap.__call__: ⏳ START TILING LABELS from folder:'/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/val/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/val/labels'.
-16/03 10:17:12|INFO|TilerHubmap._get_completed_files: Completed 0/2 files.
-16/03 10:17:12|INFO|calling get_n_tiles
-16/03 10:17:12|INFO|self.n_tiles:{'4ef6695ce': [19, 24], '2f6ecfcdf': [15, 12]}
-16/03 10:17:12|INFO|TilerHubmap._remove_small_files: Removed 15 small files (< 500kB)
-16/03 10:17:12|INFO|TilerHubmap._get_tile_labels: ⏳ Tiling label: '4ef6695ce.txt'
-16/03 10:17:12|INFO|TilerHubmap._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/val/labels/4ef6695ce.txt'
-16/03 10:17:12|INFO|TilerHubmap._get_tile_labels: x_max:19, y_max:24
-16/03 10:17:12|INFO|TilerHubmap._get_tile_labels: ✅ Tile labels saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/val/labels'.
-16/03 10:17:12|INFO|TilerHubmap._get_tile_labels: ✅ Tiling label: '4ef6695ce.txt'
-16/03 10:17:12|INFO|TilerHubmap._remove_small_files: Removed 0 small files (< 500kB)
-16/03 10:17:12|INFO|TilerHubmap._get_tile_labels: ⏳ Tiling label: '2f6ecfcdf.txt'
-16/03 10:17:12|INFO|TilerHubmap._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/val/labels/2f6ecfcdf.txt'
-16/03 10:17:12|INFO|TilerHubmap._get_tile_labels: x_max:15, y_max:12
-16/03 10:17:12|INFO|TilerHubmap._get_tile_labels: ✅ Tile labels saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/val/labels'.
-16/03 10:17:12|INFO|TilerHubmap._get_tile_labels: ✅ Tiling label: '2f6ecfcdf.txt'
-16/03 10:17:12|INFO|ManagerHubmap._tile_folder: ######################## TILING LABELS: ✅    ########################
-16/03 10:17:12|INFO|ManagerHubmap.tile_dataset: Tiling 'test'
-16/03 10:17:12|INFO|ManagerHubmap._tile_folder: ######################## CONVERTING ANNOTATIONS: ⏳    ########################
-16/03 10:17:12|INFO|json_files:1, json files:1
-16/03 10:17:13|INFO| Writing /Users/marco/helical_tests/test_hubmap_manager/detection/wsi/test/labels/1e2425f28.txt
-16/03 10:17:13|INFO|ConverterHubmap._convert_json2txt Converter: ✅ WSi .json annotation converted to WSI .txt annotation. 
-16/03 10:17:13|INFO|ManagerHubmap._tile_folder: ######################## CONVERTING ANNOTATIONS: ✅    ########################
-16/03 10:17:13|INFO|ManagerHubmap._tile_folder: ######################## TILING IMAGES: ⏳    ########################
-16/03 10:17:13|INFO|TilerHubmap.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/test/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/test/images'.
-16/03 10:17:13|INFO|TilerHubmap._get_completed_files: Completed 0/1 files.
-16/03 10:17:13|INFO|TilerHubmap._remove_small_files: Removed 0 small files (< 500kB)
-16/03 10:17:13|INFO|TilerHubmap._get_tile_images: ⏳ Tiling image: '1e2425f28.tif'
-16/03 10:17:13|INFO|TilerHubmap._get_tile_images: ⏳ Opening '1e2425f28.tif':
-16/03 10:17:13|INFO|TilerHubmap._get_tile_images: ✅ Opening '1e2425f28.tif':
-16/03 10:17:13|INFO|TilerHubmap._get_tile_images: ⏳ Reading slide with shape ((32220, 26780)):
-16/03 10:17:24|INFO|TilerHubmap._get_tile_images: ⏳ Converting to numpy:
-16/03 10:17:26|INFO|TilerHubmap._get_tile_images: ✅ Conversion to numpy.
-16/03 10:17:26|INFO|TilerHubmap._get_tile_images: ⏳ Patchifying:
-16/03 10:17:26|INFO|TilerHubmap._get_tile_images: ✅ Patchifying.
-16/03 10:17:26|INFO|TilerHubmap._get_tile_images: ⏳ Saving patches:
-16/03 10:17:43|INFO|TilerHubmap._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_manager/detection/tiles/test/images.
-16/03 10:17:44|INFO|TilerHubmap._get_tile_images: ✅ Tiling image: '1e2425f28.tif'
-16/03 10:17:44|INFO|ManagerHubmap._tile_folder: ######################## TILING IMAGES: ⏳    ########################
-16/03 10:17:44|INFO|ManagerHubmap._tile_folder: ######################## TILING LABELS: ⏳    ########################
-16/03 10:17:44|INFO|TilerHubmap.__call__: ⏳ START TILING LABELS from folder:'/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/test/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/test/labels'.
-16/03 10:17:44|INFO|TilerHubmap._get_completed_files: Completed 0/1 files.
-16/03 10:17:44|INFO|calling get_n_tiles
-16/03 10:17:44|INFO|self.n_tiles:{'1e2425f28': [13, 15]}
-16/03 10:17:44|INFO|TilerHubmap._remove_small_files: Removed 15 small files (< 500kB)
-16/03 10:17:44|INFO|TilerHubmap._get_tile_labels: ⏳ Tiling label: '1e2425f28.txt'
-16/03 10:17:44|INFO|TilerHubmap._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_manager/detection/wsi/test/labels/1e2425f28.txt'
-16/03 10:17:44|INFO|TilerHubmap._get_tile_labels: x_max:13, y_max:15
-16/03 10:17:44|INFO|TilerHubmap._get_tile_labels: ✅ Tile labels saved in '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles/test/labels'.
-16/03 10:17:44|INFO|TilerHubmap._get_tile_labels: ✅ Tiling label: '1e2425f28.txt'
-16/03 10:17:44|INFO|ManagerHubmap._tile_folder: ######################## TILING LABELS: ✅    ########################
-16/03 10:17:44|INFO|ManagerHubmap._move_slides_back: Moved slides forth.
-16/03 10:17:44|INFO|CleanerHubmap._get_data: Found 6 slides with 6 annotations and 6 tiles with 6 annotations. 
-16/03 10:17:44|INFO|CleanerHubmap._del_unpaired_labels: deleted 0 labels without matching image. Updating self.data. 
-16/03 10:17:44|INFO|CleanerHubmap._get_data: Found 6 slides with 6 annotations and 6 tiles with 6 annotations. 
-16/03 10:17:44|INFO|CleanerHubmap._get_data: Found 6 slides with 6 annotations and 6 tiles with 6 annotations. 
-16/03 10:17:44|INFO|CleanerHubmap._get_empty_images: found 1040 empty images and 552 full images. 
-16/03 10:17:44|INFO|empty: 1040, full:1040
-16/03 10:17:44|INFO|CleanerHubmap._remove_perc_: empty:61, full:552, tot:613
+16/03 17:16:55|INFO|ProcessorManager._make_tiles_branch: Creating new tiles branch at '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles'
+16/03 17:16:55|INFO|ProcessorManager._split_data: ⏳ Splitting slides
+16/03 17:16:55|INFO|Splitter._move_files: trainset: ['0486052bb.tif', 'b2dc8411c.tif']
+16/03 17:16:55|INFO|Splitter._move_files: valset: ['8242609fa.tif']
+16/03 17:16:55|INFO|Splitter._move_files: testset: []
+16/03 17:16:55|INFO|ProcessorManager._split_data: ✅ Splitting slides
+16/03 17:16:55|INFO|ProcessorManager._move_slides_forth: Moved slides forth.
+16/03 17:16:55|INFO|ProcessorManager.tile_dataset: Tiling dataset at '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi'
+16/03 17:16:55|INFO|ProcessorManager.tile_dataset: Tiling 'train'
+16/03 17:16:55|INFO|ProcessorManager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+16/03 17:16:55|INFO|TilerSegm.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/train/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/train/images'.
+16/03 17:16:55|INFO|TilerSegm._get_completed_files: Completed 0/2 files.
+16/03 17:16:55|INFO|TilerSegm._get_tile_images: ⏳ Tiling image: '0486052bb.tif'
+16/03 17:16:55|INFO|TilerSegm._get_tile_images: ⏳ Opening '0486052bb.tif':
+16/03 17:16:55|INFO|TilerSegm._get_tile_images: ✅ Opening '0486052bb.tif':
+16/03 17:16:55|INFO|SLIDE DIMENSIONSSS ARE:(34937, 25784)
+16/03 17:16:55|INFO|TilerSegm._get_tile_images: ⏳ Reading slide with shape ((34937, 25784)):
+16/03 17:17:10|INFO|TilerSegm._get_tile_images: ⏳ Converting to numpy:
+16/03 17:17:13|INFO|TilerSegm._get_tile_images: ✅ Conversion to numpy.
+16/03 17:17:13|INFO|TilerSegm._get_tile_images: ⏳ Patchifying:
+16/03 17:17:13|INFO|image /Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/train/labels/0486052bb.tif patches shape: (25, 34, 1, 1024, 1024, 3)
+16/03 17:17:13|INFO|TilerSegm._get_tile_images: ✅ Patchifying.
+16/03 17:17:13|INFO|TilerSegm._get_tile_images: ⏳ Saving patches:
+16/03 17:17:33|INFO|TilerSegm._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/train/images.
+16/03 17:17:33|INFO|TilerSegm._get_tile_images: ✅ Tiling image: '0486052bb.tif'
+16/03 17:17:33|INFO|TilerSegm._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/train/labels/0486052bb.json'
+16/03 17:17:33|INFO|TilerSegm._get_tile_labels: creating class_mask:
+16/03 17:18:31|INFO|TilerSegm._get_tile_labels: patchifying class_mask:
+16/03 17:18:48|INFO|TilerSegm._get_tile_images: ⏳ Tiling image: 'b2dc8411c.tif'
+16/03 17:18:48|INFO|TilerSegm._get_tile_images: ⏳ Opening 'b2dc8411c.tif':
+16/03 17:18:48|INFO|TilerSegm._get_tile_images: ✅ Opening 'b2dc8411c.tif':
+16/03 17:18:49|INFO|SLIDE DIMENSIONSSS ARE:(31262, 14844)
+16/03 17:18:49|INFO|TilerSegm._get_tile_images: ⏳ Reading slide with shape ((31262, 14844)):
+16/03 17:18:56|INFO|TilerSegm._get_tile_images: ⏳ Converting to numpy:
+16/03 17:18:57|INFO|TilerSegm._get_tile_images: ✅ Conversion to numpy.
+16/03 17:18:57|INFO|TilerSegm._get_tile_images: ⏳ Patchifying:
+16/03 17:18:57|INFO|image /Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/train/labels/b2dc8411c.tif patches shape: (14, 30, 1, 1024, 1024, 3)
+16/03 17:18:57|INFO|TilerSegm._get_tile_images: ✅ Patchifying.
+16/03 17:18:57|INFO|TilerSegm._get_tile_images: ⏳ Saving patches:
+16/03 17:19:07|INFO|TilerSegm._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/train/images.
+16/03 17:19:07|INFO|TilerSegm._get_tile_images: ✅ Tiling image: 'b2dc8411c.tif'
+16/03 17:19:07|INFO|TilerSegm._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/train/labels/b2dc8411c.json'
+16/03 17:19:07|INFO|TilerSegm._get_tile_labels: creating class_mask:
+16/03 17:19:34|INFO|TilerSegm._get_tile_labels: patchifying class_mask:
+16/03 17:19:43|INFO|ProcessorManager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+16/03 17:19:43|INFO|ProcessorManager.tile_dataset: Tiling 'val'
+16/03 17:19:43|INFO|ProcessorManager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+16/03 17:19:43|INFO|TilerSegm.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/val/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/val/images'.
+16/03 17:19:43|INFO|TilerSegm._get_completed_files: Completed 0/1 files.
+16/03 17:19:43|INFO|TilerSegm._get_tile_images: ⏳ Tiling image: '8242609fa.tif'
+16/03 17:19:43|INFO|TilerSegm._get_tile_images: ⏳ Opening '8242609fa.tif':
+16/03 17:19:43|INFO|TilerSegm._get_tile_images: ✅ Opening '8242609fa.tif':
+16/03 17:19:43|INFO|SLIDE DIMENSIONSSS ARE:(44066, 31299)
+16/03 17:19:43|INFO|TilerSegm._get_tile_images: ⏳ Reading slide with shape ((44066, 31299)):
+16/03 17:20:07|INFO|TilerSegm._get_tile_images: ⏳ Converting to numpy:
+16/03 17:20:18|INFO|TilerSegm._get_tile_images: ✅ Conversion to numpy.
+16/03 17:20:18|INFO|TilerSegm._get_tile_images: ⏳ Patchifying:
+16/03 17:20:18|INFO|image /Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/val/labels/8242609fa.tif patches shape: (30, 43, 1, 1024, 1024, 3)
+16/03 17:20:18|INFO|TilerSegm._get_tile_images: ✅ Patchifying.
+16/03 17:20:18|INFO|TilerSegm._get_tile_images: ⏳ Saving patches:
+16/03 17:20:54|INFO|TilerSegm._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/val/images.
+16/03 17:20:54|INFO|TilerSegm._get_tile_images: ✅ Tiling image: '8242609fa.tif'
+16/03 17:20:54|INFO|TilerSegm._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/val/labels/8242609fa.json'
+16/03 17:20:54|INFO|TilerSegm._get_tile_labels: creating class_mask:
+16/03 17:22:33|INFO|TilerSegm._get_tile_labels: patchifying class_mask:
+16/03 17:23:02|INFO|ProcessorManager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+16/03 17:23:02|INFO|ProcessorManager.tile_dataset: Tiling 'test'
+16/03 17:23:02|INFO|ProcessorManager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+16/03 17:23:02|INFO|TilerSegm.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/test/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/test/images'.
+16/03 17:23:02|ERROR|TilerSegm.__call__: ❌ No file in format 'tif' was found in '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/test/labels'.
+16/03 17:23:02|INFO|TilerSegm._get_completed_files: Completed 0/0 files.

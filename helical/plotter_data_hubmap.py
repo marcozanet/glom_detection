@@ -149,6 +149,7 @@ class Plotter(ProfilerHubmap):
                 plt.axis('off')
             
             plt.show()
+            plt.savefig('plot_data.png')
         
             return
 
