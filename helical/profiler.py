@@ -198,7 +198,7 @@ class Profiler(Configurator):
     def _add_empty2df(self) -> None: 
         """ Helper function for _get_tiles_df. Adds to the dataframe also empty tiles."""
 
-        @log_start_finish(class_name=self.__class__.__name__, func_name='_add_empty2df', msg = f"Adding empty images:" )
+        # @log_start_finish(class_name=self.__class__.__name__, func_name='_add_empty2df', msg = f"Adding empty images:" )
         def do():
             _, empty = self._get_empty_images()
             self.log.info(f"empty: {len(empty)}")

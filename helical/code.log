@@ -1,7 +1,15 @@
-17/03 12:54:01|INFO|⏳ Setting configurations for YOLO: 
-17/03 12:54:01|INFO|✅ YOLO set up completed YOLO ✅ .
-17/03 12:54:01|INFO|YOLOSegmentor.train: weights:yolov5s-seg.pt
-17/03 12:54:01|INFO|YOLOSegmentor.train: ⏳ YOLO training:
-17/03 12:54:01|INFO|⏳ Starting YOLO segmentation:
-17/03 12:54:01|INFO|YOLOSegmentor.train: python segment/train.py --img 512 --batch 2 --epochs 10 --data helical.yaml --weights yolov5s-seg.pt --workers 0
-17/03 13:31:30|INFO|YOLOSegmentor.train: ✅ YOLO training:
+17/03 16:08:54|INFO|ProfilerHubmap._get_data: Found 6 slides with 9 annotations and 6 tiles with 9 annotations. 
+17/03 16:08:55|INFO|ProfilerHubmap._get_empty_images: found 61 empty images and 552 full images. 
+17/03 16:08:55|INFO|ProfilerHubmap._get_instances_df: Df_instances:
+  class_n   width  height box_area  obj_n tile  fold
+0       0  0.0825  0.8052   0.0664  obj_0  6_6  test
+1       0  0.3325  0.0549   0.0183  obj_1  6_6  test
+2       0  0.9883  0.0149   0.0147  obj_2  6_6  test.
+17/03 16:08:55|INFO|ProfilerHubmap._get_empty_images: found 61 empty images and 552 full images. 
+17/03 16:08:56|INFO|ProfilerHubmap._get_instances_df: Df_tiles:
+      class_n obj_n tile  fold
+0  glomerulus     3  6_6  test
+1  glomerulus     2  8_9  test
+2  glomerulus     1  4_4  test.
+17/03 16:08:56|INFO|ProfilerHubmap._get_ngloms_dataset: tot gloms in dataset: 1744. 
+17/03 16:08:56|INFO|ProfilerHubmap._get_ngloms_inslide: found 178 gloms in 1e2425f28.json. 
