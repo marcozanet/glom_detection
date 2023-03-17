@@ -5,7 +5,7 @@ from decorators import log_start_finish
 from splitter import Splitter
 from move_data import move_slides_for_tiling, move_slides_back_from_tiling
 from tiler_segm_hub import TilerSegm
-from cleaner import Cleaner
+from cleaner_hubmap_segm import CleanerSegmHubmap
 
 
 
@@ -93,13 +93,18 @@ class ProcessorManager():
         return
     
     
-    def _clean_muw_dataset(self, safe_copy:bool=False) -> None: 
+    def _clean_hubmap_dataset(self, safe_copy:bool=False) -> None: 
         """ Uses the dataset cleaner to finalize the dataset, e.g. by grouping classes 
             from {0:glom_healthy, 1:glom_na, 2: glom_sclerosed, 3: tissue}
             to {0:glom_healthy, 1:glom_sclerosed} """
         
-        cleaner = Cleaner(data_root=os.path.join(self.dst_root, self.task), safe_copy=safe_copy)
-        cleaner._clean_muw()
+        cleaner = CleanerSegmHubmap(data_root=os.path.join(self.dst_root, self.task), 
+                                    safe_copy=safe_copy,
+                                    wsi_images_like = '*.tif', 
+                                    wsi_labels_like = '*.json',
+                                    tile_images_like = '*.png',
+                                    tile_labels_like = '*.txt')
+        cleaner()
         
 
         return
@@ -108,18 +113,18 @@ class ProcessorManager():
     def __call__(self) -> None:
 
 
-        # 1) create tiles branch
-        self._make_tiles_branch()
-        # 1) split data
-        self._split_data()
-        # 2) prepare for tiling 
-        self._move_slides_forth()
-        # 3) tile images and labels:
-        self.tile_dataset()
-        #4) move slides back 
-        self._move_slides_back()
+        # # 1) create tiles branch
+        # self._make_tiles_branch()
+        # # 1) split data
+        # self._split_data()
+        # # 2) prepare for tiling 
+        # self._move_slides_forth()
+        # # 3) tile images and labels:
+        # self.tile_dataset()
+        # #4) move slides back 
+        # self._move_slides_back()
         # 4) clean dataset, e.g. 
-        self._clean_muw_dataset()
+        self._clean_hubmap_dataset()
 
 
         return
@@ -198,10 +203,8 @@ class ProcessorManager():
         # tiler.test_show_image_labels()
         # self.log.info(f"{class_name}.{func_name}: ######################## TILING LABELS: ✅    ########################")
 
-
         return
     
-
 
 
 def test_ProcessorManager(): 

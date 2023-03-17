@@ -216,7 +216,7 @@ class TilerSegm(Tiler):
                     # write text:
                     text += "0"
                     for x_indices, y_indices in positions:
-                        text+= f" {x_indices} {y_indices}"
+                        text+= f" {x_indices/self.tile_shape[0]} {y_indices/self.tile_shape[1]}"
                     text += '\n'
                 
                 # save in .txt file:

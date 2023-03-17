@@ -14,10 +14,10 @@ class ProfilerBase(Configurator):
 
     def __init__(self, 
                 data_root:str, 
-                wsi_images_like:str = '*.tif', 
-                wsi_labels_like:str = '*_sample?.txt',
-                tile_images_like:str = '*sample*.png',
-                tile_labels_like:str = '*sample*.txt',
+                wsi_images_like:str,
+                wsi_labels_like:str,
+                tile_images_like:str,
+                tile_labels_like:str,
                 empty_ok:bool = False,
                 verbose:bool=False) -> None:
         """ Data Profiler to help visualize a data overview. 

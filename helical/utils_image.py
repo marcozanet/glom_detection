@@ -10,9 +10,29 @@ from torchvision.io import read_image
 import pytorch_lightning as plh
 import matplotlib.pyplot as plt 
 import numpy as np
-
-import os 
+from typing import List
 from glob import glob
+import cv2
+
+
+def mask_to_polygon(mask: np.array, report: bool = False) -> List[int]:
+    """ Converts mask to polygon """
+    contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    polygons = []
+    for object in contours:
+        coords = []
+
+        for point in object:
+            coords.append(int(point[0][0]))
+            coords.append(int(point[0][1]))
+        polygons.append(coords)
+    
+    if report:
+        print(f"Number of points = {len(polygons[0])}")
+    
+    return np.array(polygons).ravel().tolist()
+    
+
 
 def get_missing_converted(wsi_folder:str):
     """ Given a root folder with a list of wsi files, it checks that all slides 

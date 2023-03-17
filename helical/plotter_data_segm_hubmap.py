@@ -13,7 +13,7 @@ from decorators import log_start_finish
 import random
 
 
-class PlotterHubmap(ProfilerHubmap): 
+class PlotterSegmHubmap(ProfilerHubmap): 
 
     def __init__(self,
                 files:list = None,
@@ -106,6 +106,7 @@ class PlotterHubmap(ProfilerHubmap):
                 # read image
                 image = cv2.imread(image_fp)
                 W, H = image.shape[:2]
+                self.log.info(f"image shape: {W,H}")
                 # read label
                 with open(label_fp, 'r') as f:
                     text = f.readlines()
@@ -117,23 +118,26 @@ class PlotterHubmap(ProfilerHubmap):
                     items = row.split(sep = ' ')
                     class_n = int(float(items[0]))
 
-                    x = [el for (j,el) in enumerate(items[1:]) if j%2 == 0]
-                    self.log.info(f"x:{x}")
+                    items = items[1:]
+
+
+                    x = [el for (j,el) in enumerate(items) if j%2 == 0]
+                    # self.log.info(f"x:{x}")
                     # x.append(x[0])
-                    self.log.info(f"x:{x}")
-                    x = [np.int32(float(el)) for el in x]
-                    self.log.info(f"x:{x}")
+                    # self.log.info(f"x:{x}")
+                    x = [np.int32(float(el)*W) for el in x]
+                    # self.log.info(f"x:{x}")
 
 
-                    y = [el for (j,el) in enumerate(items[1:]) if j%2 != 0]
+                    y = [el for (j,el) in enumerate(items) if j%2 != 0]
                     # y.append(y[0])
-                    y = [np.int32(float(el)) for el in y]
+                    y = [np.int32(float(el)*H) for el in y]
 
                     vertices = list(zip(x,y)) 
                     vertices = [list(pair) for pair in vertices]
                     vertices = np.array(vertices, np.int32)
                     vertices = vertices.reshape((-1,1,2))
-                    self.log.info(f"vertices:{vertices}")
+                    # self.log.info(f"vertices:{vertices}")
                     # xc, yc, box_w, box_h = [float(num) for num in items[1:]]
                     # xc, box_w = xc * W, box_w * W
                     # yc, box_h = yc * H, box_h * H
@@ -144,34 +148,40 @@ class PlotterHubmap(ProfilerHubmap):
                     # start_point = (x0, y0)
                     # end_point = (x1,y1)
 
-                    color = (255,0,0) if class_n == 0 else (0,255,0) 
-                    self.log.info(vertices[0])  
-                    self.log.info(type(vertices[0]))
-                    # image = cv2.fillPoly(image, pts = [vertices], color=(0,255,0))
-                    image = cv2.polylines(img=image,pts=[vertices], isClosed=True, color=color, thickness=4)
+                    color = (0,255,0) if class_n == 0 else (255,0,0) 
+                    # self.log.info(vertices)  
+                    # self.log.info(type(vertices))
+                    # self.log.info(f"vertices: {len(vertices)}")
+                    image = cv2.fillPoly(image, pts = [vertices], color=color)
+
+                    # self.log.info(image[0,0])
+                    # image = 0.5*image + 0.5*cv2.imread(image_fp)
+                    # self.log.info(cv2.imread(image_fp)[0,0])
+                    # image = cv2.polylines(img=image,pts=[vertices], isClosed=True, color=color, thickness=4)
                     # image = cv2.drawContours(image = image, contours = vertices, contourIdx=-1, color = (0,255,0))
                     # self.log.info("filled poly done")
                     font = cv2.FONT_HERSHEY_SIMPLEX
                     text = 'glomerulus' if class_n == 0 else 'None'
-                    image = cv2.putText(image, text, org = (x0,y0-H//50), color=color, thickness=3, fontFace=font, fontScale=2)
+                    image = cv2.putText(image, text, org = (x0,y0-H//50), color=color, thickness=8, fontFace=font, fontScale=1.5)
 
                     
                     # image = cv2.rectangle(img = image, pt1 = start_point, pt2 = end_point, color = color, thickness=2)
-                    self.log.info("done rectangle")
-                    self.log.info("successfully done text")
+                    # self.log.info("done rectangle")
+                    # self.log.info("successfully done text")
 
                 # add subplot with image
+                image = cv2.addWeighted(image, 0.4, cv2.imread(image_fp), 0.6, 1.0)
 
-                self.log.info('adding subplot')
-                self.log.info(f"k//2: {k//2}, k:{k}" )
+                # self.log.info('adding subplot')
+                # self.log.info(f"k//2: {k//2}, k:{k}" )
                 plt.subplot(k//2,2,i+1)
-                self.log.info('adding title')
+                # self.log.info('adding title')
                 plt.title(f"Example tiles - {set} set")
-                self.log.info('plotting image with interpolation nearest')
+                # self.log.info('plotting image with interpolation nearest')
                 plt.imshow(image)
-                self.log.info('axis off')
+                # self.log.info('axis off') 
                 plt.tight_layout()
-                plt.axis('off')
+                # plt.axis('off')
             
             plt.show()
             fig.savefig('segm_hub_data.png')
@@ -269,7 +279,7 @@ class PlotterHubmap(ProfilerHubmap):
         return
 
 
-def test_Plotter_hubmap():
+def test_plotter_data_segm():
     import sys 
     system = 'mac' if sys.platform == 'darwin' else 'windows'
     
@@ -277,14 +287,14 @@ def test_Plotter_hubmap():
     # files = ['/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_31_18.png',
     #         '/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_52_12.png',
     #         '/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_49_24.png']
-    plotter = PlotterHubmap(data_root=data_root, 
-                      files=None, 
-                      verbose = False,
-                      wsi_images_like = '*.tif', 
-                      wsi_labels_like = '*.json',
-                      tile_images_like = '*.png',
-                      tile_labels_like = '*.txt',
-                      empty_ok=False) 
+    plotter = PlotterSegmHubmap(data_root=data_root, 
+                                files=None, 
+                                verbose = False,
+                                wsi_images_like = '*.tif', 
+                                wsi_labels_like = '*.json',
+                                tile_images_like = '*.png',
+                                tile_labels_like = '*.txt',
+                                empty_ok=False) 
 
 
 
@@ -293,4 +303,4 @@ def test_Plotter_hubmap():
     return
 
 if __name__ == '__main__':
-    test_Plotter_hubmap()
+    test_plotter_data_segm()

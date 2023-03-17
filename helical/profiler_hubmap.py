@@ -399,17 +399,3 @@ class ProfilerHubmap(ProfilerBase):
 
 
 
-def test_Profiler():
-    import sys 
-    system = 'mac' if sys.platform == 'darwin' else 'windows'
-
-    verbose = True
-    data_root = '/Users/marco/Downloads/train_20feb23_copy' if system == 'mac' else r'D:\marco\datasets\muw\detection'
-    profiler = Profiler(data_root=data_root, verbose=True)
-    profiler()
-
-    return
-
-
-if __name__ == '__main__':
-    test_Profiler()
