@@ -9,11 +9,11 @@ from typing import Literal
 import numpy as np
 from tqdm import tqdm
 from loggers import get_logger
-from converter import Converter
+from converter_base import ConverterBase
 import time
 
 
-class ConverterHubmap(Converter):
+class ConverterHubmap(ConverterBase):
 
     def __init__(self, 
                  *args, 

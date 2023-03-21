@@ -8,7 +8,6 @@ import json
 class ProfilerHubmap(ProfilerBase): 
 
     def __init__(self, 
-                n_classes: int,
                 *args,
                 **kwargs) -> None:
         """ Data Profiler to help visualize a data overview. 
@@ -20,7 +19,7 @@ class ProfilerHubmap(ProfilerBase):
             '"""
         # self.log = get_logger()
         super().__init__(*args, **kwargs)
-        self.n_classes = n_classes
+        self.n_classes = 1
 
         return
 

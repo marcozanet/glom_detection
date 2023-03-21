@@ -23,7 +23,6 @@ from loggers import get_logger
 from decorators import log_start_finish
 import json
 import cv2
-from cleaner import Cleaner
 class Tiler():
 
     def __init__(self, 

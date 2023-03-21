@@ -496,7 +496,8 @@ class CleanerBase(ProfilerBase):
         return
     
     def _clean_hubmap(self):
-
+        
+        
         if self.safe_copy is True:
             self._copy_tree()
         # 1) delete labels where image doesn't exist

@@ -1,15 +1,71 @@
-17/03 16:08:54|INFO|ProfilerHubmap._get_data: Found 6 slides with 9 annotations and 6 tiles with 9 annotations. 
-17/03 16:08:55|INFO|ProfilerHubmap._get_empty_images: found 61 empty images and 552 full images. 
-17/03 16:08:55|INFO|ProfilerHubmap._get_instances_df: Df_instances:
-  class_n   width  height box_area  obj_n tile  fold
-0       0  0.0825  0.8052   0.0664  obj_0  6_6  test
-1       0  0.3325  0.0549   0.0183  obj_1  6_6  test
-2       0  0.9883  0.0149   0.0147  obj_2  6_6  test.
-17/03 16:08:55|INFO|ProfilerHubmap._get_empty_images: found 61 empty images and 552 full images. 
-17/03 16:08:56|INFO|ProfilerHubmap._get_instances_df: Df_tiles:
-      class_n obj_n tile  fold
-0  glomerulus     3  6_6  test
-1  glomerulus     2  8_9  test
-2  glomerulus     1  4_4  test.
-17/03 16:08:56|INFO|ProfilerHubmap._get_ngloms_dataset: tot gloms in dataset: 1744. 
-17/03 16:08:56|INFO|ProfilerHubmap._get_ngloms_inslide: found 178 gloms in 1e2425f28.json. 
+21/03 09:40:44|INFO|ProcessorManager._make_tiles_branch: Creating new tiles branch at '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles'
+21/03 09:40:44|INFO|ProcessorManager._split_data: ⏳ Splitting slides
+21/03 09:40:44|INFO|Splitter._move_files: trainset: ['0486052bb.tif', 'b2dc8411c.tif']
+21/03 09:40:44|INFO|Splitter._move_files: valset: ['8242609fa.tif']
+21/03 09:40:44|INFO|Splitter._move_files: testset: []
+21/03 09:40:44|INFO|ProcessorManager._split_data: ✅ Splitting slides
+21/03 09:40:44|INFO|ProcessorManager._move_slides_forth: Moved slides forth.
+21/03 09:40:44|INFO|ProcessorManager.tile_dataset: Tiling dataset at '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi'
+21/03 09:40:44|INFO|ProcessorManager.tile_dataset: Tiling 'train'
+21/03 09:40:44|INFO|ProcessorManager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+21/03 09:40:44|INFO|TilerSegm.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/train/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/train/images'.
+21/03 09:40:44|INFO|TilerSegm._get_completed_files: Completed 0/2 files.
+21/03 09:40:44|INFO|TilerSegm._get_tile_images: ⏳ Tiling image: '0486052bb.tif'
+21/03 09:40:44|INFO|TilerSegm._get_tile_images: ⏳ Opening '0486052bb.tif':
+21/03 09:40:44|INFO|TilerSegm._get_tile_images: ✅ Opening '0486052bb.tif':
+21/03 09:40:44|INFO|SLIDE DIMENSIONSSS ARE:(34937, 25784)
+21/03 09:40:44|INFO|TilerSegm._get_tile_images: ⏳ Reading slide with shape ((34937, 25784)):
+21/03 09:40:59|INFO|TilerSegm._get_tile_images: ⏳ Converting to numpy:
+21/03 09:41:02|INFO|TilerSegm._get_tile_images: ✅ Conversion to numpy.
+21/03 09:41:02|INFO|TilerSegm._get_tile_images: ⏳ Patchifying:
+21/03 09:41:02|INFO|image /Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/train/labels/0486052bb.tif patches shape: (25, 34, 1, 1024, 1024, 3)
+21/03 09:41:02|INFO|TilerSegm._get_tile_images: ✅ Patchifying.
+21/03 09:41:02|INFO|TilerSegm._get_tile_images: ⏳ Saving patches:
+21/03 09:41:22|INFO|TilerSegm._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/train/images.
+21/03 09:41:22|INFO|TilerSegm._get_tile_images: ✅ Tiling image: '0486052bb.tif'
+21/03 09:41:22|INFO|TilerSegm._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/train/labels/0486052bb.json'
+21/03 09:41:22|INFO|TilerSegm._get_tile_labels: creating class_mask:
+21/03 09:42:20|INFO|TilerSegm._get_tile_labels: patchifying class_mask:
+21/03 09:42:37|INFO|TilerSegm._get_tile_images: ⏳ Tiling image: 'b2dc8411c.tif'
+21/03 09:42:37|INFO|TilerSegm._get_tile_images: ⏳ Opening 'b2dc8411c.tif':
+21/03 09:42:37|INFO|TilerSegm._get_tile_images: ✅ Opening 'b2dc8411c.tif':
+21/03 09:42:37|INFO|SLIDE DIMENSIONSSS ARE:(31262, 14844)
+21/03 09:42:37|INFO|TilerSegm._get_tile_images: ⏳ Reading slide with shape ((31262, 14844)):
+21/03 09:42:44|INFO|TilerSegm._get_tile_images: ⏳ Converting to numpy:
+21/03 09:42:45|INFO|TilerSegm._get_tile_images: ✅ Conversion to numpy.
+21/03 09:42:45|INFO|TilerSegm._get_tile_images: ⏳ Patchifying:
+21/03 09:42:45|INFO|image /Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/train/labels/b2dc8411c.tif patches shape: (14, 30, 1, 1024, 1024, 3)
+21/03 09:42:45|INFO|TilerSegm._get_tile_images: ✅ Patchifying.
+21/03 09:42:45|INFO|TilerSegm._get_tile_images: ⏳ Saving patches:
+21/03 09:42:55|INFO|TilerSegm._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/train/images.
+21/03 09:42:55|INFO|TilerSegm._get_tile_images: ✅ Tiling image: 'b2dc8411c.tif'
+21/03 09:42:55|INFO|TilerSegm._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/train/labels/b2dc8411c.json'
+21/03 09:42:55|INFO|TilerSegm._get_tile_labels: creating class_mask:
+21/03 09:43:22|INFO|TilerSegm._get_tile_labels: patchifying class_mask:
+21/03 09:43:31|INFO|ProcessorManager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+21/03 09:43:31|INFO|ProcessorManager.tile_dataset: Tiling 'val'
+21/03 09:43:31|INFO|ProcessorManager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+21/03 09:43:31|INFO|TilerSegm.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/val/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/val/images'.
+21/03 09:43:31|INFO|TilerSegm._get_completed_files: Completed 0/1 files.
+21/03 09:43:31|INFO|TilerSegm._get_tile_images: ⏳ Tiling image: '8242609fa.tif'
+21/03 09:43:31|INFO|TilerSegm._get_tile_images: ⏳ Opening '8242609fa.tif':
+21/03 09:43:31|INFO|TilerSegm._get_tile_images: ✅ Opening '8242609fa.tif':
+21/03 09:43:31|INFO|SLIDE DIMENSIONSSS ARE:(44066, 31299)
+21/03 09:43:31|INFO|TilerSegm._get_tile_images: ⏳ Reading slide with shape ((44066, 31299)):
+21/03 09:43:55|INFO|TilerSegm._get_tile_images: ⏳ Converting to numpy:
+21/03 09:44:02|INFO|TilerSegm._get_tile_images: ✅ Conversion to numpy.
+21/03 09:44:02|INFO|TilerSegm._get_tile_images: ⏳ Patchifying:
+21/03 09:44:02|INFO|image /Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/val/labels/8242609fa.tif patches shape: (30, 43, 1, 1024, 1024, 3)
+21/03 09:44:02|INFO|TilerSegm._get_tile_images: ✅ Patchifying.
+21/03 09:44:02|INFO|TilerSegm._get_tile_images: ⏳ Saving patches:
+21/03 09:44:39|INFO|TilerSegm._get_tile_images: ✅ Saved patches in /Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/val/images.
+21/03 09:44:39|INFO|TilerSegm._get_tile_images: ✅ Tiling image: '8242609fa.tif'
+21/03 09:44:39|INFO|TilerSegm._get_tile_labels: Tiliing label '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/val/labels/8242609fa.json'
+21/03 09:44:39|INFO|TilerSegm._get_tile_labels: creating class_mask:
+21/03 09:46:22|INFO|TilerSegm._get_tile_labels: patchifying class_mask:
+21/03 09:46:51|INFO|ProcessorManager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+21/03 09:46:51|INFO|ProcessorManager.tile_dataset: Tiling 'test'
+21/03 09:46:51|INFO|ProcessorManager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+21/03 09:46:51|INFO|TilerSegm.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/test/labels'. Results will be saved in '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/tiles/test/images'.
+21/03 09:46:51|ERROR|TilerSegm.__call__: ❌ No file in format 'tif' was found in '/Users/marco/helical_tests/test_hubmap_segm_manager/detection/wsi/test/labels'.
+21/03 09:46:51|INFO|TilerSegm._get_completed_files: Completed 0/0 files.

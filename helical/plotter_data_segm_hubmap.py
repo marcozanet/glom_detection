@@ -283,7 +283,7 @@ def test_plotter_data_segm():
     import sys 
     system = 'mac' if sys.platform == 'darwin' else 'windows'
     
-    data_root = '/Users/marco/helical_tests/test_hubmap_segm_manager/detection' if system == 'mac' else r'D:\marco\datasets\muw\detection'
+    data_root = '/Users/marco/helical_tests/test_hubmap_segm_manager/segmentation' if system == 'mac' else r'D:\marco\datasets\muw\detection'
     # files = ['/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_31_18.png',
     #         '/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_52_12.png',
     #         '/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_49_24.png']
@@ -295,9 +295,6 @@ def test_plotter_data_segm():
                                 tile_images_like = '*.png',
                                 tile_labels_like = '*.txt',
                                 empty_ok=False) 
-
-
-
     plotter()
 
     return

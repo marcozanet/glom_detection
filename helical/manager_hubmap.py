@@ -106,11 +106,11 @@ class ManagerHubmap():
             to {0:glom_healthy, 1:glom_sclerosed} """
         
         cleaner = CleanerHubmap(data_root=os.path.join(self.dst_root, self.task),
-                         safe_copy=safe_copy,
-                         wsi_images_like = '*.tif', 
-                         wsi_labels_like = '*.txt',
-                         tile_images_like = '*_*_*.png',
-                         tile_labels_like = '*_*_*.txt')
+                                safe_copy=safe_copy,
+                                wsi_images_like = '*.tif', 
+                                wsi_labels_like = '*.txt',
+                                tile_images_like = '*_*_*.png',
+                                tile_labels_like = '*_*_*.txt')
         cleaner()
         
 
@@ -120,17 +120,17 @@ class ManagerHubmap():
     def __call__(self) -> None:
 
 
-        # self._rename_tiff2tif()
-        # # 1) create tiles branch
-        # self._make_tiles_branch()
-        # # 1) split data
-        # self._split_data()
-        # # 2) prepare for tiling 
-        # self._move_slides_forth()
-        # # 3) tile images and labels:
-        # self.tile_dataset()
-        # # 4) move slides back 
-        # self._move_slides_back()
+        self._rename_tiff2tif()
+        # 1) create tiles branch
+        self._make_tiles_branch()
+        # 1) split data
+        self._split_data()
+        # 2) prepare for tiling 
+        self._move_slides_forth()
+        # 3) tile images and labels:
+        self.tile_dataset()
+        # 4) move slides back 
+        self._move_slides_back()
         # 5) clean dataset, e.g. 
         self._clean_hubmap()
 

@@ -9,39 +9,22 @@ from glob import glob
 # from loggers import get_logger
 from decorators import log_start_finish
 from profiler import Profiler
-from configurator import Configurator
+from yolo_base import YOLOBase
+import shutil
+from profiler_hubmap import ProfilerHubmap
+from plotter_data_hubmap import Plotter
 
-class YOLODetector(Configurator):
+class YOLODetector(YOLOBase):
 
     def __init__(self, 
-                data_folder:str,
-                yolov5dir: str,
-                repository_dir:str,
-                map_classes: dict = {'Glo-healthy':0, 'Glo-NA':1, 'Glo-unhealthy':2, 'Tissue':3},
-                save_features: bool = False,
-                tile_size = 512,
-                batch_size = 8,
-                workers = 1,
-                device = None,
-                epochs = 3,
+                 *args, 
+                 **kwargs
                 ) -> None: 
 
-        super().__init__()
-        # self.log = get_logger()
-
-        self.map_classes = map_classes
-        self.data_folder = data_folder
-        self.tile_size = tile_size
-        self.batch_size = batch_size
-        self.epochs = epochs
-        self.repository_dir = repository_dir
-        self.yolov5dir = yolov5dir
-        self.save_features = save_features
-        self.workers = workers
-        self.device = device
-
-
+        super().__init__(*args, **kwargs)
         self._class_name = self.__class__.__name__
+        self.task = 'detection'
+        self.def_weights = 'yolov5s.pt' 
 
         return
     
@@ -53,88 +36,66 @@ class YOLODetector(Configurator):
         # 1) prepare training:
         # start_time = time.time()
         yaml_fn = os.path.basename(self._edit_yaml())
-        weights = weights if weights is not None else 'yolov5s.pt'
+        weights = weights if weights is not None else self.def_weights
         self.log.info(f"{class_name}.{'train'}: weights:{weights}")
-        self._log_data_pretraining()
 
-        @log_start_finish(class_name=class_name, func_name='train', msg = f" YOLO training:" )
-        def do():
-            # 2) train:
-            self.log.info(f"⏳ Start training YOLO:")
-            os.chdir(self.yolov5dir)
-            prompt = f"python train.py --img {self.tile_size} --batch {self.batch_size} --epochs {self.epochs}"
-            prompt += f" --data {yaml_fn} --weights {weights} --workers {self.workers}"
-            prompt = prompt+f" --device {self.device}" if self.device is not None else prompt 
-            self.log.info(f"{class_name}.{'train'}: {prompt}")
-            os.system(prompt)
-            os.chdir(self.repository_dir)
+        # 2) train:
+        self.log.info(f"⏳ Start training YOLO:")
+        os.chdir(self.yolov5dir)
+        prompt = f"python train.py --img {self.tile_size} --batch {self.batch_size} --epochs {self.epochs}"
+        prompt += f" --data {yaml_fn} --weights {weights} --workers {self.workers}"
+        prompt = prompt+f" --device {self.device}" if self.device is not None else prompt 
+        self.log.info(f"{class_name}.{'train'}: {prompt}")
+        os.system(prompt)
+        os.chdir(self.repository_dir)
 
-            # 3) save:
-            # self.save_training_data(weights=weights, start_time=start_time)
-        
-            return
-        
-        do()
-
-        return  
+        # 3) save:
+        self._log_data(mode='train')
     
-    def _log_data_pretraining(self): 
+        return
+
+
+    def _log_data(self, mode = Literal['train', 'detect']): 
         """ Logs a bunch of dataset info prior to training. """
 
-        if 'hubmap' in self.data_folder:
-            profiler = Profiler(data_root=os.path.dirname(self.data_folder),
-                                wsi_images_like = '*.tif', 
-                                wsi_labels_like = '*.txt',
-                                tile_images_like = '*_*_*.png',
-                                tile_labels_like = '*_*_*.txt')
-            profiler.log_data_summary()
+        exp_root = os.path.join(self.yolov5dir, 'runs', f"{mode}")
+        exp_fold = self.get_exp_fold(exp_fold=exp_root)
+        shutil.copyfile(src=os.path.join(self.repository_dir, 'code.log'), dst = os.path.join(exp_fold, 'train.log'))
+        data_root = os.path.join(self.data_folder.split(self.task)[0], self.task)
+
+        if self.dataset == 'hubmap':
+            try:
+                profiler = ProfilerHubmap(data_root=data_root, 
+                                        wsi_images_like = self.wsi_images_like, 
+                                        wsi_labels_like = self.wsi_labels_like,
+                                        tile_images_like = self.tile_images_like,
+                                        tile_labels_like = self.tile_labels_like,
+                                        n_classes=self.n_classes)
+                profiler()
+                shutil.copyfile(src=os.path.join(self.repository_dir, 'code.log'), dst = os.path.join(exp_fold, 'data_summary.log'))
+            except:
+                self.log.error(f"{self._class_name}.{'_log_data'}: ❌ Failed data profiling.")
+            try:
+                plotter = Plotter(data_root=data_root, 
+                                files=None, 
+                                verbose = False,
+                                wsi_images_like = self.wsi_images_like, 
+                                wsi_labels_like = self.wsi_labels_like,
+                                tile_images_like = self.tile_images_like,
+                                tile_labels_like = self.tile_labels_like,
+                                n_classes=self.n_classes,
+                                empty_ok=False) 
+                plotter()
+                shutil.copyfile(src=os.path.join(self.repository_dir, 'plot_data.png'), dst = os.path.join(exp_fold, 'data.png'))
+            except:
+                self.log.error(f"{self._class_name}.{'_log_data'}: ❌ Failed plotting.")
 
         else:
-            profiler = Profiler(data_root=os.path.dirname(self.data_folder) )
-            profiler.log_data_summary()
+            raise NotImplementedError()
 
 
         return
 
-           
-
-    def _edit_yaml(self) -> None:
-        """ Edits YAML data file from yolov5. """
-
-        self.log.info("⏳ Setting configurations for YOLO: ")
-        classes = dict([(value, key) for key, value in self.map_classes.items()])
-       
-        # raise Exception
-        yaml_fp = os.path.join(self.yolov5dir, 'data', 'helical.yaml')
-        text = {'path':self.data_folder, 'train': os.path.join(self.data_folder, 'train', 'images'), 'val': os.path.join(self.data_folder, 'val', 'images'), 'test': os.path.join(self.data_folder, 'test', 'images'), 'names':classes}
-        with open(yaml_fp, 'w') as f:
-            yaml.dump(data = text, stream=f)
-        self.log.info(f"✅ YOLO set up completed YOLO ✅ .")
-
-        return yaml_fp
-    
-
-    def save_training_data(self, weights:str, start_time:str) -> None:
-        """ Saves training data into a json file in the runs folder from YOLO. """
-
-        # get file splitting: 
-        if os.path.isdir(self.data_folder.replace('tiles', 'wsi')):
-            sets = ['train', 'val', 'test']
-            data = {}
-            for dirname in sets: 
-                dirpath = os.path.join(self.data_folder, dirname, 'images')
-                data[dirname] = [file for file in os.listdir(dirpath) if 'DS' not in file ]
-        # print(f"dictionary data: {data}")
-        # get training duration:
-        end_time = time.time()
-        train_yolo_duration = datetime.timedelta(seconds = end_time - start_time)
-        # save info into json file:
-        otherinfo_yolo = {'datafolder': self.data_folder, 'data':data, 'classes': self.map_classes, 'epochs': self.epochs, 'duration': train_yolo_duration, 'weights': {weights}}
-        utils_manager.write_YOLO_txt(otherinfo_yolo, root_exps = os.path.join(self.yolov5dir, 'runs', 'train'))
-        self.log.info(f"Training YOLO done ✅ . Training duration: {train_yolo_duration}")
-
-        return
-    
 
 
 
@@ -147,20 +108,17 @@ def test_YOLODetector():
 
     repository_dir = '/Users/marco/yolo/code/helical' if system == 'mac' else r'C:\marco\code\glom_detection\helical'
     yolov5dir = '/Users/marco/yolov5' if system == 'mac' else r'C:\marco\yolov5'
-    data_folder = '/Users/marco/helical_tests/test_hubmap_processor/detection/tiles' if system == 'mac' else r'D:\marco\datasets\slides\detection\tiles'
+    data_folder = '/Users/marco/helical_tests/test_hubmap_manager/detection/tiles' if system == 'mac' else r'D:\marco\datasets\slides\detection\tiles'
     device = None if system == 'mac' else 'cuda:0'
     workers = 0 if system == 'mac' else 1
-    # map_classes = {'glomerulus':0}  #{'Glo-healthy':1, 'Glo-unhealthy':0}
-    # save_features = True
-    # tile_size = 512 
-    # batch_size=2 if system == 'mac' else 2
-    # epochs=5
     map_classes = {'Glo-healthy':1, 'Glo-unhealthy':0} #{'glomerulus':0}  
     save_features = False
-    tile_size = 1024 
+    tile_size = 512 
     batch_size=2 if system == 'mac' else 4
-    epochs=30    
-    detector = YOLODetector(data_folder=data_folder, 
+    epochs=1   
+    dataset = 'hubmap'
+    detector = YOLODetector(dataset = dataset,
+                            data_folder=data_folder, 
                             repository_dir=repository_dir,
                             yolov5dir=yolov5dir,
                             map_classes=map_classes,
