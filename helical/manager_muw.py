@@ -10,7 +10,7 @@ from move_data import move_slides_for_tiling, move_slides_back_from_tiling
 from tiling import Tiler
 from tiler_hubmap import TilerHubmap
 import shutil
-from cleaner import Cleaner
+# from cleaner import Cleaner
 from manager_base import ManagerBase
 
 
@@ -24,6 +24,17 @@ class ManagerMUW(ManagerBase):
         super().__init__(*args, **kwargs)
         assert self.data_source == 'muw', self.log.error(ValueError(f"'data_source' is {self.data_source} but Manager used is 'ManagerMUW'"))
         self.data_source == "muw"
+
+        return
+
+    
+    def _rename_mrxsgson2gson(self):
+
+        files = [os.path.join(self.src_root,file) for file in os.listdir(self.src_root) if '.mrxs.gson' in file]
+        old_new_names = [(file, file.replace('.mrxs.gson', '.gson')) for file in files ]
+        # self.log.info(f"files:{old_new_names}")
+        for old_fp, new_fp in old_new_names: 
+            os.rename(old_fp, new_fp)
 
         return
 
@@ -41,6 +52,7 @@ class ManagerMUW(ManagerBase):
         self.log.info(f"{class_name}.{func_name}: ######################## CONVERTING ANNOTATIONS: ⏳    ########################")
         if self.data_source == 'muw':
             converter = ConverterMuW(folder = slides_labels_folder, 
+                                     stain = self.stain,
                                     convert_from='gson_wsi_mask',  
                                     convert_to='txt_wsi_bboxes',
                                     save_folder= slides_labels_folder, 
@@ -48,6 +60,7 @@ class ManagerMUW(ManagerBase):
                                     verbose=self.verbose)
         elif self.data_source == 'hubmap':
             converter = ConverterHubmap(folder = slides_labels_folder, 
+                                        stain = self.stain,
                                         convert_from='json_wsi_mask',  
                                         convert_to='txt_wsi_bboxes',
                                         save_folder= slides_labels_folder, 
@@ -96,51 +109,36 @@ class ManagerMUW(ManagerBase):
 
 
         return
+
+    def __call__(self) -> None:
+
+
+        self._rename_tiff2tif()
+        self._rename_mrxsgson2gson()
+        # 1) create tiles branch
+        self._make_tiles_branch()
+        # 1) split data
+        self._split_data()
+        # 2) prepare for tiling 
+        self._move_slides_forth()
+        # 3) tile images and labels:
+        self.tile_dataset()
+        # 4) move slides back 
+        self._move_slides_back()
+        # 5) clean dataset, e.g. 
+        # self._clean_muw_dataset()
+
+
+        return
     
 
 
 
-def test_ProcessorManager(): 
+def test_ManagerMUW(): 
 
 
     import sys 
     system = 'mac' if sys.platform == 'darwin' else 'windows'
-    # folder = '/Users/marco/Downloads/test_folders/test_tiler/test_1slide' if system == 'mac' else  r'D:\marco\datasets\slides\detection\wsi\test\labels'
-    # save_folder = '/Users/marco/Downloads/test_folders/test_tiler/test_1slide' if system == 'mac' else  r'D:\marco\datasets\slides\detection\wsi\test\labels'
-    # save_root = '/Users/marco/Downloads/test_folders/test_tiler/test_1slide' if system == 'mac' else r'D:\marco\datasets\slides\detection\wsi\test\labels'
-    # level = 2
-    # show = False    
-
-    # TEST TRUE DATA
-    # CONFIG
-    # src_root = '/Users/marco/Downloads/test_folders/test_process_data_and_train/test_3_slides' if system == 'mac' else  r'D:\marco\datasets\slides'
-    # dst_root = '/Users/marco/Downloads/test_folders/test_process_data_and_train/test_3_slides' if system == 'mac' else  r'D:\marco\datasets\slides'
-    # slide_format = 'tif'
-    # label_format = 'gson'
-    # split_ratio = [0.7, 0.15, 0.15]    
-    # task = 'detection'
-    # verbose = True
-    # safe_copy = False
-    # tiling_shape = (2048,2048)
-    # tiling_step = 512
-    # tiling_level = 2
-    # tiling_show = True
-
-    # manager = ProcessorManager(src_root=src_root,
-    #                            dst_root=dst_root,
-    #                            slide_format=slide_format,
-    #                            label_format=label_format,
-    #                            split_ratio=split_ratio,
-    #                            tiling_shape=tiling_shape,
-    #                            tiling_step=tiling_step,
-    #                            task=task,
-    #                            tiling_level=tiling_level,
-    #                            tiling_show=tiling_show,
-    #                            verbose=verbose,
-    #                            safe_copy=safe_copy)
-    # manager()
-
-
 
     # DEVELOPMENT 
     src_root = '/Users/marco/Downloads/test_folders/test_hubmap_processor' if system == 'mac' else  r'D:\marco\datasets\slides'
@@ -157,23 +155,23 @@ def test_ProcessorManager():
     tiling_level = 3
     tiling_show = True
 
-    manager = ProcessorManager(data_source=data_source,
-                               src_root=src_root,
-                               dst_root=dst_root,
-                               slide_format=slide_format,
-                               label_format=label_format,
-                               split_ratio=split_ratio,
-                               tiling_shape=tiling_shape,
-                               tiling_step=tiling_step,
-                               task=task,
-                               tiling_level=tiling_level,
-                               tiling_show=tiling_show,
-                               verbose=verbose,
-                               safe_copy=safe_copy)
+    manager = ManagerMUW(data_source=data_source,
+                        src_root=src_root,
+                        dst_root=dst_root,
+                        slide_format=slide_format,
+                        label_format=label_format,
+                        split_ratio=split_ratio,
+                        tiling_shape=tiling_shape,
+                        tiling_step=tiling_step,
+                        task=task,
+                        tiling_level=tiling_level,
+                        tiling_show=tiling_show,
+                        verbose=verbose,
+                        safe_copy=safe_copy)
     manager()
 
     return
 
 
 if __name__ == '__main__': 
-    test_ProcessorManager()
+    test_ManagerMUW()

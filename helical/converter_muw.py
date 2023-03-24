@@ -155,19 +155,22 @@ class ConverterMuW(ConverterBase):
 
 
         for file in tqdm(base_names, desc = f"Converting annotations for YOLO"):
+            
+            print(f"file: {file}")
+            change_format = lambda fp, fmt: os.path.join(os.path.dirname(fp), os.path.basename(fp).split('.')[0] + f".{fmt}")
 
             # 1) converting from gson wsi mask to txt wsi bboxes:
             gson_file = file
             self.convert_from = 'gson_wsi_mask'
             self.convert_to = "txt_wsi_bboxes"
-            txt_file = file+'.txt'
+            txt_file = change_format(file, 'txt')
             if not os.path.isfile(txt_file):
-                print('yes')
                 self.level = 0 # i.e. output txt is in original coordinates
                 self._convert_gson2txt(gson_file=gson_file) # this will also save an intermediate json file
+            assert os.path.isfile(txt_file), self.log.error(f"{self.class_name}.{'__call__'}: txt-converted file {txt_file} doesn't exist.")
 
             # 2) splitting the geojson file into multiple txt files (1 for sample/ROI):
-            geojson_file = file+'.geojson'
+            geojson_file = change_format(gson_file, 'geojson')
             self.convert_from = 'geojson_wsi_mask'
             self.convert_to = "txt_wsi_bboxes"
             # time.sleep(5)

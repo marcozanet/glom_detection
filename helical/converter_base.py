@@ -23,9 +23,9 @@ class ConverterBase(Configurator):
     def __init__(self, 
                 folder: str, 
                 level:int,
+                stain: Literal['pas', 'sfog'],
                 convert_from: Literal['json_wsi_mask', 'jsonliketxt_wsi_mask', 'gson_wsi_mask'], 
                 convert_to: Literal['json_wsi_bboxes', 'txt_wsi_bboxes', 'geojson_wsi_mask'],
-                stain: Literal['pas', 'sfog'] = 'sfog',
                 save_folder = None,
                 map_classes: dict = {'Glo-unhealthy':0, 'Glo-NA':1, 'Glo-healthy':2, 'Tissue':3},
                 verbose: bool = False) -> None:
@@ -292,21 +292,21 @@ class ConverterBase(Configurator):
         if self.verbose is True: 
             self.log.info(f"{self.class_name}.{'_rename_all'}: renaiming all filenames to <basename>_<stain>.<ext>")
 
-        rename_file = lambda fp, stain, ext  : (fp, os.path.join(os.path.dirname(fp), os.path.basename(fp).split(stain)[0] + f'{stain}.{ext}'))
+        rename_file = lambda fp, ext  : (fp, os.path.join(os.path.dirname(fp), os.path.basename(fp).split(self.stain.upper())[0] + f'{self.stain.upper()}.{ext}'))
         
         geojson_files = glob(os.path.join(self.folder, "*.geojson"))
-        old_new_geojson = [rename_file(fp, '_SFOG', 'geojson') for fp in geojson_files ]
+        old_new_geojson = [rename_file(fp, 'geojson') for fp in geojson_files ]
         for old_fp, new_fp in old_new_geojson: 
             os.rename(old_fp, new_fp)
         
         gson_files = glob(os.path.join(self.folder, "*.gson"))
-        old_new_gson = [rename_file(fp, '_SFOG', 'gson') for fp in gson_files ]
+        old_new_gson = [rename_file(fp, 'gson') for fp in gson_files ]
         for old_fp, new_fp in old_new_gson: 
             os.rename(old_fp, new_fp)
 
 
         tif_files = glob(os.path.join(self.folder, "*.tif"))
-        old_new_tif = [rename_file(fp, '_SFOG', 'tif') for fp in tif_files ]
+        old_new_tif = [rename_file(fp, 'tif') for fp in tif_files ]
         for old_fp, new_fp in old_new_tif: 
             os.rename(old_fp, new_fp)
 

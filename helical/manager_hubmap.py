@@ -18,6 +18,7 @@ class ManagerHubmap():
     def __init__(self,
                 src_root: str, 
                 dst_root: str, 
+                stain: Literal['pas', 'muw'],
                 slide_format: Literal['tif', 'tiff'],
                 label_format: Literal['gson', 'mrxs.gson'],
                 tiling_shape: Tuple[int],
@@ -44,6 +45,7 @@ class ManagerHubmap():
         self.reproducibility = reproducibility
         self.wsi_dir = os.path.join(dst_root, self.task, 'wsi')
         self.tiles_dir = os.path.join(dst_root, self.task, 'tiles')
+        self.stain = stain
         
 
         self.log = get_logger()
@@ -176,6 +178,7 @@ class ManagerHubmap():
         # 1) convert annotations to yolo format:
         self.log.info(f"{class_name}.{func_name}: ######################## CONVERTING ANNOTATIONS: ⏳    ########################")
         converter = ConverterHubmap(folder = slides_labels_folder, 
+                                    stain = 'pas',
                                     map_classes = {'glomerulus':0},
                                     convert_from='json_wsi_mask',  
                                     convert_to='txt_wsi_bboxes',
@@ -232,12 +235,12 @@ def test_ProcessorManager():
     dst_root = '/Users/marco/helical_tests/test_hubmap_manager' if system == 'mac' else  r'D:\marco\hubmap_slides'
     slide_format = 'tif'
     label_format = 'json'
-    split_ratio = [0.34, 0.33, 0.33]  # TODO CAMBIAAAAAAA
+    split_ratio = [0.7, 0.15, 0.15]  
     task = 'detection'
     verbose = True
     safe_copy = False
     tiling_shape = (2048,2048)
-    tiling_step = 2048  # TODO CAMBIAAAAAAA
+    tiling_step = 1024
     tiling_show = False
 
     manager = ManagerHubmap(src_root=src_root,

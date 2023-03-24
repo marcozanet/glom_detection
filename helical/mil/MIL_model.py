@@ -4,7 +4,7 @@ from MIL_aggregator2 import AttentionSoftMax
 
 
 class MIL_NN(torch.nn.Module):
-    def __init__(self, n=512,  
+    def __init__(self, n=20*20,  
                  n_mid=1024, 
                  n_classes=1, 
                  dropout=0.1,
@@ -19,16 +19,17 @@ class MIL_NN(torch.nn.Module):
         else:
             self.bag_model = NN(n, n_mid, n_classes, dropout=dropout, scoring=scoring)
         
-    def forward(self, bag_features, bag_lbls=None):
+    def forward(self, bag_features:dict, bag_lbls=None):
         """
         bag_feature is an aggregated vector of 512 features
         bag_att is a gate vector of n_inst instances
         bag_lbl is a vector a labels
         figure out batches
         """
+        print(bag_features)
         bag_feature, bag_att, bag_keys = list(zip(*[list(self.agg(ff.float())) + [idx]
-                                                    for idx, ff in (bag_features.items())]))
-        bag_att = dict(zip(bag_keys, [a.detach().cpu() for a  in bag_att]))
+                                                    for idx, ff in enumerate(bag_features)]))
+        bag_att = dict(zip(bag_keys, [a.detach().cpu() for a in bag_att]))
         bag_feature_stacked = torch.stack(bag_feature)
         y_pred = self.bag_model(bag_feature_stacked)
         return y_pred, bag_att, bag_keys

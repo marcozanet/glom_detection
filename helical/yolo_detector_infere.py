@@ -14,7 +14,7 @@ import shutil
 from profiler_hubmap import ProfilerHubmap
 from plotter_data_hubmap import Plotter
 
-class YOLODetectorTrainer(YOLOBase):
+class YOLODetector(YOLOBase):
 
     def __init__(self, 
                  *args, 
@@ -99,7 +99,9 @@ class YOLODetectorTrainer(YOLOBase):
 
 
 
-def runner():
+
+
+def test_YOLODetector(): 
 
     import sys 
     system = 'mac' if sys.platform == 'darwin' else 'windows'
@@ -115,23 +117,24 @@ def runner():
     batch_size=2 if system == 'mac' else 4
     epochs=1   
     dataset = 'hubmap'
-    detector = YOLODetectorTrainer(dataset = dataset,
-                                    data_folder=data_folder, 
-                                    repository_dir=repository_dir,
-                                    yolov5dir=yolov5dir,
-                                    map_classes=map_classes,
-                                    tile_size = tile_size,
-                                    batch_size=batch_size,
-                                    epochs=epochs,
-                                    workers=workers,
-                                    device=device,
-                                    save_features=save_features)
+    detector = YOLODetector(dataset = dataset,
+                            data_folder=data_folder, 
+                            repository_dir=repository_dir,
+                            yolov5dir=yolov5dir,
+                            map_classes=map_classes,
+                            tile_size = tile_size,
+                            batch_size=batch_size,
+                            epochs=epochs,
+                            workers=workers,
+                            device=device,
+                            save_features=save_features)
     detector.train()
 
-
     return
+        
+
 
 
 if __name__ == '__main__':
     
-    runner()
+    test_YOLODetector()

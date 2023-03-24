@@ -100,7 +100,7 @@ class Plotter(Profiler):
                 pairs = list(filter(lambda pair: (os.path.isfile(pair[0]) and os.path.isfile(pair[1])), pairs))
             
             # 2) Show image/drawing rectangles as annotations:
-            plt.figure(figsize=(20, k//2*10))
+            fig = plt.figure(figsize=(20, k//2*10))
             for i, (image_fp, label_fp) in enumerate(pairs):
 
                 self.log.info(f"i:{i}")
@@ -146,6 +146,7 @@ class Plotter(Profiler):
                 plt.axis('off')
             
             plt.show()
+            fig.savefig('plot_data.png')
         
             return
 
@@ -259,7 +260,7 @@ def test_Plotter_hubmap():
     import sys 
     system = 'mac' if sys.platform == 'darwin' else 'windows'
     
-    data_root = '/Users/marco/helical_tests/test_hubmap_segm_manager/detection' if system == 'mac' else r'D:\marco\datasets\muw\detection'
+    data_root = '/Users/marco/helical_tests/test_hubmap_segm_manager/detection' if system == 'mac' else r'D:\marco\hubmap_slides\detection'
     # files = ['/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_31_18.png',
     #         '/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_52_12.png',
     #         '/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_49_24.png']

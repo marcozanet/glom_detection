@@ -147,30 +147,32 @@ class TilerSegm(Tiler):
             label_val = self.map_classes[label_name]
             vertices = glom['geometry']['coordinates'][0]
 
-            def _inflate(old_vertices:list):
-                # with inflation:
-                assert len(old_vertices)>=3, self.log.error(f"{self.class_name}.{'_inflate'}: label {json_file} has a glom with only {len(old_vertices)} vertices")
-                new_vertices = []
-                for j in range(len(old_vertices)-1):
-                    x_j, y_j = (old_vertices[j])
-                    x_l, y_l = (old_vertices[j+1])
-                    x_middle = (x_l + x_j)/2
-                    y_middle = (y_l + y_j)/2
-                    if int(x_middle) != int(x_j) and int(y_middle) != int(y_j): # makes sure there's no same key for slicing after
-                        new_vertices.extend([[x_j, y_j], [x_middle, y_middle]])
-                    else: 
-                        new_vertices.extend([[x_j, y_j]]) # e.g. don't inflate any additional points
+            # def _inflate(old_vertices:list):
+            #     # with inflation:
+            #     assert len(old_vertices)>=3, self.log.error(f"{self.class_name}.{'_inflate'}: label {json_file} has a glom with only {len(old_vertices)} vertices")
+            #     new_vertices = []
+            #     for j in range(len(old_vertices)-1):
+            #         x_j, y_j = (old_vertices[j])
+            #         x_l, y_l = (old_vertices[j+1])
+            #         x_middle = (x_l + x_j)/2
+            #         y_middle = (y_l + y_j)/2
+            #         if int(x_middle) != int(x_j) and int(y_middle) != int(y_j): # makes sure there's no same key for slicing after
+            #             new_vertices.extend([[x_j, y_j], [x_middle, y_middle]])
+            #         else: 
+            #             new_vertices.extend([[x_j, y_j]]) # e.g. don't inflate any additional points
                 
-                return new_vertices
+            #     return new_vertices
             
-            if self.inflate_points_ntimes is not None:
-                for _ in range(self.inflate_points_ntimes):
-                    vertices = _inflate(old_vertices=vertices)
+            # if self.inflate_points_ntimes is not None:
+            #     for _ in range(self.inflate_points_ntimes):
+            #         vertices = _inflate(old_vertices=vertices)
 
             assert all([len(vertex)==2 for vertex in vertices]), self.log.error(f"All vertices should be pairs of coordinates")
 
             for k,(x,y) in enumerate(vertices):
                 x, y = int(x), int(y) # slice values must be int 
+                x, y = max(x, 0), max(y,0)
+                x, y = min(x,region_dims[0]-1), min(y,region_dims[1]-1)
                 vertex_mask[x,y] = i # assigning to each vertex a unique value (one for glom)
                 class_mask[x,y] = label_val
                 order_mask[x,y] = k

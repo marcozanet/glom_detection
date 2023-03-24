@@ -53,14 +53,27 @@ class AttentionSoftMax(torch.nn.Module):
         self.otherdim = ''
         if out_features is None:
             out_features = in_features
+        print(f"number in features: {in_features}1")
         self.layer_linear_tr = nn.Linear(in_features, out_features)
+        print(f"number in features: {in_features}2")
         self.activation = nn.LeakyReLU()
+        print(f"number in features: {in_features}3")
         self.layer_linear_query = nn.Linear(out_features, 1)
+        print(f"number in features: {in_features}4")
         
     def forward(self, x):
+        print('bug here?1')
+        print(x.shape)
         keys = self.layer_linear_tr(x)
+        print('bug here?2')
         keys = self.activation(keys)
+        print(f'{keys.shape}')
         attention_map_raw = self.layer_linear_query(keys)[...,0]
+        print(f'{attention_map_raw.shape}')
+        print('bug here?4')
         attention_map = nn.Softmax(dim=-1)(attention_map_raw)
+        print('bug here?4')
+
+        print(attention_map.shape)
         result = torch.einsum(f'{self.otherdim}i,{self.otherdim}ij->{self.otherdim}j', attention_map, x)
         return result, attention_map

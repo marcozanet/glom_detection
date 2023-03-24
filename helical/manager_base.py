@@ -10,7 +10,7 @@ from move_data import move_slides_for_tiling, move_slides_back_from_tiling
 from tiling import Tiler
 from tiler_hubmap import TilerHubmap
 import shutil
-from cleaner import Cleaner
+from cleaner_muw import CleanerMuw
 from configurator import Configurator
 from abc import ABC, abstractmethod
 
@@ -21,6 +21,7 @@ class ManagerBase(Configurator, ABC):
                 data_source: Literal['muw', 'hubmap'],
                 src_root: str, 
                 dst_root: str, 
+                stain: Literal['sfog', 'pas'],
                 slide_format: Literal['tif', 'tiff'],
                 label_format: Literal['gson', 'mrxs.gson'],
                 tiling_shape: Tuple[int],
@@ -45,6 +46,7 @@ class ManagerBase(Configurator, ABC):
         self.tiling_level = tiling_level
         self.tiling_show = tiling_show
         self.split_ratio = split_ratio
+        self.stain = stain
         self.task = task
         self.verbose = verbose
         self.safe_copy = safe_copy
@@ -120,7 +122,7 @@ class ManagerBase(Configurator, ABC):
             from {0:glom_healthy, 1:glom_na, 2: glom_sclerosed, 3: tissue}
             to {0:glom_healthy, 1:glom_sclerosed} """
         
-        cleaner = Cleaner(data_root=os.path.join(self.dst_root, self.task), safe_copy=safe_copy)
+        cleaner = CleanerMuw(data_root=os.path.join(self.dst_root, self.task), safe_copy=safe_copy)
         cleaner._clean_muw()
         
 
@@ -208,6 +210,18 @@ class ManagerBase(Configurator, ABC):
 
 
         return
+    
+    def _rename_tiff2tif(self):
+
+        files = [os.path.join(self.src_root,file) for file in os.listdir(self.src_root) if '.tiff' in file]
+        old_new_names = [(file, file.replace('.tiff', '.tif')) for file in files ]
+        # self.log.info(f"files:{old_new_names}")
+        for old_fp, new_fp in old_new_names: 
+            os.rename(old_fp, new_fp)
+
+        return
+    
+
     
 
     def __call__(self) -> None:

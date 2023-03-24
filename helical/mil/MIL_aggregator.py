@@ -21,7 +21,7 @@ class NoisyAnd(torch.nn.Module):
 
 class NN(torch.nn.Module):
 
-    def __init__(self, n=512, n_mid = 1024,
+    def __init__(self, n=400, n_mid = 1024,
                  n_out=1, dropout=0.2,
                  scoring = None,
                 ):

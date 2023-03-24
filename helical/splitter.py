@@ -62,6 +62,8 @@ class Splitter():
     def _split_yolo_tiles(self):
         """ Splits images and annotation tiles into folds."""
 
+        raise NotImplementedError()
+
         return
     
     def _split_yolo_wsi(self):
