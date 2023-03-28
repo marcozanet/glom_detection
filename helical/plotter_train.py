@@ -66,7 +66,7 @@ def test_TrainPlotter():
     import sys 
     system = 'mac' if sys.platform == 'darwin' else 'windows'
     
-    yolov5_root = '/Users/marco/helical_exps/send_mac' if system == 'mac' else r'C:\marco\yolov5'
+    yolov5_root = '/Users/marco/Downloads/exps_up_to_27.03.23' if system == 'mac' else r'C:\marco\yolov5'
     plotter = TrainPlotter(yolov5_root=yolov5_root)
     plotter()
 

@@ -1,6 +1,6 @@
 ### cleans dataset from e.g. duplicates and from having too many empty images -> removes majority of them.
 
-from profiler import Profiler
+from profiler_base import ProfilerBase
 from shutil import copytree
 import os
 from tqdm import tqdm

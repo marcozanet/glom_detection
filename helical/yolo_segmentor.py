@@ -34,7 +34,7 @@ class YOLOSegmentor(YOLOBase):
         """   Runs the YOLO detection model. """
         class_name = self.__class__.__name__
         
-        # 1) prepare training:
+        # 1) prepare training: 
         # start_time = time.time()
         yaml_fn = os.path.basename(self._edit_yaml())
         weights = weights if weights is not None else self.def_weights

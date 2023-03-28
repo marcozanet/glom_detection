@@ -114,7 +114,7 @@ def runner():
     tile_size = 512 
     batch_size=2 if system == 'mac' else 4
     epochs=1   
-    dataset = 'hubmap'
+    dataset = 'hubmap' 
     detector = YOLODetectorTrainer(dataset = dataset,
                                     data_folder=data_folder, 
                                     repository_dir=repository_dir,

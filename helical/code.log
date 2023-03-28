@@ -1,9 +1,16 @@
-24/03 18:30:55|INFO|CleanerSegmHubmap._get_data: Found 0 slides with 4 annotations and 0 tiles with 4 annotations. 
-24/03 18:30:55|INFO|CleanerSegmHubmap._del_unpaired_labels: deleted 0 labels without matching image. Updating self.data. 
-24/03 18:30:55|INFO|CleanerSegmHubmap._get_data: Found 0 slides with 4 annotations and 0 tiles with 4 annotations. 
-24/03 18:30:55|INFO|CleanerSegmHubmap._del_redundant_labels: Deleted redundant labels. Updating self.data.
-24/03 18:30:55|INFO|CleanerSegmHubmap._get_data: Found 0 slides with 4 annotations and 0 tiles with 4 annotations. 
-24/03 18:30:55|INFO|CleanerSegmHubmap._get_empty_images: found 680 empty images and 217 full images. 
-24/03 18:30:55|INFO|empty:680, full:217
-24/03 18:30:55|INFO|CleanerSegmHubmap._remove_perc_: empty:24, full:217, tot:241
-24/03 18:30:55|INFO|CleanerSegmHubmap.del_3_points_masks: deleted 0 masks with less than 3 points 
+28/03 17:05:39|INFO|ManagerSegmHubPAS._make_tiles_branch: Creating new tiles branch at '/Users/marco/helical_tests/test_cleaner_segm_hubmap_pas/detection/tiles'
+28/03 17:05:39|INFO|ManagerSegmHubPAS._split_data: ⏳ Splitting slides
+28/03 17:05:39|INFO|Splitter._move_files: trainset: []
+28/03 17:05:39|INFO|Splitter._move_files: valset: []
+28/03 17:05:39|INFO|Splitter._move_files: testset: []
+28/03 17:05:39|INFO|ManagerSegmHubPAS._split_data: ✅ Splitting slides
+28/03 17:05:39|INFO|ManagerSegmHubPAS._move_slides_forth: Moved slides forth.
+28/03 17:05:39|INFO|ManagerSegmHubPAS.tile_dataset: Tiling dataset at '/Users/marco/helical_tests/test_cleaner_segm_hubmap_pas/detection/wsi'
+28/03 17:05:39|INFO|ManagerSegmHubPAS.tile_dataset: Tiling 'train'
+28/03 17:05:39|INFO|ManagerSegmHubPAS._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+28/03 17:05:39|INFO|TilerSegm.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/helical_tests/test_cleaner_segm_hubmap_pas/detection/wsi/train/labels'. Results will be saved in '/Users/marco/helical_tests/test_cleaner_segm_hubmap_pas/detection/tiles/train/images'.
+28/03 17:05:39|WARNING|TilerSegm._is_slide_computed: 😪 Tiler: found .png tiles in '/Users/marco/helical_tests/test_cleaner_segm_hubmap_pas/detection/tiles/train/images' for .png. Skipping sample.
+28/03 17:05:39|INFO|TilerSegm._get_completed_files: Completed 1/2 files.
+28/03 17:05:39|INFO|TilerSegm._get_tile_images: ⏳ Tiling image: '0486052bb.tif'
+28/03 17:05:39|WARNING|TilerSegm._is_slide_computed: 😪 Tiler: found .png tiles in '/Users/marco/helical_tests/test_cleaner_segm_hubmap_pas/detection/tiles/train/images' for .png. Skipping sample.
+28/03 17:05:39|INFO|TilerSegm._get_tile_images: ✅ Tiling image: '0486052bb.tif'

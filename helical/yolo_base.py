@@ -8,7 +8,7 @@ import yaml
 from glob import glob
 # from loggers import get_logger
 from decorators import log_start_finish
-from profiler import Profiler
+# from profiler import Profiler
 from configurator import Configurator
 from abc import ABC, abstractmethod
 
@@ -42,9 +42,9 @@ class YOLOBase(Configurator):
         self.device = device
         self.dataset = dataset
         self.n_classes = len(self.map_classes)
+        self._class_name = self.__class__.__name__
         if dataset not in data_folder:
             self.log.warning(f"{self._class_name}.{'__init__'}: 'dataset' is '{dataset}', but 'data_folder' is '{data_folder}'")
-        self._class_name = self.__class__.__name__
 
 
         self.add_attributes()

@@ -1,6 +1,6 @@
 ### cleans dataset from e.g. duplicates and from having too many empty images -> removes majority of them.
 
-from profiler import Profiler
+from profiler_muw import ProfilerMUW
 from shutil import copytree
 import os
 from tqdm import tqdm
@@ -10,7 +10,7 @@ from decorators import log_start_finish
 
 
 
-class CleanerMuw(Profiler):
+class CleanerMuw(ProfilerMUW):
 
     def __init__(self, 
                 empty_perc:float = 0.1,  
@@ -22,6 +22,7 @@ class CleanerMuw(Profiler):
 
         self.empty_perc = empty_perc
         self.safe_copy = safe_copy
+        self.data = self._get_data()
 
 
         return
