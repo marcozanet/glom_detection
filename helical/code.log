@@ -1,16 +1,6 @@
-28/03 17:05:39|INFO|ManagerSegmHubPAS._make_tiles_branch: Creating new tiles branch at '/Users/marco/helical_tests/test_cleaner_segm_hubmap_pas/detection/tiles'
-28/03 17:05:39|INFO|ManagerSegmHubPAS._split_data: ⏳ Splitting slides
-28/03 17:05:39|INFO|Splitter._move_files: trainset: []
-28/03 17:05:39|INFO|Splitter._move_files: valset: []
-28/03 17:05:39|INFO|Splitter._move_files: testset: []
-28/03 17:05:39|INFO|ManagerSegmHubPAS._split_data: ✅ Splitting slides
-28/03 17:05:39|INFO|ManagerSegmHubPAS._move_slides_forth: Moved slides forth.
-28/03 17:05:39|INFO|ManagerSegmHubPAS.tile_dataset: Tiling dataset at '/Users/marco/helical_tests/test_cleaner_segm_hubmap_pas/detection/wsi'
-28/03 17:05:39|INFO|ManagerSegmHubPAS.tile_dataset: Tiling 'train'
-28/03 17:05:39|INFO|ManagerSegmHubPAS._tile_folder: ######################## TILING IMAGES: ⏳    ########################
-28/03 17:05:39|INFO|TilerSegm.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/helical_tests/test_cleaner_segm_hubmap_pas/detection/wsi/train/labels'. Results will be saved in '/Users/marco/helical_tests/test_cleaner_segm_hubmap_pas/detection/tiles/train/images'.
-28/03 17:05:39|WARNING|TilerSegm._is_slide_computed: 😪 Tiler: found .png tiles in '/Users/marco/helical_tests/test_cleaner_segm_hubmap_pas/detection/tiles/train/images' for .png. Skipping sample.
-28/03 17:05:39|INFO|TilerSegm._get_completed_files: Completed 1/2 files.
-28/03 17:05:39|INFO|TilerSegm._get_tile_images: ⏳ Tiling image: '0486052bb.tif'
-28/03 17:05:39|WARNING|TilerSegm._is_slide_computed: 😪 Tiler: found .png tiles in '/Users/marco/helical_tests/test_cleaner_segm_hubmap_pas/detection/tiles/train/images' for .png. Skipping sample.
-28/03 17:05:39|INFO|TilerSegm._get_tile_images: ✅ Tiling image: '0486052bb.tif'
+28/03 18:02:24|INFO|⏳ Setting configurations for YOLO: 
+28/03 18:02:24|INFO|✅ YOLO set up completed YOLO ✅ .
+28/03 18:02:24|INFO|YOLODetector.train: data:/Users/marco/yolov5/data/helical.yaml
+28/03 18:02:24|INFO|YOLODetector.train: weights:/Users/marco/yolov5/yolov5s.pt
+28/03 18:02:24|INFO|⏳ Start training YOLO:
+28/03 18:02:24|INFO|YOLODetector.train: python train.py --img 512 --batch 2 --epochs 3 --data /Users/marco/yolov5/data/helical.yaml --weights /Users/marco/yolov5/yolov5s.pt --workers 0
