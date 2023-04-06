@@ -1,6 +1,13 @@
-06/04 09:48:15|INFO|YOLO_Trainer_Segmentor.get_exp_fold: exp folder: /Users/marco/yolov5/runs/train-seg/exp36.
-06/04 09:48:15|INFO|⏳ Setting configurations for YOLO: 
-06/04 09:48:15|INFO|✅ YOLO set up completed YOLO ✅ .
-06/04 09:48:15|INFO|YOLO_Trainer_Segmentor.train: weights:yolov5s-seg.pt
-06/04 09:48:15|INFO|⏳ Starting YOLO segmentation:
-06/04 09:48:15|INFO|YOLO_Trainer_Segmentor.train: python segment/train.py --img 512 --batch 2 --epochs 1 --data helical.yaml --weights yolov5s-seg.pt --workers 0
+06/04 18:12:14|INFO|KCrossValidation.__init__: n_wsis:4.
+06/04 18:12:14|INFO|KCrossValidation._get_i_split: iter_0,  train: 3 images, test: 1.
+06/04 18:12:14|INFO|KCrossValidation._get_i_split: iter_1,  train: 3 images, test: 1.
+06/04 18:12:14|INFO|KCrossValidation._get_i_split: iter_2,  train: 2 images, test: 2.
+06/04 18:12:14|INFO|KCrossValidation.fix_n_tiles: n_tiles_tot:{'2f6ecfcdf': [15, 12], '26dc41664': [18, 20], '4ef6695ce': [19, 24], '1e2425f28': [13, 15]}.
+06/04 18:12:14|INFO|KCrossValidation._change_folds: train: 2 images: ['26dc41664', '4ef6695ce'].
+06/04 18:12:14|INFO|KCrossValidation._change_folds: test: 2 labels: ['1e2425f28', '2f6ecfcdf'].
+06/04 18:12:14|INFO|train
+06/04 18:12:14|INFO|{'26dc41664': [18, 20], '4ef6695ce': [19, 24]}
+06/04 18:12:14|INFO|/Users/marco/helical_tests/test_kcrossvalidation/detection/wsi/train/labels/n_tiles.json
+06/04 18:12:14|INFO|test
+06/04 18:12:14|INFO|{'1e2425f28': [13, 15], '2f6ecfcdf': [15, 12]}
+06/04 18:12:14|INFO|/Users/marco/helical_tests/test_kcrossvalidation/detection/wsi/test/labels/n_tiles.json

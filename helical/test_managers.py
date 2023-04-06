@@ -96,5 +96,5 @@ def test_manager_segm_hubmap_pas():
 
 
 if __name__ == '__main__':
-    test_manager_detect_muw_sfog()
+    test_manager_segm_hubmap_pas()
         
