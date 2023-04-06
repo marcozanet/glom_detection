@@ -1,0 +1,4 @@
+31/03 09:54:50|INFO|PlotterSegmHubmap._get_data: Listing also test files.
+31/03 09:54:50|INFO|PlotterSegmHubmap._get_data: Found 0 slides with 0 annotations and 0 tiles with 0 annotations. 
+31/03 09:54:50|INFO|len data images: 2387
+31/03 09:54:53|INFO|PlotterSegmHubmap._get_empty_images: found 1392 empty images and 995 full images. 

@@ -12,12 +12,11 @@ class ProfilerHubmap(ProfilerBase):
                 **kwargs) -> None:
         """ Data Profiler to help visualize a data overview. 
             Needs a root folder structured like: root -> wsi/tiles->train,val,test->images/labels.
-            wsi_image_like= e.g. '*.tif'
-            wsi_label_like = e.g. '*.txt'
-            tile_image_like = e.g. '*.png'
-            tile_label_like = e.g. '*.txt'
             '"""
-        # self.log = get_logger()
+        
+        other_params = {'wsi_images_like':'*.tif', 'wsi_labels_like': '*.txt', 
+                        'tile_images_like':'*.png', 'tile_labels_like':'*.txt'}
+        kwargs.update(other_params)
         super().__init__(*args, **kwargs)
         self.n_classes = 1
 
@@ -84,12 +83,12 @@ class ProfilerHubmap(ProfilerBase):
         i = len(self.df_instances)
         for file in tqdm(empty, desc = 'Scanning empty tiles'):
             fn = os.path.basename(file)
-            tile_n = fn.split('_',1)[-1].split('.')[0]
             wsi_n = fn.split('_', 1)[0]
             fold = os.path.split(os.path.split(os.path.dirname(file))[0])[1]
             info_dict = {'class_n':np.nan, 'width':np.nan, 'height':np.nan, 
                         'area':np.nan, 'obj_n':np.nan, 'fold':fold, 
                         'tile':tile_n,'wsi':{wsi_n}} # all empty values set to nan
+            tile_n = fn.split('_',1)[-1].split('.')[0]
             self.df_instances.loc[i] = pd.Series(info_dict)
 
             i+=1

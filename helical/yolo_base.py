@@ -11,6 +11,8 @@ from decorators import log_start_finish
 # from profiler import Profiler
 from configurator import Configurator
 from abc import ABC, abstractmethod
+from PIL import Image
+import random
 
 
 class YOLOBase(Configurator):
@@ -25,6 +27,7 @@ class YOLOBase(Configurator):
                  batch_size: int,
                  workers:int,
                  epochs: int,
+                 weights: str = None,
                  save_features: bool = False,
                  device = None) -> None: 
 
@@ -41,8 +44,11 @@ class YOLOBase(Configurator):
         self.workers = workers
         self.device = device
         self.dataset = dataset
+        self.weights = weights
         self.n_classes = len(self.map_classes)
         self._class_name = self.__class__.__name__
+
+        self.image_size = self.get_image_size()
         if dataset not in data_folder:
             self.log.warning(f"{self._class_name}.{'__init__'}: 'dataset' is '{dataset}', but 'data_folder' is '{data_folder}'")
 
@@ -95,9 +101,18 @@ class YOLOBase(Configurator):
         new_fold = os.path.join(exp_fold, f"exp{nums[-1]}")
         self.log.info(f"{self._class_name}.{'get_exp_fold'}: exp folder: {new_fold}.")
 
-        self.exp_fold = new_fold
-
         return new_fold
+    
+    def get_image_size(self):
+
+        tile_fold = self.data_folder
+        assert os.path.isdir(tile_fold), f"tile_fold:{tile_fold} is not a valid dirpath."
+        images = glob(os.path.join(tile_fold, 'train', 'images', '*.png'))
+        file = random.choice(images)
+        image = Image.open(file)
+        image_size = image.size
+
+        return image_size[0]
     
 
 
@@ -115,6 +130,8 @@ class YOLOBase(Configurator):
         self.log.info(f"✅ YOLO set up completed YOLO ✅ .")
 
         return yaml_fp
+
+
     
 
     def save_training_data(self, weights:str, start_time:str) -> None:

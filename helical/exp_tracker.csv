@@ -1,0 +1,1 @@
+datetime,exp_fold,dataset,batch_size,task,map_classes,epochs,tile_size,image_size,weights,device,data_folder

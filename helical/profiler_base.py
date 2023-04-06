@@ -14,7 +14,8 @@ class ProfilerBase(Configurator, ABC):
                 tile_images_like:str,
                 tile_labels_like:str,
                 empty_ok:bool = False,
-                verbose:bool=False) -> None:
+                verbose:bool=False,
+                skip_test:bool = False) -> None:
         """ Data Profiler to help visualize a data overview. 
             Needs a root folder structured like: root -> wsi/tiles->train,val,test->images/labels.
             wsi_image_like= e.g. '*.tif'
@@ -37,6 +38,7 @@ class ProfilerBase(Configurator, ABC):
         self.tiles_label_format = tile_labels_like.split('.')[-1]
         self.verbose = verbose
         self.empty_ok = empty_ok
+        self.skip_test = skip_test
 
 
         return
@@ -51,6 +53,18 @@ class ProfilerBase(Configurator, ABC):
         wsi_labels = glob(os.path.join(self.data_root, 'wsi', '*', 'labels', self.wsi_labels_like))
         tile_images = glob(os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like))
         tile_labels = glob(os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like))
+        
+        # in case of e.g. data cleaning, test files are NOT to be changed.
+        if self.skip_test: 
+            self.log.info(f"{self._class_name}.{'_get_data'}: Skipping test files.")
+            is_not_test = lambda path: os.path.basename(os.path.dirname(os.path.dirname(path))) != 'test'
+            wsi_images = list(filter(is_not_test, wsi_images))
+            wsi_labels = list(filter(is_not_test, wsi_images))
+            tile_images = list(filter(is_not_test, wsi_images))
+            tile_labels = list(filter(is_not_test, wsi_images))
+        else:
+            self.log.info(f"{self._class_name}.{'_get_data'}: Listing also test files.")
+
 
         data = {'wsi_images':wsi_images, 'wsi_labels':wsi_labels, 'tile_images':tile_images,  'tile_labels':tile_labels }
         
@@ -105,15 +119,37 @@ class ProfilerBase(Configurator, ABC):
 
         return class_freq
     
+    def _get_only_train_val_files(self):
 
-    def _get_empty_images(self):
+            wsi_images = self.data['wsi_images']
+            wsi_labels = self.data['wsi_labels']
+            tile_images = self.data['tile_images']
+            tile_labels = self.data['tile_labels']
+            
+            is_not_test = lambda path: os.path.basename(os.path.dirname(os.path.dirname(path))) != 'test'
+            wsi_images = list(filter(is_not_test, wsi_images))
+            wsi_labels = list(filter(is_not_test, wsi_labels))
+            tile_images = list(filter(is_not_test, tile_images))
+            tile_labels = list(filter(is_not_test, tile_labels))
+
+            filtered_data = {'wsi_images':wsi_images, 'wsi_labels':wsi_labels, 
+                            'tile_images':tile_images, 'tile_labels':tile_labels}
+
+            return filtered_data
+    
+    def _get_empty_images(self, also_from_test: bool = True):
         """ Returns full and empty images from the dataset. """
 
         class_name = self.__class__.__name__
         func_name = '_get_empty_images'
 
-        tile_images = self.data['tile_images']
-        tile_labels = self.data['tile_labels']
+        if also_from_test is False:
+            filtered_data = self._get_only_train_val_files()
+            tile_images = filtered_data['tile_images']
+            tile_labels = filtered_data['tile_labels']
+        else:
+            tile_images = self.data['tile_images'] 
+            tile_labels = self.data['tile_labels'] 
 
         assert len(tile_images)>0, self.log.error(f"{self._class_name}.{'_get_empty_images'}: 'tile_images':{len(tile_images)}. No tile image found. ")
         assert len(tile_labels)>0, self.log.error(f"{self._class_name}.{'_get_empty_images'}: 'tile_labels':{len(tile_labels)}. No tile label found. ")

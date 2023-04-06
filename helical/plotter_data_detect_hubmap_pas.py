@@ -30,6 +30,10 @@ class PlotterDetectHub(ProfilerHubmap):
         self.df_tiles = self._get_tiles_df()
         self.log.info(self.df_instances.head())
         self.log.info(self.df_tiles.head())
+        self.wsi_images_like = '*.tif', 
+        self.wsi_labels_like = '*.json',
+        self.tile_images_like = '*.png',
+        self.tile_labels_like = '*.txt',
 
         if files is not None:
             assert all([os.path.isfile(file) for file in files])

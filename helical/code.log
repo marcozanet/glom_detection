@@ -1,6 +1,6 @@
-28/03 18:02:24|INFO|⏳ Setting configurations for YOLO: 
-28/03 18:02:24|INFO|✅ YOLO set up completed YOLO ✅ .
-28/03 18:02:24|INFO|YOLODetector.train: data:/Users/marco/yolov5/data/helical.yaml
-28/03 18:02:24|INFO|YOLODetector.train: weights:/Users/marco/yolov5/yolov5s.pt
-28/03 18:02:24|INFO|⏳ Start training YOLO:
-28/03 18:02:24|INFO|YOLODetector.train: python train.py --img 512 --batch 2 --epochs 3 --data /Users/marco/yolov5/data/helical.yaml --weights /Users/marco/yolov5/yolov5s.pt --workers 0
+05/04 15:19:10|INFO|YOLO_Trainer_Segmentor.get_exp_fold: exp folder: /Users/marco/yolov5/runs/train-seg/exp32.
+05/04 15:19:10|INFO|⏳ Setting configurations for YOLO: 
+05/04 15:19:10|INFO|✅ YOLO set up completed YOLO ✅ .
+05/04 15:19:10|INFO|YOLO_Trainer_Segmentor.train: weights:yolov5s-seg.pt
+05/04 15:19:10|INFO|⏳ Starting YOLO segmentation:
+05/04 15:19:10|INFO|YOLO_Trainer_Segmentor.train: python segment/train.py --img 512 --batch 2 --epochs 1 --data helical.yaml --weights yolov5s-seg.pt --workers 0

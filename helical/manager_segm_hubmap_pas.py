@@ -29,6 +29,8 @@ class ManagerSegmHubPAS():
                 empty_perc: float = 0.1,
                 reproducibility: bool = True) -> None:
         
+        # raise Exception("TODO: ADD FILTER ON TRAIN VAL (NO TEST) FOR CLEANING")
+
         self.src_root = src_root
         self.dst_root = dst_root
         self.slide_format = slide_format

@@ -5,9 +5,37 @@ import pandas as pd
 import plotly.express as px
 from plotly.offline import plot
 import plotly.graph_objects as go
-
+import random
 import os
 from glob import glob
+
+COLORS = [      'aliceblue', 'antiquewhite', 'aqua', 'aquamarine', 'azure',
+                'beige', 'bisque', 'black', 'blanchedalmond', 'blue',
+                'blueviolet', 'brown', 'burlywood', 'cadetblue',
+                'chartreuse', 'chocolate', 'coral', 'cornflowerblue',
+                'cornsilk', 'crimson', 'cyan', 'darkblue', 'darkcyan',
+                'darkgoldenrod', 'darkgray', 'darkgrey', 'darkgreen',
+                'darkkhaki', 'darkmagenta', 'darkolivegreen', 'darkorange',
+                'darkorchid', 'darkred', 'darksalmon', 'darkseagreen',
+                'darkslateblue', 'darkslategray', 'darkslategrey',
+                'darkturquoise', 'darkviolet', 'deeppink', 'deepskyblue',
+                'dimgray', 'dimgrey', 'dodgerblue', 'firebrick',
+                'floralwhite', 'forestgreen', 'fuchsia', 'gainsboro',
+                'ghostwhite', 'gold', 'goldenrod', 'gray', 'grey', 'green',
+                'greenyellow', 'honeydew', 'hotpink', 'indianred', 'indigo',
+                'ivory', 'khaki', 'lavender', 'lavenderblush', 'lawngreen',
+                'lemonchiffon', 'lightblue', 'lightcoral', 'lightcyan',
+                'lightgoldenrodyellow', 'lightgray', 'lightgrey',
+                'lightgreen', 'lightpink', 'lightsalmon', 'lightseagreen',
+                'lightskyblue', 'lightslategray', 'lightslategrey',
+                'lightsteelblue', 'lightyellow', 'lime', 'limegreen',
+                'linen', 'magenta', 'maroon', 'mediumaquamarine',
+                'mediumblue', 'mediumorchid', 'mediumpurple',
+                'mediumseagreen', 'mediumslateblue', 'mediumspringgreen',
+                'mediumturquoise', 'mediumvioletred', 'midnightblue',
+                'mintcream', 'mistyrose', 'moccasin', 'navajowhite', 'navy',
+                'oldlace', 'olive', 'olivedrab', 'orange', 'orangered',
+                'orchid', 'palegoldenrod', 'palegreen', 'paleturquoise']
 
 
 class TrainPlotter():
@@ -37,7 +65,7 @@ class TrainPlotter():
             df = pd.read_csv(exp_fp)
             df.columns = df.columns.str.strip()
             tables.append((exp_fn, df))
-            # print(df.head())
+            print(df.head())
             # raise NotImplementedError()
         tables = dict(tables)
 
@@ -46,11 +74,15 @@ class TrainPlotter():
     def _plot_metrics(self, tables:dict) -> None:
 
         fig = go.Figure()
-        for exp_fn, table in tables.items():
+        n_colors = len(tables.values())
+        colors = random.sample(COLORS, k=n_colors)
+
+        for i, (exp_fn, table) in enumerate(tables.items()):
             # x = table['epochs']
             # y1 = table['metrics/mAP_0.5']
             # trace = px.add_trace(data_frame=table, x = 'epoch', y = 'metrics/mAP_0.5', title = exp_fn)
-            fig.add_trace(go.Scatter(x = table['epoch'] , y = table['metrics/mAP_0.5'], mode ='lines', name = exp_fn))
+            fig.add_trace(go.Scatter(x = table['epoch'] , y = table['metrics/precision'], line = dict(width=4, color=colors[i]), name = exp_fn))
+            fig.add_trace(go.Scatter(x = table['epoch'] , y = table['metrics/recall'], line = dict(width=4, dash='dot', color=colors[i]), name = exp_fn))
         plot(fig)
 
         return

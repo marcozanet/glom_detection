@@ -286,12 +286,7 @@ def test_plotter_data_segm():
     #         '/Users/marco/Downloads/train_20feb23/tiles/train/images/200209761_09_SFOG_sample0_49_24.png']
     plotter = PlotterSegmHubmap(data_root=data_root, 
                                 files=None, 
-                                verbose = False,
-                                wsi_images_like = '*.tif', 
-                                wsi_labels_like = '*.json',
-                                tile_images_like = '*.png',
-                                tile_labels_like = '*.txt',
-                                empty_ok=False) 
+                                verbose = False) 
     plotter()
 
     return

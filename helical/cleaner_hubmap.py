@@ -19,10 +19,8 @@ class CleanerHubmap(ProfilerHubmap):
                 **kwargs):
             
         super().__init__(*args, **kwargs)
-
         self.empty_perc = empty_perc
         self.safe_copy = safe_copy
-
         self.data = self._get_data()
 
         return
@@ -364,8 +362,9 @@ class CleanerHubmap(ProfilerHubmap):
     def _remove_perc_(self):
         """ Removes empty images, so that remaining empty images are self.perc% of the total images."""
 
-        tile_labels = self.data['tile_labels']           
-        full, empty = self._get_empty_images()
+        filtered_data = self._get_only_train_val_files()
+        tile_labels = filtered_data['tile_labels']          
+        full, empty = self._get_empty_images(also_from_test=False)
         num_empty = len(empty)
         num_full = len(full)
         self.log.info(f"empty:{num_empty}, full:{num_full}")

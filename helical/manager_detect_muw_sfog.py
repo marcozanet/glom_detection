@@ -126,7 +126,7 @@ class ManagerDetectMuwSFOG(ManagerBase):
         # 4) move slides back 
         self._move_slides_back()
         # 5) clean dataset, e.g. 
-        # self._clean_muw_dataset()
+        self._clean_muw_dataset()
 
 
         return

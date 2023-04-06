@@ -46,7 +46,8 @@ class ManagerDetectHubmapPAS():
         self.wsi_dir = os.path.join(dst_root, self.task, 'wsi')
         self.tiles_dir = os.path.join(dst_root, self.task, 'tiles')
         self.stain = stain
-        
+        raise Exception("TODO: ADD FILTER ON TRAIN VAL (NO TEST) FOR CLEANING")
+
 
         self.log = get_logger()
 

@@ -28,35 +28,6 @@ class CleanerMuw(ProfilerMUW):
         return
     
 
-    # def _del_unpaired_labels(self):
-    #     """ Removes labels that don't have a corresponding image (the opposite is fine). """
-
-    #     tile_images = self.data['tile_images']
-    #     tile_labels = self.data['tile_labels']        
-    #     unpaired_labels = [file for file in tile_labels if os.path.join(os.path.dirname(file).replace('labels', 'images'), os.path.basename(file).replace(self.tiles_label_format, self.tiles_image_format)) not in tile_images]
-       
-    #     @log_start_finish(class_name=self._class_name, func_name='_del_unpaired_labels', msg = f" Deleting unpaired labels" )
-    #     def do():
-    #         # self.log.info(f"len unpaired: {len(unpaired_labels)}")
-    #         for file in tqdm(unpaired_labels, desc = "Removing unpaired label"):
-    #             # self.log.info(f"file: {file}")
-    #             assert os.path.isfile(file), self.log.error(f"{self._class_name}.{'_replacing_class'}: AssertionError:'file':{file} is not a valid filepath.")
-    #             # self.log.info(f"assert passed")
-    #             os.remove(file)
-    #             # self.log.info(f"file removed. ")
-            
-    #         # update self.data: 
-    #         self.data = self._get_data()
-            
-    #         return
-        
-    #     do()
-        
-
-    #     return
-
-
-
     def _del_unpaired_labels(self):
         """ Removes labels that don't have a corresponding image (the opposite is fine). """
 
@@ -295,7 +266,6 @@ class CleanerMuw(ProfilerMUW):
             
             # update self.data: 
             self.data = self._get_data()
-
             return
         do()
         
@@ -393,12 +363,12 @@ class CleanerMuw(ProfilerMUW):
     def _remove_perc_(self):
         """ Removes empty images, so that remaining empty images are self.perc% of the total images."""
 
-        tile_labels = self.data['tile_labels']           
-        full, empty = self._get_empty_images()
+        filtered_data = self._get_only_train_val_files()
+        tile_labels = filtered_data['tile_labels']           
+        full, empty = self._get_empty_images(also_from_test=False)
         num_empty = len(empty)
         num_full = len(full)
         self.log.info(f"empty: {num_empty}, full:{num_empty}")
-
 
         assert num_full > 0, self.log.error(f"{self._class_name}.{'_remove_perc_'}: no full image found. full images:{num_full}, empty images:{num_empty}")
 
@@ -444,6 +414,7 @@ class CleanerMuw(ProfilerMUW):
         """ Reads through label files and deletes the empty ones. """
 
         tile_labels = self.data['tile_labels']  
+
         for file in tqdm(tile_labels, desc="Removing empty labels"): 
             
             #open file
@@ -496,44 +467,44 @@ class CleanerMuw(ProfilerMUW):
 
         return
     
-    def _clean_hubmap(self):
+    # def _clean_hubmap(self):
 
-        if self.safe_copy is True:
-            self._copy_tree()
-        # 1) delete labels where image doesn't exist
-        self._del_unpaired_labels()
-        # 2) remove label redundancies
-        self._del_redundant_labels()
-        # 8) removing empty images to only have empty_perc of images being empty
-        self._remove_perc_()
+    #     if self.safe_copy is True:
+    #         self._copy_tree()
+    #     # 1) delete labels where image doesn't exist
+    #     self._del_unpaired_labels()
+    #     # 2) remove label redundancies
+    #     self._del_redundant_labels()
+    #     # 8) removing empty images to only have empty_perc of images being empty
+    #     self._remove_perc_()
 
-        return
+    #     return
 
 
     
     def __call__(self) -> None:
 
-        self._get_instances_df()
+        self._clean_muw()
         return 
 
 
 
-def test_Cleaner():
-    import sys 
-    system = 'mac' if sys.platform == 'darwin' else 'windows'
+# def test_Cleaner():
+#     import sys 
+#     system = 'mac' if sys.platform == 'darwin' else 'windows'
     
-    safe_copy = False
-    data_root = '/Users/marco/converted_march'
-    # data_root = '/Users/marco/Downloads/train_20feb23/' if system == 'mac' else r'D:\marco\datasets\muw\detection'
-    cleaner = CleanerMuw(data_root=data_root, 
-                        safe_copy=safe_copy,
-                        wsi_images_like = '*.tif', 
-                        wsi_labels_like = '*.gson',
-                        tile_images_like = '*.png',
-                        tile_labels_like = '*.txt',)
-    cleaner()
-    return
+#     safe_copy = False
+#     data_root = '/Users/marco/converted_march'
+#     # data_root = '/Users/marco/Downloads/train_20feb23/' if system == 'mac' else r'D:\marco\datasets\muw\detection'
+#     cleaner = CleanerMuw(data_root=data_root, 
+#                         safe_copy=safe_copy,
+#                         wsi_images_like = '*.tif', 
+#                         wsi_labels_like = '*.gson',
+#                         tile_images_like = '*.png',
+#                         tile_labels_like = '*.txt',)
+#     cleaner()
+#     return
 
 
-if __name__ == '__main__':
-    test_Cleaner()
+# if __name__ == '__main__':
+#     test_Cleaner()
