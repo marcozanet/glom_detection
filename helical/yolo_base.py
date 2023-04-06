@@ -98,7 +98,7 @@ class YOLOBase(Configurator):
         nums = [int(exp.replace('exp','')) for exp in exps]
         nums = sorted(nums)
 
-        new_fold = os.path.join(exp_fold, f"exp{nums[-1]}")
+        new_fold = os.path.join(exp_fold, f"exp{nums[-1]+1}")
         self.log.info(f"{self._class_name}.{'get_exp_fold'}: exp folder: {new_fold}.")
 
         return new_fold

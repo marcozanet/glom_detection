@@ -1,6 +1,6 @@
-05/04 15:19:10|INFO|YOLO_Trainer_Segmentor.get_exp_fold: exp folder: /Users/marco/yolov5/runs/train-seg/exp32.
-05/04 15:19:10|INFO|⏳ Setting configurations for YOLO: 
-05/04 15:19:10|INFO|✅ YOLO set up completed YOLO ✅ .
-05/04 15:19:10|INFO|YOLO_Trainer_Segmentor.train: weights:yolov5s-seg.pt
-05/04 15:19:10|INFO|⏳ Starting YOLO segmentation:
-05/04 15:19:10|INFO|YOLO_Trainer_Segmentor.train: python segment/train.py --img 512 --batch 2 --epochs 1 --data helical.yaml --weights yolov5s-seg.pt --workers 0
+06/04 09:48:15|INFO|YOLO_Trainer_Segmentor.get_exp_fold: exp folder: /Users/marco/yolov5/runs/train-seg/exp36.
+06/04 09:48:15|INFO|⏳ Setting configurations for YOLO: 
+06/04 09:48:15|INFO|✅ YOLO set up completed YOLO ✅ .
+06/04 09:48:15|INFO|YOLO_Trainer_Segmentor.train: weights:yolov5s-seg.pt
+06/04 09:48:15|INFO|⏳ Starting YOLO segmentation:
+06/04 09:48:15|INFO|YOLO_Trainer_Segmentor.train: python segment/train.py --img 512 --batch 2 --epochs 1 --data helical.yaml --weights yolov5s-seg.pt --workers 0
