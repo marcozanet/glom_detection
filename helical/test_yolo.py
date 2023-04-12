@@ -9,7 +9,7 @@ def test_yolo_trainer_detect_muw_sfog():
 
     repository_dir = '/Users/marco/yolo/code/helical' if system == 'mac' else r'C:\marco\code\glom_detection\helical'
     yolov5dir = '/Users/marco/yolov5' if system == 'mac' else r'C:\marco\yolov5'
-    data_folder = '/Users/marco/helical_tests/test_yolo_detect_train_muw_sfog/detection/tiles' if system == 'mac' else r'D:\marco\datasets\slides\detection\tiles'
+    data_folder = '/Users/marco/helical_tests/test_yolo_detect_train_muw_sfog/detection/tiles' if system == 'mac' else r'D:\marco\datasets\yolo_detect_muw_sfog\detection'
     device = None if system == 'mac' else 'cuda:0'
     workers = 0 if system == 'mac' else 1
     map_classes = {'Glo-healthy':1, 'Glo-unhealthy':0} 
@@ -37,7 +37,7 @@ def test_yolo_trainer_detect_hub_pas():
 
     repository_dir = '/Users/marco/yolo/code/helical' if system == 'mac' else r'C:\marco\code\glom_detection\helical'
     yolov5dir = '/Users/marco/yolov5' if system == 'mac' else r'C:\marco\yolov5'
-    data_folder = '/Users/marco/helical_tests/test_yolo_detect_train_hubmap_pas/detection/tiles' if system == 'mac' else r'D:\marco\datasets\slides\detection\tiles'
+    data_folder = '/Users/marco/helical_tests/test_yolo_detect_train_hubmap_pas/detection/tiles' if system == 'mac' else r'D:\marco\datasets\yolo_detect_muw_sfog\detection'
     device = None if system == 'mac' else 'cuda:0'
     workers = 0 if system == 'mac' else 1
     map_classes = {'glomerulus':0} 
@@ -66,7 +66,7 @@ def test_yolo_trainer_segm_hub_pas():
 
     repository_dir = '/Users/marco/yolo/code/helical' if system == 'mac' else r'C:\marco\code\glom_detection\helical'
     yolov5dir = '/Users/marco/yolov5' if system == 'mac' else r'C:\marco\yolov5'
-    data_folder = '/Users/marco/helical_tests/test_yolo_segm_train_hubmap_pas/detection/tiles' if system == 'mac' else r'D:\marco\datasets\slides\detection\tiles'
+    data_folder = '/Users/marco/helical_tests/test_yolo_segm_train_hubmap_pas/detection/tiles' if system == 'mac' else r'D:\marco\datasets\yolo_detect_muw_sfog\detection'
     device = None if system == 'mac' else 'cuda:0'
     workers = 0 if system == 'mac' else 1
     map_classes =  {'glomerulus':0} 
