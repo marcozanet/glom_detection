@@ -26,6 +26,7 @@ class KCrossValidation(Configurator):
         self.tile_lbl_fmt = '.txt'
         self.data_root = data_root
         self.k = k
+        self.dataset = dataset
         self._parse()
 
         self.data, self.file_list = self._get_data()
@@ -158,11 +159,14 @@ class KCrossValidation(Configurator):
         self.create_n_tiles_file(test_basenames, fold='val')
         self.data, self.file_list = self._get_data() # update data
 
-
         return
     
+    
     def create_n_tiles_file(self, wsi_basenames:list, fold:str) -> None: 
-
+        
+        if self.dataset == 'muw': 
+            wsi_basenames = [f"{basename}_sample{j}" for basename in wsi_basenames for j in range(5)]
+            wsi_basenames = [basename for basename in wsi_basenames if os.path.isfile(basename)]
         write_dict = {wsi_name:self.n_tiles_dict[wsi_name] for wsi_name in wsi_basenames}
         self.log.info(f"{write_dict}")
         fp = os.path.join(self.data_root, 'wsi', fold, 'labels', 'n_tiles.json')
