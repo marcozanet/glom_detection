@@ -1,1 +1,2 @@
-datetime,exp_fold,dataset,batch_size,task,map_classes,epochs,tile_size,image_size,weights,device,data_folder
+datetime,status,duration,exp_fold,dataset,batch_size,task,map_classes,epochs,tile_size,image_size,weights,device,data_folder,crossvalidation,tot_kfolds,cur_kfold,note
+12/04/2023 10:22:30,completed,0h 1m 54s,exp102,muw,5,detection,"{'Glo-healthy': 1, 'Glo-unhealthy': 0}",1,128,2048,yolov5s.pt,None,/Users/marco/helical_tests/test_yolo_detect_train_muw_sfog/detection/tiles,True,3,2,testing

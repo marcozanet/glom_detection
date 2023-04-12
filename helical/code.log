@@ -1,13 +1,24 @@
-06/04 18:12:14|INFO|KCrossValidation.__init__: n_wsis:4.
-06/04 18:12:14|INFO|KCrossValidation._get_i_split: iter_0,  train: 3 images, test: 1.
-06/04 18:12:14|INFO|KCrossValidation._get_i_split: iter_1,  train: 3 images, test: 1.
-06/04 18:12:14|INFO|KCrossValidation._get_i_split: iter_2,  train: 2 images, test: 2.
-06/04 18:12:14|INFO|KCrossValidation.fix_n_tiles: n_tiles_tot:{'2f6ecfcdf': [15, 12], '26dc41664': [18, 20], '4ef6695ce': [19, 24], '1e2425f28': [13, 15]}.
-06/04 18:12:14|INFO|KCrossValidation._change_folds: train: 2 images: ['26dc41664', '4ef6695ce'].
-06/04 18:12:14|INFO|KCrossValidation._change_folds: test: 2 labels: ['1e2425f28', '2f6ecfcdf'].
-06/04 18:12:14|INFO|train
-06/04 18:12:14|INFO|{'26dc41664': [18, 20], '4ef6695ce': [19, 24]}
-06/04 18:12:14|INFO|/Users/marco/helical_tests/test_kcrossvalidation/detection/wsi/train/labels/n_tiles.json
-06/04 18:12:14|INFO|test
-06/04 18:12:14|INFO|{'1e2425f28': [13, 15], '2f6ecfcdf': [15, 12]}
-06/04 18:12:14|INFO|/Users/marco/helical_tests/test_kcrossvalidation/detection/wsi/test/labels/n_tiles.json
+12/04 10:22:30|INFO|/Users/marco/helical_tests/test_yolo_detect_train_muw_sfog/detection
+12/04 10:22:30|INFO|KCrossValidation.__init__: n_wsis:4.
+12/04 10:22:30|INFO|KCrossValidation._get_i_split: iter_0,  train: 3 images, test: 1.
+12/04 10:22:30|INFO|KCrossValidation._get_i_split: iter_1,  train: 3 images, test: 1.
+12/04 10:22:30|INFO|KCrossValidation._get_i_split: iter_2,  train: 2 images, test: 2.
+12/04 10:22:30|INFO|KCrossValidation.fix_n_tiles: n_tiles_tot:{'2f6ecfcdf': [15, 12], '4ef6695ce': [19, 24], '1e2425f28': [13, 15], '26dc41664': [18, 20]}.
+12/04 10:22:30|INFO|YOLO_Trainer_Detector.get_exp_fold: exp folder: /Users/marco/yolov5/runs/train/exp102.
+12/04 10:22:30|INFO|KCrossValidation._change_folds: train: 2 images: ['2f6ecfcdf', '4ef6695ce'].
+12/04 10:22:30|INFO|KCrossValidation._change_folds: test: 2 labels: ['1e2425f28', '26dc41664'].
+12/04 10:22:30|INFO|train
+12/04 10:22:30|INFO|{'2f6ecfcdf': [15, 12], '4ef6695ce': [19, 24]}
+12/04 10:22:30|INFO|/Users/marco/helical_tests/test_yolo_detect_train_muw_sfog/detection/wsi/train/labels/n_tiles.json
+12/04 10:22:30|INFO|val
+12/04 10:22:30|INFO|{'1e2425f28': [13, 15], '26dc41664': [18, 20]}
+12/04 10:22:30|INFO|/Users/marco/helical_tests/test_yolo_detect_train_muw_sfog/detection/wsi/val/labels/n_tiles.json
+12/04 10:22:30|INFO|⏳ Setting configurations for YOLO: 
+12/04 10:22:30|INFO|✅ YOLO set up completed YOLO ✅ .
+12/04 10:22:30|INFO|YOLO_Trainer_Detector.train: data:/Users/marco/yolov5/data/helical.yaml
+12/04 10:22:30|INFO|YOLO_Trainer_Detector.train: weights:yolov5s.pt
+12/04 10:22:30|INFO|⏳ Start training YOLO:
+12/04 10:22:30|INFO|YOLO_Trainer_Detector.train: python train.py --img 128 --batch 5 --epochs 1 --data /Users/marco/yolov5/data/helical.yaml --weights yolov5s.pt --workers 0
+12/04 10:24:24|INFO|PlotterDetectMUW._get_data: Listing also test files.
+12/04 10:24:24|ERROR|PlotterDetectMUW._get_data: no tile image like /Users/marco/helical_tests/test_yolo_detect_train_muw_sfog/detection/tiles/*/images/*sample*.png was found.
+12/04 10:24:24|ERROR|YOLO_Trainer_Detector._log_data: ❌ Failed plotting.

@@ -16,12 +16,16 @@ def test_yolo_trainer_detect_muw_sfog():
     save_features = False
     tile_size = 128
     batch_size=5 if system == 'mac' else 4
-    epochs=2
+    epochs=1
     dataset = 'muw'
+    crossvalid_tot_kfolds = 3
+    crossvalid_cur_kfold = 2
+    note = 'testing'
     detector = YOLO_Trainer_Detector(dataset = dataset, data_folder=data_folder, repository_dir=repository_dir, 
-                            yolov5dir=yolov5dir, map_classes=map_classes, tile_size = tile_size,
-                            batch_size=batch_size, epochs=epochs, workers=workers, 
-                            device=device, save_features=save_features)
+                                    yolov5dir=yolov5dir, map_classes=map_classes, tile_size = tile_size,
+                                    batch_size=batch_size, epochs=epochs, workers=workers, 
+                                    device=device, save_features=save_features, crossvalid_tot_kfolds=crossvalid_tot_kfolds,
+                                    crossvalid_cur_kfold=crossvalid_cur_kfold, note = note)
     detector.train()
 
     return
@@ -42,10 +46,14 @@ def test_yolo_trainer_detect_hub_pas():
     batch_size=2 if system == 'mac' else 4
     epochs=5
     dataset = 'hubmap'
+    crossvalid_tot_kfolds = 3
+    crossvalid_cur_kfold = 1
     detector = YOLO_Trainer_Detector(dataset = dataset, data_folder=data_folder, repository_dir=repository_dir, 
                                     yolov5dir=yolov5dir, map_classes=map_classes, tile_size = tile_size,
                                     batch_size=batch_size, epochs=epochs, workers=workers, 
-                                    device=device, save_features=save_features)
+                                    device=device, save_features=save_features,
+                                    crossvalid_tot_kfolds=crossvalid_tot_kfolds,
+                                    crossvalid_cur_kfold=crossvalid_cur_kfold)
     detector.train()
 
     return
@@ -67,10 +75,13 @@ def test_yolo_trainer_segm_hub_pas():
     batch_size=2 if system == 'mac' else 4
     epochs=1
     dataset = 'hubmap'
+    crossvalid_tot_kfolds = 3
+    crossvalid_cur_kfold = 1
     segmentor = YOLO_Trainer_Segmentor(dataset = dataset, data_folder=data_folder, repository_dir=repository_dir,
                                         yolov5dir=yolov5dir, map_classes=map_classes, tile_size = tile_size,
                                         batch_size=batch_size, epochs=epochs, workers=workers, device=device,
-                                        save_features=save_features)
+                                        save_features=save_features, crossvalid_tot_kfolds=crossvalid_tot_kfolds,
+                                        crossvalid_cur_kfold=crossvalid_cur_kfold)
     segmentor.train()
 
     return
@@ -114,4 +125,4 @@ def test_yolo_infere_detect_hubmap_pas():
 
 if __name__ == '__main__':
     
-    test_yolo_trainer_segm_hub_pas()
+    test_yolo_trainer_detect_muw_sfog()

@@ -13,6 +13,8 @@ import shutil
 from cleaner_muw import CleanerMuw
 from configurator import Configurator
 from abc import ABC, abstractmethod
+from crossvalidation import KCrossValidation
+from typing import Type
 
 
 
@@ -55,8 +57,12 @@ class ManagerBase(Configurator, ABC):
         self.tiles_dir = os.path.join(dst_root, self.task, 'tiles')
         self.data_source = data_source
         self.class_name = self.__class__.__name__
+
+
         
         return
+    
+
 
 
     def _make_tiles_branch(self) -> None: 

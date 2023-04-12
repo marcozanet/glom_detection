@@ -9,6 +9,7 @@ from plotter_data_segm_hubmap_pas import PlotterSegmHubmap
 from yolo_base import YOLOBase
 from exp_tracker import Exp_Tracker
 from datetime import datetime
+from time import time
 
 
 class YOLO_Trainer_Detector(YOLOBase):
@@ -25,9 +26,11 @@ class YOLO_Trainer_Detector(YOLOBase):
         self.exp_fold = os.path.basename(self.get_exp_fold(os.path.join(self.yolov5dir, 'runs', 'train')))
         now = datetime.now()
         self.exp_datetime = now.strftime("%d/%m/%Y %H:%M:%S")
-        other_params = {'datetime': self.exp_datetime, 'image_size':self.image_size, 'task':self.task, 'exp_fold':self.exp_fold, 'weights':self.weights }
-        tracker = Exp_Tracker(other_params=other_params)
-        tracker.update_tracker(**kwargs)
+        other_params = {'datetime': self.exp_datetime, 'duration':'0h 0m 0s', 'image_size':self.image_size, 'task':self.task, 
+                        'exp_fold':self.exp_fold, 'weights':self.weights, 'crossvalidation':self.crossvalidation, 
+                        'tot_kfolds': self.tot_kfolds, 'cur_kfold': self.cur_kfold, 'status':'started', 'note':self.note}
+        self.tracker = Exp_Tracker(other_params=other_params)
+        self.tracker.update_tracker(**kwargs)
 
         return
     
@@ -37,23 +40,48 @@ class YOLO_Trainer_Detector(YOLOBase):
         class_name = self.__class__.__name__
         
         # 1) prepare training:
+        if self.crossvalidation: 
+            self.crossvalidator._change_kfold(self.cur_kfold)
         # start_time = time.time()
         yaml_fn = self._edit_yaml()
         self.log.info(f"{class_name}.{'train'}: data:{yaml_fn}")
         self.log.info(f"{class_name}.{'train'}: weights:{self.weights}")
 
         # 2) train:
-        self.log.info(f"⏳ Start training YOLO:")
-        os.chdir(self.yolov5dir)
-        prompt = f"python train.py --img {self.tile_size} --batch {self.batch_size} --epochs {self.epochs}"
-        prompt += f" --data {yaml_fn} --weights {self.weights} --workers {self.workers}"
-        prompt = prompt+f" --device {self.device}" if self.device is not None else prompt 
-        self.log.info(f"{class_name}.{'train'}: {prompt}")
-        os.system(prompt)
-        os.chdir(self.repository_dir)
+        try:
+            # train_start = time()
+            duration_start = datetime.now()
+            self.tracker.update_status('prepared')
+            self.log.info(f"⏳ Start training YOLO:")
+            os.chdir(self.yolov5dir)
+            prompt = f"python train.py --img {self.tile_size} --batch {self.batch_size} --epochs {self.epochs}"
+            prompt += f" --data {yaml_fn} --weights {self.weights} --workers {self.workers}"
+            prompt = prompt+f" --device {self.device}" if self.device is not None else prompt 
+            self.log.info(f"{class_name}.{'train'}: {prompt}")
+            os.system(prompt)
+            os.chdir(self.repository_dir)
+        except:
+            self.tracker.update_status('train_err')
 
         # 3) save:
-        self._log_data(mode='train')
+        train_h, train_m, train_s = self._get_train_duration(start=duration_start)
+        train_duration = f"{train_h}h {train_m}m {train_s}s"
+        print(f"other train dur: {train_duration}")
+        if train_m < 1: 
+            print('a')
+            self.tracker.update_duration(train_duration)
+            self.tracker.update_status('<1min')
+            return
+
+        try:
+            print('b')
+            self.tracker.update_duration(train_duration)
+            self._log_data(mode='train')
+            self.tracker.update_status('completed')
+        except:
+            print('c')
+            self.tracker.update_duration(train_duration)
+            self.tracker.update_status('plotfailed')
     
         return
 
@@ -61,9 +89,10 @@ class YOLO_Trainer_Detector(YOLOBase):
     def _log_data(self, mode = Literal['train', 'detect']): 
         """ Logs a bunch of dataset info prior to training. """
 
-        exp_root = os.path.join(self.yolov5dir, 'runs', f"{mode}")
-        exp_fold = self.get_exp_fold(exp_fold=exp_root)
+        exp_fold = os.path.join(self.yolov5dir, 'runs', f"{mode}", self.exp_fold)
+        print(f"exp fold for plotting: {exp_fold}")
         shutil.copyfile(src=os.path.join(self.repository_dir, 'code.log'), dst = os.path.join(exp_fold, 'train.log'))
+        shutil.copyfile(src=os.path.join(self.repository_dir, 'exp_tracker.csv'), dst = os.path.join(exp_fold, 'exp_tracker.csv'))
         data_root = os.path.join(self.data_folder.split(self.task)[0], self.task)
         plotters = {'detection':{'muw': PlotterDetectMUW, 
                                 'hubmap': PlotterDetectHub},
@@ -76,6 +105,7 @@ class YOLO_Trainer_Detector(YOLOBase):
         try:
             plotter(data_root=data_root, files=None, verbose = False)
             shutil.copyfile(src=os.path.join(self.repository_dir, 'plot_data.png'), dst = os.path.join(exp_fold, 'data.png'))
+
         except:
             self.log.error(f"{self._class_name}.{'_log_data'}: ❌ Failed plotting.")
 

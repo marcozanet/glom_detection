@@ -64,9 +64,6 @@ class KCrossValidation(Configurator):
 
         return data, file_list
     
-    @abstractmethod
-    def _move_ntiles_json(self): 
-        return
 
     def _get_folds(self) -> List[list]:
         """ Splits data into k folds. """
@@ -74,9 +71,6 @@ class KCrossValidation(Configurator):
         list_imgs = self.data['wsi_imgs']
         fnames = sorted([os.path.basename(name).split('.')[0] for name in list_imgs])
         fp_fnames = {os.path.basename(fp).split('.')[0]:fp for fp in list_imgs}
-
-
-
 
         folds = []
         idxs = np.linspace(start=0, stop=self.n_wsis, num=self.k+1, dtype=int) # k + 1 because first idx=0
@@ -102,7 +96,7 @@ class KCrossValidation(Configurator):
     
     def _get_i_split(self, folds:dict): 
 
-        # fold_splits = {i: {'train': folds[[j for j in range(self.k) if j != i]], 'test': folds[i] } for i in range(self.k) }    
+        # fold_splits = {i: {'train': folds[[j for j in range(self.k) if j != i]], 'val': folds[i] } for i in range(self.k) }    
 
         fold_splits = {}
         for i in range(self.k): 
@@ -116,18 +110,18 @@ class KCrossValidation(Configurator):
             # print(len(train_folds))
             test_fold = folds[test_idx]
             # print(len(test_fold))
-            fold_splits[i] = {'train': train_folds, 'test': test_fold}
+            fold_splits[i] = {'train': train_folds, 'val': test_fold}
             
-            tot_images = len(fold_splits[i]['train']) + len(fold_splits[i]['test'])
+            tot_images = len(fold_splits[i]['train']) + len(fold_splits[i]['val'])
             assert tot_images == self.n_wsis, self.log.error(f"{self.class_name}._get_i_split: sum of elems in train and test folder should be = self.n_wsis({tot_images}) but is .")
             # TODO add that train should be disjoint with test folds.
-            self.log.info(f"{self.class_name}._get_i_split: iter_{i},  train: {len(fold_splits[i]['train'])} images, test: {len(fold_splits[i]['test'])}.")
+            self.log.info(f"{self.class_name}._get_i_split: iter_{i},  train: {len(fold_splits[i]['train'])} images, test: {len(fold_splits[i]['val'])}.")
             
-            # print(f"len fold: train:{len(fold_splits[i]['train'])}, test:{len(fold_splits[i]['test'])}")
+            # print(f"len fold: train:{len(fold_splits[i]['train'])}, test:{len(fold_splits[i]['val'])}")
 
         return fold_splits
     
-    def _change_folds(self, fold_i:int): 
+    def _change_kfold(self, fold_i:int): 
 
         assert fold_i < self.k , self.log.error(f"{self.class_name}._change_folds: fold_i:{fold_i} should be < num folds({self.k}). Index starting from 0.")
 
@@ -139,7 +133,7 @@ class KCrossValidation(Configurator):
 
         # self.log.info(f"{self.class_name}._change_folds: fold_i:{fold_i}. Moving files to new new folds.")
         train_basenames = [os.path.basename(name).split('.')[0] for name in self.splits[fold_i]['train']]
-        test_basenames = [os.path.basename(name).split('.')[0] for name in self.splits[fold_i]['test']]
+        test_basenames = [os.path.basename(name).split('.')[0] for name in self.splits[fold_i]['val']]
         self.log.info(f"{self.class_name}._change_folds: train: {len(train_basenames)} images: {train_basenames}.")
         self.log.info(f"{self.class_name}._change_folds: test: {len(test_basenames)} labels: {test_basenames}.")
 
@@ -157,10 +151,11 @@ class KCrossValidation(Configurator):
         _move_files('train')
         self.data, self.file_list = self._get_data() # update data
         self.log.info('train')
+        # TODO ADD ONLY IN CASE THERE IS 
         self.create_n_tiles_file(train_basenames, fold='train')
-        _move_files('test')
-        self.log.info('test')
-        self.create_n_tiles_file(test_basenames, fold='test')
+        _move_files('val')
+        self.log.info('val')
+        self.create_n_tiles_file(test_basenames, fold='val')
         self.data, self.file_list = self._get_data() # update data
 
 
@@ -212,7 +207,7 @@ def test_KCrossValidation():
     data_root = '/Users/marco/helical_tests/test_kcrossvalidation/detection'
     k=3
     kcross = KCrossValidation(data_root=data_root, k=k)
-    kcross._change_folds(2)
+    kcross._change_kfold(1)
     # kcross._change_folds(1)
     # kcross._change_folds(0)
     # kcross._change_folds(2)

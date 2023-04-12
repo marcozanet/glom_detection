@@ -13,6 +13,7 @@ from configurator import Configurator
 from abc import ABC, abstractmethod
 from PIL import Image
 import random
+from crossvalidation import KCrossValidation
 
 
 class YOLOBase(Configurator):
@@ -29,6 +30,9 @@ class YOLOBase(Configurator):
                  epochs: int,
                  weights: str = None,
                  save_features: bool = False,
+                 crossvalid_tot_kfolds: int = None, 
+                 crossvalid_cur_kfold: int = None, 
+                 note: str = None,
                  device = None) -> None: 
 
         super().__init__()
@@ -47,6 +51,12 @@ class YOLOBase(Configurator):
         self.weights = weights
         self.n_classes = len(self.map_classes)
         self._class_name = self.__class__.__name__
+        self.tot_kfolds = crossvalid_tot_kfolds
+        self.cur_kfold = crossvalid_cur_kfold
+        self.log.info(os.path.dirname(self.data_folder))
+        self.crossvalidator = KCrossValidation(data_root=os.path.dirname(self.data_folder), k=self.tot_kfolds) if self.tot_kfolds is not None else None
+        self.crossvalidation = False if self.crossvalidator is None else True
+        self.note = note
 
         self.image_size = self.get_image_size()
         if dataset not in data_folder:
@@ -57,6 +67,13 @@ class YOLOBase(Configurator):
 
         return
     
+    def _parse(self): 
+
+        assert (self.tot_kfolds is None and self.cur_kfold is None) or  (self.tot_kfolds is not None and self.cur_kfold is not None) , self.log.error(ValueError(f"{self._class_name}.{'_parse'}: self.tot_kfolds:{self.tot_kfolds} and self.cur_kfold:{self.cur_kfold}, but either they're both None or they both are not None."))
+        assert self.cur_kfold < self.tot_kfolds, self.log.error(ValueError(f"{self._class_name}.{'_parse'}: self.tot_kfolds:{self.tot_kfolds} and self.cur_kfold:{self.cur_kfold}, but self.cur_kfold should be < self.tot_kfolds. Please start indexing from 0."))
+
+
+        return
 
     def add_attributes(self): 
         """ Adds other attributes depending on dataset. """
@@ -87,6 +104,18 @@ class YOLOBase(Configurator):
 
 
         return
+    
+    def _get_train_duration(self, start): 
+
+        end = datetime.datetime.now()
+        diff = (end - start)
+
+        diff_seconds = int(diff.total_seconds())
+        minute_seconds, seconds = divmod(diff_seconds, 60)
+        hours, minutes = divmod(minute_seconds, 60)
+        print(f"Train duration: {hours}h {minutes}m {seconds}s")
+
+        return hours, minutes, seconds
 
 
     def get_exp_fold(self, exp_fold:str) ->str:
