@@ -11,7 +11,7 @@ print("Torchvision Version: ",torchvision.__version__)
 
 # params
 device='cuda:0' if torch.cuda.is_available() else 'cpu'
-root_dir = '/Users/marco/helical_tests/test_cnn_processor/tiles'
+root_dir = '/Users/marco/helical_tests/test_cnn_processor/test_processor/tiles'
 map_classes = {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2} 
 k_tot = 4
 k_i = 1
@@ -31,7 +31,9 @@ crossvalidator._change_kfold(fold_i=k_i)
 # Load the pretrained model from pytorch
 vgg16 = models.vgg16_bn(weights = 'VGG16_BN_Weights.DEFAULT')
 vgg16.load_state_dict(torch.load(weights_path))
+print(vgg16)
 
+raise NotImplementedError()
 # Freeze training for all layers
 for param in vgg16.features.parameters():
     param.require_grad = False

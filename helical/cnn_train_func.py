@@ -151,7 +151,7 @@ def eval_model(model, dataloader_cls, dataloaders, criterion):
         model.eval()
         inputs, labels = data
 
-        inputs, labels = data
+        # inputs, labels = data
         inputs.to(device), labels.to(device)
 
         outputs = model(inputs)
