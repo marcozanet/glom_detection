@@ -136,6 +136,61 @@ class ConverterMuW(ConverterBase):
             computed = False
 
         return computed
+
+    def _split_json(self, json_file:str, multisample_loc_file:str) -> None:
+        """ Given a WSI txt (not normalised) annotation for samples or ROIs, it splits the annotation file 
+            into one file for each sample/ROI within the slide."""
+        
+        assert os.path.isfile(txt_file), f"'label_file':{txt_file} is not a valid filepath."
+        assert os.path.isfile(multisample_loc_file), f"'label_file':{multisample_loc_file} is not a valid filepath."
+        assert txt_file.split(".")[-1] == 'txt', f"'txt_file':{txt_file} should have '.txt' format. "
+
+        with open(txt_file, 'r') as f:
+            rows = f.readlines()
+        
+        with open(multisample_loc_file, 'r') as f:
+            data = geojson.load(f)
+        
+
+        txt_files = []
+        txt_fnames = []
+        for row in rows:
+            clss, xc, yc, box_w, box_h = row.replace(',', '').split(' ')
+            clss, xc, yc, box_w, box_h = float(clss), float(xc), float(yc), float(box_w), float(box_h)
+            for sample_n, rect in enumerate(data['features']):
+                assert len(rect['geometry']['coordinates'][0]) == 5, f"There seems to be more than 4 vertices annotated. "
+                save_fp = txt_file.replace('.txt', f"_sample{sample_n}.txt")
+                txt_files.append(save_fp)
+                txt_fnames.append(f"_sample{sample_n}.txt")
+                vertices = rect['geometry']['coordinates'][0][:-1]
+                x0, y0 = vertices[0]
+                x1, y1 = vertices[2]
+
+
+                if x0<xc<x1 and y0<yc<y1:
+                    xc_new, yc_new = xc-x0, yc-y0 # new ROI coords
+                    boxw_new, boxh_new = box_w, box_h # new ROI coords
+
+                    # NEW: normalize by level dimensions:
+                    basename = multisample_loc_file.split('.')[0]
+                    w_orig, h_orig, w_lev, h_lev = self._get_dimensions(basename=basename)
+                    xc_new, yc_new = xc_new/w_orig*w_lev, yc_new/h_orig*h_lev
+                    boxw_new, boxh_new = boxw_new/w_orig*w_lev, boxh_new/h_orig*h_lev
+
+                    text = f'{clss}, {xc_new}, {yc_new}, {boxw_new}, {boxh_new}\n'  
+                    # save txt file:
+                    with open(save_fp, 'a+') as f:
+                        f.write(text)
+
+        
+        # return a list of txt files for each sample:
+        txt_files = list(set(txt_files))
+        txt_fnames = list(set(txt_fnames))
+        self.log.info(f"{self.__class__.__name__}.{'_split_multisample_annotation'}: ✅ Splitted into {txt_fnames}.")
+
+
+        return txt_files
+    
     
     def __call__(self) -> None:
         """ Converts using the proper function depending on the conversion task of choice. """

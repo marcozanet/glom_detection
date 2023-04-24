@@ -6,9 +6,10 @@ import random
 from glob import glob 
 import shutil
 from tqdm import tqdm
+from configurator import Configurator
 
 
-class Splitter():
+class Splitter(Configurator):
 
     def __init__(self,
                  src_dir: str,
@@ -21,6 +22,8 @@ class Splitter():
                  safe_copy:bool = True,
                  verbose:bool = False,
                  reproducibility = True) -> None:
+        
+        super().__init__()
 
         self.log = get_logger()
 
@@ -62,7 +65,7 @@ class Splitter():
     def _split_yolo_tiles(self):
         """ Splits images and annotation tiles into folds."""
 
-        raise NotImplementedError()
+        self.log.error("Not Implementeds")
 
         return
     
@@ -134,19 +137,15 @@ class Splitter():
 
         images = [train_imgs, val_imgs, test_imgs] if self.splitting_mode == 'wtest' else [train_imgs, val_imgs]
 
-        if self.task == 'segmentation':
-            print(f"Splitting for segmentation has not yet been implemented. ")
-            raise NotImplementedError()
 
-        elif self.task == 'detection':
-            train_labels = [file for file in label_list for image in train_imgs if os.path.basename(image).split('.')[0] in file]
-            val_labels = [file for file in label_list for image in val_imgs if os.path.basename(image).split('.')[0] in file]
-            if self.splitting_mode == 'wtest':
-                test_labels = [file for file in label_list for image in test_imgs if os.path.basename(image).split('.')[0] in file]
+        train_labels = [file for file in label_list for image in train_imgs if os.path.basename(image).split('.')[0] in file]
+        val_labels = [file for file in label_list for image in val_imgs if os.path.basename(image).split('.')[0] in file]
+        if self.splitting_mode == 'wtest':
+            test_labels = [file for file in label_list for image in test_imgs if os.path.basename(image).split('.')[0] in file]
 
-            labels = [train_labels, val_labels, test_labels] if self.splitting_mode == 'wtest' else [train_labels, val_labels]
+        labels = [train_labels, val_labels, test_labels] if self.splitting_mode == 'wtest' else [train_labels, val_labels]
 
-            return images, labels
+        return images, labels
 
     def _get_files(self, format:str ) -> List[str]:
         """ Collects source files to be converted. """
@@ -404,9 +403,9 @@ class Splitter():
 
     def __call__(self):
 
-        if self.task == 'detection' and self.image_type == 'wsi':
+        if self.image_type == 'wsi':
             self._split_yolo_wsi()
-        elif self.task == 'detection' and self.image_type == 'tile':
+        else:
             print(f"detection + tile for splitter is still to be tested")
             raise NotImplementedError()
             self._split_yolo_tiles()

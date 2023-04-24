@@ -2,6 +2,7 @@ from dataset import GlomDataset
 from torch.utils.data import DataLoader
 from typing import Tuple
 import os
+import pytorch_lightning as pl
 
 
 def get_loaders(train_img_dir, 

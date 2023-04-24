@@ -29,12 +29,12 @@ class KCrossValidation(Configurator):
         self.dataset = dataset
         self._parse()
 
-        self.data, self.file_list = self._get_data()
-        # self.log.info(len(self.file_list))
-        self.n_wsis = len(self.data['wsi_imgs'])
-        self.log.info(f"{self.class_name}.__init__: n_wsis:{self.n_wsis}.")
-        self.splits = self.create_folds()
-        self.n_tiles_dict = self.get_n_tiles()
+        # self.data, self.file_list = self._get_data()
+        # # self.log.info(len(self.file_list))
+        # self.n_wsis = len(self.data['wsi_imgs'])
+        # self.log.info(f"{self.class_name}.__init__: n_wsis:{self.n_wsis}.")
+        # self.splits = self.create_folds()
+        # self.n_tiles_dict = self.get_n_tiles()
         
         #self.log.info(f"{self.class_name}.: :{}.")
         return
@@ -55,10 +55,10 @@ class KCrossValidation(Configurator):
         tile_imgs = sorted(glob(os.path.join(self.data_root, 'tiles', '*', 'images', f'*{self.tile_img_fmt}')))
         tile_lbls = sorted(glob(os.path.join(self.data_root, 'tiles', '*', 'labels', f'*{self.tile_lbl_fmt}')))
 
-        assert len(wsi_imgs) > 0, self.log.warning(f"{self.class_name}._get_data: len(wsi_imgs):{len(wsi_imgs)}.")
-        assert len(wsi_lbls) > 0, self.log.warning(f"{self.class_name}._get_data: len(wsi_lbls):{len(wsi_lbls)}.")
-        assert len(tile_imgs) > 0, self.log.warning(f"{self.class_name}._get_data: len(tile_imgs):{len(tile_imgs)}.")
-        assert len(tile_lbls) > 0, self.log.warning(f"{self.class_name}._get_data: len(tile_lbls):{len(tile_lbls)}.")
+        # assert len(wsi_imgs) > 0, self.log.warning(f"{self.class_name}._get_data: len(wsi_imgs):{len(wsi_imgs)}.")
+        # assert len(wsi_lbls) > 0, self.log.warning(f"{self.class_name}._get_data: len(wsi_lbls):{len(wsi_lbls)}.")
+        # assert len(tile_imgs) > 0, self.log.warning(f"{self.class_name}._get_data: len(tile_imgs):{len(tile_imgs)}.")
+        # assert len(tile_lbls) > 0, self.log.warning(f"{self.class_name}._get_data: len(tile_lbls):{len(tile_lbls)}.")
 
         data = {'wsi_imgs':wsi_imgs, 'wsi_lbls':wsi_lbls, 'tile_imgs':tile_imgs, 'tile_lbls':tile_lbls}
         file_list = wsi_imgs + wsi_lbls + tile_imgs + tile_lbls
@@ -69,7 +69,7 @@ class KCrossValidation(Configurator):
     def _get_folds(self) -> List[list]:
         """ Splits data into k folds. """
 
-        list_imgs = self.data['wsi_imgs']
+        list_imgs = sorted(self.data['wsi_imgs'])
         fnames = sorted([os.path.basename(name).split('.')[0] for name in list_imgs])
         fp_fnames = {os.path.basename(fp).split('.')[0]:fp for fp in list_imgs}
 
@@ -125,7 +125,14 @@ class KCrossValidation(Configurator):
     def _change_kfold(self, fold_i:int): 
 
         assert fold_i < self.k , self.log.error(f"{self.class_name}._change_folds: fold_i:{fold_i} should be < num folds({self.k}). Index starting from 0.")
-
+        
+        # ADDED HERE WAS IN INIT
+        self.data, self.file_list = self._get_data()
+        # self.log.info(len(self.file_list))
+        self.n_wsis = len(self.data['wsi_imgs'])
+        self.log.info(f"{self.class_name}.__init__: n_wsis:{self.n_wsis}.")
+        self.splits = self.create_folds()
+        self.n_tiles_dict = self.get_n_tiles()
 
         # for each wsi change folder to according new_folder 
         # selsf.log.info(self.splits[fold_i]['train'])
@@ -171,6 +178,10 @@ class KCrossValidation(Configurator):
         self.log.info(f"{write_dict}")
         fp = os.path.join(self.data_root, 'wsi', fold, 'labels', 'n_tiles.json')
         self.log.info(fp)
+
+        if not os.path.isfile(fp):
+            return
+
 
         json_obj = json.dumps(write_dict)
 

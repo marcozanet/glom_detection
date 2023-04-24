@@ -1,7 +1,8 @@
-
+# test managers
 from manager_detect_muw_sfog import ManagerDetectMuwSFOG
 from manager_detect_hubmap_pas import ManagerDetectHubmapPAS
 from manager_segm_hubmap_pas import ManagerSegmHubPAS
+from manager_segm_muw_sfog import ManagerSegmMuw
 
 
 def test_manager_detect_muw_sfog(): 
@@ -16,7 +17,7 @@ def test_manager_detect_muw_sfog():
     split_ratio = [0.34, 0.33, 0.33]    
     data_source = 'muw'
     task = 'detection'
-    verbose = True
+    verbose = True 
     safe_copy = False
     tiling_shape = (2048,2048)
     tiling_step = 512
@@ -74,7 +75,7 @@ def test_manager_segm_hubmap_pas():
     label_format = 'json'
     split_ratio = [0.34, 0.33, 0.33]    
     data_source = 'hubmap'
-    task = 'detection'
+    task = 'segmentation'
     verbose = True
     safe_copy = False
     tiling_shape = (2048,2048)
@@ -83,18 +84,54 @@ def test_manager_segm_hubmap_pas():
     tiling_show = True
     map_classes = {"glomerulus":0}
     inflate_points_ntimes=0
+    stain = 'pas'
 
 
     manager = ManagerSegmHubPAS(data_source=data_source, map_classes=map_classes,src_root=src_root, 
                              dst_root=dst_root, slide_format=slide_format, inflate_points_ntimes=inflate_points_ntimes,
                              label_format=label_format, split_ratio=split_ratio, tiling_shape=tiling_shape,
                              tiling_step=tiling_step, task=task, tiling_level=tiling_level,tiling_show=tiling_show,
-                             verbose=verbose, safe_copy=safe_copy)
+                             verbose=verbose, safe_copy=safe_copy, stain=stain)
     manager()
 
     return
 
 
+def test_manager_segm_muw_sfog(): 
+
+    import sys 
+    system = 'mac' if sys.platform == 'darwin' else 'windows'
+
+    # DEVELOPMENT 
+    src_root = '/Users/marco/helical_tests/test_manager_segm_muw_sfog' if system == 'mac' else  'not implemented'
+    dst_root = '/Users/marco/helical_tests/test_manager_segm_muw_sfog' if system == 'mac' else  'not implemented'
+    slide_format = 'tif'
+    label_format = 'json'
+    split_ratio = [0.34, 0.33, 0.33]    
+    data_source = 'muw'
+    task = 'segmentation'
+    verbose = True
+    safe_copy = False
+    tiling_shape = (2048,2048)
+    tiling_step = 2048
+    tiling_level = 0
+    tiling_show = True
+    map_classes = {'Glo-healthy':1, 'Glo-unhealthy':0}
+    inflate_points_ntimes=0
+    stain = 'sfog'
+
+
+    manager = ManagerSegmMuw(data_source=data_source, map_classes=map_classes,src_root=src_root, 
+                             dst_root=dst_root, slide_format=slide_format, inflate_points_ntimes=inflate_points_ntimes,
+                             label_format=label_format, split_ratio=split_ratio, tiling_shape=tiling_shape,
+                             tiling_step=tiling_step, task=task, tiling_level=tiling_level,tiling_show=tiling_show,
+                             verbose=verbose, safe_copy=safe_copy, stain=stain)
+    manager()
+
+    return
+
+
+
 if __name__ == '__main__':
-    test_manager_segm_hubmap_pas()
+    test_manager_segm_muw_sfog()
         
