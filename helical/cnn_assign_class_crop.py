@@ -22,8 +22,9 @@ class CropLabeller():
         self.tot_gt_labels = self.get_tot_gt_labels_from_dataset()
         self.tot_pred_labels = glob(os.path.join(self.exp_data, 'labels', '*.txt'))
         self.tot_crops = glob(os.path.join(self.exp_data, 'crops', "*", '*.jpg'))
-        self.map_classes = map_classes
+        self.map_classes = {v:k for v,k in map_classes.items() if k!='false_positives'} 
         self.resize = resize
+        # self.false_pos_clss = map_classes['false_positives']
         return
     
 
@@ -38,7 +39,7 @@ class CropLabeller():
     def get_image_shape(self): 
         """ Gets image dims"""
         img_dims: tuple
-        assert os.path.isdir(root_data), f"root_data:{self.root_data} is not a valid dirpath."
+        assert os.path.isdir(self.root_data), f"root_data:{self.root_data} is not a valid dirpath."
         all_images = glob(os.path.join(self.root_data, 'tiles', "*", "images", "*.png"))
         assert len(all_images)>0, f"No labels like {os.path.join(self.root_data, 'tiles', '*', 'labels', '*.png')} found in dataset."
         image = io.imread(all_images[0])
@@ -63,7 +64,8 @@ class CropLabeller():
             old = crop_fp
             # fold_map
             new = os.path.join(self.exp_data, 'crops_true_classes', map_class2fold_map[crop_clss], os.path.basename(crop_fp))
-            shutil.copy(src = old, dst = new)
+            if not os.path.isfile(new):
+                shutil.copy(src = old, dst = new)
         
         return
     
@@ -92,8 +94,6 @@ class CropLabeller():
         self.crop_class_dict = tot_true_labels
 
         return
-    
-
     
 
     def assign_class(self, pred_lbl:str):

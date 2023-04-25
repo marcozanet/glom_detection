@@ -1,14 +1,14 @@
-24/04 15:18:49|INFO|KCrossValidation.__init__: n_wsis:0.
-24/04 15:18:49|INFO|KCrossValidation._get_i_split: iter_0,  train: 0 images, test: 0.
-24/04 15:18:49|INFO|KCrossValidation._get_i_split: iter_1,  train: 0 images, test: 0.
-24/04 15:18:49|INFO|KCrossValidation._get_i_split: iter_2,  train: 0 images, test: 0.
-24/04 15:18:49|INFO|KCrossValidation._get_i_split: iter_3,  train: 0 images, test: 0.
-24/04 15:18:49|INFO|KCrossValidation.fix_n_tiles: n_tiles_tot:{}.
-24/04 15:18:49|INFO|KCrossValidation._change_folds: train: 0 images: [].
-24/04 15:18:49|INFO|KCrossValidation._change_folds: test: 0 labels: [].
-24/04 15:18:49|INFO|train
-24/04 15:18:49|INFO|{}
-24/04 15:18:49|INFO|/Users/marco/helical_tests/test_cnn_processor/test_processor/wsi/train/labels/n_tiles.json
-24/04 15:18:49|INFO|val
-24/04 15:18:49|INFO|{}
-24/04 15:18:49|INFO|/Users/marco/helical_tests/test_cnn_processor/test_processor/wsi/val/labels/n_tiles.json
+24/04 17:54:02|INFO|KCrossValidation.__init__: n_wsis:0.
+24/04 17:54:02|INFO|KCrossValidation._get_i_split: iter_0,  train: 0 images, test: 0.
+24/04 17:54:02|INFO|KCrossValidation._get_i_split: iter_1,  train: 0 images, test: 0.
+24/04 17:54:02|INFO|KCrossValidation._get_i_split: iter_2,  train: 0 images, test: 0.
+24/04 17:54:02|INFO|KCrossValidation._get_i_split: iter_3,  train: 0 images, test: 0.
+24/04 17:54:02|INFO|KCrossValidation.fix_n_tiles: n_tiles_tot:{}.
+24/04 17:54:02|INFO|KCrossValidation._change_folds: train: 0 images: [].
+24/04 17:54:02|INFO|KCrossValidation._change_folds: test: 0 labels: [].
+24/04 17:54:02|INFO|train
+24/04 17:54:02|INFO|{}
+24/04 17:54:02|INFO|/Users/marco/helical_tests/test_cnn_processor/test_processor/wsi/train/labels/n_tiles.json
+24/04 17:54:02|INFO|val
+24/04 17:54:02|INFO|{}
+24/04 17:54:02|INFO|/Users/marco/helical_tests/test_cnn_processor/test_processor/wsi/val/labels/n_tiles.json

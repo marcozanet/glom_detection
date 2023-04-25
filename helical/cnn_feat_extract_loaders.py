@@ -65,7 +65,7 @@ class CNNDataLoaders():
             imshow(out, title=[reversed_map_classes[int(onehot2int(x))] for x in classes])
 
         # Get a batch of training data
-        inputs, classes = next(iter(self.dataloader))
+        inputs, classes, _ = next(iter(self.dataloader))
         show_databatch(inputs, classes)
 
 

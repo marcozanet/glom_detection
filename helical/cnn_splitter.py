@@ -5,12 +5,12 @@ from sklearn import model_selection as ms
 from tqdm import tqdm
 import cv2
 
-
-class CNNProcessor(): 
+class CNNDataSplitter(): 
 
 
     def __init__(self, 
                  src_folds:list,
+                 yolo_root:str,
                  dst_root: str,
                  map_classes: dict,
                  resize:bool=True) -> None:
@@ -22,7 +22,8 @@ class CNNProcessor():
         self.tot_images = self._get_all_files()
         self.dst_root = dst_root
         self.resize = resize
-        print(self.class_folds)
+        self.yolo_root = yolo_root
+        self.map_classes = {v:k for v,k in map_classes.items() if k!='false_positives'} 
 
         return
     
@@ -51,7 +52,7 @@ class CNNProcessor():
         assert len(tot_moved_images)>0, f"No image like {os.path.join(self.dst_root, '*', '*', '*.jpg')} found in dst_root."
 
         for img_fp in tqdm(tot_moved_images, 'resizing'): 
-            print(img_fp)
+            # print(img_fp)
             image = cv2.imread(img_fp, cv2.COLOR_BGR2RGB)
             image = cv2.resize(image, dsize=(224, 224))
             cv2.imwrite(img_fp, image)
@@ -64,22 +65,23 @@ class CNNProcessor():
 
         tot_images = []
         for exp_fold in self.src_folds:
-            print(exp_fold)
+            # print(exp_fold)
             assert os.path.isdir(exp_fold), f"exp_fold:{exp_fold} is not a valid dirpath."
             # assert os. in self.class_folds, f"'class_folds':{self.class_folds}, but found fold {fold}"
 
-            images = glob(os.path.join(exp_fold, 'gt_classes', '*', '*.jpg'))
+            images = glob(os.path.join(exp_fold, 'crops_true_classes', '*', '*.jpg'))
             assert len(images)>0, f"No image found in {exp_fold}."
             tot_images.extend(images)
 
-        print(tot_images)
+        # print(tot_images)
             
         return tot_images
     
     
-    def _make_dataset(self): 
+    def _make_dataset(self) -> None: 
+        """ Creates dataset folds. """
         
-        assert os.path.isdir(self.dst_root), f"dst_root: {self.dst_root} should be a valid dirpath."
+        os.makedirs(self.dst_root, exist_ok=True)
         sets = ['train', 'val', 'test']
         self.traindir = os.path.join(self.dst_root, 'train')
         self.valdir = os.path.join(self.dst_root, 'val')
@@ -94,20 +96,17 @@ class CNNProcessor():
                 # print(f'create: {os.path.join(self.dst_root, dataset, clss )}')
                 os.makedirs(os.path.join(self.dst_root, dataset, clss), exist_ok=True)
 
-        
-
-
         return
     
     def _split_move_images(self, test_size:float=0.2):
-        """ Splits images into train, val, test and moves them in the new folds. """
+        """ Splits crops from exp folder into train, val, test and moves them in the new folds. """
 
         # map_classint2classname = {v:k for k,v in self.map_classes.items()}
         tot_map_classes = self.map_classes
         tot_map_classes.update({'false_positives':999})
         x = self.tot_images
         y = [tot_map_classes[os.path.split(os.path.dirname(img))[1]] for img in self.tot_images]
-        print(y)
+        # print(y)
         train_imgs, test_imgs, _, _ = ms.train_test_split(x, y, test_size=test_size, stratify=y) # stratify=y)
 
 
@@ -117,15 +116,10 @@ class CNNProcessor():
             shutil.copy(src=src, dst=dst)
 
         for fp in tqdm(test_imgs, 'filling test:'): 
+            # print(dst)
             src = fp
             dst = os.path.join(self.testdir, os.path.split(os.path.dirname(src))[1], os.path.basename(src))
             shutil.copy(src=src, dst=dst)
-
-
-
-
-        # print(train_imgs, test_imgs)
-
 
 
         return
@@ -148,5 +142,5 @@ if __name__ == "__main__":
     dst_root = '/Users/marco/helical_tests/test_cnn_processor'
     resize = True
     # task = 'detection'
-    cnn_processor = CNNProcessor(src_folds=src_folds, map_classes=map_classes, dst_root=dst_root, resize=resize)
+    cnn_processor = CNNDataSplitter(src_folds=src_folds, map_classes=map_classes, dst_root=dst_root, resize=resize)
     cnn_processor()

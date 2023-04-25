@@ -80,7 +80,7 @@ class CNNDataset(Dataset):
 
         # print(f"image size: {image.shape}, label size: {label.shape}")
 
-        return image, label
+        return image, label, img_fp
     
 
 
