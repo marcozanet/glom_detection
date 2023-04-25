@@ -59,7 +59,7 @@ class CNNDataset(Dataset):
         image_list = [file for file in image_list if "DS" not in file]
 
         if len(image_list) == 0: 
-            if self.dataset == 'val':
+            if self.dataset == 'test':
                 print(f"Image list for '{self.dataset}' is empty.")
                 return None
             else:

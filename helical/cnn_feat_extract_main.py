@@ -10,11 +10,8 @@ def extract_features():
     print("Torchvision Version: ",torchvision.__version__)
 
     # params
-    device='cuda:0' if torch.cuda.is_available() else 'cpu'
     cnn_root_fold = '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline'
     map_classes = {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2} 
-    feat_fold = '/Users/marco/Downloads/extracted'
-    root_dir = '/Users/marco/helical_tests/test_cnn_processor/test_crossvalidation/feat_extract'
     batch = 1
     num_workers = 0
     vgg_weights_path = '/Users/marco/.cache/torch/hub/checkpoints/vgg16_bn-6c64b313.pth'
@@ -23,7 +20,6 @@ def extract_features():
     exp_folds = ['/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/exp30',
                 '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/exp31_fake',
                  '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/exp32_fake' ]
-    task = 'detection'
     resize_crops = True
 
     # Load the pretrained model from pytorch

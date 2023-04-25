@@ -47,11 +47,13 @@ class CNN_KCrossValidation(KCrossValidation):
     
     def _get_data(self): 
 
-        tile_imgs = sorted(glob(os.path.join(self.data_root, 'tiles', '*', '*', f'*{self.tile_img_fmt}')))
+        tile_imgs = sorted(glob(os.path.join(self.data_root, '*', '*', f'*{self.tile_img_fmt}')))
+
+        # print(os.path.join(self.data_root, '*', '*', f'*{self.tile_img_fmt}'))
         tile_lbls = [os.path.split(os.path.dirname(fp))[1] for fp in tile_imgs]
         wsi_fns = list(set([os.path.basename(fp).split('_')[0] for fp in tile_imgs]))
 
-        assert len(wsi_fns) > 0, self.log.warning(f"{self.class_name}._get_data: len(wsi_imgs):{len(wsi_fns)}.")
+        # assert len(wsi_fns) > 0, self.log.warning(f"{self.class_name}._get_data: len(wsi_imgs):{len(wsi_fns)}.")
         assert len(tile_imgs) > 0, self.log.warning(f"{self.class_name}._get_data: len(tile_imgs):{len(tile_imgs)}.")
         assert len(tile_lbls) > 0, self.log.warning(f"{self.class_name}._get_data: len(tile_lbls):{len(tile_lbls)}.")
 
@@ -66,11 +68,8 @@ class CNN_KCrossValidation(KCrossValidation):
 
         list_imgs = sorted(self.data['wsi_fns'])
         fnames = sorted(self.data['wsi_fns'])#sorted([os.path.basename(name).split('.')[0] for name in list_imgs])
-        # print(fnames)
         fp_fnames = {os.path.basename(fp).split('.')[0]:fp for fp in list_imgs}
         fp_fnames = dict(sorted(fp_fnames.items(), key=lambda x:x[0]))
-        # print(fp_fnames)
-
 
         folds = []
         idxs = np.linspace(start=0, stop=self.n_wsis, num=self.k+1, dtype=int) # k + 1 because first idx=0
@@ -88,16 +87,13 @@ class CNN_KCrossValidation(KCrossValidation):
     
     def _get_i_split(self, folds:dict): 
 
-        print(folds)
+        # print(folds)
 
         fold_splits = {}
         for i in range(self.k): 
             test_idx = i
             train_idxs = sorted([j for j in range(self.k) if j!=i])
-            print(train_idxs)
             train_folds = sorted([wsi for idx in train_idxs for wsi in sorted(folds)[idx] ])
-            print(f"AHHHHH{train_folds}")
-            # self.log.warning(train_folds)
 
             test_fold = folds[test_idx]
             fold_splits[i] = {'train': train_folds, 'val': test_fold}
@@ -152,9 +148,12 @@ class CNN_KCrossValidation(KCrossValidation):
         self.log.info(f"Splitted train: {n_train}")
 
         # TODO ADD ONLY IN CASE THERE IS 
-        n_train = _move_files('val')
+        n_val = _move_files('val')
         self.data, self.file_list = self._get_data() # update data
-        self.log.info(f"Splitted val: {n_train}")
+
+        self.log.info(f"Wsi_fns splitted in: train:{n_train} val:{n_val}, test:0. ")
+
+
 
         return
     
@@ -164,7 +163,7 @@ class CNN_KCrossValidation(KCrossValidation):
         """ Create and splits folds. """
 
         folds = self._get_folds()
-        print(folds)
+        # print(folds)
         fold_splits = self._get_i_split(folds=folds)
 
         return fold_splits

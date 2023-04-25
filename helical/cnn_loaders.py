@@ -44,7 +44,7 @@ class CNNDataLoaders():
         if valset.imgs_fn is not None:
             assert set(trainset.imgs_fn).isdisjoint(set(valset.imgs_fn)) 
             # assert set(valset.imgs_fn).isdisjoint(set(testset.imgs_fn))
-        assert set(trainset.imgs_fn).isdisjoint(set(testset.imgs_fn))
+        # assert set(trainset.imgs_fn).isdisjoint(set(testset.imgs_fn))
 
         self.trainset_size = len(trainset)
         self.valset_size = len(valset)
@@ -56,12 +56,12 @@ class CNNDataLoaders():
 
         train_dataloader = DataLoader(trainset, batch_size=self.batch, shuffle=True, num_workers=self.num_workers, pin_memory=True)
         valid_dataloader = DataLoader(valset, batch_size=self.batch, shuffle=False, num_workers=self.num_workers, pin_memory=True)
-        print(type(valid_dataloader))
+        # print(type(valid_dataloader))
         test_dataloader = DataLoader(testset, batch_size=self.batch, shuffle=False, num_workers=self.num_workers, pin_memory=True)
 
         dataloaders = {'train':train_dataloader, 'val':valid_dataloader, 'test':test_dataloader} if valset.imgs_fn is not None else {'train':train_dataloader, 'test':test_dataloader}
         self.dataloaders = dataloaders
-        print(dataloaders)
+        # print(dataloaders)
 
         return dataloaders
     

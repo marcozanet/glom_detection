@@ -15,7 +15,7 @@ def prepare_data(cnn_root_fold:str, map_classes:dict, batch:int, num_workers:int
         (regardless of trainset, valset, testset) and gets the dataloader to be used by the model."""
     
     assert 'false_positives' in map_classes.keys(), f"'false_positives' missing in 'map_classes'. "
-    mil_root = os.path.join(cnn_root_fold, 'mil_dataset')
+    cnn_root = os.path.join(cnn_root_fold, 'cnn_dataset')
 
     # Assign true classes back to crops out of yolo:
     print("Labelling crops from YOLO:")
@@ -28,7 +28,7 @@ def prepare_data(cnn_root_fold:str, map_classes:dict, batch:int, num_workers:int
     print("Creating Dataset and splitting into train, val, test:")
     print("-"*10)
     cnn_processor = CNNDataSplitter(src_folds=exp_folds, map_classes=map_classes, yolo_root=yolo_root, 
-                                    dst_root=mil_root, resize=resize_crops)
+                                    dst_root=cnn_root, resize=resize_crops)
     cnn_processor()
 
 
@@ -38,12 +38,12 @@ def prepare_data(cnn_root_fold:str, map_classes:dict, batch:int, num_workers:int
     feat_extract_fold = os.path.join(cnn_root_fold, 'feat_extract')
     os.makedirs(feat_extract_fold, exist_ok=True)
     # get all images: 
-    images = glob(os.path.join(mil_root, '*', '*', '*.jpg')) # get all images 
-    class_fold_names = glob(os.path.join(mil_root, '*', '*/'))
+    images = glob(os.path.join(cnn_root, '*', '*', '*.jpg')) # get all images 
+    class_fold_names = glob(os.path.join(cnn_root, '*', '*/'))
     class_fold_names = set([os.path.split(os.path.dirname(fp))[1] for fp in class_fold_names])
     # print(class_fold_names)
 
-    assert len(images)>0, f"No images like {os.path.join(mil_root, '*', '*', '*.jpg')}"
+    assert len(images)>0, f"No images like {os.path.join(cnn_root, '*', '*', '*.jpg')}"
     # create folds:
     for fold in class_fold_names: 
         os.makedirs(os.path.join(feat_extract_fold, fold), exist_ok=True)
@@ -69,7 +69,7 @@ def feature_extraction(model, dataloader, cnn_root_fold) -> None:
     save_feats = lambda save_fp, feats: np.save(save_fp, feats.numpy())
 
     # make folds for classes: 
-    class_fold_names = glob(os.path.join(cnn_root_fold, 'mil_dataset', '*', '*/'))
+    class_fold_names = glob(os.path.join(cnn_root_fold, 'cnn_dataset', '*', '*/'))
     class_fold_names = set([os.path.split(os.path.dirname(fp))[1] for fp in class_fold_names])
     for clss in class_fold_names: 
         os.makedirs(os.path.join(cnn_root_fold, 'feat_extract',  clss, 'feats'), exist_ok=True)
