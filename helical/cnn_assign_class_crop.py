@@ -114,11 +114,13 @@ class CropLabeller():
         eucl_dist = lambda point1, point2: np.sum(np.square(np.array(point1)-np.array(point2)))
         lbl2cropfn = lambda pred_lbl, crop_n: os.path.basename(pred_lbl).split('.txt')[0] + f"_crop{crop_n}"
         cropfn_2_cropfp = lambda crop_fn: next((fp for fp in self.tot_crops if crop_fn in fp), None)
-        gt_lbl = pred2gt_label(pred_lbl)
-
+        
+        
+        gt_lbl = pred2gt_label(pred_lbl) # get true label
         if gt_lbl is None: 
             crop_fn = lbl2cropfn(pred_lbl=pred_lbl, crop_n=0)
             crop_fp = cropfn_2_cropfp(crop_fn=crop_fn)
+            assert os.path.isfile(crop_fp), f"crop_fp:{crop_fp} is not a valid filepath."
             gt_classes = {crop_fp:None}
             return gt_classes
         
@@ -143,7 +145,7 @@ class CropLabeller():
         for i, pred_row in enumerate(pred_rows):
             crop_fn = lbl2cropfn(pred_lbl=pred_lbl, crop_n=i)
             crop_fp = cropfn_2_cropfp(crop_fn=crop_fn)
-            assert os.path.isfile(crop_fp), f"'crop_fp'{crop_fp} is not a valid filepath."
+            # assert os.path.isfile(crop_fp), f"crop_fp:{crop_fp} is not a valid filepath."
             p_clss, p_xc, p_yc, p_w, p_h = get_objs_from_row_txt_label(pred_row)
             # now check if center of pred glom falls into any glom from true label (from gt_rows):
             matching_gloms = [] # gloms where predicted center for obj falls into

@@ -23,7 +23,7 @@ cnn_trainer:
   {
     yolo_data_root: 'D:\marco\datasets\slides\detection',
     cnn_data_root: 'D:\marco\datasets\slides\cnn_dataset',
-    yolo_exp_folds: ['C:\marco\yolov5\runs\detect\exp3'],
+    yolo_exp_folds: ['C:\marco\yolov5\runs\detect\exp7'],
     weights_path: 'C:\Users\hp/.cache\torch\hub\checkpoints\vgg16_bn-6c64b313.pth',
     cnn_exp_fold: 'D:\marco\cnn_model',
     map_classes: {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2},
