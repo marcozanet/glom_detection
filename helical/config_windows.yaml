@@ -1,17 +1,30 @@
-Comment: >
+readme: >
   - YOLO imags need to be in a tree like detection -> tiles,wsi -> train,val,test -> images,labels
   - cnn_data_root doesn't need to exist, will be created a tree like: 
     cnn_dataset -> train,val,test -> class0,class1,class2.. ->
   - weights_path: path to the downloaded the VGG16 checkpoint file
   - cnn_exp_fold: desired location to store results from cnn experiments. Doesn't need to exist already.
 
+  REQUIREMENTS: 
+  detect.py in yolo should be changed here: 
+    1) for j, (*xyxy, conf, cls) in enumerate(reversed(det)):
+    ...
+    2) save_one_box(xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}_crop{j}.jpg', BGR=True)
 
-CNN_TRAINER:
+  to run: 
+  (in terminal)
+  conda activate success_model
+  cd C:\marco\code\glom_detection\helical
+  python cnn_trainer.py
+
+
+#############    CNN_TRAINER.PY    #############
+cnn_trainer:
   {
     yolo_data_root: 'D:\marco\datasets\slides\detection',
     cnn_data_root: 'D:\marco\datasets\slides\cnn_dataset',
     yolo_exp_folds: ['C:\marco\yolov5\runs\detect\exp3'],
-    weights_path: '/Users/marco/.cache/torch/hub/checkpoints/vgg16_bn-6c64b313.pth',
+    weights_path: 'C:\Users\hp/.cache\torch\hub\checkpoints\vgg16_bn-6c64b313.pth',
     cnn_exp_fold: 'D:\marco\cnn_model',
     map_classes: {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2},
     lr: 0.0001,
@@ -23,4 +36,30 @@ CNN_TRAINER:
     dataset: 'muw',
     task: 'detection',
     resize_crops: True
+  }
+
+    repository_dir = '/Users/marco/yolo/code/helical' if system == 'mac' else r'C:\marco\code\glom_detection\helical'
+    yolov5dir = '/Users/marco/yolov5' if system == 'mac' else r'C:\marco\yolov5'
+    images_dir = '/Users/marco/helical_tests/test_yolo_detect_train_muw_sfog/detection/tiles/val/images' if system =='mac' else r'D:\marco\datasets\slides\detection\tiles\test\images'
+    weights = r'C:\marco\yolov5\runs\train\exp46\weights\best.pt'
+    save_crop = True
+    augment = False
+    conf_thres=0.575
+
+#############    TEST_INFERERS.PY    #############
+test_yolo_infere_detect_muw_sfog:
+  {
+    repository_dir: 'C:\marco\code\glom_detection\helical',
+    yolov5dir: 'C:\marco\yolov5',
+    images_dir: 'D:\marco\datasets\slides\detection\tiles\test\images',
+    weights: 'C:\marco\yolov5\runs\train\exp46\weights\best.pt',
+    save_crop: True,
+    augment: False,
+    conf_thres: 0.575,
+    visualize: False, 
+    save_txt: True
+  }
+
+test_yolo_infere_detect_muw_sfog:
+  {
   }

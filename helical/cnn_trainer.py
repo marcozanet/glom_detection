@@ -7,18 +7,13 @@ import os, sys
 from cnn_crossvalidation import CNN_KCrossValidation
 from datetime import datetime
 from cnn_train_func import prepare_data
-import yaml
-from yaml import SafeLoader
+from utils import get_config_params
 
 print("PyTorch Version: ",torch.__version__)
 print("Torchvision Version: ",torchvision.__version__)
 
 ############        PARAMS      ############      
-system = 'mac' if sys.platform == 'darwin' else 'windows'
-config_fp = 'config_mac.yaml' if system == 'mac' else 'config_windows.yaml'
-with open(config_fp, 'r') as f: 
-    all_params = yaml.load(f, Loader=SafeLoader)
-PARAMS = all_params['CNN_TRAINER']
+PARAMS = get_config_params('cnn_trainer')
 yolo_data_root = PARAMS['yolo_data_root']
 cnn_data_root = PARAMS['cnn_data_root']
 map_classes = PARAMS['map_classes']

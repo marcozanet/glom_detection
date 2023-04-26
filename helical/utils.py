@@ -1,7 +1,19 @@
-import os
+import os, sys
 from glob import glob
 import random
 from PIL import Image
+import yaml 
+from yaml import SafeLoader
+
+def get_config_params(set_params_name:str) -> dict:
+
+    system = 'mac' if sys.platform == 'darwin' else 'windows'
+    config_fp = 'config_mac.yaml' if system == 'mac' else 'config_windows.yaml'
+    with open(config_fp, 'r') as f: 
+        all_params = yaml.load(f, Loader=SafeLoader)
+    params = all_params[set_params_name]
+    
+    return  params
 
 def get_image_size(tile_fold:str):
 

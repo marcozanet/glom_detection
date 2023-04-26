@@ -143,6 +143,7 @@ class CropLabeller():
         for i, pred_row in enumerate(pred_rows):
             crop_fn = lbl2cropfn(pred_lbl=pred_lbl, crop_n=i)
             crop_fp = cropfn_2_cropfp(crop_fn=crop_fn)
+            assert os.path.isfile(crop_fp), f"'crop_fp'{crop_fp} is not a valid filepath."
             p_clss, p_xc, p_yc, p_w, p_h = get_objs_from_row_txt_label(pred_row)
             # now check if center of pred glom falls into any glom from true label (from gt_rows):
             matching_gloms = [] # gloms where predicted center for obj falls into
@@ -174,7 +175,7 @@ class CropLabeller():
                     raise NotImplementedError()
                 
             gt_classes.update({crop_fp:gt_class})
-
+            print((crop_fp,gt_class))
         return gt_classes
 
 
