@@ -27,6 +27,15 @@ class CropLabeller():
         # self.false_pos_clss = map_classes['false_positives']
         return
     
+    def _parse(self): 
+
+        assert os.path.isdir(self.root_data), f"'root_data':{self.root_data} is not a valid dirpath."
+        assert os.path.isdir(self.root_data), f"'exp_data':{self.exp_data} is not a valid dirpath."
+        assert type(self.map_classes) == dict, f"'map_classes':{self.map_classes} should be a dict, but is type {type(self.map_classes)}."
+
+
+        return
+    
 
     def get_tot_gt_labels_from_dataset(self): 
 
@@ -123,7 +132,7 @@ class CropLabeller():
 
             row = row.replace('\n', '')
             nums = row.split(' ')
-            clss = int(nums[0])
+            clss = int(float(nums[0]))
             nums = [float(num) for num in nums[1:]]
             assert len(nums) == 4, f"there should be 4 objects apart from class"
             x_c, y_c, w, h = nums
@@ -172,7 +181,7 @@ class CropLabeller():
     def __call__(self) -> None:
         """ Assigns a label for all the crops, moves them in folds named after their true classes 
             and resizes images to match the CNN input. """
-
+        self._parse()
         self.assign_all_labels()
         self.move_assigned_crops()
         if self.resize: 
