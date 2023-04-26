@@ -3,34 +3,42 @@ from torchvision import models
 from torch import nn
 from cnn_train_func import train_model, eval_model
 from cnn_loaders import CNNDataLoaders
-import os
+import os, sys
 from cnn_crossvalidation import CNN_KCrossValidation
 from datetime import datetime
 from cnn_train_func import prepare_data
+import yaml
+from yaml import SafeLoader
 
 print("PyTorch Version: ",torch.__version__)
 print("Torchvision Version: ",torchvision.__version__)
 
-# params
+############        PARAMS      ############      
+system = 'mac' if sys.platform == 'darwin' else 'windows'
+config_fp = 'config_mac.yaml' if system == 'mac' else 'config_windows.yaml'
+with open(config_fp, 'r') as f: 
+    all_params = yaml.load(f, Loader=SafeLoader)
+PARAMS = all_params['CNN_TRAINER']
+yolo_data_root = PARAMS['yolo_data_root']
+cnn_data_root = PARAMS['cnn_data_root']
+map_classes = PARAMS['map_classes']
+yolo_exp_folds = PARAMS['yolo_exp_folds']
+lr = PARAMS['lr']
+k_tot = PARAMS['k_tot']
+k_i = PARAMS['k_i']
+batch = PARAMS['batch']
+epochs = PARAMS['epochs']
+num_workers = PARAMS['num_workers']
+weights_path = PARAMS['weights_path']
+cnn_exp_fold = PARAMS['cnn_exp_fold']
+dataset = PARAMS['dataset']
+task = PARAMS['task']
+resize_crops = PARAMS['resize_crops']
 device='cuda:0' if torch.cuda.is_available() else 'cpu'
-yolo_data_root = '/Users/marco/helical_tests/test_yolo_detect_train_muw_sfog/detection'
-cnn_data_root = '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/cnn_dataset'
-map_classes = {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2} 
-yolo_exp_folds = ['/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/exp30']
-lr = 10e-2
-k_tot = 4
-k_i = 0
-batch = 5
-epochs = 10
-num_workers = 0
-weights_path = '/Users/marco/.cache/torch/hub/checkpoints/vgg16_bn-6c64b313.pth'
 now = datetime.now()
 dt_string = now.strftime("%Y_%m_%d__%H_%M_%S")
-cnn_exp_fold = '/Users/marco/helical_tests/cnn_model/exps'
 weights_save_fold = cnn_exp_fold +f"_{dt_string}"
-dataset = 'muw'
-task = 'detection'
-resize_crops = True
+
 
 # prepare cnn dataset: 
 cnn_data_fold = prepare_data(cnn_root_fold=cnn_data_root, map_classes=map_classes, batch=batch, resize_crops=resize_crops,

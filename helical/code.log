@@ -1,11 +1,11 @@
-25/04 16:41:33|INFO|CNN_KCrossValidation.__init__: n_wsis:9.
-25/04 16:41:33|ERROR|[['1e2425dsf', '1e2425f28'], ['1e24dfdsf5f28', '26dc41664'], ['aaa', 'bbb'], ['ccc', 'ddd', 'fff']]
-25/04 16:41:33|INFO|CNN_KCrossValidation._get_i_split: iter_0,  train: 7 images, test: 2.
-25/04 16:41:33|INFO|CNN_KCrossValidation._get_i_split: iter_1,  train: 7 images, test: 2.
-25/04 16:41:33|INFO|CNN_KCrossValidation._get_i_split: iter_2,  train: 7 images, test: 2.
-25/04 16:41:33|INFO|CNN_KCrossValidation._get_i_split: iter_3,  train: 6 images, test: 3.
-25/04 16:41:33|INFO|CNN_KCrossValidation.fix_n_tiles: n_tiles_tot:{}.
-25/04 16:41:33|INFO|CNN_KCrossValidation._change_folds: train: 7 images: ['1e24dfdsf5f28', '26dc41664', 'aaa', 'bbb', 'ccc', 'ddd', 'fff'].
-25/04 16:41:33|INFO|CNN_KCrossValidation._change_folds: test: 2 labels: ['1e2425dsf', '1e2425f28'].
-25/04 16:41:33|INFO|Splitted train: 32
-25/04 16:41:33|INFO|Wsi_fns splitted in: train:32 val:57, test:0. 
+26/04 16:39:53|INFO|CNN_KCrossValidation.__init__: n_wsis:9.
+26/04 16:39:53|ERROR|[['1e2425dsf', '1e2425f28'], ['1e24dfdsf5f28', '26dc41664'], ['aaa', 'bbb'], ['ccc', 'ddd', 'fff']]
+26/04 16:39:53|INFO|CNN_KCrossValidation._get_i_split: iter_0,  train: 7 images, test: 2.
+26/04 16:39:53|INFO|CNN_KCrossValidation._get_i_split: iter_1,  train: 7 images, test: 2.
+26/04 16:39:53|INFO|CNN_KCrossValidation._get_i_split: iter_2,  train: 7 images, test: 2.
+26/04 16:39:53|INFO|CNN_KCrossValidation._get_i_split: iter_3,  train: 6 images, test: 3.
+26/04 16:39:53|INFO|CNN_KCrossValidation.fix_n_tiles: n_tiles_tot:{}.
+26/04 16:39:53|INFO|CNN_KCrossValidation._change_folds: train: 7 images: ['1e24dfdsf5f28', '26dc41664', 'aaa', 'bbb', 'ccc', 'ddd', 'fff'].
+26/04 16:39:53|INFO|CNN_KCrossValidation._change_folds: test: 2 labels: ['1e2425dsf', '1e2425f28'].
+26/04 16:39:53|INFO|Splitted train: 32
+26/04 16:39:53|INFO|Wsi_fns splitted in: train:32 val:57, test:0. 

@@ -1,0 +1,26 @@
+Comment: >
+  - YOLO imags need to be in a tree like detection -> tiles,wsi -> train,val,test -> images,labels
+  - cnn_data_root doesn't need to exist, will be created a tree like: 
+    cnn_dataset -> train,val,test -> class0,class1,class2.. ->
+  - weights_path: path to the downloaded the VGG16 checkpoint file
+  - cnn_exp_fold: desired location to store results from cnn experiments. Doesn't need to exist already.
+
+
+CNN_TRAINER:
+  {
+    yolo_data_root: 'D:\marco\datasets\slides\detection',
+    cnn_data_root: 'D:\marco\datasets\slides\cnn_dataset',
+    yolo_exp_folds: ['C:\marco\yolov5\runs\detect\exp3'],
+    weights_path: '/Users/marco/.cache/torch/hub/checkpoints/vgg16_bn-6c64b313.pth',
+    cnn_exp_fold: 'D:\marco\cnn_model',
+    map_classes: {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2},
+    lr: 0.0001,
+    k_tot: 5,
+    k_i: 0,
+    batch: 4,
+    epochs: 10,
+    num_workers: 0,
+    dataset: 'muw',
+    task: 'detection',
+    resize_crops: True
+  }

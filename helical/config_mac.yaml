@@ -1,0 +1,25 @@
+Comment: >
+  - YOLO imags need to be in a tree like detection -> tiles,wsi -> train,val,test -> images,labels
+  - cnn_data_root doesn't need to exist, will be created a tree like: 
+    cnn_dataset -> train,val,test -> class0,class1,class2.. ->
+  - yolo_exp_folds: inference fold (or multiple folds) where detected objects (crops) are stored.
+
+
+CNN_TRAINER:
+  {
+    yolo_data_root: '/Users/marco/helical_tests/test_yolo_detect_train_muw_sfog/detection',
+    cnn_data_root: '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/',
+    map_classes: {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2},
+    yolo_exp_folds: ['/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/exp30'],
+    lr: 0.01,
+    k_tot: 4,
+    k_i: 0,
+    batch: 5,
+    epochs: 2,
+    num_workers: 0,
+    weights_path: '/Users/marco/.cache/torch/hub/checkpoints/vgg16_bn-6c64b313.pth',
+    cnn_exp_fold: '/Users/marco/helical_tests/cnn_model/exps',
+    dataset: 'muw',
+    task: 'detection',
+    resize_crops: True
+  }
