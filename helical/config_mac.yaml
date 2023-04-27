@@ -14,10 +14,10 @@ readme: >
 #############    CNN_TRAINER.PY    #############
 cnn_trainer:
   {
-    yolo_data_root: '/Users/marco/helical_tests/test_yolo_detect_train_muw_sfog/detection',
-    cnn_data_root: '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/',
+    yolo_data_root: '/Users/marco/helical_tests/test_cnn_trainer/fake_dataset',
+    cnn_data_root: '/Users/marco/helical_tests/test_cnn_trainer',
     map_classes: {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2},
-    yolo_exp_folds: ['/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/exp30'], # exp30=test
+    yolo_exp_folds: ['/Users/marco/helical_tests/test_cnn_trainer/exp10', '/Users/marco/helical_tests/test_cnn_trainer/exp11','/Users/marco/helical_tests/test_cnn_trainer/exp12'], # exp30=test
     lr: 0.01,
     k_tot: 4,
     k_i: 0,

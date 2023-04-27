@@ -50,7 +50,7 @@ class CropLabeller():
         img_dims: tuple
         assert os.path.isdir(self.root_data), f"root_data:{self.root_data} is not a valid dirpath."
         all_images = glob(os.path.join(self.root_data, 'tiles', "*", "images", "*.png"))
-        assert len(all_images)>0, f"No labels like {os.path.join(self.root_data, 'tiles', '*', 'labels', '*.png')} found in dataset."
+        assert len(all_images)>0, f"No images like {os.path.join(self.root_data, 'tiles', '*', 'images', '*.png')} found in dataset."
         image = io.imread(all_images[0])
         img_dims = image.shape
 
@@ -142,7 +142,7 @@ class CropLabeller():
             return clss, x_c, y_c, w, h
 
         gt_classes = {}
-        for i, pred_row in enumerate(pred_rows):
+        for i, pred_row in enumerate(tqdm(pred_rows, desc='Labelling crops')):
             crop_fn = lbl2cropfn(pred_lbl=pred_lbl, crop_n=i)
             crop_fp = cropfn_2_cropfp(crop_fn=crop_fn)
             # assert os.path.isfile(crop_fp), f"crop_fp:{crop_fp} is not a valid filepath."
