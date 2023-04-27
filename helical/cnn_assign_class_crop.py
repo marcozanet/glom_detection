@@ -96,7 +96,7 @@ class CropLabeller():
         """ Assign a class to all crops and saving the mapping into the self.crop_class_dict"""
         
         tot_true_labels = {}
-        for pred_lbl in self.tot_pred_labels: 
+        for pred_lbl in tqdm(self.tot_pred_labels, desc='Labelling crops'): 
             gt_classes = self.assign_class(pred_lbl=pred_lbl)
             tot_true_labels.update(gt_classes)
 
@@ -142,7 +142,7 @@ class CropLabeller():
             return clss, x_c, y_c, w, h
 
         gt_classes = {}
-        for i, pred_row in enumerate(tqdm(pred_rows, desc='Labelling crops')):
+        for i, pred_row in enumerate(pred_rows):
             crop_fn = lbl2cropfn(pred_lbl=pred_lbl, crop_n=i)
             crop_fp = cropfn_2_cropfp(crop_fn=crop_fn)
             # assert os.path.isfile(crop_fp), f"crop_fp:{crop_fp} is not a valid filepath."
