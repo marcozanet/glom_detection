@@ -91,7 +91,7 @@ def train_model(model, dataloader_cls, dataloaders,
         
         model.train(True)
         
-        for i, data in enumerate(dataloaders['train']):
+        for i, data in enumerate(tqdm(dataloaders['train'])):
             # if i % 100 == 0:
             #     print("\rTraining batch {}/{}".format(i, train_batches / 2), end='', flush=True)
                 
@@ -201,7 +201,7 @@ def eval_model(model, dataloader_cls, dataloaders, criterion):
     print("Evaluating model")
     print('-' * 10)
     
-    for i, data in enumerate(dataloaders['val']):
+    for i, data in enumerate(tqdm(dataloaders['val'])):
         # if i % 100 == 0:
         #     print("\rTest batch {}/{}".format(i, test_batches), end='', flush=True)
 
