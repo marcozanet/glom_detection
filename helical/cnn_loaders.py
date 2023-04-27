@@ -78,7 +78,7 @@ class CNNDataLoaders():
             if title is not None:
                 plt.title(title)
             plt.pause(0.001)
-            fig.savefig('cnn_crops.py')
+            fig.savefig('cnn_crops.png')
 
         def show_databatch(inputs, classes):
             out = torchvision.utils.make_grid(inputs)

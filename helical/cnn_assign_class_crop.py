@@ -177,7 +177,7 @@ class CropLabeller():
                     raise NotImplementedError()
                 
             gt_classes.update({crop_fp:gt_class})
-            print((crop_fp,gt_class))
+            
         return gt_classes
 
 
