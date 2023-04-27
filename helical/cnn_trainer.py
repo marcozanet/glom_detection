@@ -29,6 +29,7 @@ cnn_exp_fold = PARAMS['cnn_exp_fold']
 dataset = PARAMS['dataset']
 task = PARAMS['task']
 resize_crops = PARAMS['resize_crops']
+treat_as_single_class = PARAMS['treat_as_single_class']
 device='cuda:0' if torch.cuda.is_available() else 'cpu'
 now = datetime.now()
 dt_string = now.strftime("%Y_%m_%d__%H_%M_%S")
@@ -37,17 +38,17 @@ weights_save_fold = cnn_exp_fold +f"_{dt_string}"
 
 # prepare cnn dataset: 
 cnn_data_fold = prepare_data(cnn_root_fold=cnn_data_root, map_classes=map_classes, batch=batch, resize_crops=resize_crops,
-                            num_workers=num_workers, yolo_root=yolo_data_root, yolo_exp_folds=yolo_exp_folds)
+                            num_workers=num_workers, yolo_root=yolo_data_root, yolo_exp_folds=yolo_exp_folds, treat_as_single_class=treat_as_single_class)
+
+raise NotImplementedError()
 crossvalidator = CNN_KCrossValidation(data_root=cnn_data_fold, k=k_tot, dataset = dataset, task=task)
 crossvalidator._change_kfold(fold_i=k_i)
 
-# raise NotImplementedError()
 
 # processor
 dataloader_cls = CNNDataLoaders(root_dir=cnn_data_fold, map_classes=map_classes, batch=batch, num_workers=num_workers)
 dataloaders = dataloader_cls()
 
-# raise NotImplementedError()
 # Load the pretrained model from pytorch
 vgg16 = models.vgg16_bn(weights = 'VGG16_BN_Weights.DEFAULT')
 vgg16.load_state_dict(torch.load(weights_path))

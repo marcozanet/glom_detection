@@ -12,7 +12,7 @@ import shutil
 
 
 def prepare_data(cnn_root_fold:str, map_classes:dict, batch:int, num_workers:int, 
-                 yolo_root:str, yolo_exp_folds:List[str], resize_crops:bool): 
+                 yolo_root:str, yolo_exp_folds:List[str], resize_crops:bool, treat_as_single_class:bool): 
     """ Prepares data for feature extraction: puts all images in the same folder 
         (regardless of trainset, valset, testset) and gets the dataloader to be used by the model."""
     
@@ -30,7 +30,7 @@ def prepare_data(cnn_root_fold:str, map_classes:dict, batch:int, num_workers:int
     print("Creating Dataset and splitting into train, val, test:")
     print("-"*10)
     cnn_processor = CNNDataSplitter(src_folds=yolo_exp_folds, map_classes=map_classes, yolo_root=yolo_root, 
-                                    dst_root=cnn_root, resize=resize_crops)
+                                    dst_root=cnn_root, resize=resize_crops, treat_as_single_class=treat_as_single_class)
     cnn_processor()
 
     cnn_dataset_fold = os.path.join(cnn_root_fold, 'cnn_dataset')

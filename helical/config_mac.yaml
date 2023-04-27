@@ -28,7 +28,8 @@ cnn_trainer:
     cnn_exp_fold: '/Users/marco/helical_tests/cnn_model/exps',
     dataset: 'muw',
     task: 'detection',
-    resize_crops: True
+    resize_crops: True,
+    treat_as_single_class: True
   }
 ##################################################
 

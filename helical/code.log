@@ -1,6 +1,11 @@
-27/04 10:07:37|INFO|Start inference YOLO: ⏳
-27/04 10:07:39|INFO|Inference YOLO done ✅ .
-27/04 10:07:39|INFO|Start inference YOLO: ⏳
-27/04 10:08:34|INFO|Inference YOLO done ✅ .
-27/04 10:08:34|INFO|Start inference YOLO: ⏳
-27/04 10:09:49|INFO|Inference YOLO done ✅ .
+27/04 11:05:25|INFO|CNN_KCrossValidation.__init__: n_wsis:9.
+27/04 11:05:25|ERROR|[['1e2425f28', '26dc41664'], ['aaa', 'bbb'], ['ccc', 'ddd'], ['eee', 'fff', 'ggg']]
+27/04 11:05:25|INFO|CNN_KCrossValidation._get_i_split: iter_0,  train: 7 images, test: 2.
+27/04 11:05:25|INFO|CNN_KCrossValidation._get_i_split: iter_1,  train: 7 images, test: 2.
+27/04 11:05:25|INFO|CNN_KCrossValidation._get_i_split: iter_2,  train: 7 images, test: 2.
+27/04 11:05:25|INFO|CNN_KCrossValidation._get_i_split: iter_3,  train: 6 images, test: 3.
+27/04 11:05:25|INFO|CNN_KCrossValidation.fix_n_tiles: n_tiles_tot:{}.
+27/04 11:05:25|INFO|CNN_KCrossValidation._change_folds: train: 7 images: ['aaa', 'bbb', 'ccc', 'ddd', 'eee', 'fff', 'ggg'].
+27/04 11:05:25|INFO|CNN_KCrossValidation._change_folds: test: 2 labels: ['1e2425f28', '26dc41664'].
+27/04 11:05:25|INFO|Splitted train: 17
+27/04 11:05:25|INFO|Wsi_fns splitted in: train:17 val:72, test:0. 

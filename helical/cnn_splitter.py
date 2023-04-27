@@ -13,17 +13,20 @@ class CNNDataSplitter():
                  yolo_root:str,
                  dst_root: str,
                  map_classes: dict,
-                 resize:bool=True) -> None:
+                 resize:bool=True,
+                 treat_as_single_class:bool=False) -> None:
         """ Prepares data for CNN. Crops are divided by true class, resized and split in datasets."""
 
         self.src_folds = src_folds # exp folds where images for train, val, test can be retrieved
         self.map_classes = map_classes
+        self.treat_as_single_class = treat_as_single_class
         self.class_folds = self._get_class_folds()
         self.tot_images = self._get_all_files()
         self.dst_root = dst_root
         self.resize = resize
         self.yolo_root = yolo_root
         self.map_classes = {v:k for v,k in map_classes.items() if k!='false_positives'} 
+
 
         return
     
@@ -40,7 +43,7 @@ class CNNDataSplitter():
             found_folds = [dir for dir in found_folds if "DS" not in dir]
             assert set(class_folds) == set(found_folds), f"Class folds should be {class_folds}, but found class folds are {found_folds}"
 
-        return class_folds
+        return list(set(class_folds))
     
     
     def _resize_images(self) -> None:
@@ -76,6 +79,46 @@ class CNNDataSplitter():
         # print(tot_images)
             
         return tot_images
+    
+    def _treat_as_single_class(self):
+        """ Merges all classes other than 'false_positives' altogether in 'item' 
+            resulting classes used by the model are 'false_positives', 'item'. """
+        
+        all_images = glob(os.path.join(self.dst_root, '*', '*', '*.jpg'))
+        assert len(all_images) > 0, f"No image like {os.path.join(self.dst_root, '*', '*', '*.jpg')} "
+
+        # create 'item' folds:
+        sets = ['train', 'val', 'test']
+        class_folds = ['false_positives', 'item']
+        for dataset in sets: 
+            for clss in class_folds: 
+                os.makedirs(os.path.join(self.dst_root, dataset, clss), exist_ok=True)
+
+        # move all images to 'item' class
+        change_class = lambda fp: os.path.join(self.dst_root, os.path.split(os.path.dirname(os.path.dirname(fp)))[1], 'item', os.path.basename(fp)) 
+        for fp in tqdm(all_images, desc=f"Merging classes"): # to not be done on 'false_positives'
+            # skip false_positives:
+            if os.path.split(os.path.dirname(fp))[1] == 'false_positives':
+                continue
+            # move others:
+            src = fp
+            dst = change_class(fp)
+            if not os.path.isfile(dst):
+                shutil.move(src=src, dst=dst)
+        
+        # delete other class folds
+        del_classes = [_cls for _cls in self.class_folds if _cls not in ['false_positives', 'item']]
+        for dataset in sets: 
+            for clss in del_classes: 
+                del_fp = os.path.join(self.dst_root, dataset, clss)
+                if os.path.isdir(del_fp):
+                    shutil.rmtree(del_fp)
+                # print(os.path.join(self.dst_root, dataset, clss))
+                # os.makedirs(os.path.join(self.dst_root, dataset, clss), exist_ok=True)        
+
+
+
+        return
     
     
     def _make_dataset(self) -> None: 
@@ -130,6 +173,8 @@ class CNNDataSplitter():
         self._make_dataset()
         self._split_move_images()
         self._resize_images()
+        if self.treat_as_single_class:
+            self._treat_as_single_class()
         
         return
     
