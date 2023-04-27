@@ -37,15 +37,16 @@ weights_save_fold = cnn_exp_fold +f"_{dt_string}"
 
 
 # prepare cnn dataset: 
-cnn_data_fold = prepare_data(cnn_root_fold=cnn_data_root, map_classes=map_classes, batch=batch, resize_crops=resize_crops,
-                            num_workers=num_workers, yolo_root=yolo_data_root, yolo_exp_folds=yolo_exp_folds, treat_as_single_class=treat_as_single_class)
+cnn_data_fold = prepare_data(cnn_root_fold=cnn_data_root, map_classes=map_classes, batch=batch,
+                            resize_crops=resize_crops, num_workers=num_workers, yolo_root=yolo_data_root,
+                            yolo_exp_folds=yolo_exp_folds, treat_as_single_class=treat_as_single_class)
 
-# raise NotImplementedError()
 crossvalidator = CNN_KCrossValidation(data_root=cnn_data_fold, k=k_tot, dataset = dataset, task=task)
 crossvalidator._change_kfold(fold_i=k_i)
 
-
 # processor
+if treat_as_single_class: 
+    map_classes = {'false_positives':0, 'item':1}
 dataloader_cls = CNNDataLoaders(root_dir=cnn_data_fold, map_classes=map_classes, batch=batch, num_workers=num_workers)
 dataloaders = dataloader_cls()
 
