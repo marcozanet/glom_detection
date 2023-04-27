@@ -17,7 +17,7 @@ cnn_trainer:
     yolo_data_root: '/Users/marco/helical_tests/test_yolo_detect_train_muw_sfog/detection',
     cnn_data_root: '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/',
     map_classes: {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2},
-    yolo_exp_folds: ['/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/exp30'],
+    yolo_exp_folds: ['/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/exp30'], # exp30=test
     lr: 0.01,
     k_tot: 4,
     k_i: 0,
@@ -30,6 +30,7 @@ cnn_trainer:
     task: 'detection',
     resize_crops: True
   }
+##################################################
 
 #############    TEST_INFERERS.PY    #############
 test_yolo_infere_detect_muw_sfog:
@@ -45,7 +46,7 @@ test_yolo_infere_detect_muw_sfog:
     save_txt: True
   }
 
-test_yolo_infere_detect_muw_sfog:
+test_yolo_infere_detect_hubmap_pas:
   {
     repository_dir: '/Users/marco/yolo/code/helical',
     yolov5dir: '/Users/marco/yolov5',
@@ -57,3 +58,4 @@ test_yolo_infere_detect_muw_sfog:
     visualize: True, 
     save_txt: False
   }
+##################################################

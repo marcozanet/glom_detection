@@ -38,13 +38,6 @@ cnn_trainer:
     resize_crops: True
   }
 
-    repository_dir = '/Users/marco/yolo/code/helical' if system == 'mac' else r'C:\marco\code\glom_detection\helical'
-    yolov5dir = '/Users/marco/yolov5' if system == 'mac' else r'C:\marco\yolov5'
-    images_dir = '/Users/marco/helical_tests/test_yolo_detect_train_muw_sfog/detection/tiles/val/images' if system =='mac' else r'D:\marco\datasets\slides\detection\tiles\test\images'
-    weights = r'C:\marco\yolov5\runs\train\exp46\weights\best.pt'
-    save_crop = True
-    augment = False
-    conf_thres=0.575
 
 #############    TEST_INFERERS.PY    #############
 test_yolo_infere_detect_muw_sfog:
