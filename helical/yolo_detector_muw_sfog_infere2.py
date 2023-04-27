@@ -7,6 +7,7 @@ from loggers import get_logger
 from typing import Literal, List
 import yaml
 from glob import glob
+import torch
 
 
 class YOLO_Inferer_Detector():
@@ -54,12 +55,13 @@ class YOLO_Inferer_Detector():
 
         assert os.path.isdir(self.images_dir), ValueError(f"'images_dir': {self.images_dir} is not a valid dirpath.")
         os.chdir(self.yolov5dir)
+        device='cuda:0' if torch.cuda.is_available() else 'cpu'
 
         # 1) prepare inference:
         # weights_dir = self._prepare_inference(yolo_weights=yolo_weights)
 
         # 2) define command:
-        command = f'python detect.py --source {self.images_dir} --weights {self.weights}  --data data/helical.yaml --device cpu'
+        command = f'python detect.py --source {self.images_dir} --weights {self.weights}  --data data/helical.yaml --device {device}'
         if self.augment is True:
             command += " --augment"
         if self.save_crop: 
