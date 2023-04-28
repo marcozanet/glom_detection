@@ -20,11 +20,13 @@ def prepare_data(cnn_root_fold:str, map_classes:dict, batch:int, num_workers:int
     cnn_root = os.path.join(cnn_root_fold, 'cnn_dataset')
 
     # Assign true classes back to crops out of yolo:
+    print("-"*10)
     print("Labelling crops from YOLO:")
     print("-"*10)
     for exp_fold in yolo_exp_folds:
         labeller = CropLabeller(root_data=yolo_root, exp_data=exp_fold, map_classes=map_classes, resize = False)
         labeller()
+    print("-"*10)
 
     # Creating Dataset and splitting into train, val, test:
     print("Creating Dataset and splitting into train, val, test:")
@@ -32,6 +34,7 @@ def prepare_data(cnn_root_fold:str, map_classes:dict, batch:int, num_workers:int
     cnn_processor = CNNDataSplitter(src_folds=yolo_exp_folds, map_classes=map_classes, yolo_root=yolo_root, 
                                     dst_root=cnn_root, resize=resize_crops, treat_as_single_class=treat_as_single_class)
     cnn_processor()
+    print("-"*10)
 
     cnn_dataset_fold = os.path.join(cnn_root_fold, 'cnn_dataset')
 

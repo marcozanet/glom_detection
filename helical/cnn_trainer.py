@@ -40,26 +40,28 @@ weights_save_fold = cnn_exp_fold +f"_{dt_string}"
 cnn_data_fold = prepare_data(cnn_root_fold=cnn_data_root, map_classes=map_classes, batch=batch,
                             resize_crops=resize_crops, num_workers=num_workers, yolo_root=yolo_data_root,
                             yolo_exp_folds=yolo_exp_folds, treat_as_single_class=treat_as_single_class)
-
+print(f"Cross validation")
+print("-"*10)
 crossvalidator = CNN_KCrossValidation(data_root=cnn_data_fold, k=k_tot, dataset = dataset, task=task)
 crossvalidator._change_kfold(fold_i=k_i)
 
 # processor
-if treat_as_single_class: 
-    map_classes = {'false_positives':0, 'item':1}
+print("-"*10)
+print(f"Data Loaders")
+print("-"*10)
+# if treat_as_single_class: 
+#     map_classes = {'false_positives':0, 'item':1}
 dataloader_cls = CNNDataLoaders(root_dir=cnn_data_fold, map_classes=map_classes, batch=batch, num_workers=num_workers)
 dataloaders = dataloader_cls()
 
 # Load the pretrained model from pytorch
+print("-"*10)
+print(f"VGG16 definition")
 vgg16 = models.vgg16_bn(weights = 'VGG16_BN_Weights.DEFAULT')
 vgg16.load_state_dict(torch.load(weights_path))
-# print(vgg16)
-
-# raise NotImplementedError()
 # Freeze training for all layers
 for param in vgg16.features.parameters():
     param.require_grad = False
-
 # Newly created modules have require_grad=True by default
 num_features = vgg16.classifier[6].in_features
 features = list(vgg16.classifier.children())[:-1] # Remove last layer
@@ -67,6 +69,9 @@ features.extend([nn.Linear(num_features, len(map_classes))]) # Add our layer; nu
 vgg16.classifier = nn.Sequential(*features) # Replace the model classifier
 
 # train model 
+print("-"*10)
+print(f"Train Model")
+print("-"*10)
 model = vgg16
 criterion = nn.BCEWithLogitsLoss()
 optimizer_ft = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)

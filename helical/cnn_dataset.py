@@ -36,10 +36,9 @@ class CNNDataset(Dataset):
         if self.dataset == 'train': 
             transform = A.Compose([
                 A.Blur(), 
-                A.RandomContrast(),
+                A.RandomBrightnessContrast(),
                 A.HorizontalFlip(),
                 A.VerticalFlip(),
-                A.RandomBrightness(),
                 ToTensorV2(),
             ])
         else:

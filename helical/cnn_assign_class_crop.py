@@ -28,25 +28,28 @@ class CropLabeller():
         return
     
     def _parse(self): 
+        """ Parses arguments."""
 
         assert os.path.isdir(self.root_data), f"'root_data':{self.root_data} is not a valid dirpath."
         assert os.path.isdir(self.root_data), f"'exp_data':{self.exp_data} is not a valid dirpath."
         assert type(self.map_classes) == dict, f"'map_classes':{self.map_classes} should be a dict, but is type {type(self.map_classes)}."
 
-
         return
     
 
     def get_tot_gt_labels_from_dataset(self): 
+        """ Retrieves true labels from the original data folder. """
 
         assert os.path.isdir(self.root_data), f"root_data:{self.root_data} is not a valid dirpath."
         tot_gt_labels = glob(os.path.join(self.root_data, 'tiles', "*", "labels", "*.txt"))
         assert len(tot_gt_labels)>0, f"No labels like {os.path.join(self.root_data, 'tiles', '*', 'labels', '*.txt')} found in dataset."
+        
         return tot_gt_labels
 
 
     def get_image_shape(self): 
         """ Gets image dims"""
+
         img_dims: tuple
         assert os.path.isdir(self.root_data), f"root_data:{self.root_data} is not a valid dirpath."
         all_images = glob(os.path.join(self.root_data, 'tiles', "*", "images", "*.png"))
@@ -95,6 +98,7 @@ class CropLabeller():
     def assign_all_labels(self) -> None:
         """ Assign a class to all crops and saving the mapping into the self.crop_class_dict"""
         
+        assert len(self.tot_pred_labels)>0, f"'tot_pred_labels' = glob({os.path.join(self.exp_data, 'labels', '*.txt')}) is empty."
         tot_true_labels = {}
         for pred_lbl in tqdm(self.tot_pred_labels, desc='Labelling crops'): 
             gt_classes = self.assign_class(pred_lbl=pred_lbl)

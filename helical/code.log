@@ -1,11 +1,9 @@
-27/04 11:05:25|INFO|CNN_KCrossValidation.__init__: n_wsis:9.
-27/04 11:05:25|ERROR|[['1e2425f28', '26dc41664'], ['aaa', 'bbb'], ['ccc', 'ddd'], ['eee', 'fff', 'ggg']]
-27/04 11:05:25|INFO|CNN_KCrossValidation._get_i_split: iter_0,  train: 7 images, test: 2.
-27/04 11:05:25|INFO|CNN_KCrossValidation._get_i_split: iter_1,  train: 7 images, test: 2.
-27/04 11:05:25|INFO|CNN_KCrossValidation._get_i_split: iter_2,  train: 7 images, test: 2.
-27/04 11:05:25|INFO|CNN_KCrossValidation._get_i_split: iter_3,  train: 6 images, test: 3.
-27/04 11:05:25|INFO|CNN_KCrossValidation.fix_n_tiles: n_tiles_tot:{}.
-27/04 11:05:25|INFO|CNN_KCrossValidation._change_folds: train: 7 images: ['aaa', 'bbb', 'ccc', 'ddd', 'eee', 'fff', 'ggg'].
-27/04 11:05:25|INFO|CNN_KCrossValidation._change_folds: test: 2 labels: ['1e2425f28', '26dc41664'].
-27/04 11:05:25|INFO|Splitted train: 17
-27/04 11:05:25|INFO|Wsi_fns splitted in: train:17 val:72, test:0. 
+28/04 12:52:50|INFO|CNN_KCrossValidation.__init__: n_wsis:29.
+28/04 12:52:50|INFO|CNN_KCrossValidation._get_i_split: iter_0,  train: 22 images, test: 7.
+28/04 12:52:50|INFO|CNN_KCrossValidation._get_i_split: iter_1,  train: 22 images, test: 7.
+28/04 12:52:50|INFO|CNN_KCrossValidation._get_i_split: iter_2,  train: 22 images, test: 7.
+28/04 12:52:50|INFO|CNN_KCrossValidation._get_i_split: iter_3,  train: 21 images, test: 8.
+28/04 12:52:50|INFO|CNN_KCrossValidation.fix_n_tiles: n_tiles_tot:{}.
+28/04 12:52:50|INFO|CNN_KCrossValidation._change_folds: train: 22 images: ['200813457', '200822954', '201014448', '201025745', '201113659', '201200745', '201206802', '201218916', '201307077', '201322507', '201324441', '201325046', '201325292', '201404292', '201404358', '201409661', '201410900', '201413736', '201413789', '201414036', '201420222', '201423479'].
+28/04 12:52:50|INFO|CNN_KCrossValidation._change_folds: test: 7 labels: ['200104066', '200209761', '200219757', '200701099', '200720162', '200809469', '200811313'].
+28/04 12:52:50|INFO|Wsi_fns splitted in: train:5578 val:2747, test:0. 

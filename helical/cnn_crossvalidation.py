@@ -74,7 +74,6 @@ class CNN_KCrossValidation(KCrossValidation):
         folds = []
         idxs = np.linspace(start=0, stop=self.n_wsis, num=self.k+1, dtype=int) # k + 1 because first idx=0
         folds_fnames = sorted([fnames[idxs[i]:idxs[i+1]] for i in range(self.k)])
-        self.log.error(folds_fnames)
         folds = []
         for ls_fnames in folds_fnames:
             ls_fullnames = [fp_fnames[name] for name in sorted(ls_fnames)]
@@ -132,7 +131,7 @@ class CNN_KCrossValidation(KCrossValidation):
         def _move_files(to_fold:str) -> None:
             # basenames = train_basenames if to_fold == 'train' else test_basenames
             n_images = 0
-            for wsi in tqdm(self.splits[fold_i][to_fold]): # get wsi of the files splitted in the folds
+            for wsi in tqdm(self.splits[fold_i][to_fold], desc = f'moving images to {to_fold}'): # get wsi of the files splitted in the folds
                 train_old_new = [(fp, change_dir(fp, to_fold)) for fp in self.file_list if os.path.basename(wsi).split('.')[0] in fp] # take all files with same basename and changes whatever dir to 'train'.
                 # train_old_new = [(fp, change_dir(fp, to_fold)) for fp in self.file_list if os.path.basename(wsi).split('.')[0] in fp] # take all files with same basename and changes whatever dir to 'train'.
                 for old_fp, new_fp in train_old_new:
@@ -145,7 +144,7 @@ class CNN_KCrossValidation(KCrossValidation):
         
         n_train = _move_files('train')
         self.data, self.file_list = self._get_data() # update data
-        self.log.info(f"Splitted train: {n_train}")
+        # self.log.info(f"Splitted train: {n_train}")
 
         # TODO ADD ONLY IN CASE THERE IS 
         n_val = _move_files('val')

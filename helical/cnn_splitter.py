@@ -68,16 +68,11 @@ class CNNDataSplitter():
 
         tot_images = []
         for exp_fold in self.src_folds:
-            # print(exp_fold)
             assert os.path.isdir(exp_fold), f"exp_fold:{exp_fold} is not a valid dirpath."
-            # assert os. in self.class_folds, f"'class_folds':{self.class_folds}, but found fold {fold}"
-
             images = glob(os.path.join(exp_fold, 'crops_true_classes', '*', '*.jpg'))
-            assert len(images)>0, f"No image found in {exp_fold}."
+            assert len(images)>0, f"No image like {os.path.join(exp_fold, 'crops_true_classes', '*', '*.jpg')} found."
             tot_images.extend(images)
 
-        # print(tot_images)
-            
         return tot_images
     
     def _treat_as_single_class(self):
@@ -96,7 +91,7 @@ class CNNDataSplitter():
 
         # move all images to 'item' class
         change_class = lambda fp: os.path.join(self.dst_root, os.path.split(os.path.dirname(os.path.dirname(fp)))[1], 'item', os.path.basename(fp)) 
-        for fp in tqdm(all_images, desc=f"Merging classes"): # to not be done on 'false_positives'
+        for fp in tqdm(all_images, desc=f"merging classes"): # to not be done on 'false_positives'
             # skip false_positives:
             if os.path.split(os.path.dirname(fp))[1] == 'false_positives':
                 continue
@@ -113,10 +108,6 @@ class CNNDataSplitter():
                 del_fp = os.path.join(self.dst_root, dataset, clss)
                 if os.path.isdir(del_fp):
                     shutil.rmtree(del_fp)
-                # print(os.path.join(self.dst_root, dataset, clss))
-                # os.makedirs(os.path.join(self.dst_root, dataset, clss), exist_ok=True)        
-
-
 
         return
     
@@ -136,7 +127,6 @@ class CNNDataSplitter():
                 print(f"Found dataset: deleting {dataset}")
                 shutil.rmtree(os.path.join(self.dst_root, dataset))
             for clss in class_folds: 
-                # print(f'create: {os.path.join(self.dst_root, dataset, clss )}')
                 os.makedirs(os.path.join(self.dst_root, dataset, clss), exist_ok=True)
 
         return
@@ -149,17 +139,15 @@ class CNNDataSplitter():
         tot_map_classes.update({'false_positives':999})
         x = self.tot_images
         y = [tot_map_classes[os.path.split(os.path.dirname(img))[1]] for img in self.tot_images]
-        # print(y)
         train_imgs, test_imgs, _, _ = ms.train_test_split(x, y, test_size=test_size, stratify=y) # stratify=y)
 
-
+        # move train images:
         for fp in tqdm(train_imgs, 'filling train:'): 
             src = fp
             dst = os.path.join(self.traindir, os.path.split(os.path.dirname(src))[1], os.path.basename(src))
             shutil.copy(src=src, dst=dst)
-
+        # move test images:
         for fp in tqdm(test_imgs, 'filling test:'): 
-            # print(dst)
             src = fp
             dst = os.path.join(self.testdir, os.path.split(os.path.dirname(src))[1], os.path.basename(src))
             shutil.copy(src=src, dst=dst)
