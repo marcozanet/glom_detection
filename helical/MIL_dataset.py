@@ -1,14 +1,10 @@
 import os
-from skimage import io, transform, color
 from torch.utils.data import Dataset
 import torchvision.transforms as T
 import torch
-from torchvision.transforms import Compose, Resize, ToTensor, Normalize
 import numpy as np
-from bags_creation import BagCreator
+from MIL_bags_creation import BagCreator
 from configurator import Configurator
-import random
-from torch.utils.data import DataLoader
 
 
 class MILDataset(Dataset, Configurator):
@@ -25,9 +21,7 @@ class MILDataset(Dataset, Configurator):
                 n_classes: int,
                 ) -> None:
         
-        
-        self.log = self.get_logger()
-
+        super().__init__()
         assert os.path.isdir(instances_folder), f"'instances_folders':{instances_folder} is not a valid dirpath."
         assert isinstance(sclerosed_idx, int), f"'sclerosed_idx':{sclerosed_idx} should be an int."
         assert os.path.isdir(exp_folder), f"'exp_folder':{exp_folder} is not a valid dirpath."
@@ -60,13 +54,13 @@ class MILDataset(Dataset, Configurator):
         bags_indices, bags_features, bags_labels = creator()
         data = []
         for bag, images in bags_indices.items(): 
-            # print(bag)
             bag_features = bags_features[bag]
-            # print(bag_features)
+            print(bag_features)
             bag_label = bags_labels[bag]
-            # print(bag_label)
-            # print(bag_features.keys())
+            print(bag_label)
             data = [(bag_features[i], bag_label) for i in bag_features.keys()]
+            print(data)
+            assert len(data)>0, f"'data' has length 0, but should be > 0. "
 
         return  data
     
@@ -95,9 +89,9 @@ class MILDataset(Dataset, Configurator):
         bag_feature = torch.from_numpy(np.load(bag_feat_file))
 
         # brutally averaging!!
-        self.log.warning(f"{self.class_name}.{'__getitem__'}: before: {bag_feature.shape}")
+        # self.log.warning(f"{self.class_name}.{'__getitem__'}: before: {bag_feature.shape}")
         bag_feature = bag_feature.mean(dim=0)
-        self.log.warning(f"{self.class_name}.{'__getitem__'}: after: {bag_feature.shape}")
+        # self.log.warning(f"{self.class_name}.{'__getitem__'}: after: {bag_feature.shape}")
 
         print(f"bag_feat_shape: {bag_feature.shape}")
         # print(bag_feature)
@@ -105,8 +99,8 @@ class MILDataset(Dataset, Configurator):
 
 
 
-        self.log.warning(f"{self.class_name}.{'__getitem__'}: brutally averaging to lower dims!!")
-        self.log.warning(f"{self.class_name}.{'__getitem__'}: add normalization!!")
+        # self.log.warning(f"{self.class_name}.{'__getitem__'}: brutally averaging to lower dims!!")
+        # self.log.warning(f"{self.class_name}.{'__getitem__'}: add normalization!!")
 
         # bag_features = {i: torch.from_numpy(np.load(file)) for i,file in enumerate(bag_feats_files.values())}
         # bag_features = [torch.from_numpy(np.load(file)) for file in bag_feats_files.values()]

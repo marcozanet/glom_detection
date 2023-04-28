@@ -1,59 +1,46 @@
 import torch 
 from torch import nn, optim
-import inspect
 import time
 from MIL_model import MIL_NN
 from MIL_dataloader import get_loaders
 from tqdm import tqdm
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
-
-
-
-
-def calculate_metric(metric_fn, true_y, pred_y):
-    # multi class problems need to have averaging method
-    if "average" in inspect.getfullargspec(metric_fn).args:
-        return metric_fn(true_y, pred_y, average="macro")
-    else:
-        return metric_fn(true_y, pred_y)
-    
-def print_scores(p, r, f1, a, batch_size):
-    # just an utility printing function
-    for name, scores in zip(("precision", "recall", "F1", "accuracy"), (p, r, f1, a)):
-        print(f"\t{name.rjust(14, ' ')}: {sum(scores)/batch_size:.4f}")
-# 4. Train & Test
-# In [60]:
-import numpy as np
+from MIL_utils import calculate_metric, print_scores
 start_ts = time.time()
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print(torch.cuda.is_available())
 
+
+###################################################
+#################    PARAMS    ####################
+###################################################
 lr0 = 1e-4
-
-# model:
-model = MIL_NN().to(device)
-
-# params you need to specify:
 epochs = 10
-
-# get loaders:
-train_img_dir = '/Users/marco/helical_tests/test_bagcreator/images'
-val_img_dir = train_img_dir
-test_img_dir = train_img_dir
-train_detect_dir = '/Users/marco/yolov5/runs/detect/exp7'
-val_detect_dir = '/Users/marco/yolov5/runs/detect/exp7'
-test_detect_dir = '/Users/marco/yolov5/runs/detect/exp7'
+train_img_dir = '/Users/marco/helical_tests/test_bagcreator/true_dataset/cnn_dataset/train'
+val_img_dir = '/Users/marco/helical_tests/test_bagcreator/true_dataset/cnn_dataset/val'
+test_img_dir = '/Users/marco/helical_tests/test_bagcreator/true_dataset/cnn_dataset/test'
+train_detect_dir = '/Users/marco/helical_tests/test_bagcreator/true_dataset/cnn_dataset/train'
+val_detect_dir = '/Users/marco/helical_tests/test_bagcreator/true_dataset/cnn_dataset/train'
+test_detect_dir = '/Users/marco/helical_tests/test_bagcreator/true_dataset/cnn_dataset/train'
 n_images_per_bag = 9
 n_classes = 4
 batch = 1
 sclerosed_idx = 2
 num_workers = 0
 mapping = {(0, 0, 0): 0, (0, 255, 0): 1, (255, 0, 0): 2}
+##################################################
 
+
+###################################################
+##############    PREPROCESSING    ################
+###################################################
+# model:
+model = MIL_NN().to(device)
+# get loaders:
 train_loader, val_loader = get_loaders(train_img_dir=train_img_dir,
                                         train_detect_dir=train_detect_dir, 
-                                        # val_img_dir=val_img_dir,
-                                        # val_detect_dir=val_detect_dir,
+                                        val_img_dir=val_img_dir,
+                                        val_detect_dir=val_detect_dir,
                                         n_images_per_bag=n_images_per_bag,
                                         n_classes=n_classes,
                                         test_img_dir=test_img_dir,
@@ -62,12 +49,12 @@ train_loader, val_loader = get_loaders(train_img_dir=train_img_dir,
                                         batch=batch,
                                         num_workers=num_workers,
                                         mapping=mapping)
+
+###################################################
+#################    TRAIN    ####################
+###################################################
 loss_function = torch.nn.BCELoss(reduction='mean') # your loss function, cross entropy works well for multi-class problems
-
-
-#optimizer = optim.Adadelta(model.parameters())
 optimizer = optim.SGD(model.parameters(), lr=lr0, momentum=0.9)
-
 losses = []
 batches = len(train_loader)
 val_batches = len(val_loader)

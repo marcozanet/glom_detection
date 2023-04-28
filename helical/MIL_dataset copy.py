@@ -5,7 +5,7 @@ import torchvision.transforms as T
 import torch
 from torchvision.transforms import Compose, Resize, ToTensor, Normalize
 import numpy as np
-from bags_creation import BagCreator
+from MIL_bags_creation import BagCreator
 from configurator import Configurator
 import random
 from torch.utils.data import DataLoader
