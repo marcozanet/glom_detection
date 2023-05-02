@@ -26,7 +26,8 @@ class MIL_NN(torch.nn.Module):
         bag_lbl is a vector a labels
         figure out batches
         """
-        print(bag_features)
+        # print('ueee')
+        # print(bag_features)
         bag_feature, bag_att, bag_keys = list(zip(*[list(self.agg(ff.float())) + [idx]
                                                     for idx, ff in enumerate(bag_features)]))
         bag_att = dict(zip(bag_keys, [a.detach().cpu() for a in bag_att]))

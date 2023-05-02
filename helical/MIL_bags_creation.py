@@ -1,11 +1,11 @@
 import os 
 from typing import Tuple, List
 from glob import glob
-
 import numpy as np
 import random
 from configurator import Configurator
 import math
+from tqdm import tqdm
 
 class BagCreator(Configurator): 
     def __init__(self, 
@@ -13,7 +13,8 @@ class BagCreator(Configurator):
                 exp_folder:str,
                 sclerosed_idx: int,
                 n_images_per_bag: int,
-                n_classes: int
+                n_classes: int,
+                img_fmt: str = '.jpg'
                 
                 ) -> None:
         
@@ -33,67 +34,78 @@ class BagCreator(Configurator):
         self.class_name = self.__class__.__name__
         self.n_images_per_bag = n_images_per_bag
         self.n_classes = n_classes
+        self.img_fmt = img_fmt
 
         self.instances_idcs = self.get_instances_indices()
 
         return
     
     
-    def get_instances_indices(self) -> None: 
-        images = glob(os.path.join(self.instances_folders, "*.png"))
-        # print(f"Total images: {len(images)}. Images per folder: {self.n_images_per_bag}, n_bags: {math.ceil(len(images)/self.n_images_per_bag)}. Repeating {len(images)%self.n_images_per_bag} to fill last folder")
-        self.log.info(f"{self.class_name}.{'get_instances_indices'}: Total images: {len(images)}. Images per folder: {self.n_images_per_bag}, n_bags: {math.ceil(len(images)/self.n_images_per_bag)}. Repeating {len(images)%self.n_images_per_bag} to fill last folder")
+    def get_instances_indices(self) -> dict: 
+        """ Compute each bag instances like {/User/.../image0:0, /User/.../image6:1... } """
 
+        img_path_like = os.path.join(self.instances_folders, '*', f'*{self.img_fmt}')
+        images = glob(img_path_like)
+        assert len(images)>0, f"0 images like {img_path_like} "
+        self.log.info(f"{self.class_name}.{'get_instances_indices'}: Total images: {len(images)}. Images per folder: {self.n_images_per_bag}, n_bags: {math.ceil(len(images)/self.n_images_per_bag)}. Repeating {len(images)%self.n_images_per_bag} to fill last folder")
         self.n_bags = math.ceil(len(images)/self.n_images_per_bag)
-        
+        assert self.n_bags>0, f"'n_bags':{self.n_bags} should be >0."
         instances_idcs = {fp:i for (i,fp) in enumerate(images) }
+
         return instances_idcs
 
 
 
     def get_bags_indices(self) -> dict: 
 
-        images = glob(os.path.join(self.instances_folders, "*.png"))
+        img_path_like = os.path.join(self.instances_folders, '*', f'*{self.img_fmt}')
+        images = glob(img_path_like)
+        assert len(images)>0, f"0 images like {img_path_like} "
 
         # get #samples per slide: 
         wsi_fnames = list(set([os.path.basename(file).split('_SFOG')[0] for file in images]))
-        # print(wsi_fnames)
+        assert len(wsi_fnames)>0, f"'wsi_fnames': {wsi_fnames} is empty." 
+        assert all([self.img_fmt not in file for file in wsi_fnames]), f"'wsi_fnames':{wsi_fnames} shouldn't contain {self.img_fmt}"
         wsi_samples = {}
         for wsi in wsi_fnames:
             samples = [int(file.split('sample')[1].split('_')[0]) for file in images if wsi in file]
             wsi_samples[wsi] = np.array(samples).max() + 1
-        # print(wsi_samples)
+        assert len(wsi_samples)>0, f"'wsi_samples': {wsi_samples} is empty." 
 
-        # create bags
+        # Create bags:
+        def get_fname_class(fn): # helper func
+            matches = [os.path.split(os.path.dirname(fp))[1] for fp in images if fn in fp]
+            assert len(matches)>0, f"No fp matches for the fn:{fn}. "
+            assert len(matches)==1, f"More than 1 fp match for fn:{fn}"
+            return matches[0]
         somma = 0
         bags = {}
-
         bag_n = 0
-        for wsi, n_samples in wsi_samples.items():
+        for wsi, n_samples in tqdm(wsi_samples.items(), desc='Creating bags'):
             for i in range(n_samples):
-                files = sorted([os.path.basename(file) for file in images if f"{wsi}_SFOG_sample{i}" in file])
-                # print(f"files: {(files)}")
+                files = sorted([ os.path.basename(file) for file in images if f"{wsi}_SFOG_sample{i}" in file])
+                # print(files[0])
+                assert len(files)>0, f"'files': {files} is empty." 
                 somma += len(files)
 
-                # fill bags:
+                # Fill bags:
                 n_bags = len(files) // self.n_images_per_bag
-                remaining = [os.path.join(self.instances_folders, file) for file in files]
+                remaining = [os.path.join(self.instances_folders, get_fname_class(file), file ) for file in files]
                 for _ in range(n_bags):
                     selected = random.sample(remaining, k = self.n_images_per_bag)
                     remaining = [file for file in remaining if file not in selected ]
                     bags[bag_n] = {self.instances_idcs[file]: file for file in selected}
                     # bags[bag_n] = [(self.instances_idcs[file],file) for file in selected]
                     bag_n += 1
-                if len(remaining) > 0:
+                # the last bag won't be fully filled, so we'll re-sample some images to fill it:
+                if len(remaining) > 0: # last bag
                     choosable = [file for file in files if file not in remaining]
                     remaining_bag = remaining + random.sample(choosable, k= self.n_images_per_bag-len(remaining) )
-                    remaining_bag = [os.path.join(self.instances_folders, file) for file in remaining_bag ]
-                    bags[bag_n] = {self.instances_idcs[file]: file for file in remaining_bag}
+                    remaining_bag = [os.path.join(self.instances_folders, get_fname_class(file), file) for file in remaining_bag ]
+                    bags[bag_n] = {self.instances_idcs[file]: file for file in remaining_bag} # fill last bag
                 
-        # print(f"Bags indices:{bags}")
-        # print(f"Bag[0] indices:{bags[0]}")
-        self.log.info(f"{self.class_name}.{'get_bags_indices'}: Bag indices:{bags}")
-        self.log.info(f"{self.class_name}.{'get_bags_indices'}: Bag[0] indices:{bags[0]}")
+        assert len(bags) > 0, f"'bags':{bags} are empty."
+
         return  bags
     
 
@@ -128,8 +140,7 @@ class BagCreator(Configurator):
     def get_fake_labels(self, bags_indices:dict): 
 
         bags_labels = {idx_bag:random.randint(0,self.n_classes-1) for idx_bag in bags_indices.keys()}
-        # print(f"bag_labels:{bag_labels}")
-        self.log.info(f"{self.class_name}.{'get_fake_labels'}: n_classes:{self.n_classes}")
+        # self.log.info(f"{self.class_name}.{'get_fake_labels'}: n_classes:{self.n_classes}")
         self.log.info(f"{self.class_name}.{'get_fake_labels'}: bag_labels:{bags_labels}")
 
         return bags_labels
@@ -148,8 +159,8 @@ class BagCreator(Configurator):
             bag_feat = {idx_image:image2feat(image) for idx_image, image in bag.items() if os.path.isfile(image2feat(image)) }
             bags_features[idx_bag] = bag_feat
             
-        self.log.info(f"{self.class_name}.{'_get_bags_features'}: bags_features:{bags_features}")
-        self.log.info(f"{self.class_name}.{'_get_bags_features'}: bags_features[0]:{bags_features[0]}")
+        # self.log.info(f"{self.class_name}.{'_get_bags_features'}: bags_features:{bags_features}")
+        # self.log.info(f"{self.class_name}.{'_get_bags_features'}: bags_features[0]:{bags_features[0]}")
 
         return bags_features
 
@@ -172,12 +183,11 @@ class BagCreator(Configurator):
         bags_labels = self.get_fake_labels(bags_indices=bags_indices)
         bags_features = self._get_bags_features(bags_indices=bags_indices)
 
-        # self.summary(bags_instances=bags_indices, bags_labels=bags_labels, bags_features=bags_features)
-        # assert len(bags_indices) == len(bags_features) == len(bags_labels), f"Instances, features and labels don't have same length: instances: {len(bags_instances)}, features: {len(bags_features)}, labels: {len(bags_labels)}"
-        # print(f"instances: {len(bags_instances)}, features: {len(bags_features)}, labels: {len(bags_labels)}")
-        # print(f"instances: {type(bags_indices[0])}, features: {type(bags_features[0])}, labels: {type(bags_labels[0])}")
-
-
+        assert len(bags_indices)>0, f"'bags_indices': {bags_indices} is empty." 
+        assert len(bags_labels)>0, f"'bags_labels': {bags_labels} is empty." 
+        assert len(bags_features)>0, f"'bags_features': {bags_features} is empty." 
+        assert len(bags_indices)==len(bags_labels)==len(bags_features), f"Lengths of 'bags_indices':{len(bags_indices)}, 'bags_labels':{len(bags_labels)}, 'bags_features':{len(bags_features)} should be the same. "
+        
         return bags_indices, bags_features, bags_labels
 
 

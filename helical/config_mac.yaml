@@ -11,7 +11,9 @@ readme: >
     ...
     2) save_one_box(xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}_crop{j}.jpg', BGR=True)
 
+##################################################
 #############    CNN_TRAINER.PY    #############
+##################################################
 cnn_trainer:
   {
     yolo_data_root: '/Users/marco/helical_tests/test_cnn_trainer/detection',
@@ -33,7 +35,11 @@ cnn_trainer:
   }
 ##################################################
 
+
+
+##################################################
 #############    TEST_INFERERS.PY    #############
+##################################################
 test_yolo_infere_detect_muw_sfog:
   {
     repository_dir: '/Users/marco/yolo/code/helical',
@@ -59,4 +65,24 @@ test_yolo_infere_detect_hubmap_pas:
     visualize: True, 
     save_txt: False
   }
+##################################################
+
+
+##################################################
+#############    MIL_RUNNER_TRUE.PY    #############
+##################################################
+train_img_dir: '/Users/marco/helical_tests/test_bagcreator/images',
+val_img_dir: train_img_dir,
+test_img_dir: train_img_dir,
+train_detect_dir: '/Users/marco/yolov5/runs/detect/exp7',
+val_detect_dir: '/Users/marco/yolov5/runs/detect/exp7',
+test_detect_dir: '/Users/marco/yolov5/runs/detect/exp7',
+n_images_per_bag: 9,
+n_classes: 4,
+epochs: 10,
+lr0 = 0.0001,
+batch: 1,
+sclerosed_idx: 2,
+num_workers: 0,
+mapping: {(0, 0, 0): 0, (0, 255, 0): 1, (255, 0, 0): 2}
 ##################################################

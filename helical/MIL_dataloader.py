@@ -7,8 +7,8 @@ from MIL_dataset import MILDataset
 
 def get_loaders(train_img_dir, 
                 train_detect_dir,
-                # val_img_dir, 
-                # val_detect_dir,
+                val_img_dir, 
+                val_detect_dir,
                 test_img_dir,
                 test_detect_dir,
                 sclerosed_idx:int,
@@ -33,7 +33,11 @@ def get_loaders(train_img_dir,
                         sclerosed_idx=sclerosed_idx,
                         n_images_per_bag = n_images_per_bag,
                         n_classes = n_classes)
+    
+    print(f"trainset DONEEEE")
     train_dataloader = DataLoader(trainset, batch_size=batch, shuffle=True, num_workers=num_workers, pin_memory=True)
+
+    print(f"trainloader DONEEEE")
     # next(iter(train_dataloader))
 
     # valset = MILDataset(instances_folder=val_img_dir, 

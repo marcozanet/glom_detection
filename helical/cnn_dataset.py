@@ -1,17 +1,13 @@
 import torch, torchvision
 from torch import nn
 from torch.utils.data import Dataset, DataLoader
-# from torchvision import transforms as tfms
-# from album
 from typing import Literal, List, Tuple
 from glob import glob
 import os, shutil
-import cv2
 import albumentations as A 
 from albumentations.pytorch import ToTensorV2
 from skimage import io
 import matplotlib.pyplot as plt 
-import warnings
 
 class CNNDataset(Dataset): 
 
