@@ -82,10 +82,13 @@ def feature_extraction(model, dataloader, cnn_root_fold) -> None:
         inputs.to(device), labels.to(device) # to gpu
         outputs = model(inputs)
         fp=fp[0] # because it's batched otherwise
+        feat_shape = outputs.data.shape
         save_fp = os.path.join(os.path.dirname(fp), 'feats', os.path.basename(fp).replace('.jpg', '.npy'))
         save_feats(save_fp=save_fp, feats=outputs.data )
         del inputs, labels, outputs 
         torch.cuda.empty_cache()
+    print(f"Features with shape {feat_shape} saved in {os.path.dirname(save_fp)}.")
+    print('-' * 10)
 
 
     return

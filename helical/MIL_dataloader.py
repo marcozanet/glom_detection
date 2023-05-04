@@ -43,8 +43,8 @@ def get_loaders(train_img_dir,
     # valset = MILDataset(instances_folder=val_img_dir, 
     #                       exp_folder = val_detect_dir,
     #                       sclerosed_idx=sclerosed_idx)
-    testset = MILDataset(instances_folder=test_img_dir, 
-                        exp_folder = test_detect_dir,
+    valset = MILDataset(instances_folder=val_img_dir, 
+                        exp_folder = val_detect_dir,
                         sclerosed_idx=sclerosed_idx,
                         n_images_per_bag = n_images_per_bag,
                         n_classes = n_classes)
@@ -55,7 +55,7 @@ def get_loaders(train_img_dir,
 
     # print(f"Getting Loaders:")
     # valid_dataloader = DataLoader(valset, batch_size=batch, shuffle=False, num_workers=num_workers, pin_memory=True)
-    test_dataloader = DataLoader(testset, batch_size=batch, shuffle=False, num_workers=num_workers, pin_memory=True)
+    val_dataloader = DataLoader(valset, batch_size=batch, shuffle=False, num_workers=num_workers, pin_memory=True)
 
     # bag_features, bag_label = next(iter(train_dataloader))
     # # print(f"Trainloader:'bag_features':{bag_features.items()}. Bag label: {bag_label}")
@@ -64,7 +64,7 @@ def get_loaders(train_img_dir,
     # bag_features, bag_label = next(iter(test_dataloader))
     # print(f"Testloader:'bag_features':{bag_features[0].shape}. Bag label: {bag_label}")
 
-    return train_dataloader,test_dataloader #valid_dataloader, 
+    return train_dataloader,val_dataloader #valid_dataloader, 
     
 
 def test_get_loaders():

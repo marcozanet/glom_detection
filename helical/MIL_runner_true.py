@@ -1,4 +1,5 @@
 import torch 
+import os
 from torch import nn, optim
 import time
 from MIL_model import MIL_NN
@@ -6,6 +7,7 @@ from MIL_dataloader import get_loaders
 from tqdm import tqdm
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 from MIL_utils import calculate_metric, print_scores
+from utils import get_config_params
 start_ts = time.time()
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 print(torch.cuda.is_available())
@@ -14,20 +16,19 @@ print(torch.cuda.is_available())
 ###################################################
 #################    PARAMS    ####################
 ###################################################
-lr0 = 1e-4
-epochs = 10
-train_img_dir = '/Users/marco/helical_tests/test_bagcreator/true_dataset/cnn_dataset/train'
-val_img_dir = '/Users/marco/helical_tests/test_bagcreator/true_dataset/cnn_dataset/val'
-test_img_dir = '/Users/marco/helical_tests/test_bagcreator/true_dataset/cnn_dataset/test'
-train_detect_dir = '/Users/marco/helical_tests/test_bagcreator/true_dataset/cnn_dataset/train'
-val_detect_dir = '/Users/marco/helical_tests/test_bagcreator/true_dataset/cnn_dataset/train'
-test_detect_dir = '/Users/marco/helical_tests/test_bagcreator/true_dataset/cnn_dataset/train'
-n_images_per_bag = 9
-n_classes = 4
-batch = 1
-sclerosed_idx = 2
-num_workers = 0
-mapping = {(0, 0, 0): 0, (0, 255, 0): 1, (255, 0, 0): 2}
+PARAMS = get_config_params('mil_trainer')
+lr0 = PARAMS['lr0']
+epochs = PARAMS['epochs']
+train_img_dir = PARAMS['train_img_dir']
+n_images_per_bag = PARAMS['n_images_per_bag']
+n_classes = PARAMS['n_classes']
+n_classes = PARAMS['n_classes']
+batch = PARAMS['batch']
+sclerosed_idx = PARAMS['sclerosed_idx']
+num_workers = PARAMS['num_workers']
+mapping = PARAMS['mapping']
+val_img_dir = os.path.join(os.path.dirname(train_img_dir), 'val')
+test_img_dir = os.path.join(os.path.dirname(train_img_dir), 'test')
 ##################################################
 
 

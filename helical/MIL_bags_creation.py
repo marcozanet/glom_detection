@@ -8,6 +8,7 @@ import math
 from tqdm import tqdm
 
 class BagCreator(Configurator): 
+    
     def __init__(self, 
                 instances_folder:str, 
                 exp_folder:str,
@@ -43,10 +44,10 @@ class BagCreator(Configurator):
     
     def get_instances_indices(self) -> dict: 
         """ Compute each bag instances like {/User/.../image0:0, /User/.../image6:1... } """
-
+        print(self.instances_folders)
         img_path_like = os.path.join(self.instances_folders, '*', f'*{self.img_fmt}')
         images = glob(img_path_like)
-        assert len(images)>0, f"0 images like {img_path_like} "
+        assert os.path.split(os.path.dirname(img_path_like)) or (len(images)>0), f"0 images like {img_path_like} "
         self.log.info(f"{self.class_name}.{'get_instances_indices'}: Total images: {len(images)}. Images per folder: {self.n_images_per_bag}, n_bags: {math.ceil(len(images)/self.n_images_per_bag)}. Repeating {len(images)%self.n_images_per_bag} to fill last folder")
         self.n_bags = math.ceil(len(images)/self.n_images_per_bag)
         assert self.n_bags>0, f"'n_bags':{self.n_bags} should be >0."
@@ -103,8 +104,10 @@ class BagCreator(Configurator):
                     remaining_bag = remaining + random.sample(choosable, k= self.n_images_per_bag-len(remaining) )
                     remaining_bag = [os.path.join(self.instances_folders, get_fname_class(file), file) for file in remaining_bag ]
                     bags[bag_n] = {self.instances_idcs[file]: file for file in remaining_bag} # fill last bag
-                
+        
+        
         assert len(bags) > 0, f"'bags':{bags} are empty."
+        print(f"bags:{bags}")
 
         return  bags
     
@@ -142,6 +145,8 @@ class BagCreator(Configurator):
         bags_labels = {idx_bag:random.randint(0,self.n_classes-1) for idx_bag in bags_indices.keys()}
         # self.log.info(f"{self.class_name}.{'get_fake_labels'}: n_classes:{self.n_classes}")
         self.log.info(f"{self.class_name}.{'get_fake_labels'}: bag_labels:{bags_labels}")
+        assert len(bags_labels)>0, f"'bags_labels' has length 0, but should be > 0. "
+        print(f"bags_labels: {bags_labels}")
 
         return bags_labels
 
@@ -149,18 +154,30 @@ class BagCreator(Configurator):
     def _get_bags_features(self, bags_indices:dict): 
         """ Returns bag features. """
 
-        image2feat = lambda img_file: os.path.join(self.exp_folder, os.path.basename(img_file).replace('.png', ''),  'stage23_C3_features.npy')
+        # create features folds:
+        for _fold in ['train', 'val', 'test']:
+            os.makedirs(os.path.join(os.path.dirname(self.exp_folder), _fold, 'feats'), exist_ok=True)
+
+        image2feat = lambda img_file: os.path.join(self.exp_folder, 'feats', os.path.basename(img_file).replace(self.img_fmt, '.npy'))
         bags_features = {}
-        for idx_bag, bag in bags_indices.items():
+        for idx_bag, bag in tqdm(bags_indices.items(), desc='creating features'):
+            # print(idx_bag)
             # print(bag)
             # print(image2feat('/Users/marco/helical_tests/test_bagcreator/images/200701099_09_SFOG_sample0_0_4.png'))
             # bags_idcs like {0: {0: '....png', 6: '..png', 16:'..png'}, 1:{19: '....png', 1: '..png', 26:'..png'}}}
             # print(image2feat(bag[0]))
-            bag_feat = {idx_image:image2feat(image) for idx_image, image in bag.items() if os.path.isfile(image2feat(image)) }
+            # bag_feat = [(image2feat(image)) for idx_image, image in bag.items()  ]
+            # print(bag_feat)
+            bag_feat = {idx_image:image2feat(image) for idx_image, image in bag.items()  }
+            # print(bag_feat)
+            assert len(bag_feat)>0, f"'bag_feat' has length 0, but should be > 0. "
             bags_features[idx_bag] = bag_feat
             
         # self.log.info(f"{self.class_name}.{'_get_bags_features'}: bags_features:{bags_features}")
         # self.log.info(f"{self.class_name}.{'_get_bags_features'}: bags_features[0]:{bags_features[0]}")
+        assert len(bags_features)>0, f"'bags_features' has length 0, but should be > 0. "
+        print(f"bags_features: {bags_features}")
+        # print('bags features done')
 
         return bags_features
 
@@ -178,6 +195,9 @@ class BagCreator(Configurator):
 
     
     def __call__(self):
+        
+        if os.path.split(self.instances_folders)[1] == 'test':
+            return
 
         bags_indices = self.get_bags_indices()
         bags_labels = self.get_fake_labels(bags_indices=bags_indices)
@@ -193,23 +213,23 @@ class BagCreator(Configurator):
 
 
 
-def test_BagCreator():
-    instances_folder = '/Users/marco/helical_tests/test_bagcreator/images'
-    exp_folder = '/Users/marco/yolov5/runs/detect/exp7'
-    sclerosed_idx=2
-    n_images_per_bag = 9
-    n_classes = 4
-    creator = BagCreator(instances_folder=instances_folder, 
-                         sclerosed_idx=sclerosed_idx, 
-                         exp_folder=exp_folder,
-                         n_classes=n_classes,
-                         n_images_per_bag=n_images_per_bag)
-    creator()
+# def test_BagCreator():
+#     instances_folder = '/Users/marco/helical_tests/test_bagcreator/images'
+#     exp_folder = '/Users/marco/yolov5/runs/detect/exp7'
+#     sclerosed_idx=2
+#     n_images_per_bag = 9
+#     n_classes = 4
+#     creator = BagCreator(instances_folder=instances_folder, 
+#                          sclerosed_idx=sclerosed_idx, 
+#                          exp_folder=exp_folder,
+#                          n_classes=n_classes,
+#                          n_images_per_bag=n_images_per_bag)
+#     creator()
 
-    return
+#     return
 
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
-    test_BagCreator()
+#     test_BagCreator()

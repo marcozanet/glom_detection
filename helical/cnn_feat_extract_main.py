@@ -2,28 +2,28 @@ import torch, torchvision
 from torchvision import models
 from torch import nn
 from cnn_feat_extract_funcs import prepare_data, feature_extraction
+from utils import get_config_params
 
 
-def extract_features():
+def extract_cnn_features():
 
     print("PyTorch Version: ",torch.__version__)
     print("Torchvision Version: ",torchvision.__version__)
 
     # params
-    cnn_root_fold = '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline'
-    map_classes = {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2} 
-    batch = 1
-    num_workers = 0
-    vgg_weights_path = '/Users/marco/.cache/torch/hub/checkpoints/vgg16_bn-6c64b313.pth'
-    cnn_weights_path = '/Users/marco/helical_tests/cnn_model/exps/VGG16_v2-OCT_Retina_half_dataset.pt'
-    yolo_root = '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/detection'
-    exp_folds = ['/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/exp30',
-                '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/exp31_fake',
-                 '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/exp32_fake' ]
-    resize_crops = True
+    PARAMS = get_config_params('cnn_feature_extractor')
+    cnn_root_fold = PARAMS['cnn_root_fold']
+    map_classes = PARAMS['map_classes']
+    num_workers = PARAMS['num_workers']
+    vgg_weights_path = PARAMS['vgg_weights_path']
+    cnn_weights_path = PARAMS['cnn_weights_path']
+    yolo_root = PARAMS['yolo_root']
+    exp_folds = PARAMS['exp_folds']
+    resize_crops = PARAMS['resize_crops']
+    batch = PARAMS['batch']
 
     # Load the pretrained model from pytorch
-    vgg16 = models.vgg16_bn(weights = 'VGG16_BN_Weights.DEFAULT')
+    vgg16 = models.vgg16_bn(weights = 'VGG16_BN_Weights.DEFAULT') # pretrained on COCO (?)
     vgg16.load_state_dict(torch.load(vgg_weights_path))
 
     # Freeze training for all layers
@@ -58,4 +58,4 @@ def extract_features():
 
 
 if __name__ == '__main__':
-    extract_features()
+    extract_cnn_features()

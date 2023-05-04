@@ -36,6 +36,27 @@ cnn_trainer:
 ##################################################
 
 
+##################################################
+#############    CNN FEATURE EXTRACTOR.PY    #############
+##################################################
+cnn_feature_extractor:
+  {
+    cnn_root_fold: '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline',
+    cnn_data_root: '/Users/marco/helical_tests/test_cnn_trainer',
+    map_classes: {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2},
+    yolo_exp_folds: ['/Users/marco/helical_tests/test_cnn_trainer/exp10', '/Users/marco/helical_tests/test_cnn_trainer/exp11','/Users/marco/helical_tests/test_cnn_trainer/exp12'], 
+    vgg_weights_path:  '/Users/marco/.cache/torch/hub/checkpoints/vgg16_bn-6c64b313.pth',
+    cnn_weights_path: '/Users/marco/helical_tests/cnn_model/exps_2023_04_28__12_52_20/VGG16_v2-OCT_Retina_half_dataset.pt',
+    yolo_root: '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/detection',
+    exp_folds: ['/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/exp30'],
+                # '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/exp31_fake',
+                #  '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/exp32_fake' ],
+    batch: 1,
+    num_workers: 0,
+    resize_crops: True
+  }
+##################################################
+
 
 ##################################################
 #############    TEST_INFERERS.PY    #############
@@ -71,18 +92,16 @@ test_yolo_infere_detect_hubmap_pas:
 ##################################################
 #############    MIL_RUNNER_TRUE.PY    #############
 ##################################################
-train_img_dir: '/Users/marco/helical_tests/test_bagcreator/images',
-val_img_dir: train_img_dir,
-test_img_dir: train_img_dir,
-train_detect_dir: '/Users/marco/yolov5/runs/detect/exp7',
-val_detect_dir: '/Users/marco/yolov5/runs/detect/exp7',
-test_detect_dir: '/Users/marco/yolov5/runs/detect/exp7',
-n_images_per_bag: 9,
-n_classes: 4,
-epochs: 10,
-lr0 = 0.0001,
-batch: 1,
-sclerosed_idx: 2,
-num_workers: 0,
-mapping: {(0, 0, 0): 0, (0, 255, 0): 1, (255, 0, 0): 2}
+mil_runner:
+  {
+    train_feat_dir: '/Users/marco/helical_tests/test_bagcreator/true_dataset/cnn_dataset/train',
+    n_images_per_bag: 8,
+    n_classes: 4,
+    epochs: 10,
+    lr0: 0.0001,
+    batch: 1,
+    sclerosed_idx: 2,
+    num_workers: 0,
+    mapping: {(0, 0, 0): 0, (0, 255, 0): 1, (255, 0, 0): 2}
+  }
 ##################################################

@@ -52,14 +52,16 @@ class MILDataset(Dataset, Configurator):
                             n_images_per_bag=self.n_images_per_bag,
                             n_classes=self.n_classes)
         bags_indices, bags_features, bags_labels = creator()
+        print('bags creator done')
         data = []
         for bag, images in bags_indices.items(): 
+            # print(bags_features)
             bag_features = bags_features[bag]
-            print(bag_features)
+            # print(bag_features)
             bag_label = bags_labels[bag]
-            print(bag_label)
+            # print(bag_label)
             data = [(bag_features[i], bag_label) for i in bag_features.keys()]
-            print(data)
+            # print(data)
             assert len(data)>0, f"'data' has length 0, but should be > 0. "
 
         return  data
