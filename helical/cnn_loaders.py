@@ -74,11 +74,12 @@ class CNNDataLoaders():
             # plt.figure(figsize=(10, 10))
             fig = plt.figure()
             plt.axis('off')
-            # plt.imshow(inp)
+            plt.imshow(inp)
             if title is not None:
                 plt.title(title)
             plt.pause(0.001)
             fig.savefig('cnn_crops.png')
+            plt.close()
 
         def show_databatch(inputs, classes):
             out = torchvision.utils.make_grid(inputs)

@@ -92,10 +92,11 @@ test_yolo_infere_detect_hubmap_pas:
 ##################################################
 #############    MIL_RUNNER_TRUE.PY    #############
 ##################################################
-mil_runner:
+mil_trainer:
   {
-    train_feat_dir: '/Users/marco/helical_tests/test_bagcreator/true_dataset/cnn_dataset/train',
-    n_images_per_bag: 8,
+    instances_root: '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/feat_extract',
+    n_instances_per_bag: 8,
+    map_classes: {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2},
     n_classes: 4,
     epochs: 10,
     lr0: 0.0001,
