@@ -29,6 +29,7 @@ class YOLOBase(Configurator):
                  workers:int,
                  epochs: int,
                  weights: str = None,
+                 single_cls:bool = False,
                  save_features: bool = False,
                  crossvalid_tot_kfolds: int = None, 
                  crossvalid_cur_kfold: int = None, 
@@ -47,6 +48,7 @@ class YOLOBase(Configurator):
         self.save_features = save_features
         self.workers = workers
         self.device = device
+        self.single_cls = single_cls
         self.dataset = dataset
         self.weights = weights
         self.n_classes = len(self.map_classes)

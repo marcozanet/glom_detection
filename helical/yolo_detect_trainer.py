@@ -57,6 +57,7 @@ class YOLO_Trainer_Detector(YOLOBase):
             prompt = f"python train.py --img {self.tile_size} --batch {self.batch_size} --epochs {self.epochs}"
             prompt += f" --data {yaml_fn} --weights {self.weights} --workers {self.workers}"
             prompt = prompt+f" --device {self.device}" if self.device is not None else prompt 
+            prompt = prompt+f" --single-cls" if self.single_cls is True else prompt 
             self.log.info(f"{class_name}.{'train'}: {prompt}")
             os.system(prompt)
             os.chdir(self.repository_dir)

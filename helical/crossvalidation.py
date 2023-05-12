@@ -50,18 +50,26 @@ class KCrossValidation(Configurator):
     
     def _get_data(self): 
 
-        wsi_imgs = sorted(glob(os.path.join(self.data_root, 'wsi', '*', 'images', f'*{self.wsi_img_fmt}')))
-        wsi_lbls = sorted(glob(os.path.join(self.data_root, 'wsi', '*', 'labels', '*')))
-        tile_imgs = sorted(glob(os.path.join(self.data_root, 'tiles', '*', 'images', f'*{self.tile_img_fmt}')))
-        tile_lbls = sorted(glob(os.path.join(self.data_root, 'tiles', '*', 'labels', f'*{self.tile_lbl_fmt}')))
+        if self.dataset == 'hubmap':
+            wsi_imgs = sorted(glob(os.path.join(self.data_root, 'wsi', '*', 'images', f'*{self.wsi_img_fmt}')))
+            wsi_lbls = sorted(glob(os.path.join(self.data_root, 'wsi', '*', 'labels', '*')))
+            tile_imgs = sorted(glob(os.path.join(self.data_root, 'tiles', '*', 'images', f'*{self.tile_img_fmt}')))
+            tile_lbls = sorted(glob(os.path.join(self.data_root, 'tiles', '*', 'labels', f'*{self.tile_lbl_fmt}')))
+        elif self.dataset == 'muw':
+            wsi_imgs = sorted(glob(os.path.join(self.data_root, 'wsi', '*', '*', f'*{self.wsi_img_fmt}')))
+            wsi_lbls = sorted(glob(os.path.join(self.data_root, 'wsi', '*', 'labels', '*_sample[0-8].json')))
+            tile_imgs = sorted(glob(os.path.join(self.data_root, 'tiles', '*', 'images', f'*{self.tile_img_fmt}')))
+            tile_lbls = sorted(glob(os.path.join(self.data_root, 'tiles', '*', 'labels', f'*{self.tile_lbl_fmt}')))
+            other_wsi_lbls = sorted(glob(os.path.join(self.data_root, 'wsi', '*', 'labels', '*_sample[0-8]*')))
 
-        # assert len(wsi_imgs) > 0, self.log.warning(f"{self.class_name}._get_data: len(wsi_imgs):{len(wsi_imgs)}.")
-        # assert len(wsi_lbls) > 0, self.log.warning(f"{self.class_name}._get_data: len(wsi_lbls):{len(wsi_lbls)}.")
-        # assert len(tile_imgs) > 0, self.log.warning(f"{self.class_name}._get_data: len(tile_imgs):{len(tile_imgs)}.")
-        # assert len(tile_lbls) > 0, self.log.warning(f"{self.class_name}._get_data: len(tile_lbls):{len(tile_lbls)}.")
+        assert len(wsi_imgs) > 0, f"{self.class_name}._get_data: 'wsi_imgs' is empty. No 'wsi_img' like {os.path.join(self.data_root, 'wsi', '*', 'images', f'*{self.wsi_img_fmt}')} ."
+        assert len(wsi_imgs) > 0, f"{self.class_name}._get_data: 'wsi_lbls' is empty. No 'wsi_lbl' like {os.path.join(self.data_root, 'wsi', '*', 'labels', '*')} ."
+        assert len(tile_imgs) > 0, f"{self.class_name}._get_data: 'tile_imgs' is empty. No 'tile_img' like {os.path.join(self.data_root, 'tiles', '*', 'images', f'*{self.tile_img_fmt}')} ."
+        assert len(tile_lbls) > 0, f"{self.class_name}._get_data: 'tile_lbls' is empty. No 'tile_lbl' like {os.path.join(self.data_root, 'tiles', '*', 'labels', f'*{self.tile_lbl_fmt}')} ."
+        assert len(other_wsi_lbls) > 0, f"{self.class_name}._get_data: 'other_wsi_lbls' is empty. No 'other_wsi_lbl' like {os.path.join(self.data_root, 'wsi', '*', 'labels', '*_sample[0-8]*')} ."
 
         data = {'wsi_imgs':wsi_imgs, 'wsi_lbls':wsi_lbls, 'tile_imgs':tile_imgs, 'tile_lbls':tile_lbls}
-        file_list = wsi_imgs + wsi_lbls + tile_imgs + tile_lbls
+        file_list = wsi_imgs + wsi_lbls + tile_imgs + tile_lbls if self.dataset == 'hubmap' else  wsi_imgs + wsi_lbls + tile_imgs + tile_lbls + other_wsi_lbls
 
         return data, file_list
     
@@ -69,14 +77,23 @@ class KCrossValidation(Configurator):
     def _get_folds(self) -> List[list]:
         """ Splits data into k folds. """
 
-        list_imgs = sorted(self.data['wsi_imgs'])
+        if self.dataset == 'hubmap':
+            list_imgs = sorted(self.data['wsi_imgs'])
+        elif self.dataset == 'muw':
+            list_imgs = sorted(self.data['wsi_lbls']) # tif are wsi, while labels are _samples
+            # print(list_imgs)
+
         fnames = sorted([os.path.basename(name).split('.')[0] for name in list_imgs])
         fp_fnames = {os.path.basename(fp).split('.')[0]:fp for fp in list_imgs}
-
+        # print(fnames)
+        # print(len(fnames))
+        # raise NotImplementedError()
         folds = []
         idxs = np.linspace(start=0, stop=self.n_wsis, num=self.k+1, dtype=int) # k + 1 because first idx=0
         # print(idxs)
         folds_fnames = [fnames[idxs[i]:idxs[i+1]] for i in range(self.k)]
+
+        print(folds_fnames)
         folds = []
         for ls_fnames in folds_fnames:
             ls_fullnames = [fp_fnames[name] for name in ls_fnames]
@@ -92,6 +109,7 @@ class KCrossValidation(Configurator):
         #     self.log.info(f"length fold: {len(fold)}")
 
         # print(folds)
+        # raise NotImplementedError()
         # print(folds[0])
         return folds
     
@@ -126,17 +144,13 @@ class KCrossValidation(Configurator):
 
         assert fold_i < self.k , self.log.error(f"{self.class_name}._change_folds: fold_i:{fold_i} should be < num folds({self.k}). Index starting from 0.")
         
-        # ADDED HERE WAS IN INIT
         self.data, self.file_list = self._get_data()
-        # self.log.info(len(self.file_list))
         self.n_wsis = len(self.data['wsi_imgs'])
         self.log.info(f"{self.class_name}.__init__: n_wsis:{self.n_wsis}.")
         self.splits = self.create_folds()
         self.n_tiles_dict = self.get_n_tiles()
 
         # for each wsi change folder to according new_folder 
-        # selsf.log.info(self.splits[fold_i]['train'])
-        # self.log.info(self.file_list)
         change_dir = lambda fp, set_fold: os.path.join(os.path.dirname(os.path.dirname((os.path.dirname(fp)))), set_fold, os.path.split(os.path.dirname(fp))[1], os.path.basename(fp))
 
         # self.log.info(f"{self.class_name}._change_folds: fold_i:{fold_i}. Moving files to new new folds.")
@@ -151,9 +165,11 @@ class KCrossValidation(Configurator):
             basenames = train_basenames if to_fold == 'train' else test_basenames
             for wsi in tqdm(self.splits[fold_i][to_fold]): # get wsi of the files splitted in the folds
                 train_old_new = [(fp, change_dir(fp, to_fold)) for fp in self.file_list if os.path.basename(wsi).split('.')[0] in fp] # take all files with same basename and changes whatever dir to 'train'.
-                # train_old_new = [(fp, change_dir(fp, to_fold)) for fp in self.file_list if os.path.basename(wsi).split('.')[0] in fp] # take all files with same basename and changes whatever dir to 'train'.
+                # print(train_old_new[0])
+                # raise NotImplementedError()
                 for old_fp, new_fp in train_old_new:
-                    shutil.move(src=old_fp, dst=new_fp)
+                    if not os.path.isfile(new_fp):
+                        shutil.move(src=old_fp, dst=new_fp)
             return
         
         _move_files('train')
@@ -165,6 +181,8 @@ class KCrossValidation(Configurator):
         self.log.info('val')
         self.create_n_tiles_file(test_basenames, fold='val')
         self.data, self.file_list = self._get_data() # update data
+
+        # raise NotImplementedError()
 
         return
     

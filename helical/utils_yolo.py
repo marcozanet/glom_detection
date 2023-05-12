@@ -25,7 +25,6 @@ def merge_datasets(dataset1: str, dataset2:str, dst_root:str, safe_copy:bool=Tru
     # compute new dst filepaths:
     change_fold = lambda fp, dataset: os.path.join(dst_root, os.path.relpath(fp, start=dataset))
     src2dst = lambda data, dataset:[(src_fp, change_fold(src_fp, dataset)) for src_fp in data ]
-
     src2dst1 = src2dst(data=data1, dataset=dataset1)
     src2dst2 = src2dst(data=data2, dataset=dataset2)
 
@@ -40,10 +39,8 @@ def merge_datasets(dataset1: str, dataset2:str, dst_root:str, safe_copy:bool=Tru
         if safe_copy:
             if not os.path.isfile(dst_fp):
                 shutil.copy(src=src_fp, dst=dst_fp)
-
     data12 = glob(os.path.join(dst_root, '*', '*', '*', '*'))
     len1, len2, len12 = len(data1), len(data2), len(data12)
-
     assert ((len1 + len2)-3)<len12<((len1 + len2)+3), f"Merged files are {len12}, but dataset1({len1}) + dataset2({len2}) = dataset12({len12})." # +-3 because n_tiles.json files are to be excluded.
 
     return
@@ -55,10 +52,7 @@ def test_merge_datasets():
     dst_root = '/Users/marco/helical_tests/test_merge_data'
     merge_datasets(dataset1=dataset1, dataset2=dataset2, dst_root=dst_root)
 
-
     return
-
-
 
 
 def get_last_weights():
@@ -73,8 +67,8 @@ def get_last_weights():
     last = os.path.join(path_to_exps, last, 'weights')
     weights = [os.path.join(last, file) for file in os.listdir(last) if 'best' in file][0]
 
-
     return weights
+
 
 def get_last_detect():
     """ Returns path to last detected labels. """
@@ -102,7 +96,6 @@ def create_pred_folder(root: str):
     new_num = str(last_num + 1)
     os.makedirs(os.path.join(root, f'preds_{new_num}'))
 
-
     return 
 
 
@@ -114,7 +107,6 @@ def move_detected_imgs(src_folder: str, dst_folder: str) -> None:
         src = os.path.join(src_folder, file)
         dst = os.path.join(dst_folder, file)
         os.rename(src = src, dst = dst)
-
 
     return
 
@@ -133,7 +125,6 @@ def edit_yaml(root: str = False, test_folder: str = False ):
     elif isinstance(test_folder, str) and root is False:
         yaml_fp = '/Users/marco/yolov5/data/hubmap.yaml'
         print(f"YOLO test on: \n-{test_folder}")
-
         with open(yaml_fp, 'w') as f:
             yaml.dump(data = text, stream=f)
     else:
@@ -143,8 +134,5 @@ def edit_yaml(root: str = False, test_folder: str = False ):
 
 
 
-
 if __name__ == '__main__':
-    # create_pred_folder('/Users/marco/hubmap/tiles/dsrersa')
     test_merge_datasets()
-    # edit_yaml(yaml_fp = 'dsohu', root = '/Users/marco/hubmap/data/' )

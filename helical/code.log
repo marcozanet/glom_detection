@@ -1,21 +1,26 @@
-12/05 10:07:30|INFO|CleanerMuw._get_data: Listing also test files.
-12/05 10:07:30|INFO|CleanerMuw._get_data: Found 0 slides with 48 annotations and 0 tiles with 48 annotations. 
-12/05 10:07:30|INFO|CleanerMuw._del_unpaired_labels: deleted 0 labels without matching image. Updating self.data. 
-12/05 10:07:30|INFO|CleanerMuw._get_data: Listing also test files.
-12/05 10:07:30|INFO|CleanerMuw._get_data: Found 0 slides with 48 annotations and 0 tiles with 48 annotations. 
-12/05 10:07:31|INFO|CleanerMuw._get_data: Listing also test files.
-12/05 10:07:31|INFO|CleanerMuw._get_data: Found 0 slides with 48 annotations and 0 tiles with 48 annotations. 
-12/05 10:07:31|INFO|CleanerMuw._get_unique_labels: Unique classes: ['0', '1']
-12/05 10:07:31|INFO|CleanerMuw._replacing_class: ⏳ Assigning randomly class:1 to either class:0 or class:2.
-12/05 10:07:31|INFO|CleanerMuw._get_data: Listing also test files.
-12/05 10:07:31|INFO|CleanerMuw._get_data: Found 0 slides with 48 annotations and 0 tiles with 48 annotations. 
-12/05 10:07:31|INFO|CleanerMuw._replacing_class: ✅ Assigning randomly class:1 to either class:0 or class:2.
-12/05 10:07:31|INFO|CleanerMuw._get_unique_labels: Unique classes: ['2', '0']
-12/05 10:07:31|INFO|CleanerMuw._replacing_class: ⏳ Replacing class:2 with class:1
-12/05 10:07:31|INFO|CleanerMuw._replacing_class: New unique classes: unique_classes = ['0', '1'] 
-12/05 10:07:31|INFO|CleanerMuw._get_data: Listing also test files.
-12/05 10:07:31|INFO|CleanerMuw._get_data: Found 0 slides with 48 annotations and 0 tiles with 48 annotations. 
-12/05 10:07:31|INFO|CleanerMuw._replacing_class: ✅ Replacing class:2 with class:1
-12/05 10:07:31|INFO|CleanerMuw._get_empty_images: found 152 empty images and 1366 full images. 
-12/05 10:07:31|INFO|empty: 152, full:152
-12/05 10:07:31|WARNING|CleanerMuw._remove_perc_:❗️ Empty images (152/1518) are already <= 10.0% of tot images. Skipping removal of empty images.
+12/05 14:57:55|INFO|/Users/marco/helical_datasets/muw_sfog_copia2/detection
+12/05 14:57:55|INFO|YOLO_Trainer_Detector.get_exp_fold: exp folder: /Users/marco/yolov5/runs/train/exp117.
+12/05 14:57:55|INFO|KCrossValidation.__init__: n_wsis:23.
+12/05 14:57:55|INFO|KCrossValidation._get_i_split: iter_0,  train: 21 images, test: 2.
+12/05 14:57:55|INFO|KCrossValidation._get_i_split: iter_1,  train: 20 images, test: 3.
+12/05 14:57:55|INFO|KCrossValidation._get_i_split: iter_2,  train: 20 images, test: 3.
+12/05 14:57:55|INFO|KCrossValidation._get_i_split: iter_3,  train: 20 images, test: 3.
+12/05 14:57:55|INFO|KCrossValidation._get_i_split: iter_4,  train: 20 images, test: 3.
+12/05 14:57:55|INFO|KCrossValidation._get_i_split: iter_5,  train: 20 images, test: 3.
+12/05 14:57:55|INFO|KCrossValidation._get_i_split: iter_6,  train: 20 images, test: 3.
+12/05 14:57:55|INFO|KCrossValidation._get_i_split: iter_7,  train: 20 images, test: 3.
+12/05 14:57:55|INFO|KCrossValidation.fix_n_tiles: n_tiles_tot:{'200725057_09_SFOG_sample0': [48, 63], '201324441_9_SFOG_sample1': [41, 33], '201322507_09_SFOG_sample0': [63, 25], '201324441_9_SFOG_sample0': [42, 38], '200809469_09_SFOG_sample0': [38, 60], '201200745_09_SFOG_sample1': [31, 52], '200104066_09_SFOG_sample0': [52, 26], '201409661_09_SFOG_sample0': [51, 24], '200720162_09_SFOG_sample0': [52, 36], '200720162_09_SFOG_sample1': [47, 22], '201409661_09_SFOG_sample1': [50, 26], '200813457_A_09_SFOG_sample0': [31, 41], '200104066_09_SFOG_sample1': [63, 34], '201200745_09_SFOG_sample0': [33, 50], '200813457_B_09_SFOG_sample0': [56, 39], '201409661_09_SFOG_sample2': [45, 20], '200811313_09_SFOG_sample0': [63, 42], '200219757_09_SFOG_sample0': [17, 94], '201409661_09_SFOG_sample3': [45, 19], '201113659_09_SFOG_sample0': [37, 64], '201420222_09_SFOG_sample0': [26, 55], '201216192_09_SFOG_sample0': [60, 65], '200701099_09_SFOG_sample0': [30, 33], '201325046_09_SFOG_sample0': [32, 56], '201206802_09_SFOG_sample0': [29, 42], '201218916_09_SFOG_sample0': [53, 28], '201325292_9_SFOG_sample0': [36, 31], '201404292_09_SFOG_sample1': [43, 43], '201404292_09_SFOG_sample0': [48, 43], '201014448_09_SFOG_sample0': [50, 46], '201007375_09_SFOG_sample0': [63, 55]}.
+12/05 14:57:55|INFO|KCrossValidation._change_folds: train: 20 images: ['200104066_09_SFOG_sample0', '200104066_09_SFOG_sample1', '200219757_09_SFOG_sample0', '200701099_09_SFOG_sample0', '200720162_09_SFOG_sample0', '201113659_09_SFOG_sample0', '201200745_09_SFOG_sample0', '201200745_09_SFOG_sample1', '201216192_09_SFOG_sample0', '201322507_09_SFOG_sample0', '201324441_9_SFOG_sample0', '201324441_9_SFOG_sample1', '201409661_09_SFOG_sample0', '201409661_09_SFOG_sample1', '201409661_09_SFOG_sample2', '201409661_09_SFOG_sample3', '201420222_09_SFOG_sample0', '200811313_09_SFOG_sample0', '200813457_A_09_SFOG_sample0', '200813457_B_09_SFOG_sample0'].
+12/05 14:57:55|INFO|KCrossValidation._change_folds: test: 3 labels: ['200720162_09_SFOG_sample1', '200725057_09_SFOG_sample0', '200809469_09_SFOG_sample0'].
+12/05 14:57:55|INFO|train
+12/05 14:57:55|INFO|{'200725057_09_SFOG_sample0': [48, 63], '201324441_9_SFOG_sample1': [41, 33], '201322507_09_SFOG_sample0': [63, 25], '201324441_9_SFOG_sample0': [42, 38], '200809469_09_SFOG_sample0': [38, 60], '201200745_09_SFOG_sample1': [31, 52], '200104066_09_SFOG_sample0': [52, 26], '201409661_09_SFOG_sample0': [51, 24], '200720162_09_SFOG_sample0': [52, 36], '200720162_09_SFOG_sample1': [47, 22], '201409661_09_SFOG_sample1': [50, 26], '200813457_A_09_SFOG_sample0': [31, 41], '200104066_09_SFOG_sample1': [63, 34], '201200745_09_SFOG_sample0': [33, 50], '200813457_B_09_SFOG_sample0': [56, 39], '201409661_09_SFOG_sample2': [45, 20], '200811313_09_SFOG_sample0': [63, 42], '200219757_09_SFOG_sample0': [17, 94], '201409661_09_SFOG_sample3': [45, 19], '201113659_09_SFOG_sample0': [37, 64], '201420222_09_SFOG_sample0': [26, 55], '201216192_09_SFOG_sample0': [60, 65], '200701099_09_SFOG_sample0': [30, 33]}
+12/05 14:57:55|INFO|/Users/marco/helical_datasets/muw_sfog_copia2/detection/wsi/train/labels/n_tiles.json
+12/05 14:57:55|INFO|val
+12/05 14:57:55|INFO|{'200725057_09_SFOG_sample0': [48, 63], '201325046_09_SFOG_sample0': [32, 56], '201206802_09_SFOG_sample0': [29, 42], '200809469_09_SFOG_sample0': [38, 60], '201218916_09_SFOG_sample0': [53, 28], '200720162_09_SFOG_sample1': [47, 22], '201325292_9_SFOG_sample0': [36, 31], '201404292_09_SFOG_sample1': [43, 43], '201404292_09_SFOG_sample0': [48, 43], '201014448_09_SFOG_sample0': [50, 46], '201007375_09_SFOG_sample0': [63, 55]}
+12/05 14:57:55|INFO|/Users/marco/helical_datasets/muw_sfog_copia2/detection/wsi/val/labels/n_tiles.json
+12/05 14:57:55|INFO|⏳ Setting configurations for YOLO: 
+12/05 14:57:55|INFO|✅ YOLO set up completed YOLO ✅ .
+12/05 14:57:55|INFO|YOLO_Trainer_Detector.train: data:/Users/marco/yolov5/data/helical.yaml
+12/05 14:57:55|INFO|YOLO_Trainer_Detector.train: weights:yolov5s.pt
+12/05 14:57:55|INFO|⏳ Start training YOLO:
+12/05 14:57:55|INFO|YOLO_Trainer_Detector.train: python train.py --img 512 --batch 5 --epochs 5 --data /Users/marco/yolov5/data/helical.yaml --weights yolov5s.pt --workers 0 --single-cls

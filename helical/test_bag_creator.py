@@ -1,4 +1,3 @@
-import os
 from utils import get_config_params
 from MIL_bags_creation_new import BagCreator
 
