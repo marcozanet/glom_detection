@@ -1,2 +1,21 @@
-04/05 12:07:55|INFO|BagCreator.get_instances_indices: Total instances: 72. Instances per bag: 8, n_bags: 9. Repeating 0 to fill last folder
-04/05 12:07:55|INFO|BagCreator.get_fake_labels: bag_labels:{0: 1, 1: 2, 2: 2, 3: 1, 4: 2, 5: 3, 6: 0, 7: 2, 8: 0}
+12/05 10:07:30|INFO|CleanerMuw._get_data: Listing also test files.
+12/05 10:07:30|INFO|CleanerMuw._get_data: Found 0 slides with 48 annotations and 0 tiles with 48 annotations. 
+12/05 10:07:30|INFO|CleanerMuw._del_unpaired_labels: deleted 0 labels without matching image. Updating self.data. 
+12/05 10:07:30|INFO|CleanerMuw._get_data: Listing also test files.
+12/05 10:07:30|INFO|CleanerMuw._get_data: Found 0 slides with 48 annotations and 0 tiles with 48 annotations. 
+12/05 10:07:31|INFO|CleanerMuw._get_data: Listing also test files.
+12/05 10:07:31|INFO|CleanerMuw._get_data: Found 0 slides with 48 annotations and 0 tiles with 48 annotations. 
+12/05 10:07:31|INFO|CleanerMuw._get_unique_labels: Unique classes: ['0', '1']
+12/05 10:07:31|INFO|CleanerMuw._replacing_class: ⏳ Assigning randomly class:1 to either class:0 or class:2.
+12/05 10:07:31|INFO|CleanerMuw._get_data: Listing also test files.
+12/05 10:07:31|INFO|CleanerMuw._get_data: Found 0 slides with 48 annotations and 0 tiles with 48 annotations. 
+12/05 10:07:31|INFO|CleanerMuw._replacing_class: ✅ Assigning randomly class:1 to either class:0 or class:2.
+12/05 10:07:31|INFO|CleanerMuw._get_unique_labels: Unique classes: ['2', '0']
+12/05 10:07:31|INFO|CleanerMuw._replacing_class: ⏳ Replacing class:2 with class:1
+12/05 10:07:31|INFO|CleanerMuw._replacing_class: New unique classes: unique_classes = ['0', '1'] 
+12/05 10:07:31|INFO|CleanerMuw._get_data: Listing also test files.
+12/05 10:07:31|INFO|CleanerMuw._get_data: Found 0 slides with 48 annotations and 0 tiles with 48 annotations. 
+12/05 10:07:31|INFO|CleanerMuw._replacing_class: ✅ Replacing class:2 with class:1
+12/05 10:07:31|INFO|CleanerMuw._get_empty_images: found 152 empty images and 1366 full images. 
+12/05 10:07:31|INFO|empty: 152, full:152
+12/05 10:07:31|WARNING|CleanerMuw._remove_perc_:❗️ Empty images (152/1518) are already <= 10.0% of tot images. Skipping removal of empty images.

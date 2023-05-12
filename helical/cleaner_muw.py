@@ -39,22 +39,15 @@ class CleanerMuw(ProfilerMUW):
         
         if self.verbose is True:
             self.log.info(f"looking for labels like {rename_img2lbl(tile_images[0])}")
-
         unpaired_labels = [file for file in tile_labels if rename_lbl2img(file) not in tile_images]
 
-       
-        # @log_start_finish(class_name=self._class_name, func_name='_del_unpaired_labels', msg = f" Deleting unpaired labels" )
         def do():
-            # self.log.info(f"len unpaired: {len(unpaired_labels)}")
             n_removed=0
             for file in tqdm(unpaired_labels, desc = "Removing unpaired label"):
-                # self.log.info(f"file: {file}")
                 assert os.path.isfile(file), self.log.error(f"{self._class_name}.{'_replacing_class'}: AssertionError:'file':{file} is not a valid filepath.")
                 # self.log.info(f"assert passed")
                 os.remove(file)
                 n_removed+=1
-
-                # self.log.info(f"file removed. ")
             
             # update self.data: 
             self.log.info(f"{self._class_name}.{'_del_unpaired_labels'}: deleted {n_removed} labels without matching image. Updating self.data. ")
@@ -63,7 +56,6 @@ class CleanerMuw(ProfilerMUW):
             return
         
         do()
-        
 
         return
 
@@ -145,19 +137,12 @@ class CleanerMuw(ProfilerMUW):
                 for row in old_rows:
                     if row[0] == str(class_old):
                         found = True
-                        # print(f"class max found : {row[0]}")
                         row = str(class_new) + row[1:]
-                        # print(row)
-                    # else:
-                    #     found = False
                     new_rows.append(row)
 
                 assert len(old_rows) == len(new_rows), f"Old label and new label don't have the same length: old_label(len:{len(old_rows)}={old_rows}. \nnew_label(len:{len(new_rows)}={new_rows})"
                 
                 if found is True:
-                    # print(old_rows)
-                    # print(new_rows)
-
                     # overwrite label file:
                     with open(label_fp, 'w') as f:
                         f.writelines(new_rows)
@@ -165,7 +150,6 @@ class CleanerMuw(ProfilerMUW):
             # final check:
             unique_classes = self._get_unique_labels()
             assert str(class_old) not in unique_classes, f"Replaced class:{class_old} still appears in 'unique_classes':{unique_classes}"
-
             self.log.info(f"{self.__class__.__name__}.{'_replacing_class'}: New unique classes: unique_classes = {self._get_unique_labels()} ")
 
             # update self.data: 
@@ -373,23 +357,15 @@ class CleanerMuw(ProfilerMUW):
         assert num_full > 0, self.log.error(f"{self._class_name}.{'_remove_perc_'}: no full image found. full images:{num_full}, empty images:{num_empty}")
 
         def do():
-            # if self.verbose is True:
-            #     (f"empty:{num_empty}, full:{num_full}, tot:{num_empty + num_full}")
-
             # compute num images to del:
-            # self.log.info(f"round({num_full}/ (1 - {self.empty_perc})) = {tot}")
             tot = round(num_full / (1 - self.empty_perc))
             num_desired_empty = tot - num_full
             to_del = num_empty - num_desired_empty
             if to_del <= 0: 
                 self.log.warning(f"{self._class_name}.{'_remove_perc_'}:❗️ Empty images ({num_empty}/{tot}) are already <= {self.empty_perc*100}% of tot images. Skipping removal of empty images.")
                 return
-            
             # select k random empty samples to del:
-            # print(len(empty))
-            # print(to_del)
             img_empty2del = random.sample(empty, k = to_del)
-
             # check that no labels are deleted:
             lbl_empty2del = [os.path.join(os.path.dirname(file).replace('images', 'labels'), os.path.basename(file).replace(self.tiles_image_format, self.tiles_label_format)) for file in img_empty2del]
             lbl_empty2del = [file for file in lbl_empty2del if file in tile_labels]
@@ -467,18 +443,6 @@ class CleanerMuw(ProfilerMUW):
 
         return
     
-    # def _clean_hubmap(self):
-
-    #     if self.safe_copy is True:
-    #         self._copy_tree()
-    #     # 1) delete labels where image doesn't exist
-    #     self._del_unpaired_labels()
-    #     # 2) remove label redundancies
-    #     self._del_redundant_labels()
-    #     # 8) removing empty images to only have empty_perc of images being empty
-    #     self._remove_perc_()
-
-    #     return
 
 
     

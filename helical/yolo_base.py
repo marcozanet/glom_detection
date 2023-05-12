@@ -54,7 +54,7 @@ class YOLOBase(Configurator):
         self.tot_kfolds = crossvalid_tot_kfolds
         self.cur_kfold = crossvalid_cur_kfold
         self.log.info(os.path.dirname(self.data_folder))
-        self.crossvalidator = KCrossValidation(data_root=os.path.dirname(self.data_folder), k=self.tot_kfolds) if self.tot_kfolds is not None else None
+        self.crossvalidator = KCrossValidation(data_root=os.path.dirname(self.data_folder), dataset=dataset, k=self.tot_kfolds) if self.tot_kfolds is not None else None
         self.crossvalidation = False if self.crossvalidator is None else True
         self.note = note
 
@@ -137,6 +137,7 @@ class YOLOBase(Configurator):
         tile_fold = self.data_folder
         assert os.path.isdir(tile_fold), f"tile_fold:{tile_fold} is not a valid dirpath."
         images = glob(os.path.join(tile_fold, 'train', 'images', '*.png'))
+        assert len(images)>0, f"'images' is empty. No images like {os.path.join(tile_fold, 'train', 'images', '*.png')} "
         file = random.choice(images)
         image = Image.open(file)
         image_size = image.size

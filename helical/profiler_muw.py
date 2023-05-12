@@ -30,11 +30,6 @@ class ProfilerMUW(ProfilerBase):
         kwargs.update(other_params)
         super().__init__(*args, **kwargs)
 
-
-        # self.data = self._get_data()
-        # self.log.info(f"len data images: {len(self.data['tile_images'])}")
-
-
         return
 
 

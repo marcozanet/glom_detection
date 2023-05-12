@@ -1,16 +1,13 @@
 
 from typing import Literal, Tuple
-import os
-from loggers import get_logger
-from decorators import log_start_finish
-from converter_muw import ConverterMuW
+import os, shutil
+from tqdm import tqdm
+from glob import glob
+import numpy as np
+from converter_muw_new import ConverterMuW
 from converter_hubmap import ConverterHubmap
-from splitter import Splitter
-from move_data import move_slides_for_tiling, move_slides_back_from_tiling
-from tiling import Tiler
 from tiler_hubmap import TilerHubmap
-import shutil
-# from cleaner import Cleaner
+from tiler_muw_new import TilerMuwDetection
 from manager_base import ManagerBase
 
 
@@ -32,7 +29,6 @@ class ManagerDetectMuwSFOG(ManagerBase):
 
         files = [os.path.join(self.src_root,file) for file in os.listdir(self.src_root) if '.mrxs.gson' in file]
         old_new_names = [(file, file.replace('.mrxs.gson', '.gson')) for file in files ]
-        # self.log.info(f"files:{old_new_names}")
         for old_fp, new_fp in old_new_names: 
             os.rename(old_fp, new_fp)
 
@@ -41,25 +37,32 @@ class ManagerDetectMuwSFOG(ManagerBase):
 
     def _tile_folder(self, dataset:Literal['train', 'val', 'test']):
         """ Tiles a single folder"""
+
         class_name = self.__class__.__name__
         func_name = '_tile_folder'
-
         slides_labels_folder = os.path.join(self.wsi_dir, dataset, 'labels')
         save_folder_labels = os.path.join(self.tiles_dir, dataset)
         save_folder_images = os.path.join(self.tiles_dir, dataset)
+
+        # check that fold is not empty: 
+        if len(os.listdir(slides_labels_folder)) == 0:
+            self.log.warn(f"{class_name}.{func_name}: {dataset} fold is empty. Skipping.")
+            return
 
         # 1) convert annotations to yolo format:
         self.log.info(f"{class_name}.{func_name}: ######################## CONVERTING ANNOTATIONS: ⏳    ########################")
         if self.data_source == 'muw':
             converter = ConverterMuW(folder = slides_labels_folder, 
                                      stain = self.stain,
+                                     multiple_samples = self.multiple_samples,
                                     convert_from='gson_wsi_mask',  
                                     convert_to='txt_wsi_bboxes',
                                     save_folder= slides_labels_folder, 
                                     level = self.tiling_level,
                                     verbose=self.verbose)
         elif self.data_source == 'hubmap':
-            converter = ConverterHubmap(folder = slides_labels_folder, 
+            converter = ConverterHubmap(folder = slides_labels_folder,
+                                        multiple_samples = self.multiple_samples, 
                                         stain = self.stain,
                                         convert_from='json_wsi_mask',  
                                         convert_to='txt_wsi_bboxes',
@@ -69,17 +72,19 @@ class ManagerDetectMuwSFOG(ManagerBase):
         converter()
         self.log.info(f"{class_name}.{func_name}: ######################## CONVERTING ANNOTATIONS: ✅    ########################")
 
-
         # 2) tile images:
         self.log.info(f"{class_name}.{func_name}: ######################## TILING IMAGES: ⏳    ########################")
         if self.data_source == 'muw':
-            tiler = Tiler(folder = slides_labels_folder, 
-                        tile_shape= self.tiling_shape, 
-                        step=self.tiling_step, 
-                        save_root= save_folder_images, 
-                        level = self.tiling_level,
-                        show = self.tiling_show,
-                        verbose = self.verbose)
+            tiler = TilerMuwDetection(folder = slides_labels_folder, 
+                                    tile_shape= self.tiling_shape, 
+                                    step=self.tiling_step, 
+                                    save_root= save_folder_images, 
+                                    level = self.tiling_level,
+                                    show = self.tiling_show,
+                                    verbose = self.verbose,
+                                    resize = self.resize,
+                                    multiple_samples = self.multiple_samples)
+            self.tiler = tiler
         elif self.data_source == 'hubmap': 
             print(f"alling tiler hubmap")
             tiler = TilerHubmap(folder = slides_labels_folder, 
@@ -93,25 +98,48 @@ class ManagerDetectMuwSFOG(ManagerBase):
         tiler(target_format=target_format)
         self.log.info(f"{class_name}.{func_name}: ######################## TILING IMAGES: ⏳    ########################")
 
-        # 3) tile labels:
-        self.log.info(f"{class_name}.{func_name}: ######################## TILING LABELS: ⏳    ########################")
-        target_format = 'txt'
-        tiler = Tiler(folder = slides_labels_folder, 
-                    tile_shape= self.tiling_shape, 
-                    step=self.tiling_step, 
-                    save_root= save_folder_labels, 
-                    level = self.tiling_level,
-                    show = self.tiling_show,
-                    verbose = self.verbose)        
-        tiler(target_format=target_format)
-        tiler.test_show_image_labels()
-        self.log.info(f"{class_name}.{func_name}: ######################## TILING LABELS: ✅    ########################")
+        return
+    
 
+    def _segmentation2detection(self): 
+
+        # get all label files:
+        labels = glob(os.path.join(self.dst_root, self.task, 'tiles', '*', 'labels', f"*.txt"))
+        labels = [file for file in labels if 'DS' not in file]
+        assert len(labels)>0, f"'labels' like: {os.path.join(self.dst_root, self.task, 'tiles', '*', 'labels',  f'*.txt')} is empty."
+
+        # loop through labels and get bboxes:
+        for file in tqdm(labels, desc='transforming segm labels to bboxes'): 
+            with open(file, 'r') as f: # read file
+                text = f.readlines()
+            new_text=''
+            for row in text: # each row = glom vertices
+                row = row.replace(' /n', '')
+                items = row.split(sep = ' ')
+                class_n = int(float(items[0]))
+                items = items[1:]
+                x = [el for (j,el) in enumerate(items) if j%2 == 0]
+                x = np.array([float(el) for el in x])
+                y = [el for (j,el) in enumerate(items) if j%2 != 0]
+                y = np.array([float(el) for el in y])
+                x_min, x_max = str(x.min()), str(x.max())
+                y_min, y_max = str(y.min()), str(y.max())
+                new_text += str(class_n)
+                new_text += f" {x_min} {y_min} {x_max} {y_min} {x_max} {y_max} {x_min} {y_max}"
+                new_text += '\n'
+            
+            with open(file, 'w') as f: # read file
+                f.writelines(new_text)
+
+        # use self.tiler to show new images:
+        print('plotting images')
+        self.tiler.test_show_image_labels()
+        print('plotting images done. ')
 
         return
 
-    def __call__(self) -> None:
 
+    def __call__(self) -> None:
 
         self._rename_tiff2tif()
         self._rename_mrxsgson2gson()
@@ -128,6 +156,9 @@ class ManagerDetectMuwSFOG(ManagerBase):
         # 5) clean dataset, e.g. 
         self._clean_muw_dataset()
 
+        if self.task == 'detection':
+            self._segmentation2detection()
+            print('segm 2 detection done')
 
         return
     

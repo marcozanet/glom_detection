@@ -4,6 +4,7 @@ from skimage import io
 import numpy as np
 import cv2
 from tqdm import tqdm
+from skimage.draw import rectangle
 
 root_data: str # from here ground truth label. Should be a dataset wsi/tiles -> train/val/test -> images/labels
 exp_data: str # from here pred label
@@ -35,6 +36,35 @@ class CropLabeller():
         assert type(self.map_classes) == dict, f"'map_classes':{self.map_classes} should be a dict, but is type {type(self.map_classes)}."
 
         return
+    
+    def _is_predobj_part_of_trueobj(self, pred_obj:dict, gt_obj:dict, iou_thr:float=0.25):
+        """ Parts of objects are also to be counted as true pos -> x = intersection/pred ~= 1
+            -> 0.8 < x < 1. """
+        
+        # get all vertices:
+        _, p_xc, p_yc, p_w, p_h = pred_obj['p_clss'], pred_obj['p_xc'], pred_obj['p_yc'], pred_obj['p_w'], pred_obj['p_h']
+        _, g_xc, g_yc, g_w, g_h = gt_obj['g_clss'], gt_obj['g_xc'], gt_obj['g_yc'], gt_obj['g_w'], gt_obj['g_h']
+        p_x0, p_x1 = max((p_xc - p_w/2), 0), min((p_xc + p_w/2), self.img_size[0])
+        p_y0, p_y1 = max((p_yc - p_h/2), 0), min((p_yc + p_h/2), self.img_size[1])
+        g_x0, g_x1 = max((g_xc - g_w/2), 0), min((g_xc + g_w/2), self.img_size[0])
+        g_y0, g_y1 = max((g_yc - g_h/2), 0), min((g_yc + g_h/2), self.img_size[1])
+        
+        # back to original pixel scale: 
+        p_x0, p_x1, g_x0, g_x1 = [int(val*self.img_size[0]) for val in [p_x0, p_x1, g_x0, g_x1]]
+        p_y0, p_y1, g_y0, g_y1 = [int(val*self.img_size[1]) for val in [p_y0, p_y1, g_y0, g_y1]]
+
+        # draw masks
+        pred_img, true_img = np.zeros(self.img_size[:2], dtype=np.uint8), np.zeros(self.img_size[:2], dtype=np.uint8)
+        pred_mask = rectangle(start=(p_x0, p_y0), end=(p_x1, p_y1), shape = pred_img.shape)
+        gt_mask = rectangle(start=(g_x0, g_y0), end=(g_x1, g_y1), shape = true_img.shape)
+        pred_img[pred_mask] = 1
+        true_img[gt_mask] = 1
+        # compute intersection/pred obj (1 if whole pred obj is inside true obj, 0 if no intersection)
+        pred_intersection = float((pred_img * true_img).sum()) /  float(pred_img.sum())
+        assert pred_intersection <=1, f"pred_intersection:{pred_intersection}, but shouldn't be >1 by definition."
+        matching = True if iou_thr<=pred_intersection<=1 else False
+
+        return matching
     
 
     def get_tot_gt_labels_from_dataset(self): 
@@ -119,59 +149,67 @@ class CropLabeller():
         lbl2cropfn = lambda pred_lbl, crop_n: os.path.basename(pred_lbl).split('.txt')[0] + f"_crop{crop_n}"
         cropfn_2_cropfp = lambda crop_fn: next((fp for fp in self.tot_crops if crop_fn in fp), None)
         
-        
+        # look for matching true label from the original dataset
         gt_lbl = pred2gt_label(pred_lbl) # get true label
-        if gt_lbl is None: 
+        if gt_lbl is None: # if doesn't exist, then it's a false pos
             crop_fn = lbl2cropfn(pred_lbl=pred_lbl, crop_n=0)
             crop_fp = cropfn_2_cropfp(crop_fn=crop_fn)
             assert os.path.isfile(crop_fp), f"crop_fp:{crop_fp} is not a valid filepath."
             gt_classes = {crop_fp:None}
             return gt_classes
         
-        with open(pred_lbl, 'r') as f: 
-            pred_rows = f.readlines()
-
+        # otherwise look for each pred obj if its center falls into any of the true label objects:
+        with open(pred_lbl, 'r') as f: # read pred label file
+            pred_rows = f.readlines() # read true label file
         with open(gt_lbl, 'r') as f: 
             gt_rows = f.readlines()
-
-        def get_objs_from_row_txt_label(row:str):
-
+        def get_objs_from_row_txt_label(row:str): # helper func
             row = row.replace('\n', '')
             nums = row.split(' ')
             clss = int(float(nums[0]))
             nums = [float(num) for num in nums[1:]]
             assert len(nums) == 4, f"there should be 4 objects apart from class"
             x_c, y_c, w, h = nums
-
             return clss, x_c, y_c, w, h
-
+        
+        # check if falls in any of the true objs
         gt_classes = {}
-        for i, pred_row in enumerate(pred_rows):
+        for i, pred_row in enumerate(pred_rows): # for each pred obj
             crop_fn = lbl2cropfn(pred_lbl=pred_lbl, crop_n=i)
             crop_fp = cropfn_2_cropfp(crop_fn=crop_fn)
-            # assert os.path.isfile(crop_fp), f"crop_fp:{crop_fp} is not a valid filepath."
             p_clss, p_xc, p_yc, p_w, p_h = get_objs_from_row_txt_label(pred_row)
-            # now check if center of pred glom falls into any glom from true label (from gt_rows):
-            matching_gloms = [] # gloms where predicted center for obj falls into
-            for gt_row in gt_rows:
+            matching_gloms = [] 
+            for gt_row in gt_rows: # for each true label obj
                 g_clss, g_xc, g_yc, g_w, g_h = get_objs_from_row_txt_label(gt_row)
                 min_x, max_x = max(g_xc - g_w/2, 0), min(g_xc + g_w/2, self.img_size[0])
                 min_y, max_y = max(g_yc - g_h/2, 0), min(g_yc + g_h/2, self.img_size[1])
-                if min_x<=p_xc<=max_x and min_y<=p_yc<=max_y:
+                if min_x<=p_xc<=max_x and min_y<=p_yc<=max_y: # look if pred center falls into true obj
                     matching_gloms.append((g_clss, g_xc, g_yc, g_w, g_h))
-                
-                # se ci sono vari match, devi assegnare la classe di quello col centro piu' vicino
-                # tieni in un dizionario i match e poi guardi il piu' vicino 
-            if len(matching_gloms) == 0: 
-                crop_fn = lbl2cropfn(pred_lbl=pred_lbl, crop_n=i)
-                crop_fp = cropfn_2_cropfp(crop_fn=crop_fn)
-                gt_classes = {crop_fp:None}
-                return gt_classes
+            
+            if len(matching_gloms) == 0: # if no pred obj does, maybe the model detected a part of an obj:
+                pred_obj = {'p_clss':p_clss, 'p_xc':p_xc, 'p_yc':p_yc, 'p_w':p_w, 'p_h':p_h}
+                for gt_row in gt_rows: # for each true label obj
+                    g_clss, g_xc, g_yc, g_w, g_h = get_objs_from_row_txt_label(gt_row) 
+                    gt_obj = {'g_clss':g_clss, 'g_xc':g_xc, 'g_yc':g_yc, 'g_w':g_w, 'g_h':g_h}
+                    if self._is_predobj_part_of_trueobj(pred_obj=pred_obj, gt_obj=gt_obj): # check if is part of the true obj
+                        matching_gloms.append((g_clss, g_xc, g_yc, g_w, g_h))
+                        # print('found match with intersection')
+                else:
+                    crop_fn = lbl2cropfn(pred_lbl=pred_lbl, crop_n=i)
+                    crop_fp = cropfn_2_cropfp(crop_fn=crop_fn)
+                    gt_classes = {crop_fp:None}
+                    return gt_classes
+            
+            # if len(matching_gloms) == 0: # if no pred obj does
+            #     crop_fn = lbl2cropfn(pred_lbl=pred_lbl, crop_n=i)
+            #     crop_fp = cropfn_2_cropfp(crop_fn=crop_fn)
+            #     gt_classes = {crop_fp:None}
+            #     return gt_classes
             
             if len(matching_gloms) == 1:
                 gt_class = matching_gloms[0][0]
             
-            elif len(matching_gloms) > 1: 
+            elif len(matching_gloms) > 1: # if multiple matches for same pred obj:
                 # compute dist between pred glom and the (many) matching gt_gloms
                 min_dist = 99999999
                 print("warning: multiple matching gloms for one pred glom in labeller not tested")

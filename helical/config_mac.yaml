@@ -11,6 +11,9 @@ readme: >
     ...
     2) save_one_box(xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}_crop{j}.jpg', BGR=True)
 
+
+
+
 ##################################################
 #############    CNN_TRAINER.PY    #############
 ##################################################
@@ -20,7 +23,7 @@ cnn_trainer:
     cnn_data_root: '/Users/marco/helical_tests/test_cnn_trainer',
     map_classes: {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2},
     yolo_exp_folds: ['/Users/marco/helical_tests/test_cnn_trainer/exp10', '/Users/marco/helical_tests/test_cnn_trainer/exp11','/Users/marco/helical_tests/test_cnn_trainer/exp12'], # exp30=test
-    lr: 0.01,
+    lr: 0.001,
     k_tot: 4,
     k_i: 0,
     batch: 5,
@@ -104,5 +107,54 @@ mil_trainer:
     sclerosed_idx: 2,
     num_workers: 0,
     mapping: {(0, 0, 0): 0, (0, 255, 0): 1, (255, 0, 0): 2}
+  }
+##################################################
+
+
+##################################################
+#############    YOLO_PROCESSOR.PY    #############
+##################################################
+yolo_processor:
+  {
+    src_root : '/Users/marco/helical_datasets/muw_sfog',
+    dst_root : '/Users/marco/helical_datasets/muw_sfog', 
+    slide_format : 'tif',
+    label_format : 'json',
+    split_ratio : [0.34, 0.33, 0.33],  
+    data_source : 'muw',
+    task : 'segmentation',
+    verbose : True,
+    safe_copy : False,
+    tiling_shape : (2048,2048),
+    tiling_step : 1024,
+    tiling_level : 2,
+    tiling_show : True,
+    stain: 'sfog',
+    multiple_samples: True,
+    resize: (512,512),
+  }
+##################################################
+
+##################################################
+#############    YOLO_TRAINER.PY    #############
+##################################################
+yolo_trainer:
+  {
+    src_root : '/Users/marco/helical_datasets/muw_sfog',
+    dst_root : '/Users/marco/helical_datasets/muw_sfog', 
+    slide_format : 'tif',
+    label_format : 'json',
+    split_ratio : [0.34, 0.33, 0.33],  
+    data_source : 'muw',
+    task : 'segmentation',
+    verbose : True,
+    safe_copy : False,
+    tiling_shape : (2048,2048),
+    tiling_step : 1024,
+    tiling_level : 2,
+    tiling_show : True,
+    stain: 'sfog',
+    multiple_samples: True,
+    resize: (512,512),
   }
 ##################################################

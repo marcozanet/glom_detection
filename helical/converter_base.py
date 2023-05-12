@@ -23,6 +23,7 @@ class ConverterBase(Configurator):
     def __init__(self, 
                 folder: str, 
                 level:int,
+                multiple_samples: bool,
                 stain: Literal['pas', 'sfog'],
                 convert_from: Literal['json_wsi_mask', 'jsonliketxt_wsi_mask', 'gson_wsi_mask'], 
                 convert_to: Literal['json_wsi_bboxes', 'txt_wsi_bboxes', 'geojson_wsi_mask'],
@@ -41,6 +42,7 @@ class ConverterBase(Configurator):
         assert isinstance(verbose, bool), f"'verbose' should be a boolean."  
 
         self.convert_from = convert_from
+        self.multiple_samples = multiple_samples
         self.convert_to = convert_to
         self.folder = folder
         self.format_from = convert_from.split('_')[0] if convert_from != 'jsonliketxt_wsi_mask' else 'txt'
@@ -64,7 +66,8 @@ class ConverterBase(Configurator):
         if self.verbose is True:
             self.log.info(f"First 5 files: {files[:5]}", extra={'className': self.__class__.__name__})
 
-        assert len(files)>0, f"No file like {os.path.join(self.folder, f'*.{self.format_from}')} found"
+        if len(files)==0:
+            self.log.warn(f"No file like {os.path.join(self.folder, f'*.{self.format_from}')} found")
 
         print(files)
 
@@ -219,7 +222,6 @@ class ConverterBase(Configurator):
         
         with open(multisample_loc_file, 'r') as f:
             data = geojson.load(f)
-        
 
         txt_files = []
         txt_fnames = []

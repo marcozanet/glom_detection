@@ -13,8 +13,8 @@ class KCrossValidation(Configurator):
 
     def __init__(self, 
                  data_root:str,
+                 dataset: Literal['hubmap', 'muw'], 
                  k:int = 5,
-                 dataset = Literal['hubmap', 'muw'], 
                  task = Literal['segmentation', 'detection'],
                  ) -> None:
         
@@ -173,7 +173,10 @@ class KCrossValidation(Configurator):
         
         if self.dataset == 'muw': 
             wsi_basenames = [f"{basename}_sample{j}" for basename in wsi_basenames for j in range(5)]
-            wsi_basenames = [basename for basename in wsi_basenames if os.path.isfile(basename)]
+            wsi_basenames = glob(os.path.join(self.data_root, 'wsi', fold, 'labels', '*_sample[0-9].json'))
+            assert len(wsi_basenames)>0, f"'wsi_basenames' is empty. No files like {os.path.join(self.data_root, 'wsi', fold, 'labels', '*_sample[0-9].json')} "
+            wsi_basenames = [os.path.basename(fp).split('.')[0] for fp in wsi_basenames]
+            print(wsi_basenames)
         write_dict = {wsi_name:self.n_tiles_dict[wsi_name] for wsi_name in wsi_basenames}
         self.log.info(f"{write_dict}")
         fp = os.path.join(self.data_root, 'wsi', fold, 'labels', 'n_tiles.json')

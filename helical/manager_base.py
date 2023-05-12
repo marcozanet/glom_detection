@@ -23,12 +23,14 @@ class ManagerBase(Configurator, ABC):
                 data_source: Literal['muw', 'hubmap'],
                 src_root: str, 
                 dst_root: str, 
+                multiple_samples: bool,
                 stain: Literal['sfog', 'pas'],
                 slide_format: Literal['tif', 'tiff'],
                 label_format: Literal['gson', 'mrxs.gson'],
                 tiling_shape: Tuple[int],
                 tiling_step: int,
                 tiling_level: int,
+                resize:tuple = None,
                 tiling_show: bool = True,
                 split_ratio = [0.7, 0.15, 0.15], 
                 task = Literal['detection', 'segmentation', 'both'],
@@ -41,6 +43,7 @@ class ManagerBase(Configurator, ABC):
         
         self.src_root = src_root
         self.dst_root = dst_root
+        self.multiple_samples = multiple_samples
         self.slide_format = slide_format
         self.label_format = label_format
         self.tiling_shape = tiling_shape
@@ -49,6 +52,7 @@ class ManagerBase(Configurator, ABC):
         self.tiling_show = tiling_show
         self.split_ratio = split_ratio
         self.stain = stain
+        self.resize = resize
         self.task = task
         self.verbose = verbose
         self.safe_copy = safe_copy

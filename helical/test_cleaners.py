@@ -18,7 +18,7 @@ def test_cleaner_segm_hubmap_pas():
 
 def test_cleaner_detect_muw_sfog():
     safe_copy = False
-    data_root = '/Users/marco/helical_tests/test_cleaner_detect_muw_sfog/detection'
+    data_root = '/Users/marco/helical_datasets/muw_sfog/detection'
     cleaner = CleanerMuw(data_root=data_root, 
                         safe_copy=safe_copy,
                         wsi_images_like = '*.tif', 

@@ -29,6 +29,7 @@ class Tiler():
                 folder: str, 
                 step: int,
                 tile_shape: tuple = (2048, 2048),
+                resize: tuple = None,
                 save_root = None, 
                 multiple_samples: bool = True,
                 level:int = 0,
@@ -61,6 +62,7 @@ class Tiler():
         self.multiple_samples = multiple_samples
         self.level = level
         self.show = show
+        self.resize = resize
         # self.clean_every_file = clean_every_file
         # self.cleaner_path = cleaner_path
 
@@ -422,6 +424,7 @@ class Tiler():
         
 
         if target_format == 'txt':
+            raise NotImplementedError('not this one')
             self.log.info(f"calling get_n_tiles")
             self.n_tiles = self._get_n_tiles() #(files, overlapping=False, save_folder=save_folder)
             self.log.info(f"self.n_tiles:{self.n_tiles}")

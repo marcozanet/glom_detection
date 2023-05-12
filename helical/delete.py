@@ -1,5 +1,6 @@
-import cv2
 
-path = '/Users/marco/Downloads/muw_slides/images/201423479_09_SFOG_sample0_7_20.png'
-img = cv2.imread(path)
-print(type(img))
+
+
+feat = [[[7151, 33771], [7151, 33773], [7151.2, 33772.24], [7151, 33771]]]
+for (xi, yi) in feat:
+    print(xi,yi)
