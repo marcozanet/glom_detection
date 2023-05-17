@@ -443,6 +443,26 @@ class CleanerMuw(ProfilerMUW):
 
         return
     
+    def _clean_muw(self): 
+
+        if self.safe_copy is True:
+            self._copy_tree()
+        # 1) delete labels where image doesn't exist
+        self._del_unpaired_labels()
+        # 2) remove label redundancies
+        self._del_redundant_labels()
+        # # 5) removes tissue class
+        # self._remove_class_(class_num=3)
+        # # 6) assign randomly the NA class (int=1) to either class 0 or 2:
+        # self._assign_NA_randomly()
+        # # 7) replace class 2 with class 1 ({0:healthy, 1:NA, 2:unhealthy} -> {0:healthy, 2:unhealthy})
+        # self._replacing_class(class_old=2, class_new=1)
+        # 8) removing empty images to only have empty_perc of images being empty
+        self._remove_perc_()
+        
+
+        return
+    
 
 
     

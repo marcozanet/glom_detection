@@ -1,26 +1,1696 @@
-12/05 14:57:55|INFO|/Users/marco/helical_datasets/muw_sfog_copia2/detection
-12/05 14:57:55|INFO|YOLO_Trainer_Detector.get_exp_fold: exp folder: /Users/marco/yolov5/runs/train/exp117.
-12/05 14:57:55|INFO|KCrossValidation.__init__: n_wsis:23.
-12/05 14:57:55|INFO|KCrossValidation._get_i_split: iter_0,  train: 21 images, test: 2.
-12/05 14:57:55|INFO|KCrossValidation._get_i_split: iter_1,  train: 20 images, test: 3.
-12/05 14:57:55|INFO|KCrossValidation._get_i_split: iter_2,  train: 20 images, test: 3.
-12/05 14:57:55|INFO|KCrossValidation._get_i_split: iter_3,  train: 20 images, test: 3.
-12/05 14:57:55|INFO|KCrossValidation._get_i_split: iter_4,  train: 20 images, test: 3.
-12/05 14:57:55|INFO|KCrossValidation._get_i_split: iter_5,  train: 20 images, test: 3.
-12/05 14:57:55|INFO|KCrossValidation._get_i_split: iter_6,  train: 20 images, test: 3.
-12/05 14:57:55|INFO|KCrossValidation._get_i_split: iter_7,  train: 20 images, test: 3.
-12/05 14:57:55|INFO|KCrossValidation.fix_n_tiles: n_tiles_tot:{'200725057_09_SFOG_sample0': [48, 63], '201324441_9_SFOG_sample1': [41, 33], '201322507_09_SFOG_sample0': [63, 25], '201324441_9_SFOG_sample0': [42, 38], '200809469_09_SFOG_sample0': [38, 60], '201200745_09_SFOG_sample1': [31, 52], '200104066_09_SFOG_sample0': [52, 26], '201409661_09_SFOG_sample0': [51, 24], '200720162_09_SFOG_sample0': [52, 36], '200720162_09_SFOG_sample1': [47, 22], '201409661_09_SFOG_sample1': [50, 26], '200813457_A_09_SFOG_sample0': [31, 41], '200104066_09_SFOG_sample1': [63, 34], '201200745_09_SFOG_sample0': [33, 50], '200813457_B_09_SFOG_sample0': [56, 39], '201409661_09_SFOG_sample2': [45, 20], '200811313_09_SFOG_sample0': [63, 42], '200219757_09_SFOG_sample0': [17, 94], '201409661_09_SFOG_sample3': [45, 19], '201113659_09_SFOG_sample0': [37, 64], '201420222_09_SFOG_sample0': [26, 55], '201216192_09_SFOG_sample0': [60, 65], '200701099_09_SFOG_sample0': [30, 33], '201325046_09_SFOG_sample0': [32, 56], '201206802_09_SFOG_sample0': [29, 42], '201218916_09_SFOG_sample0': [53, 28], '201325292_9_SFOG_sample0': [36, 31], '201404292_09_SFOG_sample1': [43, 43], '201404292_09_SFOG_sample0': [48, 43], '201014448_09_SFOG_sample0': [50, 46], '201007375_09_SFOG_sample0': [63, 55]}.
-12/05 14:57:55|INFO|KCrossValidation._change_folds: train: 20 images: ['200104066_09_SFOG_sample0', '200104066_09_SFOG_sample1', '200219757_09_SFOG_sample0', '200701099_09_SFOG_sample0', '200720162_09_SFOG_sample0', '201113659_09_SFOG_sample0', '201200745_09_SFOG_sample0', '201200745_09_SFOG_sample1', '201216192_09_SFOG_sample0', '201322507_09_SFOG_sample0', '201324441_9_SFOG_sample0', '201324441_9_SFOG_sample1', '201409661_09_SFOG_sample0', '201409661_09_SFOG_sample1', '201409661_09_SFOG_sample2', '201409661_09_SFOG_sample3', '201420222_09_SFOG_sample0', '200811313_09_SFOG_sample0', '200813457_A_09_SFOG_sample0', '200813457_B_09_SFOG_sample0'].
-12/05 14:57:55|INFO|KCrossValidation._change_folds: test: 3 labels: ['200720162_09_SFOG_sample1', '200725057_09_SFOG_sample0', '200809469_09_SFOG_sample0'].
-12/05 14:57:55|INFO|train
-12/05 14:57:55|INFO|{'200725057_09_SFOG_sample0': [48, 63], '201324441_9_SFOG_sample1': [41, 33], '201322507_09_SFOG_sample0': [63, 25], '201324441_9_SFOG_sample0': [42, 38], '200809469_09_SFOG_sample0': [38, 60], '201200745_09_SFOG_sample1': [31, 52], '200104066_09_SFOG_sample0': [52, 26], '201409661_09_SFOG_sample0': [51, 24], '200720162_09_SFOG_sample0': [52, 36], '200720162_09_SFOG_sample1': [47, 22], '201409661_09_SFOG_sample1': [50, 26], '200813457_A_09_SFOG_sample0': [31, 41], '200104066_09_SFOG_sample1': [63, 34], '201200745_09_SFOG_sample0': [33, 50], '200813457_B_09_SFOG_sample0': [56, 39], '201409661_09_SFOG_sample2': [45, 20], '200811313_09_SFOG_sample0': [63, 42], '200219757_09_SFOG_sample0': [17, 94], '201409661_09_SFOG_sample3': [45, 19], '201113659_09_SFOG_sample0': [37, 64], '201420222_09_SFOG_sample0': [26, 55], '201216192_09_SFOG_sample0': [60, 65], '200701099_09_SFOG_sample0': [30, 33]}
-12/05 14:57:55|INFO|/Users/marco/helical_datasets/muw_sfog_copia2/detection/wsi/train/labels/n_tiles.json
-12/05 14:57:55|INFO|val
-12/05 14:57:55|INFO|{'200725057_09_SFOG_sample0': [48, 63], '201325046_09_SFOG_sample0': [32, 56], '201206802_09_SFOG_sample0': [29, 42], '200809469_09_SFOG_sample0': [38, 60], '201218916_09_SFOG_sample0': [53, 28], '200720162_09_SFOG_sample1': [47, 22], '201325292_9_SFOG_sample0': [36, 31], '201404292_09_SFOG_sample1': [43, 43], '201404292_09_SFOG_sample0': [48, 43], '201014448_09_SFOG_sample0': [50, 46], '201007375_09_SFOG_sample0': [63, 55]}
-12/05 14:57:55|INFO|/Users/marco/helical_datasets/muw_sfog_copia2/detection/wsi/val/labels/n_tiles.json
-12/05 14:57:55|INFO|⏳ Setting configurations for YOLO: 
-12/05 14:57:55|INFO|✅ YOLO set up completed YOLO ✅ .
-12/05 14:57:55|INFO|YOLO_Trainer_Detector.train: data:/Users/marco/yolov5/data/helical.yaml
-12/05 14:57:55|INFO|YOLO_Trainer_Detector.train: weights:yolov5s.pt
-12/05 14:57:55|INFO|⏳ Start training YOLO:
-12/05 14:57:55|INFO|YOLO_Trainer_Detector.train: python train.py --img 512 --batch 5 --epochs 5 --data /Users/marco/yolov5/data/helical.yaml --weights yolov5s.pt --workers 0 --single-cls
+17/05 15:36:38|INFO|making geojson file using dimensions.
+17/05 15:36:38|INFO|Manager._make_tiles_branch: Creating new tiles branch:
+17/05 15:36:38|INFO|Manager._make_tiles_branch: Created new tiles branch at '/Users/marco/Downloads/zaneta_files/detection/tiles'.
+17/05 15:36:38|INFO|Manager._split_data: splitting WSIs: 
+17/05 15:36:38|INFO|Splitter._move_files: trainset: ['I_3_S_4_ROI_3_PAS.tif', 'I_3_S_3_ROI_2_PAS.tif', 'I_1_S_2_ROI_4_PAS.tif', 'I_4_S_3_ROI_1_PAS.tif', 'I_4_S_4_ROI_1_PAS.tif', 'I_2_S_5_ROI_6_PAS.tif', 'I_3_S_3_ROI_3_PAS.tif', 'I_1_S_1_ROI_4_PAS.tif', 'I_1_S_4_ROI_3_PAS.tif', 'I_2_S_4_ROI_1_PAS.tif', 'I_3_S_2_ROI_4_PAS.tif', 'I_1_S_3_ROI_2_PAS.tif', 'I_2_S_5_ROI_4_PAS.tif', 'I_4_S_4_ROI_3_PAS.tif', 'I_4_S_3_ROI_2_PAS.tif', 'I_3_S_3_ROI_1_PAS.tif', 'I_2_S_5_ROI_5_PAS.tif', 'I_4_S_4_ROI_2_PAS.tif', 'I_3_S_4_ROI_1_PAS.tif', 'I_2_S_2_ROI_4_PAS.tif', 'I_4_S_3_ROI_3_PAS.tif', 'I_1_S_4_ROI_2_PAS.tif', 'I_4_S_6_ROI_6_PAS.tif', 'I_3_S_1_ROI_4_PAS.tif', 'I_1_S_3_ROI_3_PAS.tif', 'I_3_S_1_ROI_1_PAS.tif', 'I_4_S_1_ROI_2_PAS.tif', 'I_4_S_2_ROI_3_PAS.tif', 'I_3_S_5_ROI_1_PAS.tif', 'I_2_S_4_ROI_5_PAS.tif', 'I_4_S_6_ROI_3_PAS.tif', 'I_4_S_5_ROI_2_PAS.tif', 'I_2_S_2_ROI_1_PAS.tif', 'I_1_S_1_ROI_2_PAS.tif', 'I_1_S_2_ROI_3_PAS.tif', 'I_3_S_4_ROI_4_PAS.tif', 'I_2_S_4_ROI_4_PAS.tif', 'I_4_S_5_ROI_3_PAS.tif', 'I_1_S_1_ROI_1_PAS.tif', 'I_2_S_2_ROI_2_PAS.tif', 'I_2_S_1_ROI_3_PAS.tif', 'I_2_S_5_ROI_3_PAS.tif', 'I_4_S_4_ROI_4_PAS.tif', 'I_4_S_1_ROI_1_PAS.tif', 'I_3_S_2_ROI_3_PAS.tif', 'I_3_S_1_ROI_2_PAS.tif', 'I_4_S_5_ROI_1_PAS.tif', 'I_2_S_4_ROI_6_PAS.tif', 'I_3_S_5_ROI_2_PAS.tif', 'I_1_S_4_ROI_4_PAS.tif', 'I_4_S_2_ROI_1_PAS.tif', 'I_3_S_2_ROI_2_PAS.tif', 'I_3_S_1_ROI_3_PAS.tif', 'I_4_S_6_ROI_1_PAS.tif', 'I_1_S_4_ROI_5_PAS.tif']
+17/05 15:36:38|INFO|Splitter._move_files: valset: ['I_1_S_2_ROI_1_PAS.tif', 'I_2_S_2_ROI_3_PAS.tif', 'I_4_S_3_ROI_4_PAS.tif', 'I_2_S_1_ROI_2_PAS.tif', 'I_2_S_5_ROI_2_PAS.tif', 'I_4_S_6_ROI_4_PAS.tif', 'I_2_S_4_ROI_2_PAS.tif', 'I_2_S_3_ROI_3_PAS.tif', 'I_4_S_2_ROI_4_PAS.tif', 'I_1_S_3_ROI_1_PAS.tif', 'I_2_S_4_ROI_3_PAS.tif', 'I_4_S_6_ROI_5_PAS.tif']
+17/05 15:36:38|INFO|Splitter._move_files: testset: ['I_4_S_5_ROI_4_PAS.tif', 'I_1_S_4_ROI_1_PAS.tif', 'I_3_S_4_ROI_2_PAS.tif', 'I_2_S_1_ROI_1_PAS.tif', 'I_1_S_1_ROI_3_PAS.tif', 'I_1_S_2_ROI_2_PAS.tif', 'I_2_S_5_ROI_1_PAS.tif', 'I_3_S_2_ROI_1_PAS.tif', 'I_4_S_1_ROI_3_PAS.tif', 'I_4_S_2_ROI_2_PAS.tif', 'I_4_S_6_ROI_2_PAS.tif']
+17/05 15:36:38|INFO|Manager._split_data: splitted WSIs with [0.7, 0.15, 0.15] ratio.
+17/05 15:36:38|INFO|Manager._move_slides_forth: Moving slides forth:
+17/05 15:36:38|INFO|Manager._move_slides_forth: Moved slides forth.
+17/05 15:36:38|INFO|Manager.tile_dataset: ⏳ Tiling dataset at '/Users/marco/Downloads/zaneta_files/detection/wsi':
+17/05 15:36:38|INFO|Manager.tile_dataset: Tiling 'train'
+17/05 15:36:38|INFO|Manager._tile_folder: ######################## CONVERTING ANNOTATIONS: ⏳    ########################
+17/05 15:36:38|INFO|Converter._rename_all: renaiming all filenames to <basename>_<stain>.<ext>
+17/05 15:36:38|INFO|Converter._rename_all: renamed all filenames to <basename>_<stain>.<ext>
+17/05 15:36:38|INFO|Converter._remove_empty_pair: checking annotations:
+17/05 15:36:38|WARNING|Converter._remove_empty_pair: annotations checked. Remaining files: 0.
+17/05 15:36:38|INFO|First 5 files: ['/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_2_PAS.json', '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_3_PAS.json', '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_3_PAS.json', '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_1_ROI_4_PAS.json', '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_1_PAS.json']
+17/05 15:36:38|INFO|converting with convert_hubmapppp
+17/05 15:36:38|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_2_PAS.json
+17/05 15:36:38|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_2_PAS.json
+17/05 15:36:38|INFO|Rectangle for I_1_S_4_ROI_2_PAS.json: x_start:0, x_end:2396, y_start:0, y_end:4472
+17/05 15:36:38|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_2_PAS.json
+17/05 15:36:38|INFO|converting with convert_hubmapppp
+17/05 15:36:38|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_3_PAS.json
+17/05 15:36:38|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_3_PAS.json
+17/05 15:36:38|INFO|Rectangle for I_1_S_4_ROI_3_PAS.json: x_start:0, x_end:2966, y_start:0, y_end:5308
+17/05 15:36:38|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_3_PAS.json
+17/05 15:36:38|INFO|converting with convert_hubmapppp
+17/05 15:36:38|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_3_PAS.json
+17/05 15:36:38|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_3_PAS.json
+17/05 15:36:38|INFO|Rectangle for I_2_S_5_ROI_3_PAS.json: x_start:0, x_end:2583, y_start:0, y_end:5200
+17/05 15:36:38|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_3_PAS.json
+17/05 15:36:38|INFO|converting with convert_hubmapppp
+17/05 15:36:38|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_1_ROI_4_PAS.json
+17/05 15:36:38|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_1_ROI_4_PAS.json
+17/05 15:36:38|INFO|Rectangle for I_1_S_1_ROI_4_PAS.json: x_start:0, x_end:4358, y_start:0, y_end:5744
+17/05 15:36:38|ERROR|data annotations is empty: []. Making empty label. 
+17/05 15:36:38|ERROR|done write sample file
+17/05 15:36:38|WARNING|File is empty. Skipping vertices interpolation
+17/05 15:36:38|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_1_ROI_4_PAS.json
+17/05 15:36:38|INFO|converting with convert_hubmapppp
+17/05 15:36:38|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_1_PAS.json
+17/05 15:36:38|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_1_PAS.json
+17/05 15:36:38|INFO|Rectangle for I_3_S_1_ROI_1_PAS.json: x_start:0, x_end:2169, y_start:0, y_end:3028
+17/05 15:36:38|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_1_PAS.json
+17/05 15:36:38|INFO|converting with convert_hubmapppp
+17/05 15:36:38|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_2_ROI_2_PAS.json
+17/05 15:36:38|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_2_ROI_2_PAS.json
+17/05 15:36:38|INFO|Rectangle for I_2_S_2_ROI_2_PAS.json: x_start:0, x_end:5200, y_start:0, y_end:5928
+17/05 15:36:38|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_2_ROI_2_PAS.json
+17/05 15:36:38|INFO|converting with convert_hubmapppp
+17/05 15:36:38|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_3_ROI_3_PAS.json
+17/05 15:36:38|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_3_ROI_3_PAS.json
+17/05 15:36:38|INFO|Rectangle for I_1_S_3_ROI_3_PAS.json: x_start:0, x_end:5142, y_start:0, y_end:6466
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_3_ROI_3_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_3_ROI_2_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_3_ROI_2_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_1_S_3_ROI_2_PAS.json: x_start:0, x_end:5239, y_start:0, y_end:6633
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_3_ROI_2_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_1_ROI_2_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_1_ROI_2_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_4_S_1_ROI_2_PAS.json: x_start:0, x_end:4547, y_start:0, y_end:8314
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_1_ROI_2_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_2_ROI_3_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_2_ROI_3_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_1_S_2_ROI_3_PAS.json: x_start:0, x_end:4468, y_start:0, y_end:7709
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_2_ROI_3_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_4_ROI_4_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_4_ROI_4_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_4_S_4_ROI_4_PAS.json: x_start:0, x_end:6363, y_start:0, y_end:10460
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_4_ROI_4_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_6_ROI_3_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_6_ROI_3_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_4_S_6_ROI_3_PAS.json: x_start:0, x_end:4734, y_start:0, y_end:5527
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_6_ROI_3_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_2_ROI_4_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_2_ROI_4_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_1_S_2_ROI_4_PAS.json: x_start:0, x_end:3985, y_start:0, y_end:6548
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_2_ROI_4_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_4_ROI_3_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_4_ROI_3_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_4_S_4_ROI_3_PAS.json: x_start:0, x_end:5196, y_start:0, y_end:10367
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_4_ROI_3_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_4_ROI_2_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_4_ROI_2_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_4_S_4_ROI_2_PAS.json: x_start:0, x_end:6348, y_start:0, y_end:9313
+17/05 15:36:39|ERROR|data annotations is empty: []. Making empty label. 
+17/05 15:36:39|ERROR|done write sample file
+17/05 15:36:39|WARNING|File is empty. Skipping vertices interpolation
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_4_ROI_2_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_4_ROI_4_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_4_ROI_4_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_2_S_4_ROI_4_PAS.json: x_start:0, x_end:3624, y_start:0, y_end:4350
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_4_ROI_4_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_4_ROI_5_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_4_ROI_5_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_2_S_4_ROI_5_PAS.json: x_start:0, x_end:3762, y_start:0, y_end:3974
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_4_ROI_5_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_5_ROI_1_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_5_ROI_1_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_3_S_5_ROI_1_PAS.json: x_start:0, x_end:4928, y_start:0, y_end:8140
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_5_ROI_1_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_1_ROI_3_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_1_ROI_3_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_2_S_1_ROI_3_PAS.json: x_start:0, x_end:2879, y_start:0, y_end:4447
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_1_ROI_3_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_3_ROI_2_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_3_ROI_2_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_4_S_3_ROI_2_PAS.json: x_start:0, x_end:4757, y_start:0, y_end:5167
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_3_ROI_2_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_3_ROI_3_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_3_ROI_3_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_4_S_3_ROI_3_PAS.json: x_start:0, x_end:4491, y_start:0, y_end:6068
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_3_ROI_3_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_5_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_5_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_1_S_4_ROI_5_PAS.json: x_start:0, x_end:2686, y_start:0, y_end:4684
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_5_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_4_ROI_1_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_4_ROI_1_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_3_S_4_ROI_1_PAS.json: x_start:0, x_end:2302, y_start:0, y_end:3018
+17/05 15:36:39|ERROR|data annotations is empty: []. Making empty label. 
+17/05 15:36:39|ERROR|done write sample file
+17/05 15:36:39|WARNING|File is empty. Skipping vertices interpolation
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_4_ROI_1_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_4_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_4_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_1_S_4_ROI_4_PAS.json: x_start:0, x_end:3184, y_start:0, y_end:5322
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_4_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_4_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_4_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_2_S_5_ROI_4_PAS.json: x_start:0, x_end:3046, y_start:0, y_end:5870
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_4_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_5_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_5_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_2_S_5_ROI_5_PAS.json: x_start:0, x_end:3462, y_start:0, y_end:6699
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_5_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_2_ROI_3_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_2_ROI_3_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_4_S_2_ROI_3_PAS.json: x_start:0, x_end:4781, y_start:0, y_end:5504
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_2_ROI_3_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_1_ROI_2_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_1_ROI_2_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_1_S_1_ROI_2_PAS.json: x_start:0, x_end:3937, y_start:0, y_end:6493
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_1_ROI_2_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_2_ROI_4_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_2_ROI_4_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_2_S_2_ROI_4_PAS.json: x_start:0, x_end:4769, y_start:0, y_end:6128
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_2_ROI_4_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_3_ROI_1_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_3_ROI_1_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_3_S_3_ROI_1_PAS.json: x_start:0, x_end:2752, y_start:0, y_end:3761
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_3_ROI_1_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_5_ROI_3_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_5_ROI_3_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_4_S_5_ROI_3_PAS.json: x_start:0, x_end:4928, y_start:0, y_end:6064
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_5_ROI_3_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_5_ROI_2_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_5_ROI_2_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_4_S_5_ROI_2_PAS.json: x_start:0, x_end:4743, y_start:0, y_end:6124
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_5_ROI_2_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_4_ROI_1_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_4_ROI_1_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_2_S_4_ROI_1_PAS.json: x_start:0, x_end:3723, y_start:0, y_end:4746
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_4_ROI_1_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_6_ROI_1_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_6_ROI_1_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_4_S_6_ROI_1_PAS.json: x_start:0, x_end:4386, y_start:0, y_end:6674
+17/05 15:36:39|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_6_ROI_1_PAS.json
+17/05 15:36:39|INFO|converting with convert_hubmapppp
+17/05 15:36:39|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_1_ROI_1_PAS.json
+17/05 15:36:39|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_1_ROI_1_PAS.json
+17/05 15:36:39|INFO|Rectangle for I_4_S_1_ROI_1_PAS.json: x_start:0, x_end:4771, y_start:0, y_end:8543
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_1_ROI_1_PAS.json
+17/05 15:36:40|INFO|converting with convert_hubmapppp
+17/05 15:36:40|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_2_ROI_4_PAS.json
+17/05 15:36:40|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_2_ROI_4_PAS.json
+17/05 15:36:40|INFO|Rectangle for I_3_S_2_ROI_4_PAS.json: x_start:0, x_end:3321, y_start:0, y_end:3300
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_2_ROI_4_PAS.json
+17/05 15:36:40|INFO|converting with convert_hubmapppp
+17/05 15:36:40|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_2_ROI_1_PAS.json
+17/05 15:36:40|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_2_ROI_1_PAS.json
+17/05 15:36:40|INFO|Rectangle for I_2_S_2_ROI_1_PAS.json: x_start:0, x_end:4389, y_start:0, y_end:5520
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_2_ROI_1_PAS.json
+17/05 15:36:40|INFO|converting with convert_hubmapppp
+17/05 15:36:40|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_4_ROI_4_PAS.json
+17/05 15:36:40|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_4_ROI_4_PAS.json
+17/05 15:36:40|INFO|Rectangle for I_3_S_4_ROI_4_PAS.json: x_start:0, x_end:2388, y_start:0, y_end:3414
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_4_ROI_4_PAS.json
+17/05 15:36:40|INFO|converting with convert_hubmapppp
+17/05 15:36:40|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_3_PAS.json
+17/05 15:36:40|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_3_PAS.json
+17/05 15:36:40|INFO|Rectangle for I_3_S_1_ROI_3_PAS.json: x_start:0, x_end:1576, y_start:0, y_end:2639
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_3_PAS.json
+17/05 15:36:40|INFO|converting with convert_hubmapppp
+17/05 15:36:40|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_2_PAS.json
+17/05 15:36:40|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_2_PAS.json
+17/05 15:36:40|INFO|Rectangle for I_3_S_1_ROI_2_PAS.json: x_start:0, x_end:2423, y_start:0, y_end:3136
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_2_PAS.json
+17/05 15:36:40|INFO|converting with convert_hubmapppp
+17/05 15:36:40|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_3_ROI_2_PAS.json
+17/05 15:36:40|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_3_ROI_2_PAS.json
+17/05 15:36:40|INFO|Rectangle for I_3_S_3_ROI_2_PAS.json: x_start:0, x_end:2860, y_start:0, y_end:3947
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_3_ROI_2_PAS.json
+17/05 15:36:40|INFO|converting with convert_hubmapppp
+17/05 15:36:40|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_3_ROI_3_PAS.json
+17/05 15:36:40|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_3_ROI_3_PAS.json
+17/05 15:36:40|INFO|Rectangle for I_3_S_3_ROI_3_PAS.json: x_start:0, x_end:2958, y_start:0, y_end:3741
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_3_ROI_3_PAS.json
+17/05 15:36:40|INFO|converting with convert_hubmapppp
+17/05 15:36:40|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_5_ROI_1_PAS.json
+17/05 15:36:40|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_5_ROI_1_PAS.json
+17/05 15:36:40|INFO|Rectangle for I_4_S_5_ROI_1_PAS.json: x_start:0, x_end:4568, y_start:0, y_end:6649
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_5_ROI_1_PAS.json
+17/05 15:36:40|INFO|converting with convert_hubmapppp
+17/05 15:36:40|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_6_PAS.json
+17/05 15:36:40|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_6_PAS.json
+17/05 15:36:40|INFO|Rectangle for I_2_S_5_ROI_6_PAS.json: x_start:0, x_end:2900, y_start:0, y_end:5913
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_6_PAS.json
+17/05 15:36:40|INFO|converting with convert_hubmapppp
+17/05 15:36:40|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_4_ROI_3_PAS.json
+17/05 15:36:40|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_4_ROI_3_PAS.json
+17/05 15:36:40|INFO|Rectangle for I_3_S_4_ROI_3_PAS.json: x_start:0, x_end:2507, y_start:0, y_end:3563
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_4_ROI_3_PAS.json
+17/05 15:36:40|INFO|converting with convert_hubmapppp
+17/05 15:36:40|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_2_ROI_1_PAS.json
+17/05 15:36:40|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_2_ROI_1_PAS.json
+17/05 15:36:40|INFO|Rectangle for I_4_S_2_ROI_1_PAS.json: x_start:0, x_end:4292, y_start:0, y_end:6044
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_2_ROI_1_PAS.json
+17/05 15:36:40|INFO|converting with convert_hubmapppp
+17/05 15:36:40|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_1_ROI_1_PAS.json
+17/05 15:36:40|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_1_ROI_1_PAS.json
+17/05 15:36:40|INFO|Rectangle for I_1_S_1_ROI_1_PAS.json: x_start:0, x_end:3793, y_start:0, y_end:6207
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_1_ROI_1_PAS.json
+17/05 15:36:40|INFO|converting with convert_hubmapppp
+17/05 15:36:40|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_4_PAS.json
+17/05 15:36:40|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_4_PAS.json
+17/05 15:36:40|INFO|Rectangle for I_3_S_1_ROI_4_PAS.json: x_start:0, x_end:2240, y_start:0, y_end:2874
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_4_PAS.json
+17/05 15:36:40|INFO|converting with convert_hubmapppp
+17/05 15:36:40|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_6_ROI_6_PAS.json
+17/05 15:36:40|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_6_ROI_6_PAS.json
+17/05 15:36:40|INFO|Rectangle for I_4_S_6_ROI_6_PAS.json: x_start:0, x_end:4452, y_start:0, y_end:6387
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_6_ROI_6_PAS.json
+17/05 15:36:40|INFO|converting with convert_hubmapppp
+17/05 15:36:40|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_5_ROI_2_PAS.json
+17/05 15:36:40|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_5_ROI_2_PAS.json
+17/05 15:36:40|INFO|Rectangle for I_3_S_5_ROI_2_PAS.json: x_start:0, x_end:4713, y_start:0, y_end:8310
+17/05 15:36:40|ERROR|data annotations is empty: []. Making empty label. 
+17/05 15:36:40|ERROR|done write sample file
+17/05 15:36:40|WARNING|File is empty. Skipping vertices interpolation
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_5_ROI_2_PAS.json
+17/05 15:36:40|INFO|converting with convert_hubmapppp
+17/05 15:36:40|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_4_ROI_6_PAS.json
+17/05 15:36:40|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_4_ROI_6_PAS.json
+17/05 15:36:40|INFO|Rectangle for I_2_S_4_ROI_6_PAS.json: x_start:0, x_end:3811, y_start:0, y_end:4184
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_4_ROI_6_PAS.json
+17/05 15:36:40|INFO|converting with convert_hubmapppp
+17/05 15:36:40|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_3_ROI_1_PAS.json
+17/05 15:36:40|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_3_ROI_1_PAS.json
+17/05 15:36:40|INFO|Rectangle for I_4_S_3_ROI_1_PAS.json: x_start:0, x_end:4374, y_start:0, y_end:5874
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_3_ROI_1_PAS.json
+17/05 15:36:40|INFO|converting with convert_hubmapppp
+17/05 15:36:40|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_2_ROI_2_PAS.json
+17/05 15:36:40|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_2_ROI_2_PAS.json
+17/05 15:36:40|INFO|Rectangle for I_3_S_2_ROI_2_PAS.json: x_start:0, x_end:3252, y_start:0, y_end:3880
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_2_ROI_2_PAS.json
+17/05 15:36:40|INFO|converting with convert_hubmapppp
+17/05 15:36:40|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_2_ROI_3_PAS.json
+17/05 15:36:40|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_2_ROI_3_PAS.json
+17/05 15:36:40|INFO|Rectangle for I_3_S_2_ROI_3_PAS.json: x_start:0, x_end:3207, y_start:0, y_end:3865
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_2_ROI_3_PAS.json
+17/05 15:36:40|INFO|converting with convert_hubmapppp
+17/05 15:36:40|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_4_ROI_1_PAS.json
+17/05 15:36:40|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_4_ROI_1_PAS.json
+17/05 15:36:40|INFO|Rectangle for I_4_S_4_ROI_1_PAS.json: x_start:0, x_end:5659, y_start:0, y_end:9607
+17/05 15:36:40|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_4_ROI_1_PAS.json
+17/05 15:36:40|INFO|Manager._tile_folder: ######################## CONVERTING ANNOTATIONS: ✅    ########################
+17/05 15:36:40|INFO|Manager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+17/05 15:36:40|INFO|Tiler.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels'. Results will be saved in '/Users/marco/Downloads/zaneta_files/detection/tiles/train/images'.
+17/05 15:36:40|INFO|Tiler._get_completed_files: Completed 0/55 files.
+17/05 15:36:40|INFO|Tiler._get_tile_images: ✅ Opening 'I_3_S_4_ROI_3_PAS.tif':
+17/05 15:36:40|INFO|SLIDE DIMENSIONSSS ARE:(2507, 3563)
+17/05 15:36:40|INFO|Tiler._get_tile_images: ⏳ Reading region ((2507, 3563)) of sample_0:
+17/05 15:36:40|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:36:40|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:36:40|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:36:40|INFO|PATCH IMAGE DIMENSIONS: (1, 2, 1, 2048, 2048, 3)
+17/05 15:36:40|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:36:40|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:36:40|INFO|Tiling labels using (2507, 3563)
+17/05 15:36:40|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_4_ROI_3_PAS_sample0.json'
+17/05 15:36:40|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:36:40|INFO|Total gloms in this image: 10
+17/05 15:36:40|INFO|Total gloms assigned in this image: 10
+17/05 15:36:40|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:36:41|INFO|Tiler._get_tile_images: ✅ Opening 'I_3_S_3_ROI_2_PAS.tif':
+17/05 15:36:41|INFO|SLIDE DIMENSIONSSS ARE:(2860, 3947)
+17/05 15:36:41|INFO|Tiler._get_tile_images: ⏳ Reading region ((2860, 3947)) of sample_0:
+17/05 15:36:41|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:36:41|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:36:41|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:36:41|INFO|PATCH IMAGE DIMENSIONS: (1, 2, 1, 2048, 2048, 3)
+17/05 15:36:41|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:36:41|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:36:41|INFO|Tiling labels using (2860, 3947)
+17/05 15:36:41|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_3_ROI_2_PAS_sample0.json'
+17/05 15:36:41|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:36:41|INFO|Total gloms in this image: 5
+17/05 15:36:41|INFO|Total gloms assigned in this image: 5
+17/05 15:36:41|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:36:42|INFO|Tiler._get_tile_images: ✅ Opening 'I_1_S_2_ROI_4_PAS.tif':
+17/05 15:36:42|INFO|SLIDE DIMENSIONSSS ARE:(3985, 6548)
+17/05 15:36:42|INFO|Tiler._get_tile_images: ⏳ Reading region ((3985, 6548)) of sample_0:
+17/05 15:36:42|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:36:42|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:36:42|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:36:42|INFO|PATCH IMAGE DIMENSIONS: (2, 5, 1, 2048, 2048, 3)
+17/05 15:36:42|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:36:42|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:36:42|INFO|Tiling labels using (3985, 6548)
+17/05 15:36:42|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_2_ROI_4_PAS_sample0.json'
+17/05 15:36:42|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:36:42|INFO|Total gloms in this image: 19
+17/05 15:36:42|INFO|Total gloms assigned in this image: 19
+17/05 15:36:42|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:36:44|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_3_ROI_1_PAS.tif':
+17/05 15:36:44|INFO|SLIDE DIMENSIONSSS ARE:(4374, 5874)
+17/05 15:36:44|INFO|Tiler._get_tile_images: ⏳ Reading region ((4374, 5874)) of sample_0:
+17/05 15:36:44|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:36:44|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:36:44|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:36:44|INFO|PATCH IMAGE DIMENSIONS: (3, 4, 1, 2048, 2048, 3)
+17/05 15:36:44|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:36:44|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:36:44|INFO|Tiling labels using (4374, 5874)
+17/05 15:36:44|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_3_ROI_1_PAS_sample0.json'
+17/05 15:36:44|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:36:44|INFO|Total gloms in this image: 34
+17/05 15:36:44|INFO|Total gloms assigned in this image: 34
+17/05 15:36:44|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:36:47|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_4_ROI_1_PAS.tif':
+17/05 15:36:47|INFO|SLIDE DIMENSIONSSS ARE:(5659, 9607)
+17/05 15:36:47|INFO|Tiler._get_tile_images: ⏳ Reading region ((5659, 9607)) of sample_0:
+17/05 15:36:47|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:36:47|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:36:47|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:36:47|INFO|PATCH IMAGE DIMENSIONS: (4, 8, 1, 2048, 2048, 3)
+17/05 15:36:47|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:36:48|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:36:48|INFO|Tiling labels using (5659, 9607)
+17/05 15:36:48|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_4_ROI_1_PAS_sample0.json'
+17/05 15:36:48|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:36:48|INFO|Total gloms in this image: 40
+17/05 15:36:48|INFO|Total gloms assigned in this image: 40
+17/05 15:36:48|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:36:52|INFO|Tiler._get_tile_images: ✅ Opening 'I_2_S_5_ROI_6_PAS.tif':
+17/05 15:36:52|INFO|SLIDE DIMENSIONSSS ARE:(2900, 5913)
+17/05 15:36:52|INFO|Tiler._get_tile_images: ⏳ Reading region ((2900, 5913)) of sample_0:
+17/05 15:36:52|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:36:52|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:36:52|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:36:52|INFO|PATCH IMAGE DIMENSIONS: (1, 4, 1, 2048, 2048, 3)
+17/05 15:36:52|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:36:52|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:36:52|INFO|Tiling labels using (2900, 5913)
+17/05 15:36:52|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_6_PAS_sample0.json'
+17/05 15:36:52|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:36:52|INFO|Total gloms in this image: 16
+17/05 15:36:52|INFO|Total gloms assigned in this image: 16
+17/05 15:36:52|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:36:53|INFO|Tiler._get_tile_images: ✅ Opening 'I_3_S_3_ROI_3_PAS.tif':
+17/05 15:36:53|INFO|SLIDE DIMENSIONSSS ARE:(2958, 3741)
+17/05 15:36:53|INFO|Tiler._get_tile_images: ⏳ Reading region ((2958, 3741)) of sample_0:
+17/05 15:36:53|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:36:53|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:36:53|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:36:53|INFO|PATCH IMAGE DIMENSIONS: (1, 2, 1, 2048, 2048, 3)
+17/05 15:36:53|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:36:53|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:36:53|INFO|Tiling labels using (2958, 3741)
+17/05 15:36:53|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_3_ROI_3_PAS_sample0.json'
+17/05 15:36:53|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:36:53|INFO|Total gloms in this image: 5
+17/05 15:36:53|INFO|Total gloms assigned in this image: 5
+17/05 15:36:53|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:36:53|INFO|Tiler._get_tile_images: ✅ Opening 'I_1_S_1_ROI_4_PAS.tif':
+17/05 15:36:53|INFO|SLIDE DIMENSIONSSS ARE:(4358, 5744)
+17/05 15:36:53|INFO|Tiler._get_tile_images: ⏳ Reading region ((4358, 5744)) of sample_0:
+17/05 15:36:53|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:36:53|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:36:53|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:36:53|INFO|PATCH IMAGE DIMENSIONS: (3, 4, 1, 2048, 2048, 3)
+17/05 15:36:53|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:36:53|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:36:54|INFO|Tiling labels using (4358, 5744)
+17/05 15:36:54|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_1_ROI_4_PAS_sample0.json'
+17/05 15:36:54|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:36:54|WARNING|mask is empty. Skipping label.
+17/05 15:36:54|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:36:54|INFO|Tiler._get_tile_images: ✅ Opening 'I_1_S_4_ROI_3_PAS.tif':
+17/05 15:36:54|INFO|SLIDE DIMENSIONSSS ARE:(2966, 5308)
+17/05 15:36:54|INFO|Tiler._get_tile_images: ⏳ Reading region ((2966, 5308)) of sample_0:
+17/05 15:36:54|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:36:54|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:36:54|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:36:54|INFO|PATCH IMAGE DIMENSIONS: (1, 4, 1, 2048, 2048, 3)
+17/05 15:36:54|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:36:54|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:36:54|INFO|Tiling labels using (2966, 5308)
+17/05 15:36:54|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_3_PAS_sample0.json'
+17/05 15:36:54|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:36:54|INFO|Total gloms in this image: 9
+17/05 15:36:54|INFO|Total gloms assigned in this image: 9
+17/05 15:36:54|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:36:55|INFO|Tiler._get_tile_images: ✅ Opening 'I_2_S_4_ROI_1_PAS.tif':
+17/05 15:36:55|INFO|SLIDE DIMENSIONSSS ARE:(3723, 4746)
+17/05 15:36:55|INFO|Tiler._get_tile_images: ⏳ Reading region ((3723, 4746)) of sample_0:
+17/05 15:36:55|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:36:55|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:36:55|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:36:55|INFO|PATCH IMAGE DIMENSIONS: (2, 3, 1, 2048, 2048, 3)
+17/05 15:36:55|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:36:55|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:36:55|INFO|Tiling labels using (3723, 4746)
+17/05 15:36:55|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_4_ROI_1_PAS_sample0.json'
+17/05 15:36:55|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:36:55|INFO|Total gloms in this image: 37
+17/05 15:36:55|INFO|Total gloms assigned in this image: 37
+17/05 15:36:55|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:36:56|INFO|Tiler._get_tile_images: ✅ Opening 'I_3_S_2_ROI_4_PAS.tif':
+17/05 15:36:56|INFO|SLIDE DIMENSIONSSS ARE:(3321, 3300)
+17/05 15:36:56|INFO|Tiler._get_tile_images: ⏳ Reading region ((3321, 3300)) of sample_0:
+17/05 15:36:56|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:36:56|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:36:56|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:36:56|INFO|PATCH IMAGE DIMENSIONS: (2, 2, 1, 2048, 2048, 3)
+17/05 15:36:56|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:36:56|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:36:56|INFO|Tiling labels using (3321, 3300)
+17/05 15:36:56|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_2_ROI_4_PAS_sample0.json'
+17/05 15:36:56|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:36:56|INFO|Total gloms in this image: 10
+17/05 15:36:56|INFO|Total gloms assigned in this image: 10
+17/05 15:36:56|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:36:58|INFO|Tiler._get_tile_images: ✅ Opening 'I_1_S_3_ROI_2_PAS.tif':
+17/05 15:36:58|INFO|SLIDE DIMENSIONSSS ARE:(5239, 6633)
+17/05 15:36:58|INFO|Tiler._get_tile_images: ⏳ Reading region ((5239, 6633)) of sample_0:
+17/05 15:36:58|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:36:58|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:36:58|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:36:58|INFO|PATCH IMAGE DIMENSIONS: (4, 5, 1, 2048, 2048, 3)
+17/05 15:36:58|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:36:58|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:36:58|INFO|Tiling labels using (5239, 6633)
+17/05 15:36:58|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_3_ROI_2_PAS_sample0.json'
+17/05 15:36:58|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:36:58|INFO|Total gloms in this image: 13
+17/05 15:36:58|INFO|Total gloms assigned in this image: 13
+17/05 15:36:58|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:01|INFO|Tiler._get_tile_images: ✅ Opening 'I_2_S_5_ROI_4_PAS.tif':
+17/05 15:37:01|INFO|SLIDE DIMENSIONSSS ARE:(3046, 5870)
+17/05 15:37:01|INFO|Tiler._get_tile_images: ⏳ Reading region ((3046, 5870)) of sample_0:
+17/05 15:37:01|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:01|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:01|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:01|INFO|PATCH IMAGE DIMENSIONS: (1, 4, 1, 2048, 2048, 3)
+17/05 15:37:01|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:01|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:01|INFO|Tiling labels using (3046, 5870)
+17/05 15:37:01|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_4_PAS_sample0.json'
+17/05 15:37:01|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:01|INFO|Total gloms in this image: 29
+17/05 15:37:01|INFO|Total gloms assigned in this image: 29
+17/05 15:37:01|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:03|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_4_ROI_3_PAS.tif':
+17/05 15:37:03|INFO|SLIDE DIMENSIONSSS ARE:(5196, 10367)
+17/05 15:37:03|INFO|Tiler._get_tile_images: ⏳ Reading region ((5196, 10367)) of sample_0:
+17/05 15:37:03|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:03|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:03|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:03|INFO|PATCH IMAGE DIMENSIONS: (4, 9, 1, 2048, 2048, 3)
+17/05 15:37:03|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:03|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:03|INFO|Tiling labels using (5196, 10367)
+17/05 15:37:03|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_4_ROI_3_PAS_sample0.json'
+17/05 15:37:03|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:03|INFO|Total gloms in this image: 28
+17/05 15:37:03|INFO|Total gloms assigned in this image: 28
+17/05 15:37:03|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:07|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_3_ROI_2_PAS.tif':
+17/05 15:37:07|INFO|SLIDE DIMENSIONSSS ARE:(4757, 5167)
+17/05 15:37:07|INFO|Tiler._get_tile_images: ⏳ Reading region ((4757, 5167)) of sample_0:
+17/05 15:37:07|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:07|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:07|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:07|INFO|PATCH IMAGE DIMENSIONS: (3, 4, 1, 2048, 2048, 3)
+17/05 15:37:07|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:08|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:08|INFO|Tiling labels using (4757, 5167)
+17/05 15:37:08|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_3_ROI_2_PAS_sample0.json'
+17/05 15:37:08|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:08|INFO|Total gloms in this image: 22
+17/05 15:37:08|INFO|Total gloms assigned in this image: 22
+17/05 15:37:08|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:10|INFO|Tiler._get_tile_images: ✅ Opening 'I_3_S_3_ROI_1_PAS.tif':
+17/05 15:37:10|INFO|SLIDE DIMENSIONSSS ARE:(2752, 3761)
+17/05 15:37:10|INFO|Tiler._get_tile_images: ⏳ Reading region ((2752, 3761)) of sample_0:
+17/05 15:37:10|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:10|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:10|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:10|INFO|PATCH IMAGE DIMENSIONS: (1, 2, 1, 2048, 2048, 3)
+17/05 15:37:10|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:10|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:10|INFO|Tiling labels using (2752, 3761)
+17/05 15:37:10|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_3_ROI_1_PAS_sample0.json'
+17/05 15:37:10|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:10|INFO|Total gloms in this image: 3
+17/05 15:37:10|INFO|Total gloms assigned in this image: 3
+17/05 15:37:10|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:10|INFO|Tiler._get_tile_images: ✅ Opening 'I_2_S_5_ROI_5_PAS.tif':
+17/05 15:37:10|INFO|SLIDE DIMENSIONSSS ARE:(3462, 6699)
+17/05 15:37:10|INFO|Tiler._get_tile_images: ⏳ Reading region ((3462, 6699)) of sample_0:
+17/05 15:37:10|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:10|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:10|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:10|INFO|PATCH IMAGE DIMENSIONS: (2, 5, 1, 2048, 2048, 3)
+17/05 15:37:10|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:10|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:10|INFO|Tiling labels using (3462, 6699)
+17/05 15:37:10|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_5_PAS_sample0.json'
+17/05 15:37:10|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:10|INFO|Total gloms in this image: 25
+17/05 15:37:10|INFO|Total gloms assigned in this image: 25
+17/05 15:37:10|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:13|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_4_ROI_2_PAS.tif':
+17/05 15:37:13|INFO|SLIDE DIMENSIONSSS ARE:(6348, 9313)
+17/05 15:37:13|INFO|Tiler._get_tile_images: ⏳ Reading region ((6348, 9313)) of sample_0:
+17/05 15:37:13|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:13|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:13|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:13|INFO|PATCH IMAGE DIMENSIONS: (5, 8, 1, 2048, 2048, 3)
+17/05 15:37:13|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:14|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:14|INFO|Tiling labels using (6348, 9313)
+17/05 15:37:14|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_4_ROI_2_PAS_sample0.json'
+17/05 15:37:14|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:14|WARNING|mask is empty. Skipping label.
+17/05 15:37:14|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:14|INFO|Tiler._get_tile_images: ✅ Opening 'I_3_S_4_ROI_1_PAS.tif':
+17/05 15:37:14|INFO|SLIDE DIMENSIONSSS ARE:(2302, 3018)
+17/05 15:37:14|INFO|Tiler._get_tile_images: ⏳ Reading region ((2302, 3018)) of sample_0:
+17/05 15:37:14|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:14|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:14|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:14|INFO|PATCH IMAGE DIMENSIONS: (1, 1, 1, 2048, 2048, 3)
+17/05 15:37:14|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:14|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:14|INFO|Tiling labels using (2302, 3018)
+17/05 15:37:14|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_4_ROI_1_PAS_sample0.json'
+17/05 15:37:14|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:14|WARNING|mask is empty. Skipping label.
+17/05 15:37:14|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:15|INFO|Tiler._get_tile_images: ✅ Opening 'I_2_S_2_ROI_4_PAS.tif':
+17/05 15:37:15|INFO|SLIDE DIMENSIONSSS ARE:(4769, 6128)
+17/05 15:37:15|INFO|Tiler._get_tile_images: ⏳ Reading region ((4769, 6128)) of sample_0:
+17/05 15:37:15|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:15|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:15|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:15|INFO|PATCH IMAGE DIMENSIONS: (3, 4, 1, 2048, 2048, 3)
+17/05 15:37:15|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:15|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:15|INFO|Tiling labels using (4769, 6128)
+17/05 15:37:15|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_2_ROI_4_PAS_sample0.json'
+17/05 15:37:15|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:15|INFO|Total gloms in this image: 18
+17/05 15:37:15|INFO|Total gloms assigned in this image: 18
+17/05 15:37:15|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:17|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_3_ROI_3_PAS.tif':
+17/05 15:37:17|INFO|SLIDE DIMENSIONSSS ARE:(4491, 6068)
+17/05 15:37:17|INFO|Tiler._get_tile_images: ⏳ Reading region ((4491, 6068)) of sample_0:
+17/05 15:37:17|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:17|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:17|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:17|INFO|PATCH IMAGE DIMENSIONS: (3, 4, 1, 2048, 2048, 3)
+17/05 15:37:17|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:17|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:17|INFO|Tiling labels using (4491, 6068)
+17/05 15:37:17|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_3_ROI_3_PAS_sample0.json'
+17/05 15:37:17|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:17|INFO|Total gloms in this image: 20
+17/05 15:37:17|INFO|Total gloms assigned in this image: 20
+17/05 15:37:17|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:19|INFO|Tiler._get_tile_images: ✅ Opening 'I_1_S_4_ROI_2_PAS.tif':
+17/05 15:37:19|INFO|SLIDE DIMENSIONSSS ARE:(2396, 4472)
+17/05 15:37:19|INFO|Tiler._get_tile_images: ⏳ Reading region ((2396, 4472)) of sample_0:
+17/05 15:37:19|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:19|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:19|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:19|INFO|PATCH IMAGE DIMENSIONS: (1, 3, 1, 2048, 2048, 3)
+17/05 15:37:19|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:19|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:19|INFO|Tiling labels using (2396, 4472)
+17/05 15:37:19|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_2_PAS_sample0.json'
+17/05 15:37:19|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:19|INFO|Total gloms in this image: 5
+17/05 15:37:19|INFO|Total gloms assigned in this image: 5
+17/05 15:37:19|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:20|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_6_ROI_6_PAS.tif':
+17/05 15:37:20|INFO|SLIDE DIMENSIONSSS ARE:(4452, 6387)
+17/05 15:37:20|INFO|Tiler._get_tile_images: ⏳ Reading region ((4452, 6387)) of sample_0:
+17/05 15:37:20|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:20|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:20|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:20|INFO|PATCH IMAGE DIMENSIONS: (3, 5, 1, 2048, 2048, 3)
+17/05 15:37:20|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:20|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:20|INFO|Tiling labels using (4452, 6387)
+17/05 15:37:20|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_6_ROI_6_PAS_sample0.json'
+17/05 15:37:20|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:20|INFO|Total gloms in this image: 21
+17/05 15:37:20|INFO|Total gloms assigned in this image: 21
+17/05 15:37:20|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:23|INFO|Tiler._get_tile_images: ✅ Opening 'I_3_S_1_ROI_4_PAS.tif':
+17/05 15:37:23|INFO|SLIDE DIMENSIONSSS ARE:(2240, 2874)
+17/05 15:37:23|INFO|Tiler._get_tile_images: ⏳ Reading region ((2240, 2874)) of sample_0:
+17/05 15:37:23|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:23|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:23|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:23|INFO|PATCH IMAGE DIMENSIONS: (1, 1, 1, 2048, 2048, 3)
+17/05 15:37:23|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:23|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:23|INFO|Tiling labels using (2240, 2874)
+17/05 15:37:23|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_4_PAS_sample0.json'
+17/05 15:37:23|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:23|INFO|Total gloms in this image: 9
+17/05 15:37:23|INFO|Total gloms assigned in this image: 9
+17/05 15:37:23|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:24|INFO|Tiler._get_tile_images: ✅ Opening 'I_1_S_3_ROI_3_PAS.tif':
+17/05 15:37:24|INFO|SLIDE DIMENSIONSSS ARE:(5142, 6466)
+17/05 15:37:24|INFO|Tiler._get_tile_images: ⏳ Reading region ((5142, 6466)) of sample_0:
+17/05 15:37:24|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:24|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:24|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:24|INFO|PATCH IMAGE DIMENSIONS: (4, 5, 1, 2048, 2048, 3)
+17/05 15:37:24|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:24|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:24|INFO|Tiling labels using (5142, 6466)
+17/05 15:37:24|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_3_ROI_3_PAS_sample0.json'
+17/05 15:37:24|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:24|INFO|Total gloms in this image: 23
+17/05 15:37:24|INFO|Total gloms assigned in this image: 23
+17/05 15:37:24|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:27|INFO|Tiler._get_tile_images: ✅ Opening 'I_3_S_1_ROI_1_PAS.tif':
+17/05 15:37:27|INFO|SLIDE DIMENSIONSSS ARE:(2169, 3028)
+17/05 15:37:27|INFO|Tiler._get_tile_images: ⏳ Reading region ((2169, 3028)) of sample_0:
+17/05 15:37:27|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:27|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:27|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:27|INFO|PATCH IMAGE DIMENSIONS: (1, 1, 1, 2048, 2048, 3)
+17/05 15:37:27|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:27|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:27|INFO|Tiling labels using (2169, 3028)
+17/05 15:37:27|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_1_PAS_sample0.json'
+17/05 15:37:27|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:27|INFO|Total gloms in this image: 4
+17/05 15:37:27|INFO|Total gloms assigned in this image: 4
+17/05 15:37:27|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:28|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_1_ROI_2_PAS.tif':
+17/05 15:37:28|INFO|SLIDE DIMENSIONSSS ARE:(4547, 8314)
+17/05 15:37:28|INFO|Tiler._get_tile_images: ⏳ Reading region ((4547, 8314)) of sample_0:
+17/05 15:37:28|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:28|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:28|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:28|INFO|PATCH IMAGE DIMENSIONS: (3, 7, 1, 2048, 2048, 3)
+17/05 15:37:28|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:28|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:28|INFO|Tiling labels using (4547, 8314)
+17/05 15:37:28|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_1_ROI_2_PAS_sample0.json'
+17/05 15:37:28|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:28|INFO|Total gloms in this image: 26
+17/05 15:37:28|INFO|Total gloms assigned in this image: 26
+17/05 15:37:28|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:31|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_2_ROI_3_PAS.tif':
+17/05 15:37:31|INFO|SLIDE DIMENSIONSSS ARE:(4781, 5504)
+17/05 15:37:31|INFO|Tiler._get_tile_images: ⏳ Reading region ((4781, 5504)) of sample_0:
+17/05 15:37:31|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:31|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:31|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:31|INFO|PATCH IMAGE DIMENSIONS: (3, 4, 1, 2048, 2048, 3)
+17/05 15:37:31|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:31|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:31|INFO|Tiling labels using (4781, 5504)
+17/05 15:37:31|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_2_ROI_3_PAS_sample0.json'
+17/05 15:37:31|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:31|INFO|Total gloms in this image: 22
+17/05 15:37:31|INFO|Total gloms assigned in this image: 22
+17/05 15:37:31|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:34|INFO|Tiler._get_tile_images: ✅ Opening 'I_3_S_5_ROI_1_PAS.tif':
+17/05 15:37:34|INFO|SLIDE DIMENSIONSSS ARE:(4928, 8140)
+17/05 15:37:34|INFO|Tiler._get_tile_images: ⏳ Reading region ((4928, 8140)) of sample_0:
+17/05 15:37:34|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:34|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:34|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:34|INFO|PATCH IMAGE DIMENSIONS: (3, 6, 1, 2048, 2048, 3)
+17/05 15:37:34|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:34|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:34|INFO|Tiling labels using (4928, 8140)
+17/05 15:37:34|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_5_ROI_1_PAS_sample0.json'
+17/05 15:37:34|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:34|INFO|Total gloms in this image: 14
+17/05 15:37:34|INFO|Total gloms assigned in this image: 14
+17/05 15:37:34|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:36|INFO|Tiler._get_tile_images: ✅ Opening 'I_2_S_4_ROI_5_PAS.tif':
+17/05 15:37:36|INFO|SLIDE DIMENSIONSSS ARE:(3762, 3974)
+17/05 15:37:36|INFO|Tiler._get_tile_images: ⏳ Reading region ((3762, 3974)) of sample_0:
+17/05 15:37:36|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:36|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:36|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:36|INFO|PATCH IMAGE DIMENSIONS: (2, 2, 1, 2048, 2048, 3)
+17/05 15:37:36|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:36|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:36|INFO|Tiling labels using (3762, 3974)
+17/05 15:37:36|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_4_ROI_5_PAS_sample0.json'
+17/05 15:37:36|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:36|INFO|Total gloms in this image: 35
+17/05 15:37:36|INFO|Total gloms assigned in this image: 35
+17/05 15:37:36|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:38|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_6_ROI_3_PAS.tif':
+17/05 15:37:38|INFO|SLIDE DIMENSIONSSS ARE:(4734, 5527)
+17/05 15:37:38|INFO|Tiler._get_tile_images: ⏳ Reading region ((4734, 5527)) of sample_0:
+17/05 15:37:38|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:38|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:38|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:38|INFO|PATCH IMAGE DIMENSIONS: (3, 4, 1, 2048, 2048, 3)
+17/05 15:37:38|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:38|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:38|INFO|Tiling labels using (4734, 5527)
+17/05 15:37:38|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_6_ROI_3_PAS_sample0.json'
+17/05 15:37:38|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:38|INFO|Total gloms in this image: 10
+17/05 15:37:38|INFO|Total gloms assigned in this image: 10
+17/05 15:37:38|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:40|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_5_ROI_2_PAS.tif':
+17/05 15:37:40|INFO|SLIDE DIMENSIONSSS ARE:(4743, 6124)
+17/05 15:37:40|INFO|Tiler._get_tile_images: ⏳ Reading region ((4743, 6124)) of sample_0:
+17/05 15:37:40|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:40|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:40|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:40|INFO|PATCH IMAGE DIMENSIONS: (3, 4, 1, 2048, 2048, 3)
+17/05 15:37:40|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:40|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:40|INFO|Tiling labels using (4743, 6124)
+17/05 15:37:40|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_5_ROI_2_PAS_sample0.json'
+17/05 15:37:40|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:41|INFO|Total gloms in this image: 23
+17/05 15:37:41|INFO|Total gloms assigned in this image: 23
+17/05 15:37:41|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:43|INFO|Tiler._get_tile_images: ✅ Opening 'I_2_S_2_ROI_1_PAS.tif':
+17/05 15:37:43|INFO|SLIDE DIMENSIONSSS ARE:(4389, 5520)
+17/05 15:37:43|INFO|Tiler._get_tile_images: ⏳ Reading region ((4389, 5520)) of sample_0:
+17/05 15:37:43|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:43|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:43|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:43|INFO|PATCH IMAGE DIMENSIONS: (3, 4, 1, 2048, 2048, 3)
+17/05 15:37:43|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:43|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:43|INFO|Tiling labels using (4389, 5520)
+17/05 15:37:43|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_2_ROI_1_PAS_sample0.json'
+17/05 15:37:43|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:43|INFO|Total gloms in this image: 8
+17/05 15:37:43|INFO|Total gloms assigned in this image: 8
+17/05 15:37:43|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:45|INFO|Tiler._get_tile_images: ✅ Opening 'I_1_S_1_ROI_2_PAS.tif':
+17/05 15:37:45|INFO|SLIDE DIMENSIONSSS ARE:(3937, 6493)
+17/05 15:37:45|INFO|Tiler._get_tile_images: ⏳ Reading region ((3937, 6493)) of sample_0:
+17/05 15:37:45|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:45|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:45|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:45|INFO|PATCH IMAGE DIMENSIONS: (2, 5, 1, 2048, 2048, 3)
+17/05 15:37:45|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:45|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:45|INFO|Tiling labels using (3937, 6493)
+17/05 15:37:45|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_1_ROI_2_PAS_sample0.json'
+17/05 15:37:45|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:45|INFO|Total gloms in this image: 10
+17/05 15:37:45|INFO|Total gloms assigned in this image: 10
+17/05 15:37:45|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:47|INFO|Tiler._get_tile_images: ✅ Opening 'I_1_S_2_ROI_3_PAS.tif':
+17/05 15:37:47|INFO|SLIDE DIMENSIONSSS ARE:(4468, 7709)
+17/05 15:37:47|INFO|Tiler._get_tile_images: ⏳ Reading region ((4468, 7709)) of sample_0:
+17/05 15:37:47|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:47|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:47|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:47|INFO|PATCH IMAGE DIMENSIONS: (3, 6, 1, 2048, 2048, 3)
+17/05 15:37:47|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:47|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:47|INFO|Tiling labels using (4468, 7709)
+17/05 15:37:47|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_2_ROI_3_PAS_sample0.json'
+17/05 15:37:47|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:47|INFO|Total gloms in this image: 15
+17/05 15:37:47|INFO|Total gloms assigned in this image: 15
+17/05 15:37:47|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:49|INFO|Tiler._get_tile_images: ✅ Opening 'I_3_S_4_ROI_4_PAS.tif':
+17/05 15:37:49|INFO|SLIDE DIMENSIONSSS ARE:(2388, 3414)
+17/05 15:37:49|INFO|Tiler._get_tile_images: ⏳ Reading region ((2388, 3414)) of sample_0:
+17/05 15:37:49|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:49|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:49|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:49|INFO|PATCH IMAGE DIMENSIONS: (1, 2, 1, 2048, 2048, 3)
+17/05 15:37:49|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:49|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:49|INFO|Tiling labels using (2388, 3414)
+17/05 15:37:49|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_4_ROI_4_PAS_sample0.json'
+17/05 15:37:49|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:49|INFO|Total gloms in this image: 5
+17/05 15:37:49|INFO|Total gloms assigned in this image: 5
+17/05 15:37:49|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:50|INFO|Tiler._get_tile_images: ✅ Opening 'I_2_S_4_ROI_4_PAS.tif':
+17/05 15:37:50|INFO|SLIDE DIMENSIONSSS ARE:(3624, 4350)
+17/05 15:37:50|INFO|Tiler._get_tile_images: ⏳ Reading region ((3624, 4350)) of sample_0:
+17/05 15:37:50|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:50|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:50|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:50|INFO|PATCH IMAGE DIMENSIONS: (2, 3, 1, 2048, 2048, 3)
+17/05 15:37:50|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:50|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:50|INFO|Tiling labels using (3624, 4350)
+17/05 15:37:50|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_4_ROI_4_PAS_sample0.json'
+17/05 15:37:50|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:50|INFO|Total gloms in this image: 27
+17/05 15:37:50|INFO|Total gloms assigned in this image: 27
+17/05 15:37:50|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:52|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_5_ROI_3_PAS.tif':
+17/05 15:37:52|INFO|SLIDE DIMENSIONSSS ARE:(4928, 6064)
+17/05 15:37:52|INFO|Tiler._get_tile_images: ⏳ Reading region ((4928, 6064)) of sample_0:
+17/05 15:37:52|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:52|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:52|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:52|INFO|PATCH IMAGE DIMENSIONS: (3, 4, 1, 2048, 2048, 3)
+17/05 15:37:52|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:52|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:52|INFO|Tiling labels using (4928, 6064)
+17/05 15:37:52|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_5_ROI_3_PAS_sample0.json'
+17/05 15:37:52|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:52|INFO|Total gloms in this image: 19
+17/05 15:37:52|INFO|Total gloms assigned in this image: 19
+17/05 15:37:52|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:54|INFO|Tiler._get_tile_images: ✅ Opening 'I_1_S_1_ROI_1_PAS.tif':
+17/05 15:37:54|INFO|SLIDE DIMENSIONSSS ARE:(3793, 6207)
+17/05 15:37:54|INFO|Tiler._get_tile_images: ⏳ Reading region ((3793, 6207)) of sample_0:
+17/05 15:37:54|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:54|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:54|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:54|INFO|PATCH IMAGE DIMENSIONS: (2, 5, 1, 2048, 2048, 3)
+17/05 15:37:54|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:54|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:54|INFO|Tiling labels using (3793, 6207)
+17/05 15:37:54|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_1_ROI_1_PAS_sample0.json'
+17/05 15:37:54|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:54|INFO|Total gloms in this image: 8
+17/05 15:37:54|INFO|Total gloms assigned in this image: 8
+17/05 15:37:54|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:56|INFO|Tiler._get_tile_images: ✅ Opening 'I_2_S_2_ROI_2_PAS.tif':
+17/05 15:37:56|INFO|SLIDE DIMENSIONSSS ARE:(5200, 5928)
+17/05 15:37:56|INFO|Tiler._get_tile_images: ⏳ Reading region ((5200, 5928)) of sample_0:
+17/05 15:37:56|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:56|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:56|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:56|INFO|PATCH IMAGE DIMENSIONS: (4, 4, 1, 2048, 2048, 3)
+17/05 15:37:56|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:56|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:56|INFO|Tiling labels using (5200, 5928)
+17/05 15:37:56|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_2_ROI_2_PAS_sample0.json'
+17/05 15:37:56|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:56|INFO|Total gloms in this image: 25
+17/05 15:37:56|INFO|Total gloms assigned in this image: 25
+17/05 15:37:56|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:37:59|INFO|Tiler._get_tile_images: ✅ Opening 'I_2_S_1_ROI_3_PAS.tif':
+17/05 15:37:59|INFO|SLIDE DIMENSIONSSS ARE:(2879, 4447)
+17/05 15:37:59|INFO|Tiler._get_tile_images: ⏳ Reading region ((2879, 4447)) of sample_0:
+17/05 15:37:59|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:37:59|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:37:59|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:37:59|INFO|PATCH IMAGE DIMENSIONS: (1, 3, 1, 2048, 2048, 3)
+17/05 15:37:59|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:37:59|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:37:59|INFO|Tiling labels using (2879, 4447)
+17/05 15:37:59|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_1_ROI_3_PAS_sample0.json'
+17/05 15:37:59|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:37:59|INFO|Total gloms in this image: 7
+17/05 15:37:59|INFO|Total gloms assigned in this image: 7
+17/05 15:37:59|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:00|INFO|Tiler._get_tile_images: ✅ Opening 'I_2_S_5_ROI_3_PAS.tif':
+17/05 15:38:00|INFO|SLIDE DIMENSIONSSS ARE:(2583, 5200)
+17/05 15:38:00|INFO|Tiler._get_tile_images: ⏳ Reading region ((2583, 5200)) of sample_0:
+17/05 15:38:00|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:00|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:00|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:00|INFO|PATCH IMAGE DIMENSIONS: (1, 4, 1, 2048, 2048, 3)
+17/05 15:38:00|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:00|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:38:00|INFO|Tiling labels using (2583, 5200)
+17/05 15:38:00|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_3_PAS_sample0.json'
+17/05 15:38:00|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:00|INFO|Total gloms in this image: 17
+17/05 15:38:00|INFO|Total gloms assigned in this image: 17
+17/05 15:38:00|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:02|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_4_ROI_4_PAS.tif':
+17/05 15:38:02|INFO|SLIDE DIMENSIONSSS ARE:(6363, 10460)
+17/05 15:38:02|INFO|Tiler._get_tile_images: ⏳ Reading region ((6363, 10460)) of sample_0:
+17/05 15:38:02|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:02|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:02|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:02|INFO|PATCH IMAGE DIMENSIONS: (5, 9, 1, 2048, 2048, 3)
+17/05 15:38:02|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:03|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:38:03|INFO|Tiling labels using (6363, 10460)
+17/05 15:38:03|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_4_ROI_4_PAS_sample0.json'
+17/05 15:38:03|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:03|INFO|Total gloms in this image: 46
+17/05 15:38:03|INFO|Total gloms assigned in this image: 46
+17/05 15:38:03|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:09|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_1_ROI_1_PAS.tif':
+17/05 15:38:09|INFO|SLIDE DIMENSIONSSS ARE:(4771, 8543)
+17/05 15:38:09|INFO|Tiler._get_tile_images: ⏳ Reading region ((4771, 8543)) of sample_0:
+17/05 15:38:09|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:09|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:09|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:09|INFO|PATCH IMAGE DIMENSIONS: (3, 7, 1, 2048, 2048, 3)
+17/05 15:38:09|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:09|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:38:09|INFO|Tiling labels using (4771, 8543)
+17/05 15:38:09|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_1_ROI_1_PAS_sample0.json'
+17/05 15:38:09|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:09|INFO|Total gloms in this image: 33
+17/05 15:38:09|INFO|Total gloms assigned in this image: 33
+17/05 15:38:09|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:12|INFO|Tiler._get_tile_images: ✅ Opening 'I_3_S_2_ROI_3_PAS.tif':
+17/05 15:38:12|INFO|SLIDE DIMENSIONSSS ARE:(3207, 3865)
+17/05 15:38:12|INFO|Tiler._get_tile_images: ⏳ Reading region ((3207, 3865)) of sample_0:
+17/05 15:38:12|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:12|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:12|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:12|INFO|PATCH IMAGE DIMENSIONS: (2, 2, 1, 2048, 2048, 3)
+17/05 15:38:12|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:12|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:38:12|INFO|Tiling labels using (3207, 3865)
+17/05 15:38:12|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_2_ROI_3_PAS_sample0.json'
+17/05 15:38:12|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:12|INFO|Total gloms in this image: 6
+17/05 15:38:12|INFO|Total gloms assigned in this image: 6
+17/05 15:38:12|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:13|INFO|Tiler._get_tile_images: ✅ Opening 'I_3_S_1_ROI_2_PAS.tif':
+17/05 15:38:13|INFO|SLIDE DIMENSIONSSS ARE:(2423, 3136)
+17/05 15:38:13|INFO|Tiler._get_tile_images: ⏳ Reading region ((2423, 3136)) of sample_0:
+17/05 15:38:13|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:13|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:13|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:13|INFO|PATCH IMAGE DIMENSIONS: (1, 2, 1, 2048, 2048, 3)
+17/05 15:38:13|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:13|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:38:13|INFO|Tiling labels using (2423, 3136)
+17/05 15:38:13|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_2_PAS_sample0.json'
+17/05 15:38:13|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:13|INFO|Total gloms in this image: 6
+17/05 15:38:13|INFO|Total gloms assigned in this image: 6
+17/05 15:38:13|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:14|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_5_ROI_1_PAS.tif':
+17/05 15:38:14|INFO|SLIDE DIMENSIONSSS ARE:(4568, 6649)
+17/05 15:38:14|INFO|Tiler._get_tile_images: ⏳ Reading region ((4568, 6649)) of sample_0:
+17/05 15:38:14|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:14|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:14|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:14|INFO|PATCH IMAGE DIMENSIONS: (3, 5, 1, 2048, 2048, 3)
+17/05 15:38:14|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:14|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:38:14|INFO|Tiling labels using (4568, 6649)
+17/05 15:38:14|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_5_ROI_1_PAS_sample0.json'
+17/05 15:38:14|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:14|INFO|Total gloms in this image: 24
+17/05 15:38:14|INFO|Total gloms assigned in this image: 24
+17/05 15:38:14|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:17|INFO|Tiler._get_tile_images: ✅ Opening 'I_2_S_4_ROI_6_PAS.tif':
+17/05 15:38:17|INFO|SLIDE DIMENSIONSSS ARE:(3811, 4184)
+17/05 15:38:17|INFO|Tiler._get_tile_images: ⏳ Reading region ((3811, 4184)) of sample_0:
+17/05 15:38:17|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:17|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:17|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:17|INFO|PATCH IMAGE DIMENSIONS: (2, 3, 1, 2048, 2048, 3)
+17/05 15:38:17|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:17|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:38:17|INFO|Tiling labels using (3811, 4184)
+17/05 15:38:17|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_4_ROI_6_PAS_sample0.json'
+17/05 15:38:17|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:17|INFO|Total gloms in this image: 19
+17/05 15:38:17|INFO|Total gloms assigned in this image: 19
+17/05 15:38:17|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:19|INFO|Tiler._get_tile_images: ✅ Opening 'I_3_S_5_ROI_2_PAS.tif':
+17/05 15:38:19|INFO|SLIDE DIMENSIONSSS ARE:(4713, 8310)
+17/05 15:38:19|INFO|Tiler._get_tile_images: ⏳ Reading region ((4713, 8310)) of sample_0:
+17/05 15:38:19|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:19|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:19|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:19|INFO|PATCH IMAGE DIMENSIONS: (3, 7, 1, 2048, 2048, 3)
+17/05 15:38:19|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:19|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:38:19|INFO|Tiling labels using (4713, 8310)
+17/05 15:38:19|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_5_ROI_2_PAS_sample0.json'
+17/05 15:38:19|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:19|WARNING|mask is empty. Skipping label.
+17/05 15:38:19|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:19|INFO|Tiler._get_tile_images: ✅ Opening 'I_1_S_4_ROI_4_PAS.tif':
+17/05 15:38:19|INFO|SLIDE DIMENSIONSSS ARE:(3184, 5322)
+17/05 15:38:19|INFO|Tiler._get_tile_images: ⏳ Reading region ((3184, 5322)) of sample_0:
+17/05 15:38:19|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:19|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:19|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:19|INFO|PATCH IMAGE DIMENSIONS: (2, 4, 1, 2048, 2048, 3)
+17/05 15:38:19|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:19|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:38:19|INFO|Tiling labels using (3184, 5322)
+17/05 15:38:19|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_4_PAS_sample0.json'
+17/05 15:38:19|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:19|INFO|Total gloms in this image: 13
+17/05 15:38:19|INFO|Total gloms assigned in this image: 13
+17/05 15:38:19|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:21|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_2_ROI_1_PAS.tif':
+17/05 15:38:21|INFO|SLIDE DIMENSIONSSS ARE:(4292, 6044)
+17/05 15:38:21|INFO|Tiler._get_tile_images: ⏳ Reading region ((4292, 6044)) of sample_0:
+17/05 15:38:21|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:21|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:21|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:21|INFO|PATCH IMAGE DIMENSIONS: (3, 4, 1, 2048, 2048, 3)
+17/05 15:38:21|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:21|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:38:21|INFO|Tiling labels using (4292, 6044)
+17/05 15:38:21|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_2_ROI_1_PAS_sample0.json'
+17/05 15:38:21|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:21|INFO|Total gloms in this image: 20
+17/05 15:38:21|INFO|Total gloms assigned in this image: 20
+17/05 15:38:21|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:23|INFO|Tiler._get_tile_images: ✅ Opening 'I_3_S_2_ROI_2_PAS.tif':
+17/05 15:38:23|INFO|SLIDE DIMENSIONSSS ARE:(3252, 3880)
+17/05 15:38:23|INFO|Tiler._get_tile_images: ⏳ Reading region ((3252, 3880)) of sample_0:
+17/05 15:38:23|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:23|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:23|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:23|INFO|PATCH IMAGE DIMENSIONS: (2, 2, 1, 2048, 2048, 3)
+17/05 15:38:23|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:23|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:38:23|INFO|Tiling labels using (3252, 3880)
+17/05 15:38:23|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_2_ROI_2_PAS_sample0.json'
+17/05 15:38:23|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:23|INFO|Total gloms in this image: 9
+17/05 15:38:23|INFO|Total gloms assigned in this image: 9
+17/05 15:38:23|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:24|INFO|Tiler._get_tile_images: ✅ Opening 'I_3_S_1_ROI_3_PAS.tif':
+17/05 15:38:24|INFO|SLIDE DIMENSIONSSS ARE:(1576, 2639)
+17/05 15:38:24|INFO|Tiler._get_tile_images: ⏳ Reading region ((1576, 2639)) of sample_0:
+17/05 15:38:24|INFO|Sample dimensions: (1576, 2639), tile shape: (2048, 2048). Region too small for the given tile shape.
+17/05 15:38:24|INFO|fileeeeeeee: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_3_PAS.tif
+17/05 15:38:24|INFO|Tiling labels using (1576, 2639)
+17/05 15:38:24|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_3_PAS_sample0.json'
+17/05 15:38:24|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:24|INFO|Total gloms in this image: 8
+17/05 15:38:24|INFO|Total gloms assigned in this image: 8
+17/05 15:38:24|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:24|INFO|Sample dimensions: (1576, 2639), tile shape: (2048, 2048). Region too small for the given tile shape.
+17/05 15:38:24|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_6_ROI_1_PAS.tif':
+17/05 15:38:24|INFO|SLIDE DIMENSIONSSS ARE:(4386, 6674)
+17/05 15:38:24|INFO|Tiler._get_tile_images: ⏳ Reading region ((4386, 6674)) of sample_0:
+17/05 15:38:24|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:24|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:24|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:24|INFO|PATCH IMAGE DIMENSIONS: (3, 5, 1, 2048, 2048, 3)
+17/05 15:38:24|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:25|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:38:25|INFO|Tiling labels using (4386, 6674)
+17/05 15:38:25|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_6_ROI_1_PAS_sample0.json'
+17/05 15:38:25|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:25|INFO|Total gloms in this image: 9
+17/05 15:38:25|INFO|Total gloms assigned in this image: 9
+17/05 15:38:25|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:26|INFO|Tiler._get_tile_images: ✅ Opening 'I_1_S_4_ROI_5_PAS.tif':
+17/05 15:38:26|INFO|SLIDE DIMENSIONSSS ARE:(2686, 4684)
+17/05 15:38:26|INFO|Tiler._get_tile_images: ⏳ Reading region ((2686, 4684)) of sample_0:
+17/05 15:38:26|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:26|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:26|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:26|INFO|PATCH IMAGE DIMENSIONS: (1, 3, 1, 2048, 2048, 3)
+17/05 15:38:26|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:27|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/train/images.
+17/05 15:38:27|INFO|Tiling labels using (2686, 4684)
+17/05 15:38:27|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_5_PAS_sample0.json'
+17/05 15:38:27|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:27|INFO|Total gloms in this image: 8
+17/05 15:38:27|INFO|Total gloms assigned in this image: 8
+17/05 15:38:27|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:27|INFO|Manager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+17/05 15:38:27|INFO|Manager.tile_dataset: Tiling 'val'
+17/05 15:38:27|INFO|Manager._tile_folder: ######################## CONVERTING ANNOTATIONS: ⏳    ########################
+17/05 15:38:27|INFO|Converter._rename_all: renaiming all filenames to <basename>_<stain>.<ext>
+17/05 15:38:27|INFO|Converter._rename_all: renamed all filenames to <basename>_<stain>.<ext>
+17/05 15:38:27|INFO|Converter._remove_empty_pair: checking annotations:
+17/05 15:38:27|WARNING|Converter._remove_empty_pair: annotations checked. Remaining files: 0.
+17/05 15:38:27|INFO|First 5 files: ['/Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_5_ROI_2_PAS.json', '/Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_2_ROI_4_PAS.json', '/Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_2_ROI_3_PAS.json', '/Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_3_ROI_3_PAS.json', '/Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_4_ROI_3_PAS.json']
+17/05 15:38:27|INFO|converting with convert_hubmapppp
+17/05 15:38:27|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_5_ROI_2_PAS.json
+17/05 15:38:27|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_5_ROI_2_PAS.json
+17/05 15:38:27|INFO|Rectangle for I_2_S_5_ROI_2_PAS.json: x_start:0, x_end:2492, y_start:0, y_end:5642
+17/05 15:38:27|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_5_ROI_2_PAS.json
+17/05 15:38:27|INFO|converting with convert_hubmapppp
+17/05 15:38:27|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_2_ROI_4_PAS.json
+17/05 15:38:27|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_2_ROI_4_PAS.json
+17/05 15:38:27|INFO|Rectangle for I_4_S_2_ROI_4_PAS.json: x_start:0, x_end:5176, y_start:0, y_end:5519
+17/05 15:38:27|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_2_ROI_4_PAS.json
+17/05 15:38:27|INFO|converting with convert_hubmapppp
+17/05 15:38:27|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_2_ROI_3_PAS.json
+17/05 15:38:27|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_2_ROI_3_PAS.json
+17/05 15:38:27|INFO|Rectangle for I_2_S_2_ROI_3_PAS.json: x_start:0, x_end:4087, y_start:0, y_end:5506
+17/05 15:38:27|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_2_ROI_3_PAS.json
+17/05 15:38:27|INFO|converting with convert_hubmapppp
+17/05 15:38:27|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_3_ROI_3_PAS.json
+17/05 15:38:27|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_3_ROI_3_PAS.json
+17/05 15:38:27|INFO|Rectangle for I_2_S_3_ROI_3_PAS.json: x_start:0, x_end:2482, y_start:0, y_end:4327
+17/05 15:38:27|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_3_ROI_3_PAS.json
+17/05 15:38:27|INFO|converting with convert_hubmapppp
+17/05 15:38:27|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_4_ROI_3_PAS.json
+17/05 15:38:27|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_4_ROI_3_PAS.json
+17/05 15:38:27|INFO|Rectangle for I_2_S_4_ROI_3_PAS.json: x_start:0, x_end:3936, y_start:0, y_end:4174
+17/05 15:38:27|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_4_ROI_3_PAS.json
+17/05 15:38:27|INFO|converting with convert_hubmapppp
+17/05 15:38:27|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_4_ROI_2_PAS.json
+17/05 15:38:27|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_4_ROI_2_PAS.json
+17/05 15:38:27|INFO|Rectangle for I_2_S_4_ROI_2_PAS.json: x_start:0, x_end:3452, y_start:0, y_end:4328
+17/05 15:38:27|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_4_ROI_2_PAS.json
+17/05 15:38:27|INFO|converting with convert_hubmapppp
+17/05 15:38:27|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_3_ROI_4_PAS.json
+17/05 15:38:27|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_3_ROI_4_PAS.json
+17/05 15:38:27|INFO|Rectangle for I_4_S_3_ROI_4_PAS.json: x_start:0, x_end:4668, y_start:0, y_end:6135
+17/05 15:38:27|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_3_ROI_4_PAS.json
+17/05 15:38:27|INFO|converting with convert_hubmapppp
+17/05 15:38:27|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_6_ROI_5_PAS.json
+17/05 15:38:27|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_6_ROI_5_PAS.json
+17/05 15:38:27|INFO|Rectangle for I_4_S_6_ROI_5_PAS.json: x_start:0, x_end:5548, y_start:0, y_end:8204
+17/05 15:38:27|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_6_ROI_5_PAS.json
+17/05 15:38:27|INFO|converting with convert_hubmapppp
+17/05 15:38:27|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_6_ROI_4_PAS.json
+17/05 15:38:27|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_6_ROI_4_PAS.json
+17/05 15:38:27|INFO|Rectangle for I_4_S_6_ROI_4_PAS.json: x_start:0, x_end:4859, y_start:0, y_end:8264
+17/05 15:38:27|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_6_ROI_4_PAS.json
+17/05 15:38:27|INFO|converting with convert_hubmapppp
+17/05 15:38:27|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_1_ROI_2_PAS.json
+17/05 15:38:27|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_1_ROI_2_PAS.json
+17/05 15:38:27|INFO|Rectangle for I_2_S_1_ROI_2_PAS.json: x_start:0, x_end:2455, y_start:0, y_end:4298
+17/05 15:38:27|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_1_ROI_2_PAS.json
+17/05 15:38:27|INFO|converting with convert_hubmapppp
+17/05 15:38:27|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_1_S_2_ROI_1_PAS.json
+17/05 15:38:27|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_1_S_2_ROI_1_PAS.json
+17/05 15:38:27|INFO|Rectangle for I_1_S_2_ROI_1_PAS.json: x_start:0, x_end:3895, y_start:0, y_end:6275
+17/05 15:38:27|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_1_S_2_ROI_1_PAS.json
+17/05 15:38:27|INFO|converting with convert_hubmapppp
+17/05 15:38:27|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_1_S_3_ROI_1_PAS.json
+17/05 15:38:27|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_1_S_3_ROI_1_PAS.json
+17/05 15:38:27|INFO|Rectangle for I_1_S_3_ROI_1_PAS.json: x_start:0, x_end:5239, y_start:0, y_end:6227
+17/05 15:38:27|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_1_S_3_ROI_1_PAS.json
+17/05 15:38:27|INFO|Manager._tile_folder: ######################## CONVERTING ANNOTATIONS: ✅    ########################
+17/05 15:38:27|INFO|Manager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+17/05 15:38:27|INFO|Tiler.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/Downloads/zaneta_files/detection/wsi/val/labels'. Results will be saved in '/Users/marco/Downloads/zaneta_files/detection/tiles/val/images'.
+17/05 15:38:27|INFO|Tiler._get_completed_files: Completed 0/12 files.
+17/05 15:38:28|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_6_ROI_4_PAS.tif':
+17/05 15:38:28|INFO|SLIDE DIMENSIONSSS ARE:(4859, 8264)
+17/05 15:38:28|INFO|Tiler._get_tile_images: ⏳ Reading region ((4859, 8264)) of sample_0:
+17/05 15:38:28|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:28|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:28|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:28|INFO|PATCH IMAGE DIMENSIONS: (3, 7, 1, 2048, 2048, 3)
+17/05 15:38:28|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:28|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/val/images.
+17/05 15:38:28|INFO|Tiling labels using (4859, 8264)
+17/05 15:38:28|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_6_ROI_4_PAS_sample0.json'
+17/05 15:38:28|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:28|INFO|Total gloms in this image: 27
+17/05 15:38:28|INFO|Total gloms assigned in this image: 27
+17/05 15:38:28|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:31|INFO|Tiler._get_tile_images: ✅ Opening 'I_2_S_4_ROI_2_PAS.tif':
+17/05 15:38:31|INFO|SLIDE DIMENSIONSSS ARE:(3452, 4328)
+17/05 15:38:31|INFO|Tiler._get_tile_images: ⏳ Reading region ((3452, 4328)) of sample_0:
+17/05 15:38:31|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:31|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:31|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:31|INFO|PATCH IMAGE DIMENSIONS: (2, 3, 1, 2048, 2048, 3)
+17/05 15:38:31|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:31|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/val/images.
+17/05 15:38:31|INFO|Tiling labels using (3452, 4328)
+17/05 15:38:31|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_4_ROI_2_PAS_sample0.json'
+17/05 15:38:31|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:31|INFO|Total gloms in this image: 13
+17/05 15:38:31|INFO|Total gloms assigned in this image: 13
+17/05 15:38:31|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:32|INFO|Tiler._get_tile_images: ✅ Opening 'I_2_S_3_ROI_3_PAS.tif':
+17/05 15:38:32|INFO|SLIDE DIMENSIONSSS ARE:(2482, 4327)
+17/05 15:38:32|INFO|Tiler._get_tile_images: ⏳ Reading region ((2482, 4327)) of sample_0:
+17/05 15:38:32|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:32|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:32|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:32|INFO|PATCH IMAGE DIMENSIONS: (1, 3, 1, 2048, 2048, 3)
+17/05 15:38:32|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:33|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/val/images.
+17/05 15:38:33|INFO|Tiling labels using (2482, 4327)
+17/05 15:38:33|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_3_ROI_3_PAS_sample0.json'
+17/05 15:38:33|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:33|INFO|Total gloms in this image: 2
+17/05 15:38:33|INFO|Total gloms assigned in this image: 2
+17/05 15:38:33|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:33|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_2_ROI_4_PAS.tif':
+17/05 15:38:33|INFO|SLIDE DIMENSIONSSS ARE:(5176, 5519)
+17/05 15:38:33|INFO|Tiler._get_tile_images: ⏳ Reading region ((5176, 5519)) of sample_0:
+17/05 15:38:33|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:33|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:33|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:33|INFO|PATCH IMAGE DIMENSIONS: (4, 4, 1, 2048, 2048, 3)
+17/05 15:38:33|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:34|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/val/images.
+17/05 15:38:34|INFO|Tiling labels using (5176, 5519)
+17/05 15:38:34|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_2_ROI_4_PAS_sample0.json'
+17/05 15:38:34|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:34|INFO|Total gloms in this image: 15
+17/05 15:38:34|INFO|Total gloms assigned in this image: 15
+17/05 15:38:34|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:37|INFO|Tiler._get_tile_images: ✅ Opening 'I_1_S_3_ROI_1_PAS.tif':
+17/05 15:38:37|INFO|SLIDE DIMENSIONSSS ARE:(5239, 6227)
+17/05 15:38:37|INFO|Tiler._get_tile_images: ⏳ Reading region ((5239, 6227)) of sample_0:
+17/05 15:38:37|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:37|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:37|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:37|INFO|PATCH IMAGE DIMENSIONS: (4, 5, 1, 2048, 2048, 3)
+17/05 15:38:37|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:37|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/val/images.
+17/05 15:38:37|INFO|Tiling labels using (5239, 6227)
+17/05 15:38:37|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_1_S_3_ROI_1_PAS_sample0.json'
+17/05 15:38:37|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:37|INFO|Total gloms in this image: 10
+17/05 15:38:37|INFO|Total gloms assigned in this image: 10
+17/05 15:38:37|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:39|INFO|Tiler._get_tile_images: ✅ Opening 'I_2_S_4_ROI_3_PAS.tif':
+17/05 15:38:39|INFO|SLIDE DIMENSIONSSS ARE:(3936, 4174)
+17/05 15:38:39|INFO|Tiler._get_tile_images: ⏳ Reading region ((3936, 4174)) of sample_0:
+17/05 15:38:39|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:39|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:39|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:39|INFO|PATCH IMAGE DIMENSIONS: (2, 3, 1, 2048, 2048, 3)
+17/05 15:38:39|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:40|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/val/images.
+17/05 15:38:40|INFO|Tiling labels using (3936, 4174)
+17/05 15:38:40|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_4_ROI_3_PAS_sample0.json'
+17/05 15:38:40|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:40|INFO|Total gloms in this image: 23
+17/05 15:38:40|INFO|Total gloms assigned in this image: 23
+17/05 15:38:40|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:42|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_6_ROI_5_PAS.tif':
+17/05 15:38:42|INFO|SLIDE DIMENSIONSSS ARE:(5548, 8204)
+17/05 15:38:42|INFO|Tiler._get_tile_images: ⏳ Reading region ((5548, 8204)) of sample_0:
+17/05 15:38:42|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:42|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:42|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:42|INFO|PATCH IMAGE DIMENSIONS: (4, 7, 1, 2048, 2048, 3)
+17/05 15:38:42|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:42|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/val/images.
+17/05 15:38:42|INFO|Tiling labels using (5548, 8204)
+17/05 15:38:42|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_6_ROI_5_PAS_sample0.json'
+17/05 15:38:42|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:42|INFO|Total gloms in this image: 22
+17/05 15:38:42|INFO|Total gloms assigned in this image: 22
+17/05 15:38:42|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:46|INFO|Tiler._get_tile_images: ✅ Opening 'I_1_S_2_ROI_1_PAS.tif':
+17/05 15:38:46|INFO|SLIDE DIMENSIONSSS ARE:(3895, 6275)
+17/05 15:38:46|INFO|Tiler._get_tile_images: ⏳ Reading region ((3895, 6275)) of sample_0:
+17/05 15:38:46|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:46|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:46|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:46|INFO|PATCH IMAGE DIMENSIONS: (2, 5, 1, 2048, 2048, 3)
+17/05 15:38:46|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:46|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/val/images.
+17/05 15:38:46|INFO|Tiling labels using (3895, 6275)
+17/05 15:38:46|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_1_S_2_ROI_1_PAS_sample0.json'
+17/05 15:38:46|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:46|INFO|Total gloms in this image: 20
+17/05 15:38:46|INFO|Total gloms assigned in this image: 20
+17/05 15:38:46|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:47|INFO|Tiler._get_tile_images: ✅ Opening 'I_2_S_2_ROI_3_PAS.tif':
+17/05 15:38:47|INFO|SLIDE DIMENSIONSSS ARE:(4087, 5506)
+17/05 15:38:47|INFO|Tiler._get_tile_images: ⏳ Reading region ((4087, 5506)) of sample_0:
+17/05 15:38:47|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:47|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:47|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:47|INFO|PATCH IMAGE DIMENSIONS: (2, 4, 1, 2048, 2048, 3)
+17/05 15:38:47|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:48|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/val/images.
+17/05 15:38:48|INFO|Tiling labels using (4087, 5506)
+17/05 15:38:48|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_2_ROI_3_PAS_sample0.json'
+17/05 15:38:48|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:48|INFO|Total gloms in this image: 18
+17/05 15:38:48|INFO|Total gloms assigned in this image: 18
+17/05 15:38:48|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:49|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_3_ROI_4_PAS.tif':
+17/05 15:38:49|INFO|SLIDE DIMENSIONSSS ARE:(4668, 6135)
+17/05 15:38:49|INFO|Tiler._get_tile_images: ⏳ Reading region ((4668, 6135)) of sample_0:
+17/05 15:38:49|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:49|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:49|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:49|INFO|PATCH IMAGE DIMENSIONS: (3, 4, 1, 2048, 2048, 3)
+17/05 15:38:49|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:49|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/val/images.
+17/05 15:38:49|INFO|Tiling labels using (4668, 6135)
+17/05 15:38:49|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_3_ROI_4_PAS_sample0.json'
+17/05 15:38:49|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:49|INFO|Total gloms in this image: 17
+17/05 15:38:49|INFO|Total gloms assigned in this image: 17
+17/05 15:38:49|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:51|INFO|Tiler._get_tile_images: ✅ Opening 'I_2_S_1_ROI_2_PAS.tif':
+17/05 15:38:51|INFO|SLIDE DIMENSIONSSS ARE:(2455, 4298)
+17/05 15:38:51|INFO|Tiler._get_tile_images: ⏳ Reading region ((2455, 4298)) of sample_0:
+17/05 15:38:51|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:51|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:51|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:51|INFO|PATCH IMAGE DIMENSIONS: (1, 3, 1, 2048, 2048, 3)
+17/05 15:38:51|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:51|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/val/images.
+17/05 15:38:51|INFO|Tiling labels using (2455, 4298)
+17/05 15:38:51|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_1_ROI_2_PAS_sample0.json'
+17/05 15:38:51|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:51|INFO|Total gloms in this image: 7
+17/05 15:38:51|INFO|Total gloms assigned in this image: 7
+17/05 15:38:51|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:52|INFO|Tiler._get_tile_images: ✅ Opening 'I_2_S_5_ROI_2_PAS.tif':
+17/05 15:38:52|INFO|SLIDE DIMENSIONSSS ARE:(2492, 5642)
+17/05 15:38:52|INFO|Tiler._get_tile_images: ⏳ Reading region ((2492, 5642)) of sample_0:
+17/05 15:38:52|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:52|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:52|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:52|INFO|PATCH IMAGE DIMENSIONS: (1, 4, 1, 2048, 2048, 3)
+17/05 15:38:52|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:52|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/val/images.
+17/05 15:38:52|INFO|Tiling labels using (2492, 5642)
+17/05 15:38:52|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_5_ROI_2_PAS_sample0.json'
+17/05 15:38:52|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:52|INFO|Total gloms in this image: 8
+17/05 15:38:52|INFO|Total gloms assigned in this image: 8
+17/05 15:38:52|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:53|INFO|Manager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+17/05 15:38:53|INFO|Manager.tile_dataset: Tiling 'test'
+17/05 15:38:53|INFO|Manager._tile_folder: ######################## CONVERTING ANNOTATIONS: ⏳    ########################
+17/05 15:38:53|INFO|Converter._rename_all: renaiming all filenames to <basename>_<stain>.<ext>
+17/05 15:38:53|INFO|Converter._rename_all: renamed all filenames to <basename>_<stain>.<ext>
+17/05 15:38:53|INFO|Converter._remove_empty_pair: checking annotations:
+17/05 15:38:53|WARNING|Converter._remove_empty_pair: annotations checked. Remaining files: 0.
+17/05 15:38:53|INFO|First 5 files: ['/Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_5_ROI_4_PAS.json', '/Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_1_ROI_3_PAS.json', '/Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_1_S_2_ROI_2_PAS.json', '/Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_6_ROI_2_PAS.json', '/Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_3_S_2_ROI_1_PAS.json']
+17/05 15:38:53|INFO|converting with convert_hubmapppp
+17/05 15:38:53|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_5_ROI_4_PAS.json
+17/05 15:38:53|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_5_ROI_4_PAS.json
+17/05 15:38:53|INFO|Rectangle for I_4_S_5_ROI_4_PAS.json: x_start:0, x_end:4777, y_start:0, y_end:6395
+17/05 15:38:53|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_5_ROI_4_PAS.json
+17/05 15:38:53|INFO|converting with convert_hubmapppp
+17/05 15:38:53|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_1_ROI_3_PAS.json
+17/05 15:38:53|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_1_ROI_3_PAS.json
+17/05 15:38:53|INFO|Rectangle for I_4_S_1_ROI_3_PAS.json: x_start:0, x_end:4412, y_start:0, y_end:9574
+17/05 15:38:53|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_1_ROI_3_PAS.json
+17/05 15:38:53|INFO|converting with convert_hubmapppp
+17/05 15:38:53|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_1_S_2_ROI_2_PAS.json
+17/05 15:38:53|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_1_S_2_ROI_2_PAS.json
+17/05 15:38:53|INFO|Rectangle for I_1_S_2_ROI_2_PAS.json: x_start:0, x_end:3914, y_start:0, y_end:4121
+17/05 15:38:53|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_1_S_2_ROI_2_PAS.json
+17/05 15:38:53|INFO|converting with convert_hubmapppp
+17/05 15:38:53|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_6_ROI_2_PAS.json
+17/05 15:38:53|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_6_ROI_2_PAS.json
+17/05 15:38:53|INFO|Rectangle for I_4_S_6_ROI_2_PAS.json: x_start:0, x_end:6006, y_start:0, y_end:5642
+17/05 15:38:53|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_6_ROI_2_PAS.json
+17/05 15:38:53|INFO|converting with convert_hubmapppp
+17/05 15:38:53|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_3_S_2_ROI_1_PAS.json
+17/05 15:38:53|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_3_S_2_ROI_1_PAS.json
+17/05 15:38:53|INFO|Rectangle for I_3_S_2_ROI_1_PAS.json: x_start:0, x_end:2634, y_start:0, y_end:3881
+17/05 15:38:53|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_3_S_2_ROI_1_PAS.json
+17/05 15:38:53|INFO|converting with convert_hubmapppp
+17/05 15:38:53|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_2_ROI_2_PAS.json
+17/05 15:38:53|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_2_ROI_2_PAS.json
+17/05 15:38:53|INFO|Rectangle for I_4_S_2_ROI_2_PAS.json: x_start:0, x_end:4542, y_start:0, y_end:6717
+17/05 15:38:53|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_2_ROI_2_PAS.json
+17/05 15:38:53|INFO|converting with convert_hubmapppp
+17/05 15:38:53|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_1_S_1_ROI_3_PAS.json
+17/05 15:38:53|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_1_S_1_ROI_3_PAS.json
+17/05 15:38:53|INFO|Rectangle for I_1_S_1_ROI_3_PAS.json: x_start:0, x_end:4174, y_start:0, y_end:6074
+17/05 15:38:53|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_1_S_1_ROI_3_PAS.json
+17/05 15:38:53|INFO|converting with convert_hubmapppp
+17/05 15:38:53|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_2_S_5_ROI_1_PAS.json
+17/05 15:38:53|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_2_S_5_ROI_1_PAS.json
+17/05 15:38:53|INFO|Rectangle for I_2_S_5_ROI_1_PAS.json: x_start:0, x_end:3432, y_start:0, y_end:5616
+17/05 15:38:53|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_2_S_5_ROI_1_PAS.json
+17/05 15:38:53|INFO|converting with convert_hubmapppp
+17/05 15:38:53|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_1_S_4_ROI_1_PAS.json
+17/05 15:38:53|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_1_S_4_ROI_1_PAS.json
+17/05 15:38:53|INFO|Rectangle for I_1_S_4_ROI_1_PAS.json: x_start:0, x_end:2267, y_start:0, y_end:4747
+17/05 15:38:53|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_1_S_4_ROI_1_PAS.json
+17/05 15:38:53|INFO|converting with convert_hubmapppp
+17/05 15:38:53|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_3_S_4_ROI_2_PAS.json
+17/05 15:38:53|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_3_S_4_ROI_2_PAS.json
+17/05 15:38:53|INFO|Rectangle for I_3_S_4_ROI_2_PAS.json: x_start:0, x_end:2626, y_start:0, y_end:3408
+17/05 15:38:53|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_3_S_4_ROI_2_PAS.json
+17/05 15:38:53|INFO|converting with convert_hubmapppp
+17/05 15:38:53|INFO|CALLING CONVERTER hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_2_S_1_ROI_1_PAS.json
+17/05 15:38:53|INFO|Converting with converter hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_2_S_1_ROI_1_PAS.json
+17/05 15:38:53|INFO|Rectangle for I_2_S_1_ROI_1_PAS.json: x_start:0, x_end:2545, y_start:0, y_end:4340
+17/05 15:38:53|INFO|tesssstinnnnnngggg hubmap: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_2_S_1_ROI_1_PAS.json
+17/05 15:38:53|INFO|Manager._tile_folder: ######################## CONVERTING ANNOTATIONS: ✅    ########################
+17/05 15:38:53|INFO|Manager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+17/05 15:38:53|INFO|Tiler.__call__: ⏳ START TILING IMAGES from folder:'/Users/marco/Downloads/zaneta_files/detection/wsi/test/labels'. Results will be saved in '/Users/marco/Downloads/zaneta_files/detection/tiles/test/images'.
+17/05 15:38:53|INFO|Tiler._get_completed_files: Completed 0/11 files.
+17/05 15:38:54|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_5_ROI_4_PAS.tif':
+17/05 15:38:54|INFO|SLIDE DIMENSIONSSS ARE:(4777, 6395)
+17/05 15:38:54|INFO|Tiler._get_tile_images: ⏳ Reading region ((4777, 6395)) of sample_0:
+17/05 15:38:54|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:54|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:54|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:54|INFO|PATCH IMAGE DIMENSIONS: (3, 5, 1, 2048, 2048, 3)
+17/05 15:38:54|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:54|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/test/images.
+17/05 15:38:54|INFO|Tiling labels using (4777, 6395)
+17/05 15:38:54|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_5_ROI_4_PAS_sample0.json'
+17/05 15:38:54|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:54|INFO|Total gloms in this image: 16
+17/05 15:38:54|INFO|Total gloms assigned in this image: 16
+17/05 15:38:54|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:56|INFO|Tiler._get_tile_images: ✅ Opening 'I_1_S_4_ROI_1_PAS.tif':
+17/05 15:38:56|INFO|SLIDE DIMENSIONSSS ARE:(2267, 4747)
+17/05 15:38:56|INFO|Tiler._get_tile_images: ⏳ Reading region ((2267, 4747)) of sample_0:
+17/05 15:38:56|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:56|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:56|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:56|INFO|PATCH IMAGE DIMENSIONS: (1, 3, 1, 2048, 2048, 3)
+17/05 15:38:56|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:56|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/test/images.
+17/05 15:38:56|INFO|Tiling labels using (2267, 4747)
+17/05 15:38:56|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_1_S_4_ROI_1_PAS_sample0.json'
+17/05 15:38:56|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:56|INFO|Total gloms in this image: 9
+17/05 15:38:56|INFO|Total gloms assigned in this image: 9
+17/05 15:38:56|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:57|INFO|Tiler._get_tile_images: ✅ Opening 'I_3_S_4_ROI_2_PAS.tif':
+17/05 15:38:57|INFO|SLIDE DIMENSIONSSS ARE:(2626, 3408)
+17/05 15:38:57|INFO|Tiler._get_tile_images: ⏳ Reading region ((2626, 3408)) of sample_0:
+17/05 15:38:57|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:57|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:57|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:57|INFO|PATCH IMAGE DIMENSIONS: (1, 2, 1, 2048, 2048, 3)
+17/05 15:38:57|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:57|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/test/images.
+17/05 15:38:57|INFO|Tiling labels using (2626, 3408)
+17/05 15:38:57|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_3_S_4_ROI_2_PAS_sample0.json'
+17/05 15:38:57|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:57|INFO|Total gloms in this image: 7
+17/05 15:38:57|INFO|Total gloms assigned in this image: 7
+17/05 15:38:57|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:57|INFO|Tiler._get_tile_images: ✅ Opening 'I_2_S_1_ROI_1_PAS.tif':
+17/05 15:38:57|INFO|SLIDE DIMENSIONSSS ARE:(2545, 4340)
+17/05 15:38:57|INFO|Tiler._get_tile_images: ⏳ Reading region ((2545, 4340)) of sample_0:
+17/05 15:38:57|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:57|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:57|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:57|INFO|PATCH IMAGE DIMENSIONS: (1, 3, 1, 2048, 2048, 3)
+17/05 15:38:57|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:58|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/test/images.
+17/05 15:38:58|INFO|Tiling labels using (2545, 4340)
+17/05 15:38:58|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_2_S_1_ROI_1_PAS_sample0.json'
+17/05 15:38:58|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:58|INFO|Total gloms in this image: 5
+17/05 15:38:58|INFO|Total gloms assigned in this image: 5
+17/05 15:38:58|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:38:58|INFO|Tiler._get_tile_images: ✅ Opening 'I_1_S_1_ROI_3_PAS.tif':
+17/05 15:38:58|INFO|SLIDE DIMENSIONSSS ARE:(4174, 6074)
+17/05 15:38:58|INFO|Tiler._get_tile_images: ⏳ Reading region ((4174, 6074)) of sample_0:
+17/05 15:38:58|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:38:58|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:38:58|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:38:58|INFO|PATCH IMAGE DIMENSIONS: (3, 4, 1, 2048, 2048, 3)
+17/05 15:38:58|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:38:59|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/test/images.
+17/05 15:38:59|INFO|Tiling labels using (4174, 6074)
+17/05 15:38:59|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_1_S_1_ROI_3_PAS_sample0.json'
+17/05 15:38:59|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:38:59|INFO|Total gloms in this image: 4
+17/05 15:38:59|INFO|Total gloms assigned in this image: 4
+17/05 15:38:59|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:39:00|INFO|Tiler._get_tile_images: ✅ Opening 'I_1_S_2_ROI_2_PAS.tif':
+17/05 15:39:00|INFO|SLIDE DIMENSIONSSS ARE:(3914, 4121)
+17/05 15:39:00|INFO|Tiler._get_tile_images: ⏳ Reading region ((3914, 4121)) of sample_0:
+17/05 15:39:00|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:39:00|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:39:00|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:39:00|INFO|PATCH IMAGE DIMENSIONS: (2, 3, 1, 2048, 2048, 3)
+17/05 15:39:00|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:39:00|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/test/images.
+17/05 15:39:00|INFO|Tiling labels using (3914, 4121)
+17/05 15:39:00|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_1_S_2_ROI_2_PAS_sample0.json'
+17/05 15:39:00|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:39:00|INFO|Total gloms in this image: 13
+17/05 15:39:00|INFO|Total gloms assigned in this image: 13
+17/05 15:39:00|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:39:02|INFO|Tiler._get_tile_images: ✅ Opening 'I_2_S_5_ROI_1_PAS.tif':
+17/05 15:39:02|INFO|SLIDE DIMENSIONSSS ARE:(3432, 5616)
+17/05 15:39:02|INFO|Tiler._get_tile_images: ⏳ Reading region ((3432, 5616)) of sample_0:
+17/05 15:39:02|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:39:02|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:39:02|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:39:02|INFO|PATCH IMAGE DIMENSIONS: (2, 4, 1, 2048, 2048, 3)
+17/05 15:39:02|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:39:02|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/test/images.
+17/05 15:39:02|INFO|Tiling labels using (3432, 5616)
+17/05 15:39:02|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_2_S_5_ROI_1_PAS_sample0.json'
+17/05 15:39:02|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:39:02|INFO|Total gloms in this image: 36
+17/05 15:39:02|INFO|Total gloms assigned in this image: 36
+17/05 15:39:02|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:39:03|INFO|Tiler._get_tile_images: ✅ Opening 'I_3_S_2_ROI_1_PAS.tif':
+17/05 15:39:03|INFO|SLIDE DIMENSIONSSS ARE:(2634, 3881)
+17/05 15:39:03|INFO|Tiler._get_tile_images: ⏳ Reading region ((2634, 3881)) of sample_0:
+17/05 15:39:03|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:39:03|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:39:03|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:39:03|INFO|PATCH IMAGE DIMENSIONS: (1, 2, 1, 2048, 2048, 3)
+17/05 15:39:03|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:39:03|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/test/images.
+17/05 15:39:03|INFO|Tiling labels using (2634, 3881)
+17/05 15:39:03|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_3_S_2_ROI_1_PAS_sample0.json'
+17/05 15:39:03|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:39:03|INFO|Total gloms in this image: 5
+17/05 15:39:03|INFO|Total gloms assigned in this image: 5
+17/05 15:39:03|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:39:05|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_1_ROI_3_PAS.tif':
+17/05 15:39:05|INFO|SLIDE DIMENSIONSSS ARE:(4412, 9574)
+17/05 15:39:05|INFO|Tiler._get_tile_images: ⏳ Reading region ((4412, 9574)) of sample_0:
+17/05 15:39:05|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:39:05|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:39:05|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:39:05|INFO|PATCH IMAGE DIMENSIONS: (3, 8, 1, 2048, 2048, 3)
+17/05 15:39:05|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:39:05|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/test/images.
+17/05 15:39:05|INFO|Tiling labels using (4412, 9574)
+17/05 15:39:05|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_1_ROI_3_PAS_sample0.json'
+17/05 15:39:05|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:39:05|INFO|Total gloms in this image: 26
+17/05 15:39:05|INFO|Total gloms assigned in this image: 26
+17/05 15:39:05|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:39:08|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_2_ROI_2_PAS.tif':
+17/05 15:39:08|INFO|SLIDE DIMENSIONSSS ARE:(4542, 6717)
+17/05 15:39:08|INFO|Tiler._get_tile_images: ⏳ Reading region ((4542, 6717)) of sample_0:
+17/05 15:39:08|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:39:08|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:39:08|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:39:08|INFO|PATCH IMAGE DIMENSIONS: (3, 5, 1, 2048, 2048, 3)
+17/05 15:39:08|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:39:09|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/test/images.
+17/05 15:39:09|INFO|Tiling labels using (4542, 6717)
+17/05 15:39:09|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_2_ROI_2_PAS_sample0.json'
+17/05 15:39:09|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:39:09|INFO|Total gloms in this image: 25
+17/05 15:39:09|INFO|Total gloms assigned in this image: 25
+17/05 15:39:09|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:39:11|INFO|Tiler._get_tile_images: ✅ Opening 'I_4_S_6_ROI_2_PAS.tif':
+17/05 15:39:11|INFO|SLIDE DIMENSIONSSS ARE:(6006, 5642)
+17/05 15:39:11|INFO|Tiler._get_tile_images: ⏳ Reading region ((6006, 5642)) of sample_0:
+17/05 15:39:11|INFO|Tiler._get_tile_images: ⏳ Converting to numpy sample_0:
+17/05 15:39:11|INFO|Tiler._get_tile_images: ✅ Conversion to numpy.
+17/05 15:39:11|INFO|Tiler._get_tile_images: ⏳ Patchifying sample_0:
+17/05 15:39:11|INFO|PATCH IMAGE DIMENSIONS: (4, 4, 1, 2048, 2048, 3)
+17/05 15:39:11|INFO|Tiler._get_tile_images: ⏳ Saving patches of sample_0:
+17/05 15:39:12|INFO|Tiler._get_tile_images: ✅ Saved sample_0 patches in /Users/marco/Downloads/zaneta_files/detection/tiles/test/images.
+17/05 15:39:12|INFO|Tiling labels using (6006, 5642)
+17/05 15:39:12|INFO|Tiler._get_tile_labels: Tiliing label '/Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_6_ROI_2_PAS_sample0.json'
+17/05 15:39:12|INFO|Tiler._get_tile_labels: creating class_mask:
+17/05 15:39:12|INFO|Total gloms in this image: 9
+17/05 15:39:12|INFO|Total gloms assigned in this image: 9
+17/05 15:39:12|INFO|Tiler._get_tile_labels: patchifying class_mask:
+17/05 15:39:14|INFO|Manager._tile_folder: ######################## TILING IMAGES: ⏳    ########################
+17/05 15:39:14|INFO|Manager.tile_dataset: ✅ Tiled '/Users/marco/Downloads/zaneta_files/detection/wsi'.
+17/05 15:39:14|INFO|Manager._move_slides_back: Moving slides back:
+17/05 15:39:14|INFO|Manager._move_slides_back: Moved slides back.
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_2_ROI_2_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_1_S_1_ROI_3_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_5_ROI_4_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_6_ROI_2_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_2_S_5_ROI_1_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_2_S_1_ROI_1_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_3_S_2_ROI_1_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_3_S_4_ROI_2_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_1_S_2_ROI_2_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_1_S_4_ROI_1_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/test/labels/I_4_S_1_ROI_3_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_2_ROI_1_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_4_ROI_1_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_3_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_1_ROI_1_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_4_ROI_3_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_3_ROI_2_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_5_ROI_1_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_3_PAS.geojson
+17/05 15:39:14|ERROR|Sample size: (1576, 2639). Tile size: (2048, 2048)
+17/05 15:39:14|INFO|Removed I_3_S_1_ROI_3_PAS. Region smaller than tile_size 
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_2_ROI_4_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_4_ROI_4_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_5_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_4_ROI_4_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_6_ROI_1_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_2_ROI_3_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_5_ROI_2_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_3_ROI_3_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_3_ROI_1_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_1_ROI_2_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_4_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_4_ROI_1_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_3_ROI_3_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_4_ROI_2_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_2_ROI_3_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_2_ROI_1_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_2_ROI_2_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_4_ROI_6_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_2_ROI_4_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_2_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_6_ROI_3_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_3_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_3_ROI_3_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_2_ROI_4_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_6_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_1_ROI_2_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_1_ROI_3_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_2_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_3_ROI_1_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_5_ROI_2_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_6_ROI_6_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_2_ROI_3_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_4_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_5_ROI_1_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_3_ROI_2_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_4_ROI_3_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_4_ROI_4_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_5_ROI_5_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_1_ROI_1_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_3_ROI_2_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_4_ROI_1_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_1_ROI_4_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_2_ROI_2_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_4_S_5_ROI_3_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_3_S_1_ROI_1_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_1_S_4_ROI_4_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/train/labels/I_2_S_4_ROI_5_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_4_ROI_2_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_1_ROI_2_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_5_ROI_2_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_2_ROI_4_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_3_ROI_4_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_6_ROI_4_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_1_S_3_ROI_1_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_4_ROI_3_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_1_S_2_ROI_1_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_2_ROI_3_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_4_S_6_ROI_5_PAS.geojson
+17/05 15:39:14|INFO|geojson: /Users/marco/Downloads/zaneta_files/detection/wsi/val/labels/I_2_S_3_ROI_3_PAS.geojson
+17/05 15:39:14|INFO|segm 2 detection done

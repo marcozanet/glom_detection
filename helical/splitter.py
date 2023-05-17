@@ -153,6 +153,8 @@ class Splitter(Configurator):
         files = glob(os.path.join(self.src_dir, f'*.{format}' ))
         files = [file for file in files if "sample" not in file]
 
+        assert len(files)>0, f"'files' is empty. No file like {os.path.join(self.src_dir, f'*.{format}')}"
+
         # sanity check:
         already_patched = glob(os.path.join(self.dst_dir, f'*_?_?.{format}' ))
         if len(already_patched) > 0:

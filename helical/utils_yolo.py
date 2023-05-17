@@ -3,6 +3,7 @@ import numpy as np
 import yaml
 from glob import glob
 from tqdm import tqdm
+import json
 
 def merge_datasets(dataset1: str, dataset2:str, dst_root:str, safe_copy:bool=True):
     """ Merges 2 datasets: train1+train1, val1+val2, test1+test2 """
@@ -28,6 +29,32 @@ def merge_datasets(dataset1: str, dataset2:str, dst_root:str, safe_copy:bool=Tru
     src2dst1 = src2dst(data=data1, dataset=dataset1)
     src2dst2 = src2dst(data=data2, dataset=dataset2)
 
+    # merge n_tiles.json files: 
+    # read files:
+    def _read_ntiles(_set_:str, dataset:str):
+        ntiles_file = os.path.join(dataset, 'wsi', _set_, 'labels', 'n_tiles.json')
+        if not os.path.isfile(ntiles_file):
+            return None
+        with open(ntiles_file, 'r') as f:
+            data = json.load(f)
+        return data
+    # write files:
+    def _write_merged_ntiles(_set_:str):
+        ntiles_fp = os.path.join(dst_root, 'wsi', _set_, 'labels', 'n_tiles.json')
+        with open(ntiles_fp, 'w') as f: 
+            json.dump(merged_dict, fp=f)
+        return
+    for _set_ in sets:
+        merged_dict = {}
+        ntiles_dict1 = _read_ntiles(_set_=_set_, dataset=dataset1) # read dictionaries 
+        ntiles_dict2 = _read_ntiles(_set_=_set_, dataset=dataset2)
+        if ntiles_dict1 is not None:
+            merged_dict.update(ntiles_dict1) # create merged one 
+        if ntiles_dict2 is not None:
+            merged_dict.update(ntiles_dict2)
+        if len(merged_dict)>0:
+            _write_merged_ntiles(_set_=_set_) # write merged one
+
     # move data from dataset1:
     for src_fp, dst_fp in tqdm(src2dst1, desc='copying dataset1'):
         if safe_copy:
@@ -37,7 +64,7 @@ def merge_datasets(dataset1: str, dataset2:str, dst_root:str, safe_copy:bool=Tru
     # move data from dataset1:
     for src_fp, dst_fp in tqdm(src2dst2, desc='copying dataset2'):
         if safe_copy:
-            if not os.path.isfile(dst_fp):
+            if not os.path.isfile(dst_fp) and 'n_tiles.json' not in dst_fp: # original n_tiles are not to be copied
                 shutil.copy(src=src_fp, dst=dst_fp)
     data12 = glob(os.path.join(dst_root, '*', '*', '*', '*'))
     len1, len2, len12 = len(data1), len(data2), len(data12)
@@ -45,11 +72,61 @@ def merge_datasets(dataset1: str, dataset2:str, dst_root:str, safe_copy:bool=Tru
 
     return
 
+def switch_healthy_unhealthy_labels(dataset_root:str):
+
+    assert os.path.isdir(dataset_root), f"'dataset_root':{dataset_root} is not a valid dirpath."
+    assert 'tiles' in os.listdir(dataset_root), f"'dataset_root' should contain 'tiles'."
+
+    tiles_labels = glob(os.path.join(dataset_root, 'tiles', '*', 'labels', '*.txt'))
+    
+    def _change_label(_fp:str):
+        # read data
+        with open(_fp,'r') as f:
+            text = f.readlines()
+        # loop throgu rows and objects and change 1st object = class
+        new_text = []
+        for row in text:
+            objs = row.replace('\n', '').split(' ')
+            class_n = int(float(objs[0]))
+            assert class_n in [0,1,2,3,4,5,6,7,8,9], f"'class_n':{class_n} should be 0-9."
+            new_class = '0' if class_n == 1 else '1'
+            for obj in objs[1:]: # make new line
+                new_row = new_class + ' ' + obj
+            new_row += '\n'
+            new_row = new_class + row[1:]
+            assert len(new_row)>0
+            new_text.append(new_row)
+        # save new text
+        with open(_fp, 'w') as f: 
+            f.writelines(new_text)
+
+        return
+
+    for fp in tqdm(tiles_labels, desc='switching 0-1 labels'): 
+        _change_label(_fp=fp)
+
+
+    return
+
+
+def test_switch_healthy_unhealthy_labels():
+    dataset_root='/Users/marco/helical_datasets/muw_sfog/detection'
+
+    switch_healthy_unhealthy_labels(dataset_root=dataset_root)
+
+
+    return
+
+
+
+
+
+
 def test_merge_datasets():
 
-    dataset1 = '/Users/marco/helical_tests/test_manager_detect_muw_sfog/detection'
-    dataset2 = '/Users/marco/helical_tests/test_yolo_detect_train_muw_sfog/detection'
-    dst_root = '/Users/marco/helical_tests/test_merge_data'
+    dataset1 = '/Users/marco/helical_tests/test_merge_dataset'
+    dataset2 = '/Users/marco/Downloads/zaneta_files/detection'
+    dst_root = '/Users/marco/helical_tests/test_merge_hubmap_sfog_zaneta'
     merge_datasets(dataset1=dataset1, dataset2=dataset2, dst_root=dst_root)
 
     return

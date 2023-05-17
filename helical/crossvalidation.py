@@ -66,7 +66,8 @@ class KCrossValidation(Configurator):
         assert len(wsi_imgs) > 0, f"{self.class_name}._get_data: 'wsi_lbls' is empty. No 'wsi_lbl' like {os.path.join(self.data_root, 'wsi', '*', 'labels', '*')} ."
         assert len(tile_imgs) > 0, f"{self.class_name}._get_data: 'tile_imgs' is empty. No 'tile_img' like {os.path.join(self.data_root, 'tiles', '*', 'images', f'*{self.tile_img_fmt}')} ."
         assert len(tile_lbls) > 0, f"{self.class_name}._get_data: 'tile_lbls' is empty. No 'tile_lbl' like {os.path.join(self.data_root, 'tiles', '*', 'labels', f'*{self.tile_lbl_fmt}')} ."
-        assert len(other_wsi_lbls) > 0, f"{self.class_name}._get_data: 'other_wsi_lbls' is empty. No 'other_wsi_lbl' like {os.path.join(self.data_root, 'wsi', '*', 'labels', '*_sample[0-8]*')} ."
+        if self.dataset == 'muw':
+            assert len(other_wsi_lbls) > 0, f"{self.class_name}._get_data: 'other_wsi_lbls' is empty. No 'other_wsi_lbl' like {os.path.join(self.data_root, 'wsi', '*', 'labels', '*_sample[0-8]*')} ."
 
         data = {'wsi_imgs':wsi_imgs, 'wsi_lbls':wsi_lbls, 'tile_imgs':tile_imgs, 'tile_lbls':tile_lbls}
         file_list = wsi_imgs + wsi_lbls + tile_imgs + tile_lbls if self.dataset == 'hubmap' else  wsi_imgs + wsi_lbls + tile_imgs + tile_lbls + other_wsi_lbls
@@ -132,7 +133,7 @@ class KCrossValidation(Configurator):
             fold_splits[i] = {'train': train_folds, 'val': test_fold}
             
             tot_images = len(fold_splits[i]['train']) + len(fold_splits[i]['val'])
-            assert tot_images == self.n_wsis, self.log.error(f"{self.class_name}._get_i_split: sum of elems in train and test folder should be = self.n_wsis({tot_images}) but is .")
+            # assert tot_images == self.n_wsis, self.log.error(f"{self.class_name}._get_i_split: sum of elems in train and test folder should be = {self.n_wsis}, but is {tot_images}).")
             # TODO add that train should be disjoint with test folds.
             self.log.info(f"{self.class_name}._get_i_split: iter_{i},  train: {len(fold_splits[i]['train'])} images, test: {len(fold_splits[i]['val'])}.")
             

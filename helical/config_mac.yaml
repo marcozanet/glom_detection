@@ -11,6 +11,8 @@ readme: >
     ...
     2) save_one_box(xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}_crop{j}.jpg', BGR=True)
 
+    muw classes: {'Glo-unhealthy':0, 'Glo-NA':1, 'Glo-healthy':2, 'Tissue':3},
+
 
 ##################################################
 #############    CNN_TRAINER.PY    #############
@@ -114,20 +116,32 @@ mil_trainer:
 ##################################################
 yolo_processor:
   {
-    src_root : '/Users/marco/helical_datasets/muw_sfog',
-    dst_root : '/Users/marco/helical_datasets/muw_sfog', 
+    src_root : '/Users/marco/Downloads/zaneta_files',
+    # src_root : '/Users/marco/Downloads/example_images_zaneta',
+    # src_root : '/Users/marco/helical_tests/test_manager_segm_hubmap_pas',
+    # src_root : '/Users/marco/helical_datasets/muw_sfog',
+    # dst_root : '/Users/marco/Downloads/example_images_zaneta', 
+    dst_root : '/Users/marco/Downloads/zaneta_files', 
+    # dst_root : '/Users/marco/helical_tests/test_manager_segm_hubmap_pas', 
+    # dst_root : '/Users/marco/helical_datasets/muw_sfog', 
     slide_format : 'tif',
     label_format : 'json',
-    split_ratio : [0.34, 0.33, 0.33],  
-    data_source : 'muw',
-    task : 'segmentation',
+    split_ratio : [0.70, 0.15, 0.15],  
+    data_source : 'zaneta',
+    # data_source : 'hubmap',
+    # data_source : 'muw',
+    # map_classes: {'Glo-unhealthy':0, 'Glo-NA':1, 'Glo-healthy':2, 'Tissue':3},
+    map_classes: {'Glo-unhealthy':1, 'Glo-healthy':0},
+    # map_classes: {'glomerulus':0}, 
+    task : 'detection',
     verbose : True,
     safe_copy : False,
     tiling_shape : (2048,2048),
     tiling_step : 1024,
-    tiling_level : 2,
+    tiling_level : 0,
     tiling_show : True,
-    stain: 'sfog',
+    stain: 'pas',
+    # stain: 'sfog',
     multiple_samples: True,
     resize: (512,512),
   }
@@ -136,23 +150,27 @@ yolo_processor:
 ##################################################
 #############    YOLO_TRAINER.PY    #############
 ##################################################
-yolo_trainer:
-  {
-    src_root : '/Users/marco/helical_datasets/muw_sfog',
-    dst_root : '/Users/marco/helical_datasets/muw_sfog', 
-    slide_format : 'tif',
-    label_format : 'json',
-    split_ratio : [0.34, 0.33, 0.33],  
-    data_source : 'muw',
-    task : 'segmentation',
-    verbose : True,
-    safe_copy : False,
-    tiling_shape : (2048,2048),
-    tiling_step : 1024,
-    tiling_level : 2,
-    tiling_show : True,
-    stain: 'sfog',
-    multiple_samples: True,
-    resize: (512,512),
-  }
-##################################################
+# yolo_trainer:
+#   {
+#     src_root : '/Users/marco/helical_tests/test_manager_segm_hubmap_pas',
+#     # src_root : '/Users/marco/helical_datasets/muw_sfog',
+#     dst_root : '/Users/marco/helical_tests/test_manager_segm_hubmap_pas', 
+#     # dst_root : '/Users/marco/helical_datasets/muw_sfog',  
+#     slide_format : 'tif',
+#     label_format : 'json',
+#     split_ratio : [0.34, 0.33, 0.33],  
+#     # data_source : 'muw',
+#     data_source : 'hubmap',
+#     task : 'detection',
+#     verbose : True,
+#     safe_copy : False,
+#     tiling_shape : (2048,2048),
+#     tiling_step : 1024,
+#     tiling_level : 2,
+#     tiling_show : True,
+#     stain: 'sfog',
+#     stain: 'sfog',
+#     multiple_samples: True,
+#     resize: (512,512),
+#   }
+# ##################################################

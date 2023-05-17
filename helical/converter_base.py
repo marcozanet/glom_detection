@@ -23,12 +23,13 @@ class ConverterBase(Configurator):
     def __init__(self, 
                 folder: str, 
                 level:int,
+                map_classes: dict,
+                data_source:Literal['muw', 'hubmap'],
                 multiple_samples: bool,
                 stain: Literal['pas', 'sfog'],
                 convert_from: Literal['json_wsi_mask', 'jsonliketxt_wsi_mask', 'gson_wsi_mask'], 
                 convert_to: Literal['json_wsi_bboxes', 'txt_wsi_bboxes', 'geojson_wsi_mask'],
                 save_folder = None,
-                map_classes: dict = {'Glo-unhealthy':0, 'Glo-NA':1, 'Glo-healthy':2, 'Tissue':3},
                 verbose: bool = False) -> None:
         """ Offers conversion capabilities from/to a variety of formats. 
             json_wsi_mask"""
@@ -45,6 +46,7 @@ class ConverterBase(Configurator):
         self.multiple_samples = multiple_samples
         self.convert_to = convert_to
         self.folder = folder
+        self.data_source = data_source
         self.format_from = convert_from.split('_')[0] if convert_from != 'jsonliketxt_wsi_mask' else 'txt'
         self.format_to = convert_to.split('_')[0]
         self.save_folder = save_folder if save_folder is not None else folder
@@ -59,15 +61,16 @@ class ConverterBase(Configurator):
 
     def _get_files(self) -> List[str]:
         """ Collects source files to be converted. """
-
         
-        files = glob(os.path.join(self.folder, f'*.{self.format_from}' ))
-
+        if self.data_source == 'muw':
+            path_like = os.path.join(self.folder, f'*.{self.format_from}')
+        elif self.data_source == 'hubmap' or self.data_source == 'zaneta':
+            path_like = os.path.join(self.folder, f'*.json')
+        files = glob(path_like)
         if self.verbose is True:
             self.log.info(f"First 5 files: {files[:5]}", extra={'className': self.__class__.__name__})
-
         if len(files)==0:
-            self.log.warn(f"No file like {os.path.join(self.folder, f'*.{self.format_from}')} found")
+            self.log.warn(f"No file like {path_like} found")
 
         print(files)
 

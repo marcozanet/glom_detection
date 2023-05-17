@@ -23,11 +23,12 @@ from loggers import get_logger
 from decorators import log_start_finish
 import json
 import cv2
-class Tiler():
+class TilerBase():
 
     def __init__(self, 
                 folder: str, 
                 step: int,
+                data_source: Literal['muw', 'hubmap'],
                 tile_shape: tuple = (2048, 2048),
                 resize: tuple = None,
                 save_root = None, 
@@ -63,6 +64,7 @@ class Tiler():
         self.level = level
         self.show = show
         self.resize = resize
+        self.data_source = data_source
         # self.clean_every_file = clean_every_file
         # self.cleaner_path = cleaner_path
 
@@ -594,7 +596,6 @@ class Tiler():
         """ Given a WSI with multiple samples and a file with annotations of the samples location 
             within the WSI, it returns the location, H, W for the openslide.read_region function to use. """
         
-
         assert os.path.isfile(fp), ValueError(f"'fp':{fp} is not a valid filepath. ")
 
 
@@ -615,6 +616,8 @@ class Tiler():
 
             dictionary = {'location':location, 'w':w, 'h':h}
             all_dicts.append(dictionary)
+
+        # raise NotImplementedError()
 
     
         return all_dicts
@@ -752,7 +755,7 @@ def test_Tiler():
     level = 2
     show = True
     target_format = 'txt'
-    tiler = Tiler(folder = folder, 
+    tiler = TilerBase(folder = folder, 
                   tile_shape= (2048, 2048), 
                   step=512, 
                   save_root= save_root, 
