@@ -124,8 +124,9 @@ class Converter(ConverterBase):
                 # try:
                 for xi, yi in file_coords:
                     # clip x and y: e.g. if xi exceeds x_min or x_max, take x_min or x_max as new xi
-                    clip_x, clip_y = (min(max(x_start, xi), x_end), min(max(y_start, yi), y_end) )
-                    xy = (clip_x - x_start, clip_y - y_start)
+                    clip_x, clip_y = xi, yi
+                    # clip_x, clip_y = (min(max(x_start, xi), x_end), min(max(y_start, yi), y_end) )
+                    xy = (clip_y - y_start, clip_x - x_start)
                     # if clipped_xy != (xi,yi):
                         # print(f"xi,yi: {xi,yi}")
                         # print(f"xi,yi clipped: {clipped_xy}")

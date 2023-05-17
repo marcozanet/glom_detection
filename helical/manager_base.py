@@ -125,8 +125,12 @@ class ManagerBase(Configurator, ABC):
             to {0:glom_healthy, 1:glom_sclerosed} """
         
         cleaner = CleanerMuw(data_root=os.path.join(self.dst_root, self.task), safe_copy=safe_copy)
-        cleaner._clean_muw()
-        
+        if self.data_source == 'muw':
+            cleaner._clean_muw()
+        elif self.data_source == 'zaneta' or self.data_source == 'hubmap': 
+            cleaner._clean_hubmap()
+        else:
+            raise NotImplementedError()
 
         return
     

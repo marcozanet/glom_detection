@@ -163,44 +163,41 @@ class Tiler(TilerBase):
             self.log.warn('mask is empty. Skipping label.')
             return None, None, None
 
-
-        # print(data)
-
         data = data['features']
         vertex_mask = np.zeros(shape=region_dims)
         class_mask = np.zeros_like(vertex_mask)
         order_mask = np.zeros_like(vertex_mask)
         zorro=0
+
         for i, glom in enumerate(data, start=1): 
             label_name = glom['classification']
             assert label_name in self.map_classes.keys(), self.log.error(f"{self.class_name}.{'read_label'}: class {label_name} not in 'map_classes': {self.map_classes}")
-            label_val = self.map_classes[label_name] 
+            label_val = self.map_classes[label_name]  
             vertices = glom['coordinates']
-
 
             assert all([len(vertex)==2 for vertex in vertices]), self.log.error(f"All vertices should be pairs of coordinates")
             
             for k,(x,y) in enumerate(vertices, start=1):
                 if k==1:
                     zorro+=1
-                x, y = min(x,region_dims[0]-1), min(y,region_dims[1]-1)
+                # x, y = min(x,region_dims[1]-1), min(y,region_dims[0]-1)
                 x, y = int(x), int(y) # in hubmap annotations there's vertices like 3785.6, 23932.1 .. 
                 vertex_mask[x,y] = i # assigning to each vertex a unique value (one for glom)
                 class_mask[x,y] = label_val
                 order_mask[x,y] = k
+            if 'I_1_S_4_ROI_2' in os.path.basename(json_file):
+                self.log.info(f"Glom {i}. Vertices: {k}, Class: {label_name}")
+                self.log.info(f"Unique  values in vertex mask: {np.unique(vertex_mask)}")
+
         
         # self._show_vertex_mask(vertex_mask=vertex_mask)
-        
-        self.log.info(f"Total gloms in this image: {i}")
-        self.log.info(f"Total gloms assigned in this image: {zorro}")
+        # self.log.info("I_1_S_4_")
+        if 'I_1_S_4_ROI_2' in os.path.basename(json_file):
+            self.log.info(f"Total gloms in this image: {i}")
+            self.log.info(f"Total gloms assigned in this image: {zorro}")
+            # raise NotImplementedError()
 
         return  vertex_mask, class_mask, order_mask
-    
-
-
-
-
-
     
 
     def _tile_class_mask(self, vertex_mask:np.ndarray, class_mask:np.ndarray,
@@ -215,23 +212,29 @@ class Tiler(TilerBase):
             return       
 
         # patchify masks:
-        label_patches = patchify(vertex_mask, (w, h), step =  self.step )
-        order_patches = patchify(order_mask, (w, h), step =  self.step )
-        class_patches = patchify(class_mask, (w, h), step =  self.step )
+        label_patches = patchify(vertex_mask, (w, h), step = self.step )
+        order_patches = patchify(order_mask, (w, h), step = self.step )
+        class_patches = patchify(class_mask, (w, h), step = self.step )
+        if 'I_1_S_4_ROI_2' in os.path.basename(label_fp):
+            self.log.info(f'Vertex mask shape: {vertex_mask.shape}')
+            self.log.info(f'label_patches shape: {label_patches.shape}')
+            self.log.info(f'order_patches shape: {order_patches.shape}')
+            self.log.info(f'class_patches shape: {class_patches.shape}')
 
-        # self.log.info(f"PATCH LABEL DIMENSIONS: {label_patches.shape}")
-        # self.log.info(f"PATCH ORDER DIMENSIONS: {order_patches.shape}")
-        # self.log.info(f"PATCH CLASS DIMENSIONS: {class_patches.shape}")
 
         # loop through patches and write/save label_patch:
         for i in tqdm(range(label_patches.shape[0])):
             for j in range(label_patches.shape[1]):
                 unique_values = np.unique(label_patches[i,j,:,:])
+                pre_unique = unique_values.copy()
                 unique_values = [val for val in unique_values if val != 0]
+                if 'I_1_S_4_ROI_2' in os.path.basename(label_fp):
+                    self.log.info(f"Pre_unique values in tile: {pre_unique}")
+                    self.log.info(f"Post_unique values in tile: {unique_values}")
                 if len(unique_values)==0: 
-                    # self.log.info(f"In tile: _{j}_{i}.{self.tile_label_format} there seems to be no glom")
+                    if 'I_1_S_4_ROI_2' in os.path.basename(label_fp):
+                        self.log.info(f"In tile: {os.path.basename(label_fp)} _{j}_{i}.{self.tile_label_format} there seems to be no glom")
                     continue
-                # self.log.info(f"yes ✅ there's label in tile: _{j}_{i}.{self.tile_label_format} ")
 
                 # for each glom:
                 text = ''
@@ -244,12 +247,12 @@ class Tiler(TilerBase):
                     positions = [pos for (_, pos) in sorted(zip(order, positions), key=lambda tup: tup[0]) ]
                     # write text:
                     text += str(int(class_patches[i,j,x,y]))
-                    for x_indices, y_indices in positions:
+                    for y_indices, x_indices in positions:
                         text+= f" {x_indices/self.tile_shape[0]} {y_indices/self.tile_shape[1]}"
                     text += '\n'
                 # save in .txt file:
                 if len(unique_values) > 0:
-                    save_fn = os.path.basename(label_fp.split('.json')[0] + f'_{j}_{i}.{self.tile_label_format}')
+                    save_fn = os.path.basename(label_fp.split('.json')[0] + f'_{i}_{j}.{self.tile_label_format}')
                     replace_fold = lambda fp: os.path.join(  os.path.split(os.path.dirname(fp))[0]  , os.path.split(os.path.dirname(fp))[1].replace('images', 'labels'),     os.path.basename(fp))
                     save_fp = os.path.join(save_folder, save_fn)
                     save_fp = replace_fold(save_fp)
@@ -257,7 +260,11 @@ class Tiler(TilerBase):
                     assert os.path.isdir(os.path.dirname(save_fp)), f"{os.path.dirname(save_fp)} is not a valid dirpath. Can't write a file here."
                     with open(save_fp, 'w') as f:
                         f.write(text)
-  
+
+        if 'I_1_S_4_ROI_2' in os.path.basename(label_fp):
+            # if i==
+            raise NotImplementedError()
+
         return
     
     
@@ -337,9 +344,9 @@ class Tiler(TilerBase):
                 self.log.info(f"Tiling labels using {W,H}")
                 for json_sample in json_samples:
                     self._get_tile_labels(fp = json_sample, region_dims=(W,H), save_folder=save_folder)
-
-            # if self.show is True:
-            #     self.test_show_image_labels()
+            if i%11 == 0:
+                if self.show is True:
+                    self.test_show_image_labels()
 
         return
     
@@ -386,8 +393,8 @@ class Tiler(TilerBase):
                 vertices = vertices.reshape((-1,1,2))
                 x0 = np.array(x).min()
                 y0 = np.array(y).min()  
-                if self.data_source == 'zaneta':                  
-                    color = (0,255,0) if class_n == 1 else (255,0,0) 
+                if self.data_source == 'zaneta':    
+                    color = (0,255,0) if class_n == 0 else (255,0,0) 
                 elif self.data_source == 'hubmap':
                     # assert class_n == 0, f"Class to display is not 0, but hubmap should only contain class 0 objects."
                     color = (0,255,0) if class_n == 0 else (255,0,0) 

@@ -77,3 +77,8 @@ datetime,status,duration,exp_fold,dataset,batch_size,task,map_classes,epochs,til
 17/05/2023 15:25:31,started,0h 0m 0s,exp129,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",2,512,512,yolov5s.pt,None,/Users/marco/Downloads/zaneta_files/detection/tiles,True,8,2,testing
 17/05/2023 15:26:39,prepared,0h 0m 0s,exp129,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",2,512,512,yolov5s.pt,None,/Users/marco/Downloads/zaneta_files/detection/tiles,True,8,2,testing
 17/05/2023 15:29:11,prepared,0h 0m 0s,exp130,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",2,512,512,yolov5s.pt,None,/Users/marco/Downloads/zaneta_files/detection/tiles,True,8,2,testing
+17/05/2023 15:41:12,prepared,0h 0m 0s,exp131,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",2,512,512,yolov5s.pt,None,/Users/marco/Downloads/zaneta_files/detection/tiles,True,8,2,testing
+17/05/2023 15:57:36,prepared,0h 0m 0s,exp132,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",2,512,512,yolov5s.pt,None,/Users/marco/Downloads/zaneta_files/detection/tiles,True,8,2,testing
+17/05/2023 16:08:53,started,0h 0m 0s,exp133,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",2,512,512,yolov5s.pt,None,/Users/marco/Downloads/zaneta_files/detection/tiles,True,8,2,testing
+17/05/2023 16:35:15,prepared,0h 0m 0s,exp133,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",2,512,512,yolov5s.pt,None,/Users/marco/Downloads/zaneta_files/detection/tiles,True,8,2,testing
+17/05/2023 16:36:53,started,0h 0m 0s,exp134,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",2,512,512,yolov5s.pt,None,/Users/marco/Downloads/zaneta_files/detection/tiles,True,8,2,testing

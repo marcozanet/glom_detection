@@ -443,7 +443,7 @@ class CleanerMuw(ProfilerMUW):
 
         return
     
-    def _clean_muw(self): 
+    def _clean_hubmap(self): 
 
         if self.safe_copy is True:
             self._copy_tree()

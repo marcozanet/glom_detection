@@ -160,10 +160,11 @@ class Manager(ManagerBase):
             with open(file, 'w') as f: # read file
                 f.writelines(new_text)
 
+        self.log.info(f"Converted annotations to detection bboxes. ")
         # use self.tiler to show new images:
-        print('plotting images')
         # self.tiler.test_show_image_labels()
         print('plotting images done. ')
+
 
         return
     
@@ -271,14 +272,14 @@ class Manager(ManagerBase):
         if self.data_source == 'zaneta':
             # raise NotImplementedError()
             self._del_regions_smaller_than_tile_size()
-        else:
+        elif self.data_source == 'hubmap' or self.data_source == 'muw':
             self._clean_muw_dataset()
 
         # self._clean_muw_dataset()
 
-        if self.task == 'detection':
-            self._segmentation2detection()
-            self.log.info('segm 2 detection done')
+        # if self.task == 'detection':
+        #     self._segmentation2detection()
+        #     self.log.info('segm 2 detection done')
 
         return
     
