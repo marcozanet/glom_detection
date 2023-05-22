@@ -74,4 +74,4 @@ def test_yolo_infere_detect_hubmap_pas():
     return
 
 if __name__ == "__main__": 
-    test_yolo_infere_detect_muw_sfog()
+    test_yolo_infere_trainvaltest_muw_sfog_for_feature_extraction()

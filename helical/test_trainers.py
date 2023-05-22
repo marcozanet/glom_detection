@@ -8,18 +8,18 @@ def test_yolo_trainer_detect_muw_sfog():
 
     repository_dir = '/Users/marco/yolo/code/helical' if system == 'mac' else r'C:\marco\code\glom_detection\helical'
     yolov5dir = '/Users/marco/yolov5' if system == 'mac' else r'C:\marco\yolov5'
-    data_folder = '/Users/marco/Downloads/zaneta_files/detection/tiles' if system == 'mac' else r'D:\marco\datasets\yolo_detect_muw_sfog\detection'
+    data_folder = '/Users/marco/helical_tests/test_merge_muw_zaneta/tiles' if system == 'mac' else r'D:\marco\datasets\yolo_detect_muw_sfog\detection'
     # data_folder = '/Users/marco/helical_tests/test_yolo_detect_train_muw_sfog/detection/tiles' if system == 'mac' else r'D:\marco\datasets\yolo_detect_muw_sfog\detection'
     device = None if system == 'mac' else 'cuda:0'
     single_cls = False
     workers = 0 if system == 'mac' else 1
     map_classes = {'Glo-healthy':0, 'Glo-unhealthy':1} 
-    save_features = False
+    save_features = True
     tile_size = 512
     batch_size=20 if system == 'mac' else 4
-    epochs=2
+    epochs=50
     dataset = 'muw'
-    crossvalid_tot_kfolds = 8
+    crossvalid_tot_kfolds = 5
     crossvalid_cur_kfold = 2
     note = 'testing'
     detector = YOLO_Trainer_Detector(dataset = dataset, data_folder=data_folder, repository_dir=repository_dir, 

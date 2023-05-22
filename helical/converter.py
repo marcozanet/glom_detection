@@ -91,6 +91,10 @@ class Converter(ConverterBase):
                 # compute center: 
                 xc = np.array([tup[1] for tup in feat['geometry']['coordinates'][0]]).mean()
                 yc = np.array([tup[0] for tup in feat['geometry']['coordinates'][0]]).mean() # TODO CHECK THAT X E Y SONO NEL CORRETTO ORDINE
+                
+                if self.data_source == 'muw':
+                    xc, yc = yc, xc 
+
                 # if center outside sample rectangle, continue:
                 if not x_start<=xc<=x_end:
                     self.log.error(f'xc non cade dentro i vertici del rettangolo :{x_start}<={xc}<={x_end}. Skipping glom.')
@@ -124,9 +128,15 @@ class Converter(ConverterBase):
                 # try:
                 for xi, yi in file_coords:
                     # clip x and y: e.g. if xi exceeds x_min or x_max, take x_min or x_max as new xi
-                    clip_x, clip_y = xi, yi
-                    # clip_x, clip_y = (min(max(x_start, xi), x_end), min(max(y_start, yi), y_end) )
-                    xy = (clip_y - y_start, clip_x - x_start)
+                    if self.data_source == 'muw':
+                        clip_x, clip_y = xi, yi
+                        xy = (clip_x - x_start, clip_y - y_start)
+                    elif self.data_source == 'zaneta':
+                        clip_x, clip_y = (min(max(x_start, xi), x_end), min(max(y_start, yi), y_end) )
+                        xy = (clip_x - x_start, clip_y - y_start)
+                        xy = (clip_x, clip_y)
+                    else:
+                        raise NotImplementedError()
                     # if clipped_xy != (xi,yi):
                         # print(f"xi,yi: {xi,yi}")
                         # print(f"xi,yi clipped: {clipped_xy}")
@@ -429,7 +439,10 @@ class Converter(ConverterBase):
 
             for sample_n, gloms in enumerate(data_new['features']):
                 vertices = gloms['coordinates']
-                new_vertices = [ [int(x/w_0*w_lev), int(y/h_0*h_lev)] for x,y in vertices]
+                if self.data_source == 'zaneta':
+                    new_vertices = [ [int(x/w_0*w_lev), int(y/h_0*h_lev)] for x,y in vertices]
+                elif self.data_source == 'muw':
+                    new_vertices = [ [int(x/w_0*w_lev), int(y/h_0*h_lev)] for y,x in vertices]
                 data_new['features'][sample_n]['coordinates'] = new_vertices
 
             # new_geojson = geojson_file.replace('.geojson', 'copy.geojson')

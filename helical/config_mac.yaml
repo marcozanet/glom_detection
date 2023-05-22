@@ -19,10 +19,10 @@ readme: >
 ##################################################
 cnn_trainer:
   {
-    yolo_data_root: '/Users/marco/helical_tests/test_cnn_trainer/detection',
-    cnn_data_root: '/Users/marco/helical_tests/test_cnn_trainer',
+    yolo_data_root: '/Users/marco/helical_tests/test_cnn_trainer2/detection',
+    cnn_data_root: '/Users/marco/helical_tests/test_cnn_trainer2',
     map_classes: {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2},
-    yolo_exp_folds: ['/Users/marco/helical_tests/test_cnn_trainer/exp10', '/Users/marco/helical_tests/test_cnn_trainer/exp11','/Users/marco/helical_tests/test_cnn_trainer/exp12'], # exp30=test
+    yolo_exp_folds: [ '/Users/marco/helical_tests/test_cnn_trainer2/exp39','/Users/marco/helical_tests/test_cnn_trainer2/exp40'], # exp30=test
     lr: 0.001,
     k_tot: 4,
     k_i: 0,
@@ -68,11 +68,11 @@ test_yolo_infere_detect_muw_sfog:
   {
     repository_dir: '/Users/marco/yolo/code/helical',
     yolov5dir: '/Users/marco/yolov5',
-    images_dir: '/Users/marco/helical_tests/test_yolo_detect_train_muw_sfog/detection/tiles/val/images',
-    weights: '/Users/marco/helical_tests/test_yolo_detect_infere_muw_sfog/best.pt',
+    images_dir: '/Users/marco/helical_tests/test_merge_muw_zaneta/tiles/train/images',
+    weights: '/Users/marco/yolov5/runs/train/exp139/weights/best.pt',
     save_crop: True,
     augment: False,
-    conf_thres: 0.304,
+    conf_thres: 0.23,
     visualize: False, 
     save_txt: True
   }
@@ -116,32 +116,34 @@ mil_trainer:
 ##################################################
 yolo_processor:
   {
-    src_root : '/Users/marco/Downloads/zaneta_files',
+    # src_root : '/Users/marco/Downloads/zaneta_files',
+    src_root : '/Users/marco/helical_datasets/muw_sfog',
     # src_root : '/Users/marco/Downloads/example_images_zaneta',
     # src_root : '/Users/marco/helical_tests/test_manager_segm_hubmap_pas',
-    # src_root : '/Users/marco/helical_datasets/muw_sfog',
+    # src_root : '/Users/marco/helical_tests/test_manager_detect_muw_sfog',
     # dst_root : '/Users/marco/Downloads/example_images_zaneta', 
-    dst_root : '/Users/marco/Downloads/zaneta_files', 
+    dst_root : '/Users/marco/helical_datasets/muw_sfog', 
+    # dst_root : '/Users/marco/Downloads/zaneta_files', 
     # dst_root : '/Users/marco/helical_tests/test_manager_segm_hubmap_pas', 
-    # dst_root : '/Users/marco/helical_datasets/muw_sfog', 
+    # dst_root : '/Users/marco/helical_tests/test_manager_detect_muw_sfog', 
     slide_format : 'tif',
     label_format : 'json',
     split_ratio : [0.70, 0.15, 0.15],  
-    data_source : 'zaneta',
+    # data_source : 'zaneta',
     # data_source : 'hubmap',
-    # data_source : 'muw',
-    # map_classes: {'Glo-unhealthy':0, 'Glo-NA':1, 'Glo-healthy':2, 'Tissue':3},
-    map_classes: {'Glo-unhealthy':1, 'Glo-healthy':0},
+    data_source : 'muw',
+    map_classes: {'Glo-unhealthy':0, 'Glo-NA':1, 'Glo-healthy':2, 'Tissue':3},
+    # map_classes: {'Glo-unhealthy':1, 'Glo-healthy':0},
     # map_classes: {'glomerulus':0}, 
     task : 'detection',
     verbose : True,
     safe_copy : False,
     tiling_shape : (2048,2048),
     tiling_step : 1024,
-    tiling_level : 0,
-    tiling_show : True,
-    stain: 'pas',
-    # stain: 'sfog',
+    tiling_level : 2,
+    tiling_show : False,
+    # stain: 'pas',
+    stain: 'sfog',
     multiple_samples: True,
     resize: (512,512),
   }

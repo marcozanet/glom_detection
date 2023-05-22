@@ -82,3 +82,10 @@ datetime,status,duration,exp_fold,dataset,batch_size,task,map_classes,epochs,til
 17/05/2023 16:08:53,started,0h 0m 0s,exp133,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",2,512,512,yolov5s.pt,None,/Users/marco/Downloads/zaneta_files/detection/tiles,True,8,2,testing
 17/05/2023 16:35:15,prepared,0h 0m 0s,exp133,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",2,512,512,yolov5s.pt,None,/Users/marco/Downloads/zaneta_files/detection/tiles,True,8,2,testing
 17/05/2023 16:36:53,started,0h 0m 0s,exp134,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",2,512,512,yolov5s.pt,None,/Users/marco/Downloads/zaneta_files/detection/tiles,True,8,2,testing
+19/05/2023 14:52:03,prepared,0h 0m 0s,exp138,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",2,512,512,yolov5s.pt,None,/Users/marco/helical_tests/test_merge_muw_zaneta/tiles,True,5,2,testing
+19/05/2023 14:52:10,completed,1h 7m 24s,exp138,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",2,512,512,yolov5s.pt,None,/Users/marco/helical_tests/test_merge_muw_zaneta/tiles,True,5,2,testing
+19/05/2023 18:21:55,completed,5h 27m 8s,exp139,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",10,512,512,yolov5s.pt,None,/Users/marco/helical_tests/test_merge_muw_zaneta/tiles,True,5,2,testing
+20/05/2023 22:09:26,completed,15h 51m 21s,exp140,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",30,512,512,yolov5s.pt,None,/Users/marco/helical_tests/test_merge_muw_zaneta/tiles,True,5,2,testing
+21/05/2023 15:39:28,prepared,0h 0m 0s,exp141,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",50,512,512,yolov5s.pt,None,/Users/marco/helical_tests/test_merge_muw_zaneta/tiles,True,5,2,testing
+22/05/2023 14:59:48,prepared,0h 0m 0s,exp142,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",50,512,512,yolov5s.pt,None,/Users/marco/helical_tests/test_merge_muw_zaneta/tiles,True,5,2,testing
+22/05/2023 16:53:48,prepared,0h 0m 0s,exp143,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",50,512,512,yolov5s.pt,None,/Users/marco/helical_tests/test_merge_muw_zaneta/tiles,True,5,2,testing

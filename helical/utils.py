@@ -8,7 +8,7 @@ from yaml import SafeLoader
 def get_config_params(set_params_name:str) -> dict:
 
     system = 'mac' if sys.platform == 'darwin' else 'windows'
-    config_fp = 'config_mac.yaml' if system == 'mac' else 'config_windows.yaml'
+    config_fp = '/Users/marco/yolo/code/helical/config_mac.yaml' if system == 'mac' else 'config_windows.yaml'
     with open(config_fp, 'r') as f: 
         all_params = yaml.load(f, Loader=SafeLoader)
     params = all_params[set_params_name]

@@ -73,13 +73,21 @@ def train_model(model, dataloader_cls, dataloaders,
     since = time.time()
     best_model_wts = copy.deepcopy(model.state_dict())
     best_acc = 0.0
-    device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
+    # device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
+    device = 'mps'
+    device = print(f"Device: {device}")
     
     avg_loss = 0
     avg_acc = 0
     avg_loss_val = 0
     avg_acc_val = 0
     
+    model.to(device)
+    print(f"Model is on '{next(model.parameters()).device}'")
+    model = model.to(device)
+    print(f"Model is on '{next(model.parameters()).device}'")
+    criterion = criterion.to(device)
+    # print(f"Criterion is on '{criterion.device}'")
     train_batches = len(dataloaders['train'])
     val_batches = len(dataloaders['val'])
     
@@ -103,7 +111,7 @@ def train_model(model, dataloader_cls, dataloaders,
             #     break
             inputs, labels = data
             t_batch = labels.shape[0]
-            inputs.to(device), labels.to(device)
+            inputs, labels = inputs.to(device), labels.to(device)
             
             
             optimizer.zero_grad()
@@ -136,6 +144,7 @@ def train_model(model, dataloader_cls, dataloaders,
             acc_train += (torch.sum(preds == true_classes) / t_batch) # number true classes for all images in batch
 
             # raise NotImplementedError()
+            # assert inputs.is_cuda
             
             del inputs, labels, outputs, preds
             torch.cuda.empty_cache()
@@ -152,7 +161,8 @@ def train_model(model, dataloader_cls, dataloaders,
             #     print("\rValidation batch {}/{}".format(i, val_batches), end='', flush=True)
                 
             inputs, labels = data
-            inputs.to(device), labels.to(device)
+            inputs, labels = inputs.to(device), labels.to(device)
+
             v_batch = labels.shape[0]
             optimizer.zero_grad()
             

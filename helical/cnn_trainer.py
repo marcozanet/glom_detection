@@ -30,7 +30,9 @@ dataset = PARAMS['dataset']
 task = PARAMS['task']
 resize_crops = PARAMS['resize_crops']
 treat_as_single_class = PARAMS['treat_as_single_class']
-device='cuda:0' if torch.cuda.is_available() else 'cpu'
+device='mps'
+# device='cuda:0' if torch.cuda.is_available() else 'cpu'
+print(f"Device: {device}")
 now = datetime.now()
 dt_string = now.strftime("%Y_%m_%d__%H_%M_%S")
 weights_save_fold = cnn_exp_fold +f"_{dt_string}"
@@ -54,6 +56,8 @@ print("-"*10)
 dataloader_cls = CNNDataLoaders(root_dir=cnn_data_fold, map_classes=map_classes, batch=batch, num_workers=num_workers)
 dataloaders = dataloader_cls()
 
+# raise NotImplementedError()
+
 # Load the pretrained model from pytorch
 print("-"*10)
 print(f"VGG16 definition")
@@ -67,6 +71,9 @@ num_features = vgg16.classifier[6].in_features
 features = list(vgg16.classifier.children())[:-1] # Remove last layer
 features.extend([nn.Linear(num_features, len(map_classes))]) # Add our layer; num classes + 1 because also false-positives = bg
 vgg16.classifier = nn.Sequential(*features) # Replace the model classifier
+
+# plot labels
+
 
 # train model 
 print("-"*10)

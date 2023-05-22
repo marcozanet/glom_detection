@@ -6,7 +6,7 @@ from utils import get_config_params
 def test_yolo_processor(): 
 
     PARAMS = get_config_params('yolo_processor')
-    src_root = PARAMS['src_root']
+    src_root = PARAMS['src_root']   
     dst_root = PARAMS['dst_root']
     slide_format = PARAMS['slide_format']
     label_format = PARAMS['label_format']

@@ -128,6 +128,23 @@ def merge_datasets(dataset1: str, dataset2:str, dst_root:str, safe_copy:bool=Tru
             merged_dict.update(ntiles_dict2)
         if len(merged_dict)>0:
             _write_merged_ntiles(_set_=_set_) # write merged one
+    
+    def merge_json_files(src:str, dst:str):
+        """ Merges json files"""
+        try:
+            with open(src, 'r') as f: 
+                data1 = json.load(f)
+            with open(dst, 'r') as f: 
+                data2 = json.load(f)
+        except: 
+            raise Exception(f"Couldn't read {dst} or {src}.")
+        
+        assert isinstance(data1, dict) and isinstance(data2, dict)
+        json_merge = data2.update(data1)
+        with open(dst, 'w') as f: 
+            json.dump(json_merge, f)
+
+        return json_merge
 
     # move data from dataset1:
     for src_fp, dst_fp in tqdm(src2dst1, desc='copying dataset1'):
@@ -135,14 +152,18 @@ def merge_datasets(dataset1: str, dataset2:str, dst_root:str, safe_copy:bool=Tru
             if not os.path.isfile(dst_fp):
                 shutil.copy(src=src_fp, dst=dst_fp)
 
-    # move data from dataset1:
+    # move data from dataset2:
     for src_fp, dst_fp in tqdm(src2dst2, desc='copying dataset2'):
         if safe_copy:
-            if not os.path.isfile(dst_fp) and 'n_tiles.json' not in dst_fp: # original n_tiles are not to be copied
+            if not os.path.isfile(dst_fp) and 'n_tiles.json' not in dst_fp: #original n_tiles are not to be copied
                 shutil.copy(src=src_fp, dst=dst_fp)
+            elif os.path.isfile(dst_fp) and 'n_tiles.json' in src_fp and 'n_tiles.json' in dst_fp:
+                merge_json_files(src=src_fp, dst=dst_fp)
+                
+
     data12 = glob(os.path.join(dst_root, '*', '*', '*', '*'))
     len1, len2, len12 = len(data1), len(data2), len(data12)
-    assert ((len1 + len2)-3)<len12<((len1 + len2)+3), f"Merged files are {len12}, but dataset1({len1}) + dataset2({len2}) = dataset12({len12})." # +-3 because n_tiles.json files are to be excluded.
+    assert ((len1 + len2)-6)<len12<((len1 + len2)+6), f"Merged files are {len12}, but dataset1({len1}) + dataset2({len2}) = dataset12({len12})." # +-3 because n_tiles.json files are to be excluded.
 
     return
 
@@ -198,8 +219,8 @@ def test_switch_healthy_unhealthy_labels():
 
 def test_merge_datasets():
 
-    dataset1 = '/Users/marco/helical_tests/test_merge_dataset'
-    dataset2 = '/Users/marco/Downloads/zaneta_files/detection'
+    dataset1 = '/Users/marco/helical_tests/test_merge_hubmap_sfog'
+    dataset2 = '/Users/marco/Downloads/zaneta_files/detection' 
     dst_root = '/Users/marco/helical_tests/test_merge_hubmap_sfog_zaneta'
     merge_datasets(dataset1=dataset1, dataset2=dataset2, dst_root=dst_root)
 
@@ -286,9 +307,9 @@ def edit_yaml(root: str = False, test_folder: str = False ):
 
 
 if __name__ == '__main__':
-    # test_merge_datasets()
-    root='/Users/marco/Downloads/zaneta_files'
-    task='detection'
-    data_source='zaneta'
-    for _ in range(8):
-        show_image_labels(root=root, data_source=data_source, task=task)
+    test_merge_datasets()
+    # root='/Users/marco/Downloads/zaneta_files'
+    # task='detection'
+    # data_source='zaneta'
+    # for _ in range(8):
+    #     show_image_labels(root=root, data_source=data_source, task=task)

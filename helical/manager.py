@@ -151,8 +151,9 @@ class Manager(ManagerBase):
                 x = np.array([float(el) for el in x])
                 y = [el for (j,el) in enumerate(items) if j%2 != 0]
                 y = np.array([float(el) for el in y])
-                x_min, x_max = str(x.min()), str(x.max())
-                y_min, y_max = str(y.min()), str(y.max())
+                x_min, x_max = x.min(), x.max()
+                y_min, y_max = y.min(), y.max()
+                # xc, yc = (x_max-x_min)/2, (y_max-y_min)/2
                 new_text += str(class_n)
                 new_text += f" {x_min} {y_min} {x_max} {y_min} {x_max} {y_max} {x_min} {y_max}"
                 new_text += '\n'
@@ -277,9 +278,9 @@ class Manager(ManagerBase):
 
         # self._clean_muw_dataset()
 
-        # if self.task == 'detection':
-        #     self._segmentation2detection()
-        #     self.log.info('segm 2 detection done')
+        if self.task == 'detection':
+            self._segmentation2detection()
+            self.log.info('segm 2 detection done')
 
         return
     

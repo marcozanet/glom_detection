@@ -119,7 +119,10 @@ class CropLabeller():
         tot_moved_images = glob(os.path.join(self.exp_data, 'crops_true_classes', '*', '*.jpg'))
         for img_fp in tqdm(tot_moved_images, 'resizing'): 
             image = cv2.imread(img_fp, cv2.COLOR_BGR2RGB)
-            image = cv2.resize(image, dsize=(224, 224))
+            try:
+                image = cv2.resize(image, dsize=(224, 224))
+            except:
+                raise Exception(f"Couldn't resize {os.path.basename(img_fp)}")
             cv2.imwrite(img_fp, image)
 
         return
@@ -127,8 +130,8 @@ class CropLabeller():
 
     def assign_all_labels(self) -> None:
         """ Assign a class to all crops and saving the mapping into the self.crop_class_dict"""
-        
-        assert len(self.tot_pred_labels)>0, f"'tot_pred_labels' = glob({os.path.join(self.exp_data, 'labels', '*.txt')}) is empty."
+        if len(self.tot_pred_labels)==0:
+            print(f"'tot_pred_labels' = glob({os.path.join(self.exp_data, 'labels', '*.txt')}) is empty.")
         tot_true_labels = {}
         for pred_lbl in tqdm(self.tot_pred_labels, desc='Labelling crops'): 
             gt_classes = self.assign_class(pred_lbl=pred_lbl)
@@ -168,13 +171,24 @@ class CropLabeller():
             nums = row.split(' ')
             clss = int(float(nums[0]))
             nums = [float(num) for num in nums[1:]]
-            assert len(nums) == 4, f"there should be 4 objects apart from class"
-            x_c, y_c, w, h = nums
+            if len(nums) == 4:
+                x_c, y_c, w, h = nums
+            elif len(nums) == 8: 
+                x_min, y_min, x_max, y_min, x_max, y_max, x_min, y_max = nums
+                x_c, y_c = x_min + (x_max-x_min)/2, y_min + (y_max-y_min)/2
+                w, h = x_max-x_min, y_max-y_min
+                assert all([el>=0 for el in [x_c, y_c, w, h]])
+                assert x_c-w/2 == x_min, f"{x_c}-{w}/2 != {x_min}. Result is: {x_c-w/2}. "
+            else:
+                print(f"there should be 4 or 8 objects apart from class but are {len(nums)}")
+
             return clss, x_c, y_c, w, h
+        
         
         # check if falls in any of the true objs
         gt_classes = {}
         for i, pred_row in enumerate(pred_rows): # for each pred obj
+            # print(self.img_size[0])
             crop_fn = lbl2cropfn(pred_lbl=pred_lbl, crop_n=i)
             crop_fp = cropfn_2_cropfp(crop_fn=crop_fn)
             p_clss, p_xc, p_yc, p_w, p_h = get_objs_from_row_txt_label(pred_row)
@@ -184,8 +198,14 @@ class CropLabeller():
                 min_x, max_x = max(g_xc - g_w/2, 0), min(g_xc + g_w/2, self.img_size[0])
                 min_y, max_y = max(g_yc - g_h/2, 0), min(g_yc + g_h/2, self.img_size[1])
                 if min_x<=p_xc<=max_x and min_y<=p_yc<=max_y: # look if pred center falls into true obj
+                    if  g_w> 0.5 or g_h> 0.5: #NB IGNORE OBJECTS BIGGER THAN HALF THE TILE! (NO GLOMS LIKE THIS AT LEVEL 2 OF TILING)
+                        continue 
                     matching_gloms.append((g_clss, g_xc, g_yc, g_w, g_h))
-            
+                    if len(matching_gloms)>1:
+                        print(f"WARNING: glom in file {os.path.basename(pred_lbl)} has multiple matching true gloms. Assigning class of the closest.")
+                        print(f"{min_x}<={p_xc}<={max_x} and {min_y}<={p_yc}<={max_y} \n matching gloms: {matching_gloms}")
+                        # raise NotADirectoryError()
+
             if len(matching_gloms) == 0: # if no pred obj does, maybe the model detected a part of an obj:
                 pred_obj = {'p_clss':p_clss, 'p_xc':p_xc, 'p_yc':p_yc, 'p_w':p_w, 'p_h':p_h}
                 for gt_row in gt_rows: # for each true label obj
@@ -211,12 +231,18 @@ class CropLabeller():
             
             elif len(matching_gloms) > 1: # if multiple matches for same pred obj:
                 # compute dist between pred glom and the (many) matching gt_gloms
+                # print(f'multiple matches for {pred_lbl} \nand {gt_lbl}')
+                # print(f"pred obj has center: {p_xc, p_yc}")
+                # print(f"Matching gloms: {matching_gloms}")
+                # raise NotImplementedError()
                 min_dist = 99999999
-                print("warning: multiple matching gloms for one pred glom in labeller not tested")
-                for gt_glom in matching_gloms:
+                # print("warning: multiple matching gloms for one pred glom in labeller not tested")
+                for j, gt_glom in enumerate(matching_gloms):
                     dist = eucl_dist(point1 = (p_xc, p_yc), point2= gt_glom[1:3])
                     min_dist = dist if dist < min_dist else min_dist
-                    raise NotImplementedError()
+                    min_class = matching_gloms[j][0]
+                gt_class = min_class
+                   
                 
             gt_classes.update({crop_fp:gt_class})
             
@@ -226,6 +252,7 @@ class CropLabeller():
     def __call__(self) -> None:
         """ Assigns a label for all the crops, moves them in folds named after their true classes 
             and resizes images to match the CNN input. """
+        
         self._parse()
         self.assign_all_labels()
         self.move_assigned_crops()
@@ -237,9 +264,10 @@ class CropLabeller():
 
 
 if __name__ == "__main__": 
-    root_data = '/Users/marco/helical_tests/test_yolo_detect_train_muw_sfog/detection'
-    exp_data = '/Users/marco/yolov5/runs/detect/exp30'
-    map_classes = {'Glo-healthy':1, 'Glo-unhealthy':0} 
+    root_data = '/Users/marco/helical_tests/test_merge_muw_zaneta'
+    exp_data = '/Users/marco/helical_tests/test_cnn_trainer2/exp40'
+    map_classes = {'Glo-healthy':0, 'Glo-unhealthy':1} 
     resize = True
-    labeller = CropLabeller(root_data=root_data, exp_data=exp_data, map_classes=map_classes, resize = resize)
+    labeller = CropLabeller(root_data=root_data, exp_data=exp_data, 
+                            map_classes=map_classes, resize = resize)
     labeller()
