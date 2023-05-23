@@ -30,8 +30,8 @@ dataset = PARAMS['dataset']
 task = PARAMS['task']
 resize_crops = PARAMS['resize_crops']
 treat_as_single_class = PARAMS['treat_as_single_class']
-device='mps'
-# device='cuda:0' if torch.cuda.is_available() else 'cpu'
+# device='mps' 
+device='cuda:0' if torch.cuda.is_available() else 'cpu'
 print(f"Device: {device}")
 now = datetime.now()
 dt_string = now.strftime("%Y_%m_%d__%H_%M_%S")
@@ -68,20 +68,18 @@ for param in vgg16.features.parameters():
     param.require_grad = False
 # Newly created modules have require_grad=True by default
 num_features = vgg16.classifier[6].in_features
-features = list(vgg16.classifier.children())[:-1] # Remove last layer
-features.extend([nn.Linear(num_features, len(map_classes))]) # Add our layer; num classes + 1 because also false-positives = bg
-vgg16.classifier = nn.Sequential(*features) # Replace the model classifier
+vgg16.classifier[-1]= nn.Linear(num_features, len(map_classes))
+vgg16.to(device)
 
 # plot labels
-
 
 # train model 
 print("-"*10)
 print(f"Train Model")
 print("-"*10)
-model = vgg16
+# model = vgg16
 criterion = nn.BCEWithLogitsLoss()
-optimizer_ft = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
+optimizer_ft = torch.optim.SGD(vgg16.parameters(), lr=lr, momentum=0.9)
 exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
 vgg16 = train_model(model=vgg16, dataloader_cls=dataloader_cls, dataloaders=dataloaders, 
                     criterion=criterion, optimizer=optimizer_ft, scheduler=exp_lr_scheduler, num_epochs=epochs)
