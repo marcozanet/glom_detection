@@ -39,7 +39,8 @@ cnn_trainer:
     dataset: 'muw',
     task: 'detection',
     resize_crops: True,
-    treat_as_single_class: False
+    treat_as_single_class: False,
+    device: 'cuda:0'
   }
 
 

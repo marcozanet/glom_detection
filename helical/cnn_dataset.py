@@ -77,6 +77,7 @@ class CNNDataset(Dataset):
         img_fp = self.image_list[idx] 
         img = io.imread(img_fp)
         image = self.transform(image=img)['image']
+        image = image.float()
         image = image / 255
         # print(f"max: {image.max()}, min: {image.min()}")
 
@@ -89,6 +90,9 @@ class CNNDataset(Dataset):
         # TODO TRANSFORM THIS IN TORCH
 
         # print(f"image size: {image.shape}, label size: {label.shape}")
+        assert isinstance(image, torch.Tensor), f"{type(image)}"
+        assert isinstance(label, torch.Tensor), f"{type(label)}"
+
 
         return image, label
     

@@ -25,6 +25,7 @@ class CropLabeller():
         self.tot_crops = glob(os.path.join(self.exp_data, 'crops', "*", '*.jpg'))
         self.map_classes = {v:k for v,k in map_classes.items() if k!='false_positives'} 
         self.resize = resize
+        self.resize_shape = (224,224)
         # self.false_pos_clss = map_classes['false_positives']
         return
     
@@ -89,6 +90,50 @@ class CropLabeller():
 
         return img_dims
     
+    def resize_with_pad(self, image_fp: np.array, new_shape: tuple,
+                        padding_color: tuple = (255, 255, 255)) -> np.array:
+        """Maintains aspect ratio and resizes with padding.
+        Params:
+            image: Image to be resized.
+            new_shape: Expected (width, height) of new image.
+            padding_color: Tuple in BGR of padding color
+        Returns:
+            image: Resized image with padding
+        """
+        
+        image = cv2.imread(image_fp, cv2.COLOR_BGR2RGB)
+        original_shape = (image.shape[1], image.shape[0])
+        ratio = float(max(new_shape))/max(original_shape)
+        new_size = tuple([int(x*ratio) for x in original_shape])
+        image = cv2.resize(image, new_size)
+        delta_w = new_shape[0] - new_size[0]
+        delta_h = new_shape[1] - new_size[1]
+        top, bottom = delta_h//2, delta_h-(delta_h//2)
+        left, right = delta_w//2, delta_w-(delta_w//2)
+        image = cv2.copyMakeBorder(image, top, bottom, left, right, cv2.BORDER_CONSTANT, value=padding_color)
+        cv2.imwrite(filename=image_fp, img=image)
+        # print(f"Saving img at {image_fp}")
+        # raise NotImplementedError()
+
+        return 
+    
+    def pad_all_images(self, new_shape: tuple, padding_color: tuple = (255, 255, 255)) -> np.array:
+        """ Pads all images into a new shape. """
+
+
+        assert os.path.isdir(self.root_data), f"root_data:{self.root_data} is not a valid dirpath."
+        all_images = glob(os.path.join(self.exp_data, 'crops', "*", "*.jpg"))
+        assert len(all_images)>0, f"No images like {os.path.join(self.exp_data, 'crops', '*', '*.jpg')} found in dataset."
+        all_images = list(filter(self.is_image_to_copy, all_images))
+
+        for img in tqdm(all_images, 'padding images'):
+            # if self.is_image_to_copy(crop_fp=img):
+            self.resize_with_pad(image_fp=img, new_shape=new_shape, padding_color=padding_color)
+        
+
+
+        return
+    
 
     def move_assigned_crops(self) -> None: 
         """ Copies crops into a folder which represent the true class for those crops. """
@@ -106,10 +151,22 @@ class CropLabeller():
             old = crop_fp
             # fold_map
             new = os.path.join(self.exp_data, 'crops_true_classes', map_class2fold_map[crop_clss], os.path.basename(crop_fp))
-            if not os.path.isfile(new):
-                shutil.copy(src = old, dst = new)
+            if self.is_image_to_copy(crop_fp=crop_fp):
+                if not os.path.isfile(new):
+                    shutil.copy(src = old, dst = new)
         
         return
+    
+    def is_image_to_copy(self, crop_fp:str)->bool: 
+        """ Returns True if image is to copy. If e.g. image is a small crop, it is not to be copied. """
+        
+        is_to_copy = True
+        crop = cv2.imread(crop_fp, cv2.COLOR_BGR2RGB)
+        w, h = crop.shape[0], crop.shape[1]
+        if w < h*0.7 or h < w*0.7:
+            is_to_copy = False
+
+        return is_to_copy
     
 
     def resize_images(self) -> None:
@@ -120,9 +177,10 @@ class CropLabeller():
         for img_fp in tqdm(tot_moved_images, 'resizing'): 
             image = cv2.imread(img_fp, cv2.COLOR_BGR2RGB)
             try:
-                image = cv2.resize(image, dsize=(224, 224))
+                image = cv2.resize(image, dsize=self.resize_shape)
             except:
                 raise Exception(f"Couldn't resize {os.path.basename(img_fp)}")
+                continue
             cv2.imwrite(img_fp, image)
 
         return
@@ -130,6 +188,7 @@ class CropLabeller():
 
     def assign_all_labels(self) -> None:
         """ Assign a class to all crops and saving the mapping into the self.crop_class_dict"""
+
         if len(self.tot_pred_labels)==0:
             print(f"'tot_pred_labels' = glob({os.path.join(self.exp_data, 'labels', '*.txt')}) is empty.")
         tot_true_labels = {}
@@ -254,6 +313,7 @@ class CropLabeller():
             and resizes images to match the CNN input. """
         
         self._parse()
+        self.pad_all_images(new_shape=self.resize_shape)
         self.assign_all_labels()
         self.move_assigned_crops()
         if self.resize: 

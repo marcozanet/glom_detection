@@ -68,14 +68,14 @@ def prepare_data(cnn_root_fold:str, map_classes:dict, batch:int, num_workers:int
     # return  dataloader
 
 
-def train_model(model, dataloader_cls, dataloaders, 
+def train_model(model, dataloader_cls, dataloaders, device,
                 criterion, optimizer, scheduler, num_epochs=10):
     since = time.time()
     best_model_wts = copy.deepcopy(model.state_dict())
     best_acc = 0.0
     # device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
-    device = 'mps'
-    device = print(f"Device: {device}")
+    # device = 'mps'
+    # device = print(f"Device: {device}")
     
     avg_loss = 0
     avg_acc = 0
@@ -84,10 +84,7 @@ def train_model(model, dataloader_cls, dataloaders,
     
     model.to(device)
     print(f"Model is on '{next(model.parameters()).device}'")
-    model = model.to(device)
-    print(f"Model is on '{next(model.parameters()).device}'")
     criterion = criterion.to(device)
-    # print(f"Criterion is on '{criterion.device}'")
     train_batches = len(dataloaders['train'])
     val_batches = len(dataloaders['val'])
     
@@ -111,28 +108,19 @@ def train_model(model, dataloader_cls, dataloaders,
             #     break
             inputs, labels = data
             t_batch = labels.shape[0]
-            inputs, labels = inputs.to(device), labels.to(device)
+            inputs = inputs.to(device)
+            labels =  labels.to(device)
+
+            # print(inputs.type())
+            # print(labels.type())
             
             
             optimizer.zero_grad()
             
             outputs = model(inputs)
-            # print(f"ouput data: {outputs.data.shape}")
-            # print(outputs.data)
-            # print(f"preds: {torch.max(outputs.data, 1, keepdim=True)}")
-            
             _, preds = torch.max(outputs.data, 1, keepdim=True)
             _, true_classes = torch.max(labels.data, 1, keepdim=True)
 
-            # print(f"\nlabels:{labels}")
-            # print(f"\nouputs:{outputs.data}")
-            # print(f"\npreds:{preds}")
-            # print(f"\ntrue classes:{true_classes}")
-
-            # raise NotImplementedError()
-            # print(f"\noutputs shape: {outputs.shape}")
-            # print(f"labels shape: {labels.data.shape}")
-            # print(f"labels shape: {labels.data.argmax(dim=1).shape}")
             loss = criterion(outputs, labels.data)
             
             loss.backward()
@@ -166,8 +154,8 @@ def train_model(model, dataloader_cls, dataloaders,
             v_batch = labels.shape[0]
             optimizer.zero_grad()
             
+            # raise NotImplementedError()
             outputs = model(inputs)
-            
             _, preds = torch.max(outputs.data, 1, keepdim=True)
             # print(f"\noutputs shape: {outputs.shape}")
             # print(f"labels shape: {labels.data.shape}")
@@ -224,7 +212,7 @@ def eval_model(model, dataloader_cls, dataloaders, criterion):
         v_batch = labels.shape[0]
 
         # inputs, labels = data
-        inputs.to(device), labels.to(device)
+        inputs, labels = inputs.to(device), labels.to(device)
 
         outputs = model(inputs)
         # print(f"\noutputs shape: {outputs.shape}")
@@ -238,7 +226,7 @@ def eval_model(model, dataloader_cls, dataloaders, criterion):
 
         del inputs, labels, outputs, preds
         torch.cuda.empty_cache()
-    print(dataloader_cls.valset_size)
+    # print(dataloader_cls.valset_size)
     avg_loss = loss_test / dataloader_cls.valset_size
     avg_acc = acc_test / dataloader_cls.valset_size
     

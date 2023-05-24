@@ -30,9 +30,9 @@ dataset = PARAMS['dataset']
 task = PARAMS['task']
 resize_crops = PARAMS['resize_crops']
 treat_as_single_class = PARAMS['treat_as_single_class']
-# device='mps' 
-device='cuda:0' if torch.cuda.is_available() else 'cpu'
-print(f"Device: {device}")
+device = PARAMS['device']
+gpu = 'cuda:0' if torch.cuda.is_available() else 'cpu'
+device = device if device == 'mps' else gpu
 now = datetime.now()
 dt_string = now.strftime("%Y_%m_%d__%H_%M_%S")
 weights_save_fold = cnn_exp_fold +f"_{dt_string}"
@@ -81,7 +81,7 @@ print("-"*10)
 criterion = nn.BCEWithLogitsLoss()
 optimizer_ft = torch.optim.SGD(vgg16.parameters(), lr=lr, momentum=0.9)
 exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
-vgg16 = train_model(model=vgg16, dataloader_cls=dataloader_cls, dataloaders=dataloaders, 
+vgg16 = train_model(model=vgg16, dataloader_cls=dataloader_cls, dataloaders=dataloaders, device=device,
                     criterion=criterion, optimizer=optimizer_ft, scheduler=exp_lr_scheduler, num_epochs=epochs)
 os.makedirs(weights_save_fold)
 torch.save(vgg16.state_dict(), os.path.join(weights_save_fold, 'VGG16_v2-OCT_Retina_half_dataset.pt'))
