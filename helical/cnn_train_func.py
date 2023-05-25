@@ -54,7 +54,7 @@ def show_data(images:torch.Tensor, pred_lbl:torch.Tensor,
         plt.imshow(inp)
         if title is not None:
             plt.title(title)
-        fig.savefig(f"cnn_epoch{n_epoch}.png")
+        fig.savefig(f"cnn_training.png")
         plt.close()
         return
 
