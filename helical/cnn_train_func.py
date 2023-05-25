@@ -62,10 +62,10 @@ def show_data(images:torch.Tensor, pred_lbl:torch.Tensor,
     pred_lbl = pred_lbl.cpu()
     gt_lbl = gt_lbl.cpu()
     out = torchvision.utils.make_grid(images)
-    onehot2int = lambda tensor: tensor.argmax() 
+    onehot2int = lambda tensor: int(tensor.numpy())
     reversed_map_classes = {v:k for k,v in map_classes.items()}
-    pred_titles = [reversed_map_classes[int(onehot2int(x))] for x in pred_lbl]
-    gt_titles = [reversed_map_classes[int(onehot2int(x))] for x in gt_lbl]
+    pred_titles = [reversed_map_classes[onehot2int(x)] for x in pred_lbl]
+    gt_titles = [reversed_map_classes[onehot2int(x)] for x in gt_lbl]
     title = [f"P:{pr}_GT:{gt}" for pr, gt in zip(pred_titles, gt_titles)]
 
     imshow(out, title=title, n_epoch=n_epoch)
@@ -105,9 +105,10 @@ def train_model(model, dataloader_cls, dataloaders, device, map_classes,
             # if i % 100 == 0:
             #     print("\rTraining batch {}/{}".format(i, train_batches / 2), end='', flush=True)
                 
-            # # Use half training dataset
-            # if i >= train_batches / 2:
+            # Use half training dataset
+            # if i >= len(dataloaders['train']) / 100:
             #     break
+
             inputs, labels = data
             t_batch = labels.shape[0]
             inputs = inputs.to(device)
