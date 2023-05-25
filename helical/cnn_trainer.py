@@ -78,7 +78,7 @@ print("-"*10)
 print(f"Train Model")
 print("-"*10)
 # model = vgg16
-criterion = nn.BCEWithLogitsLoss()
+criterion = nn.CrossEntropyLoss()
 optimizer_ft = torch.optim.SGD(vgg16.parameters(), lr=lr, momentum=0.9)
 exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
 vgg16 = train_model(model=vgg16, dataloader_cls=dataloader_cls, dataloaders=dataloaders, device=device, map_classes=map_classes,
