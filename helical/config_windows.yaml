@@ -30,7 +30,7 @@ cnn_trainer:
     weights_path: 'C:\Users\hp/.cache\torch\hub\checkpoints\vgg16_bn-6c64b313.pth',
     cnn_exp_fold: 'D:\marco\cnn_model\exps',
     map_classes: {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2}, 
-    lr: 0.01,
+    lr: 0.00005,
     k_tot: 5,
     k_i: 0,
     batch: 4,

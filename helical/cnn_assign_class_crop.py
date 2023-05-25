@@ -5,7 +5,8 @@ import numpy as np
 import cv2
 from tqdm import tqdm
 from skimage.draw import rectangle
-
+import albumentations as A
+import random
 root_data: str # from here ground truth label. Should be a dataset wsi/tiles -> train/val/test -> images/labels
 exp_data: str # from here pred label
 
@@ -127,8 +128,6 @@ class CropLabeller():
         for img in tqdm(all_images, 'Padding crops'):
             self.resize_with_pad(image_fp=img, new_shape=new_shape, padding_color=padding_color)
         
-
-
         return
     
 
@@ -287,6 +286,55 @@ class CropLabeller():
             gt_classes.update({crop_fp:gt_class})
             
         return gt_classes
+    
+    def balance_dataset(self):
+
+        # get images
+        classes_folds = [ os.path.join(self.exp_data, 'crops_true_classes', fold) for fold in os.listdir(os.path.join(self.exp_data, 'crops_true_classes'))]
+        classes_folds = [ fold for fold in classes_folds if os.path.isdir(fold)]
+        assert len(classes_folds) > 0
+        classes_n_images = {clss_fp: len(os.listdir(clss_fp)) for clss_fp in classes_folds}
+        max_n_imgs = max(classes_n_images.values())
+
+        # albumentations funcs
+        transform = A.Compose([
+            A.ToGray(p=0.5),
+            A.HorizontalFlip(p=0.5),
+            A.CLAHE(p=0.5),
+            A.VerticalFlip(p=0.5),
+            A.RandomBrightnessContrast(p=0.2)])
+        change_name_augm = lambda fp, i: os.path.join(os.path.dirname(fp), f"Augm_{i}_{os.path.basename(fp)}")
+        
+        
+        for clss_fp, n_imgs in classes_n_images.items():
+
+            # skip max class, augment others
+            if n_imgs == max_n_imgs:
+                continue 
+
+            # get images
+            clss_images = glob(os.path.join(clss_fp, '*.jpg'))
+            clss_images = [img for img in clss_images if 'Augm' not in img]
+
+            assert len(clss_images)>0, f"No images like {os.path.join(clss_fp, '*.jpg')}"
+            n_imgs_to_make = max_n_imgs - n_imgs
+
+            print(f"Images to create: {n_imgs_to_make}")
+
+            # create new images:
+            for i in tqdm(range(n_imgs_to_make), desc=f'Augmenting {os.path.basename(clss_fp)}'): 
+                img_fp = random.choice(clss_images)
+                img = cv2.imread(img_fp, cv2.COLOR_BGR2RGB)
+                transformed_img = transform(image=img)['image']
+                write_fp = change_name_augm(img_fp, i)
+                if not os.path.isfile(write_fp):
+                    cv2.imwrite(write_fp, transformed_img)
+            
+            n_clss_imgs = len(glob(os.path.join(clss_fp, '*.jpg')))
+            assert n_clss_imgs == max_n_imgs
+            
+
+        return
 
 
     def __call__(self) -> None:
@@ -299,6 +347,8 @@ class CropLabeller():
         self.move_assigned_crops()
         if self.resize: 
             self.resize_images()
+        
+        self.balance_dataset()
 
         return
 

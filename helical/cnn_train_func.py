@@ -44,13 +44,7 @@ def prepare_data(cnn_root_fold:str, map_classes:dict, batch:int, num_workers:int
 
 def show_data(images:torch.Tensor, pred_lbl:torch.Tensor, 
               gt_lbl:torch.Tensor, map_classes:dict, n_epoch:int = None):
-
-    # print(type(images))
-    # print(type(pred_lbl))
-    # print(type(gt_lbl))
-    # print(images.shape)
-    # print(pred_lbl.shape)
-    # print(gt_lbl.shape)
+    """ Plots images during training. """
     
     def imshow(inp:torch.Tensor, title=None, n_epoch:int=None):
 
@@ -64,15 +58,9 @@ def show_data(images:torch.Tensor, pred_lbl:torch.Tensor,
         plt.close()
         return
 
-
     images = images.cpu()
     pred_lbl = pred_lbl.cpu()
     gt_lbl = gt_lbl.cpu()
-
-    # print(pred_lbl)
-    # print(gt_lbl)
-    # title = f"Epoch:{n_epoch}" if n_epoch is not None else "Epoch:_"
-
     out = torchvision.utils.make_grid(images)
     onehot2int = lambda tensor: tensor.argmax() 
     reversed_map_classes = {v:k for k,v in map_classes.items()}
@@ -81,63 +69,9 @@ def show_data(images:torch.Tensor, pred_lbl:torch.Tensor,
     title = [f"P:{pr}_GT:{gt}" for pr, gt in zip(pred_titles, gt_titles)]
 
     imshow(out, title=title, n_epoch=n_epoch)
-
-    # raise NotImplementedError()
-
-    
     
     return
 
-
-
-# def show_data(inputs:torch.Tensor, labels:torch.Tensor, map_classes:dict):
-
-#     def imshow(inp:torch.Tensor, title=None):
-
-
-#         inp = inp.permute((1,2,0)).numpy()
-
-#         # plt.figure(figsize=(10, 10))
-#         fig = plt.figure()
-#         plt.axis('off')
-#         plt.imshow(inp)
-#         if title is not None:
-#             plt.title(title)
-#         # plt.pause(0.001)
-#         fig.savefig('cnn_crops.png')
-#         plt.close()
-
-#     def show_databatch(inputs:torch.Tensor, classes:torch.Tensor, map_classes:dict):
-
-#         inputs = inputs.cpu()
-#         classes = inputs.cpu()
-#         print(type(inputs))
-#         print(type(classes))
-#         print(inputs.shape)
-#         print(classes.shape)
-
-#         out = torchvision.utils.make_grid(inputs)
-        
-#         onehot2int = lambda tensor: tensor.argmax() 
-
-#         reversed_map_classes = {v:k for k,v in map_classes.items()}
-
-#         # classes
-#         imshow(out, title=[reversed_map_classes[int(onehot2int(x))] for x in classes])
-
-#     # Get a batch of training data
-#     # classes = [self.map_classes[self.] for x in classes]
-#     # print(classes)
-#     print(type(inputs))
-#     print(type(labels))
-#     print(inputs.shape)
-#     print(labels.shape)
-
-
-#     show_databatch(inputs, labels)
-
-
-#     return 
 
 
 
@@ -147,10 +81,6 @@ def train_model(model, dataloader_cls, dataloaders, device, map_classes,
     since = time.time()
     best_model_wts = copy.deepcopy(model.state_dict())
     best_acc = 0.0
-    # device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
-    # device = 'mps'
-    # device = print(f"Device: {device}")
-    
     avg_loss = 0
     avg_acc = 0
     avg_loss_val = 0
@@ -159,13 +89,11 @@ def train_model(model, dataloader_cls, dataloaders, device, map_classes,
     model.to(device)
     print(f"Model is on '{next(model.parameters()).device}'")
     criterion = criterion.to(device)
-    train_batches = len(dataloaders['train'])
-    val_batches = len(dataloaders['val'])
     
     for epoch in range(num_epochs):
+
         print("Epoch {}/{}".format(epoch, num_epochs))
         print('-' * 10)
-        
         loss_train = 0
         loss_val = 0
         acc_train = 0
@@ -184,10 +112,6 @@ def train_model(model, dataloader_cls, dataloaders, device, map_classes,
             t_batch = labels.shape[0]
             inputs = inputs.to(device)
             labels =  labels.to(device)
-
-            # print(inputs.type())
-            # print(labels.type())
-            
             
             optimizer.zero_grad()
             
@@ -205,19 +129,13 @@ def train_model(model, dataloader_cls, dataloaders, device, map_classes,
             optimizer.step()
             
             loss_train += loss.data
-            # print(f"labels shape: {labels.data.shape}")
-            # print(torch.sum(preds == true_classes))
             acc_train += (torch.sum(preds == true_classes) / t_batch) # number true classes for all images in batch
-
-            # raise NotImplementedError()
-            # assert inputs.is_cuda
             
             del inputs, labels, outputs, preds
             torch.cuda.empty_cache()
         
         avg_loss = loss_train / dataloader_cls.trainset_size
         avg_acc = acc_train / dataloader_cls.trainset_size
-        # print(f"train acc: {acc_train} / {dataloader_cls.trainset_size} = {avg_acc} ")
         
         model.train(False)
         model.eval()
@@ -232,12 +150,8 @@ def train_model(model, dataloader_cls, dataloaders, device, map_classes,
             v_batch = labels.shape[0]
             optimizer.zero_grad()
             
-            # raise NotImplementedError()
             outputs = model(inputs)
             _, preds = torch.max(outputs.data, 1, keepdim=True)
-            # print(f"\noutputs shape: {outputs.shape}")
-            # print(f"labels shape: {labels.data.shape}")
-            # print(f"labels shape: {labels.data.argmax(dim=1).shape}")
             loss = criterion(outputs, labels.data)
             
             loss_val += loss.data
@@ -248,7 +162,6 @@ def train_model(model, dataloader_cls, dataloaders, device, map_classes,
         
         avg_loss_val = loss_val / dataloader_cls.valset_size
         avg_acc_val = acc_val / dataloader_cls.valset_size
-        # print(f"val acc: {acc_val} / {dataloader_cls.valset_size} = {avg_acc_val} ")
 
         print(f"Epoch {epoch} result: ")
         print(f"Avg loss (train): {avg_loss:.4f}, Avg loss (val): {avg_loss_val:.4f} ")
@@ -291,11 +204,7 @@ def eval_model(model, dataloader_cls, dataloaders, criterion):
 
         # inputs, labels = data
         inputs, labels = inputs.to(device), labels.to(device)
-
         outputs = model(inputs)
-        # print(f"\noutputs shape: {outputs.shape}")
-        # print(f"labels shape: {labels.data.shape}")
-        # print(f"labels shape: {labels.data.argmax(dim=1).shape}")
         _, preds = torch.max(outputs.data, 1, keepdim=True)
         loss = criterion(outputs, labels)
 
@@ -314,3 +223,5 @@ def eval_model(model, dataloader_cls, dataloaders, criterion):
     print("Avg loss (test): {:.4f}".format(avg_loss))
     print("Avg acc (test): {:.4f}".format(avg_acc))
     print('-' * 10)
+
+    return

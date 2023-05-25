@@ -32,6 +32,8 @@ class CNNDataset(Dataset):
         if self.dataset == 'train': 
             transform = A.Compose([
                 A.Blur(), 
+                A.CLAHE(),
+                A.ChannelShuffle(),
                 A.RandomBrightnessContrast(),
                 A.HorizontalFlip(),
                 A.VerticalFlip(),
