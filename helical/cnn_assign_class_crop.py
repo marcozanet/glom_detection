@@ -26,7 +26,7 @@ class CropLabeller():
         self.map_classes = {v:k for v,k in map_classes.items() if k!='false_positives'} 
         self.resize = resize
         self.resize_shape = (224,224)
-        # self.false_pos_clss = map_classes['false_positives']
+
         return
     
     def _parse(self): 
@@ -60,6 +60,7 @@ class CropLabeller():
         gt_mask = rectangle(start=(g_x0, g_y0), end=(g_x1, g_y1), shape = true_img.shape)
         pred_img[pred_mask] = 1
         true_img[gt_mask] = 1
+
         # compute intersection/pred obj (1 if whole pred obj is inside true obj, 0 if no intersection)
         pred_intersection = float((pred_img * true_img).sum()) /  float(pred_img.sum())
         assert pred_intersection <=1, f"pred_intersection:{pred_intersection}, but shouldn't be >1 by definition."
@@ -112,22 +113,18 @@ class CropLabeller():
         left, right = delta_w//2, delta_w-(delta_w//2)
         image = cv2.copyMakeBorder(image, top, bottom, left, right, cv2.BORDER_CONSTANT, value=padding_color)
         cv2.imwrite(filename=image_fp, img=image)
-        # print(f"Saving img at {image_fp}")
-        # raise NotImplementedError()
 
         return 
     
     def pad_all_images(self, new_shape: tuple, padding_color: tuple = (255, 255, 255)) -> np.array:
         """ Pads all images into a new shape. """
 
-
         assert os.path.isdir(self.root_data), f"root_data:{self.root_data} is not a valid dirpath."
         all_images = glob(os.path.join(self.exp_data, 'crops', "*", "*.jpg"))
         assert len(all_images)>0, f"No images like {os.path.join(self.exp_data, 'crops', '*', '*.jpg')} found in dataset."
         all_images = list(filter(self.is_image_to_copy, all_images))
 
-        for img in tqdm(all_images, 'padding images'):
-            # if self.is_image_to_copy(crop_fp=img):
+        for img in tqdm(all_images, 'Padding crops'):
             self.resize_with_pad(image_fp=img, new_shape=new_shape, padding_color=padding_color)
         
 
@@ -174,7 +171,7 @@ class CropLabeller():
 
         # get all moved images: 
         tot_moved_images = glob(os.path.join(self.exp_data, 'crops_true_classes', '*', '*.jpg'))
-        for img_fp in tqdm(tot_moved_images, 'resizing'): 
+        for img_fp in tqdm(tot_moved_images, 'Resizing crops'): 
             image = cv2.imread(img_fp, cv2.COLOR_BGR2RGB)
             try:
                 image = cv2.resize(image, dsize=self.resize_shape)
@@ -247,7 +244,6 @@ class CropLabeller():
         # check if falls in any of the true objs
         gt_classes = {}
         for i, pred_row in enumerate(pred_rows): # for each pred obj
-            # print(self.img_size[0])
             crop_fn = lbl2cropfn(pred_lbl=pred_lbl, crop_n=i)
             crop_fp = cropfn_2_cropfp(crop_fn=crop_fn)
             p_clss, p_xc, p_yc, p_w, p_h = get_objs_from_row_txt_label(pred_row)
@@ -263,7 +259,6 @@ class CropLabeller():
                     if len(matching_gloms)>1:
                         print(f"WARNING: glom in file {os.path.basename(pred_lbl)} has multiple matching true gloms. Assigning class of the closest.")
                         print(f"{min_x}<={p_xc}<={max_x} and {min_y}<={p_yc}<={max_y} \n matching gloms: {matching_gloms}")
-                        # raise NotADirectoryError()
 
             if len(matching_gloms) == 0: # if no pred obj does, maybe the model detected a part of an obj:
                 pred_obj = {'p_clss':p_clss, 'p_xc':p_xc, 'p_yc':p_yc, 'p_w':p_w, 'p_h':p_h}
@@ -272,36 +267,22 @@ class CropLabeller():
                     gt_obj = {'g_clss':g_clss, 'g_xc':g_xc, 'g_yc':g_yc, 'g_w':g_w, 'g_h':g_h}
                     if self._is_predobj_part_of_trueobj(pred_obj=pred_obj, gt_obj=gt_obj): # check if is part of the true obj
                         matching_gloms.append((g_clss, g_xc, g_yc, g_w, g_h))
-                        # print('found match with intersection')
                 else:
                     crop_fn = lbl2cropfn(pred_lbl=pred_lbl, crop_n=i)
                     crop_fp = cropfn_2_cropfp(crop_fn=crop_fn)
                     gt_classes = {crop_fp:None}
                     return gt_classes
             
-            # if len(matching_gloms) == 0: # if no pred obj does
-            #     crop_fn = lbl2cropfn(pred_lbl=pred_lbl, crop_n=i)
-            #     crop_fp = cropfn_2_cropfp(crop_fn=crop_fn)
-            #     gt_classes = {crop_fp:None}
-            #     return gt_classes
-            
             if len(matching_gloms) == 1:
                 gt_class = matching_gloms[0][0]
             
             elif len(matching_gloms) > 1: # if multiple matches for same pred obj:
-                # compute dist between pred glom and the (many) matching gt_gloms
-                # print(f'multiple matches for {pred_lbl} \nand {gt_lbl}')
-                # print(f"pred obj has center: {p_xc, p_yc}")
-                # print(f"Matching gloms: {matching_gloms}")
-                # raise NotImplementedError()
                 min_dist = 99999999
-                # print("warning: multiple matching gloms for one pred glom in labeller not tested")
                 for j, gt_glom in enumerate(matching_gloms):
                     dist = eucl_dist(point1 = (p_xc, p_yc), point2= gt_glom[1:3])
                     min_dist = dist if dist < min_dist else min_dist
                     min_class = matching_gloms[j][0]
                 gt_class = min_class
-                   
                 
             gt_classes.update({crop_fp:gt_class})
             

@@ -81,7 +81,7 @@ print("-"*10)
 criterion = nn.BCEWithLogitsLoss()
 optimizer_ft = torch.optim.SGD(vgg16.parameters(), lr=lr, momentum=0.9)
 exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
-vgg16 = train_model(model=vgg16, dataloader_cls=dataloader_cls, dataloaders=dataloaders, device=device,
+vgg16 = train_model(model=vgg16, dataloader_cls=dataloader_cls, dataloaders=dataloaders, device=device, map_classes=map_classes,
                     criterion=criterion, optimizer=optimizer_ft, scheduler=exp_lr_scheduler, num_epochs=epochs)
 os.makedirs(weights_save_fold)
 torch.save(vgg16.state_dict(), os.path.join(weights_save_fold, 'VGG16_v2-OCT_Retina_half_dataset.pt'))

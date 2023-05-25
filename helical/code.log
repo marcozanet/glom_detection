@@ -1,9 +1,9 @@
-24/05 11:47:53|INFO|CNN_KCrossValidation.__init__: n_wsis:30.
-24/05 11:47:53|INFO|CNN_KCrossValidation._get_i_split: iter_0,  train: 23 images, test: 7.
-24/05 11:47:53|INFO|CNN_KCrossValidation._get_i_split: iter_1,  train: 22 images, test: 8.
-24/05 11:47:53|INFO|CNN_KCrossValidation._get_i_split: iter_2,  train: 23 images, test: 7.
-24/05 11:47:53|INFO|CNN_KCrossValidation._get_i_split: iter_3,  train: 22 images, test: 8.
-24/05 11:47:53|INFO|CNN_KCrossValidation.fix_n_tiles: n_tiles_tot:{}.
-24/05 11:47:53|INFO|CNN_KCrossValidation._change_folds: train: 23 images: ['200809469', '200811313', '200813457', '201007375', '201014448', '201113659', '201200745', '201206802', '201216192', '201218916', '201322507', '201324441', '201325046', '201325292', '201404292', '201409661', '201420222', '26dc41664', '4ef6695ce', '8242609fa', 'I', 'b2dc8411c', 'c68fe75ea'].
-24/05 11:47:53|INFO|CNN_KCrossValidation._change_folds: test: 7 labels: ['0486052bb', '1e2425f28', '200104066', '200219757', '200701099', '200720162', '200725057'].
-24/05 11:47:54|INFO|Wsi_fns splitted in: train:7027 val:1238, test:0. 
+25/05 10:50:36|INFO|CNN_KCrossValidation.__init__: n_wsis:30.
+25/05 10:50:36|INFO|CNN_KCrossValidation._get_i_split: iter_0,  train: 23 images, test: 7.
+25/05 10:50:36|INFO|CNN_KCrossValidation._get_i_split: iter_1,  train: 22 images, test: 8.
+25/05 10:50:36|INFO|CNN_KCrossValidation._get_i_split: iter_2,  train: 23 images, test: 7.
+25/05 10:50:36|INFO|CNN_KCrossValidation._get_i_split: iter_3,  train: 22 images, test: 8.
+25/05 10:50:36|INFO|CNN_KCrossValidation.fix_n_tiles: n_tiles_tot:{}.
+25/05 10:50:36|INFO|CNN_KCrossValidation._change_folds: train: 23 images: ['200809469', '200811313', '200813457', '201007375', '201014448', '201113659', '201200745', '201206802', '201216192', '201218916', '201322507', '201324441', '201325046', '201325292', '201404292', '201409661', '201420222', '26dc41664', '4ef6695ce', '8242609fa', 'I', 'b2dc8411c', 'c68fe75ea'].
+25/05 10:50:36|INFO|CNN_KCrossValidation._change_folds: test: 7 labels: ['0486052bb', '1e2425f28', '200104066', '200219757', '200701099', '200720162', '200725057'].
+25/05 10:50:37|INFO|Wsi_fns splitted in: train:7027 val:1238, test:0. 

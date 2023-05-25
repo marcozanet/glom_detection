@@ -8,7 +8,8 @@ from cnn_splitter import CNNDataSplitter
 from cnn_loaders import CNNDataLoaders
 from glob import glob
 from tqdm import tqdm 
-import shutil
+import matplotlib.pyplot as plt
+import torchvision
 
 
 def prepare_data(cnn_root_fold:str, map_classes:dict, batch:int, num_workers:int, 
@@ -40,35 +41,108 @@ def prepare_data(cnn_root_fold:str, map_classes:dict, batch:int, num_workers:int
 
     return cnn_dataset_fold
 
-    # # Putting images all in same fold and extracting features:
-    # print("Create Dataset for Feature Extraction:")
-    # print("-"*10)
-    # feat_extract_fold = os.path.join(cnn_root_fold, 'feat_extract')
-    # os.makedirs(feat_extract_fold, exist_ok=True)
-    # # get all images: 
-    # images = glob(os.path.join(cnn_root, '*', '*', '*.jpg')) # get all images 
-    # class_fold_names = glob(os.path.join(cnn_root, '*', '*/'))
-    # class_fold_names = set([os.path.split(os.path.dirname(fp))[1] for fp in class_fold_names])
-    # # print(class_fold_names)
 
-    # assert len(images)>0, f"No images like {os.path.join(cnn_root, '*', '*', '*.jpg')}"
-    # # create folds:
-    # for fold in class_fold_names: 
-    #     os.makedirs(os.path.join(feat_extract_fold, fold), exist_ok=True)
-    # # fill fold:
-    # for img in tqdm(images, desc="Filling 'feature_extract'"): 
-    #     clss_fold_name = os.path.split(os.path.dirname(img))[1]
-    #     dst = os.path.join(feat_extract_fold, clss_fold_name, os.path.basename(img))
-    #     if not os.path.isfile(dst):
-    #         shutil.copy(src=img, dst=dst)
-    # assert len(os.listdir(feat_extract_fold))>0, f"No images found in extract fold: {feat_extract_fold}"
-    # dataloader_cls = CNNDataLoaders(root_dir=feat_extract_fold, map_classes=map_classes, batch=batch, num_workers=num_workers)
-    # dataloader = dataloader_cls()
+def show_data(images:torch.Tensor, pred_lbl:torch.Tensor, 
+              gt_lbl:torch.Tensor, map_classes:dict, n_epoch:int = None):
 
-    # return  dataloader
+    # print(type(images))
+    # print(type(pred_lbl))
+    # print(type(gt_lbl))
+    # print(images.shape)
+    # print(pred_lbl.shape)
+    # print(gt_lbl.shape)
+    
+    def imshow(inp:torch.Tensor, title=None, n_epoch:int=None):
+
+        inp = inp.permute((1,2,0)).numpy()
+        fig = plt.figure()
+        plt.axis('off')
+        plt.imshow(inp)
+        if title is not None:
+            plt.title(title)
+        fig.savefig(f"cnn_epoch{n_epoch}.png")
+        plt.close()
+        return
 
 
-def train_model(model, dataloader_cls, dataloaders, device,
+    images = images.cpu()
+    pred_lbl = pred_lbl.cpu()
+    gt_lbl = gt_lbl.cpu()
+
+    # print(pred_lbl)
+    # print(gt_lbl)
+    # title = f"Epoch:{n_epoch}" if n_epoch is not None else "Epoch:_"
+
+    out = torchvision.utils.make_grid(images)
+    onehot2int = lambda tensor: tensor.argmax() 
+    reversed_map_classes = {v:k for k,v in map_classes.items()}
+    pred_titles = [reversed_map_classes[int(onehot2int(x))] for x in pred_lbl]
+    gt_titles = [reversed_map_classes[int(onehot2int(x))] for x in gt_lbl]
+    title = [f"P:{pr}_GT:{gt}" for pr, gt in zip(pred_titles, gt_titles)]
+
+    imshow(out, title=title, n_epoch=n_epoch)
+
+    # raise NotImplementedError()
+
+    
+    
+    return
+
+
+
+# def show_data(inputs:torch.Tensor, labels:torch.Tensor, map_classes:dict):
+
+#     def imshow(inp:torch.Tensor, title=None):
+
+
+#         inp = inp.permute((1,2,0)).numpy()
+
+#         # plt.figure(figsize=(10, 10))
+#         fig = plt.figure()
+#         plt.axis('off')
+#         plt.imshow(inp)
+#         if title is not None:
+#             plt.title(title)
+#         # plt.pause(0.001)
+#         fig.savefig('cnn_crops.png')
+#         plt.close()
+
+#     def show_databatch(inputs:torch.Tensor, classes:torch.Tensor, map_classes:dict):
+
+#         inputs = inputs.cpu()
+#         classes = inputs.cpu()
+#         print(type(inputs))
+#         print(type(classes))
+#         print(inputs.shape)
+#         print(classes.shape)
+
+#         out = torchvision.utils.make_grid(inputs)
+        
+#         onehot2int = lambda tensor: tensor.argmax() 
+
+#         reversed_map_classes = {v:k for k,v in map_classes.items()}
+
+#         # classes
+#         imshow(out, title=[reversed_map_classes[int(onehot2int(x))] for x in classes])
+
+#     # Get a batch of training data
+#     # classes = [self.map_classes[self.] for x in classes]
+#     # print(classes)
+#     print(type(inputs))
+#     print(type(labels))
+#     print(inputs.shape)
+#     print(labels.shape)
+
+
+#     show_databatch(inputs, labels)
+
+
+#     return 
+
+
+
+
+def train_model(model, dataloader_cls, dataloaders, device, map_classes,
                 criterion, optimizer, scheduler, num_epochs=10):
     since = time.time()
     best_model_wts = copy.deepcopy(model.state_dict())
@@ -120,6 +194,10 @@ def train_model(model, dataloader_cls, dataloaders, device,
             outputs = model(inputs)
             _, preds = torch.max(outputs.data, 1, keepdim=True)
             _, true_classes = torch.max(labels.data, 1, keepdim=True)
+
+
+            if epoch%1 == 0: 
+                show_data(images=inputs, pred_lbl=preds, gt_lbl=true_classes, map_classes=map_classes, n_epoch=epoch)
 
             loss = criterion(outputs, labels.data)
             
