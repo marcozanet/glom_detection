@@ -120,7 +120,7 @@ def train_model(model, dataloader_cls, dataloaders, device, map_classes,
             _, true_classes = torch.max(labels.data, 1, keepdim=True)
 
 
-            if epoch%1 == 0: 
+            if epoch%1 == 0 and i==0: 
                 show_data(images=inputs, pred_lbl=preds, gt_lbl=true_classes, map_classes=map_classes, n_epoch=epoch)
 
             loss = criterion(outputs, labels.data)
