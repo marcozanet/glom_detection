@@ -2,7 +2,7 @@ import torch, torchvision
 from torchvision import models
 from torch import nn
 from cnn_train_func import train_model, eval_model
-from cnn_loaders import CNNDataLoaders
+from cnn_loaders import CNNDataLoaders  
 import os, sys
 from cnn_crossvalidation import CNN_KCrossValidation
 from datetime import datetime

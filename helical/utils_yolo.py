@@ -8,13 +8,84 @@ import random
 import matplotlib.pyplot as plt
 import cv2
 
+def show_specific_labels(root:str, data_source:str, task:str, save = True):
+    """ Shows K random images/labels. """
+
+    replace_dir = lambda fp, to_dir, format: os.path.join(os.path.dirname(os.path.dirname(fp)), to_dir, os.path.basename(fp).split('.')[0] + f".{format}")
+    labels = glob(os.path.join(root, 'tiles', '*', 'labels', '*.txt')) # /Users/marco/helical_tests/test_manager_detect_muw_sfog/detection/tiles/train
+    labels = [file for file in labels if '200104066_09_SFOG_sample0_3' in file]
+    assert len(labels)>0
+    print(len(labels))
+    k=min(6, len(labels))
+
+    # 1) Picking images:
+    labels = random.sample(labels, k=k)
+    pairs = [(replace_dir(fp, to_dir='images', format='png'), fp) for fp in labels]
+    pairs = list(filter(lambda pair: (os.path.isfile(pair[0]) and os.path.isfile(pair[1])), pairs))
+    # .log.info(f"Displaying {[os.path.basename(label) for label in labels]}")
+    # 2) Show image/drawing rectangles as annotations:
+    fig = plt.figure(figsize=(20, k//2*10))
+    for i, (image_fp, label_fp) in enumerate(pairs):
+
+        # read image
+        image = cv2.imread(image_fp)
+        W, H = image.shape[:2]
+        # print((W, H))
+        # .log.info(f"image shape: {W,H}")
+
+        # read label
+        with open(label_fp, 'r') as f:
+            text = f.readlines()
+            f.close()
+        # draw rectangle for each glom/row:
+        for row in text: 
+            row = row.replace('/n', '')
+            items = row.split(sep = ' ')
+            class_n = int(float(items[0]))
+            items = items[1:]
+            x = [el for (j,el) in enumerate(items) if j%2 == 0]
+            x = [np.int32(float(el)*W) for el in x]
+            y = [el for (j,el) in enumerate(items) if j%2 != 0]
+            y = [np.int32(float(el)*H) for el in y]
+            vertices = list(zip(x,y)) 
+            vertices = [list(pair) for pair in vertices]
+            vertices = np.array(vertices, np.int32)
+            vertices = vertices.reshape((-1,1,2))
+            x0 = np.array(x).min()
+            y0 = np.array(y).min()  
+            if data_source == 'zaneta':    
+                color = (0,255,0) if class_n == 0 else (255,0,0) 
+            elif data_source == 'hubmap':
+                # assert class_n == 0, f"Class to display is not 0, but hubmap should only contain class 0 objects."
+                color = (0,255,0) if class_n == 0 else (255,0,0) 
+            elif data_source == 'muw':
+                color = (0,255,0) if class_n == 0 else (255,0,0) 
+            image = cv2.fillPoly(image, pts = [vertices], color=color)
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            text = 'H' if class_n == 0 else 'U'
+            image = cv2.putText(image, text, org = (x0,y0-H//50), color=color, thickness=3, fontFace=font, fontScale=1)
+
+        # add subplot with image
+        image = cv2.addWeighted(image, 0.4, cv2.imread(image_fp), 0.6, 1.0)
+        plt.subplot(k//2,2,i+1)
+        plt.title(f"Example tile.")
+        plt.imshow(image)
+        plt.tight_layout()
+        plt.axis('off')
+    
+    plt.show()
+    fig.savefig('tiled_examples.png')
+
+    return
 
 def show_image_labels(root:str, data_source:str, task:str, save = True):
     """ Shows K random images/labels. """
 
     replace_dir = lambda fp, to_dir, format: os.path.join(os.path.dirname(os.path.dirname(fp)), to_dir, os.path.basename(fp).split('.')[0] + f".{format}")
     labels = glob(os.path.join(root, task, 'tiles', '*', 'labels', '*.txt')) # /Users/marco/helical_tests/test_manager_detect_muw_sfog/detection/tiles/train
+    # labels = [file for file in labels if 'b2dc8411c_PAS_sample0_7' in file]
     assert len(labels)>0
+    # print(len(labels))
     k=min(6, len(labels))
 
     # 1) Picking images:
@@ -307,9 +378,11 @@ def edit_yaml(root: str = False, test_folder: str = False ):
 
 
 if __name__ == '__main__':
-    test_merge_datasets()
-    # root='/Users/marco/Downloads/zaneta_files'
-    # task='detection'
-    # data_source='zaneta'
-    # for _ in range(8):
-    #     show_image_labels(root=root, data_source=data_source, task=task)
+    # test_merge_datasets()
+
+    root='/Users/marco/helical_tests/test_merge_muw_zaneta'
+    task='detection'
+    data_source='zaneta'
+    
+    for i in range(5):
+        show_specific_labels(root=root, data_source=data_source, task=task)

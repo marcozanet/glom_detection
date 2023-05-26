@@ -27,6 +27,7 @@ def prepare_data(cnn_root_fold:str, map_classes:dict, batch:int, num_workers:int
     for exp_fold in yolo_exp_folds:
         labeller = CropLabeller(root_data=yolo_root, exp_data=exp_fold, map_classes=map_classes, resize = False)
         labeller()
+        # raise NotImplementedError()
     print("-"*10)
 
     # Creating Dataset and splitting into train, val, test:
@@ -89,7 +90,7 @@ def train_model(model, dataloader_cls, dataloaders, device, map_classes,
     model.to(device)
     print(f"Model is on '{next(model.parameters()).device}'")
     criterion = criterion.to(device)
-    
+
     for epoch in range(num_epochs):
 
         print("Epoch {}/{}".format(epoch, num_epochs))

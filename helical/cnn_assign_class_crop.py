@@ -10,6 +10,62 @@ import random
 root_data: str # from here ground truth label. Should be a dataset wsi/tiles -> train/val/test -> images/labels
 exp_data: str # from here pred label
 
+# b2dc8411c_PAS_sample0_3_5_crop8
+LBLS_0 = ['b2dc8411c_PAS_sample0_7_5_crop5.jpg', 'b2dc8411c_PAS_sample0_8_5_crop6.jpg', 'b2dc8411c_PAS_sample0_3_4_crop4.jpg',
+             'b2dc8411c_PAS_sample0_2_4_crop1.jpg', 'b2dc8411c_PAS_sample0_2_5_crop5.jpg','0486052bb_PAS_sample0_9_6_crop3.jpg', 
+             '0486052bb_PAS_sample0_9_7_crop1.jpg', 'b2dc8411c_PAS_sample0_7_5_crop8.jpg','b2dc8411c_PAS_sample0_3_5_crop8', 
+             '0486052bb_PAS_sample0_10_6_crop3.jpg', '0486052bb_PAS_sample0_10_7_crop2.jpg', '8242609fa_PAS_sample0_6_32_crop2.jpg',
+             '8242609fa_PAS_sample0_6_33_crop6.jpg', '8242609fa_PAS_sample0_8_36_crop1.jpg', '8242609fa_PAS_sample0_9_36_crop1.jpg',
+             '200104066_09_SFOG_sample0_11_4_crop1.jpg', '200104066_09_SFOG_sample0_11_5_crop1.jpg', '200104066_09_SFOG_sample0_12_4_crop1.jpg',
+             '200104066_09_SFOG_sample0_12_5_crop1.jpg', '200701099_09_SFOG_sample0_5_6_crop3.jpg', '200701099_09_SFOG_sample0_6_5_crop1.jpg',
+             '200701099_09_SFOG_sample0_6_6_crop3.jpg', 'b2dc8411c_PAS_sample0_8_7_crop0.jpg', '200104066_09_SFOG_sample0_8_4_crop1.jpg', 
+             '200219757_09_SFOG_sample0_0_16_crop1.jpg',  '200219757_09_SFOG_sample0_0_15_crop0.jpg', '200219757_09_SFOG_sample0_1_15_crop5.jpg',
+             '200219757_09_SFOG_sample0_1_16_crop4.jpg', '200701099_09_SFOG_sample0_0_3_crop2.jpg', '200701099_09_SFOG_sample0_1_2_crop2.jpg',
+             '8242609fa_PAS_sample0_7_32_crop4.jpg', '0486052bb_PAS_sample0_6_5_crop0.jpg', '0486052bb_PAS_sample0_5_6_crop0.jpg', 
+             '0486052bb_PAS_sample0_6_6_crop2.jpg', '8242609fa_PAS_sample0_7_32_crop4.jpg', '8242609fa_PAS_sample0_7_33_crop10.jpg', 
+             '8242609fa_PAS_sample0_8_35_crop2.jpg', '8242609fa_PAS_sample0_9_35_crop2.jpg', '200811313_09_SFOG_sample0_10_5_crop0.jpg',
+             '200813457_B_09_SFOG_sample0_1_0_crop3.jpg', '201007375_09_SFOG_sample0_10_8_crop1.jpg', '201007375_09_SFOG_sample0_10_9_crop0.jpg',
+             '201200745_09_SFOG_sample1_0_8_crop1.jpg', '201200745_09_SFOG_sample1_0_9_crop0.jpg', '201200745_09_SFOG_sample1_0_10_crop1.jpg',
+             '201218916_09_SFOG_sample0_6_1_crop1.jpg', '201218916_09_SFOG_sample0_6_0_crop1.jpg', '201218916_09_SFOG_sample0_6_3_crop1.jpg',
+             '201218916_09_SFOG_sample0_6_4_crop1.jpg', '201218916_09_SFOG_sample0_7_0_crop0.jpg', '201218916_09_SFOG_sample0_7_1_crop2.jpg', 
+             '201218916_09_SFOG_sample0_7_2_crop5.jpg', '201218916_09_SFOG_sample0_7_4_crop1.jpg', '201325046_09_SFOG_sample0_5_1_crop0.jpg',
+             '201325046_09_SFOG_sample0_6_1_crop2.jpg', '201404292_09_SFOG_sample0_8_7_crop3.jpg', '201404292_09_SFOG_sample0_9_7_crop2.jpg',
+             '201404292_09_SFOG_sample0_9_8_crop1.jpg', '201404292_09_SFOG_sample1_7_5_crop3.jpg', '201404292_09_SFOG_sample1_7_6_crop3.jpg',
+             '201404292_09_SFOG_sample1_8_5_crop2.jpg', '201404292_09_SFOG_sample1_8_6_crop2.jpg'
+
+             
+             
+             
+             ]
+
+
+
+LBLS_1 = ['b2dc8411c_PAS_sample0_1_11_crop0.jpg', '200104066_09_SFOG_sample0_0_0_crop1.jpg', '200720162_09_SFOG_sample1_1_0_crop3.jpg',
+          '200720162_09_SFOG_sample1_1_1_crop4.jpg', '200725057_09_SFOG_sample0_3_3_crop1.jpg', '200725057_09_SFOG_sample0_3_4_crop1.jpg',
+          '200725057_09_SFOG_sample0_4_3_crop1.jpg', '200725057_09_SFOG_sample0_4_4_crop1.jpg', '200811313_09_SFOG_sample0_0_7_crop1.jpg',
+           '200811313_09_SFOG_sample0_0_6_crop1.jpg', '200811313_09_SFOG_sample0_0_7_crop1.jpg', '200813457_A_09_SFOG_sample0_2_3_crop0.jpg', 
+            '200813457_A_09_SFOG_sample0_2_4_crop1.jpg', '200813457_A_09_SFOG_sample0_3_3_crop1.jpg', '200813457_A_09_SFOG_sample0_3_4_crop2.jpg',
+            '201014448_09_SFOG_sample0_0_0_crop3.jpg', '201014448_09_SFOG_sample0_1_0_crop5.jpg', '201216192_09_SFOG_sample0_1_14_crop4.jpg',
+            '201322507_09_SFOG_sample0_3_1_crop1.jpg', '201322507_09_SFOG_sample0_3_2_crop0.jpg', '201325046_09_SFOG_sample0_0_13_crop0.jpg', 
+            '201404292_09_SFOG_sample1_7_4_crop3.jpg', '201404292_09_SFOG_sample1_7_5_crop2.jpg', '201409661_09_SFOG_sample0_10_3_crop1.jpg',
+            '201409661_09_SFOG_sample0_11_3_crop1.jpg', '201409661_09_SFOG_sample1_11_3_crop0.jpg', '201409661_09_SFOG_sample1_11_4_crop1.jpg',
+            '201420222_09_SFOG_sample0_0_11_crop2.jpg', '201420222_09_SFOG_sample0_0_12_crop1.jpg', '201420222_09_SFOG_sample0_1_11_crop2.jpg',
+            '201420222_09_SFOG_sample0_1_12_crop1.jpg', 
+            ]
+
+
+
+LBLS_NONE = ['200104066_09_SFOG_sample1_2_0_crop0.jpg', '200720162_09_SFOG_sample0_4_0_crop1.jpg', '200720162_09_SFOG_sample0_4_0_crop1.jpg',
+             '200725057_09_SFOG_sample0_6_3_crop0.jpg', '200725057_09_SFOG_sample0_6_4_crop1.jpg', '200725057_09_SFOG_sample0_9_5_crop0.jpg', 
+             '200725057_09_SFOG_sample0_9_6_crop1.png', '200725057_09_SFOG_sample0_10_5_crop0.jpg']
+
+
+LBLS_UNKNOWN = ['b2dc8411c_PAS_sample0_3_7_crop2.jpg', 'b2dc8411c_PAS_sample0_6_11_crop1.jpg', 'b2dc8411c_PAS_sample0_6_12_crop1.jpg',
+                '200104066_09_SFOG_sample0_12_5_crop2.jpg', '200104066_09_SFOG_sample0_12_4_crop0.jpg', '200701099_09_SFOG_sample0_0_3_crop1.jpg',
+                 '200701099_09_SFOG_sample0_0_3_crop0.jpg', '200701099_09_SFOG_sample0_0_3_crop1.jpg', '201200745_09_SFOG_sample0_0_7_crop2.jpg', 
+                  '201200745_09_SFOG_sample0_0_8_crop1.jpg' ]
+
+
 class CropLabeller(): 
 
     def __init__(self,
@@ -159,7 +215,7 @@ class CropLabeller():
         is_to_copy = True
         crop = cv2.imread(crop_fp, cv2.COLOR_BGR2RGB)
         w, h = crop.shape[0], crop.shape[1]
-        if w < h*0.7 or h < w*0.7:
+        if w < h*0.6 or h < w*0.6:
             is_to_copy = False
 
         return is_to_copy
@@ -176,7 +232,6 @@ class CropLabeller():
                 image = cv2.resize(image, dsize=self.resize_shape)
             except:
                 raise Exception(f"Couldn't resize {os.path.basename(img_fp)}")
-                continue
             cv2.imwrite(img_fp, image)
 
         return
@@ -246,8 +301,11 @@ class CropLabeller():
             crop_fn = lbl2cropfn(pred_lbl=pred_lbl, crop_n=i)
             crop_fp = cropfn_2_cropfp(crop_fn=crop_fn)
             p_clss, p_xc, p_yc, p_w, p_h = get_objs_from_row_txt_label(pred_row)
+                
+
             matching_gloms = [] 
-            for gt_row in gt_rows: # for each true label obj
+            zs= []
+            for z, gt_row in enumerate(gt_rows): # for each true label obj
                 g_clss, g_xc, g_yc, g_w, g_h = get_objs_from_row_txt_label(gt_row)
                 min_x, max_x = max(g_xc - g_w/2, 0), min(g_xc + g_w/2, self.img_size[0])
                 min_y, max_y = max(g_yc - g_h/2, 0), min(g_yc + g_h/2, self.img_size[1])
@@ -255,37 +313,79 @@ class CropLabeller():
                     if  g_w> 0.5 or g_h> 0.5: #NB IGNORE OBJECTS BIGGER THAN HALF THE TILE! (NO GLOMS LIKE THIS AT LEVEL 2 OF TILING)
                         continue 
                     matching_gloms.append((g_clss, g_xc, g_yc, g_w, g_h))
-                    if len(matching_gloms)>1:
-                        print(f"WARNING: glom in file {os.path.basename(pred_lbl)} has multiple matching true gloms. Assigning class of the closest.")
-                        print(f"{min_x}<={p_xc}<={max_x} and {min_y}<={p_yc}<={max_y} \n matching gloms: {matching_gloms}")
+                #     zs.append(z)
+                # if len(matching_gloms)>1:
+                #     print(f"Multiple matches for PRED:{crop_fn}. {p_xc, p_yc}")
+                #     for el, match_glom in zip(zs, matching_gloms):
+                #         print(f"\nGT gloms: {el}: {match_glom}")
+                    # raise NotImplementedError()
 
+            # if glom is one of those with wrong label:
+            found = False
+            def get_cropfn_and_i(fp:str):
+                try:
+                    basefn, crop_n = (fp.split('_crop')[0], int(fp.split('_crop')[-1].split('.')[0]))
+                except: 
+                    raise Exception(f"fp:{fp} couldn't split it in basefn and crop_n")
+                return basefn, crop_n
+            
+            for wrong_lbl in LBLS_0:
+                basefn, crop_n = get_cropfn_and_i(wrong_lbl)
+                if basefn in pred_lbl and i==crop_n:
+                    gt_classes.update({crop_fp:0})
+                    found = True
+                    break
+            for wrong_lbl in LBLS_1:
+                basefn, crop_n = get_cropfn_and_i(wrong_lbl)
+                if basefn in pred_lbl and i==crop_n:
+                    gt_classes.update({crop_fp:1})
+                    # print(f"{wrong_lbl.split('_crop')[0]} and i== {int(wrong_lbl.split('_crop')[-1].split('.')[0])}")
+                    found = True
+                    break
+            for wrong_lbl in LBLS_NONE:
+                basefn, crop_n = get_cropfn_and_i(wrong_lbl)
+                if basefn in pred_lbl and i==crop_n:                   
+                    gt_classes.update({crop_fp:None})
+                    print(f"{wrong_lbl.split('_crop')[0]} and i== {int(wrong_lbl.split('_crop')[-1].split('.')[0])}")
+                    found = True
+                    break
+            if found is True:
+                continue
+
+
+            # otherwise (normal scenario):
             if len(matching_gloms) == 0: # if no pred obj does, maybe the model detected a part of an obj:
-                pred_obj = {'p_clss':p_clss, 'p_xc':p_xc, 'p_yc':p_yc, 'p_w':p_w, 'p_h':p_h}
-                for gt_row in gt_rows: # for each true label obj
-                    g_clss, g_xc, g_yc, g_w, g_h = get_objs_from_row_txt_label(gt_row) 
-                    gt_obj = {'g_clss':g_clss, 'g_xc':g_xc, 'g_yc':g_yc, 'g_w':g_w, 'g_h':g_h}
-                    if self._is_predobj_part_of_trueobj(pred_obj=pred_obj, gt_obj=gt_obj): # check if is part of the true obj
-                        matching_gloms.append((g_clss, g_xc, g_yc, g_w, g_h))
-                else:
-                    crop_fn = lbl2cropfn(pred_lbl=pred_lbl, crop_n=i)
-                    crop_fp = cropfn_2_cropfp(crop_fn=crop_fn)
-                    gt_classes = {crop_fp:None}
-                    return gt_classes
+                # pred_obj = {'p_clss':p_clss, 'p_xc':p_xc, 'p_yc':p_yc, 'p_w':p_w, 'p_h':p_h}
+                # for gt_row in gt_rows: # for each true label obj
+
+                #     g_clss, g_xc, g_yc, g_w, g_h = get_objs_from_row_txt_label(gt_row) 
+                #     gt_obj = {'g_clss':g_clss, 'g_xc':g_xc, 'g_yc':g_yc, 'g_w':g_w, 'g_h':g_h}
+                #     if self._is_predobj_part_of_trueobj(pred_obj=pred_obj, gt_obj=gt_obj): # check if is part of the true obj
+                #         matching_gloms.append((g_clss, g_xc, g_yc, g_w, g_h))
+                # else:
+                crop_fn = lbl2cropfn(pred_lbl=pred_lbl, crop_n=i)
+                crop_fp = cropfn_2_cropfp(crop_fn=crop_fn)
+                gt_classes.update({crop_fp:None})
             
             if len(matching_gloms) == 1:
                 gt_class = matching_gloms[0][0]
+                gt_classes.update({crop_fp:gt_class})
             
             elif len(matching_gloms) > 1: # if multiple matches for same pred obj:
                 min_dist = 99999999
+                print(f"{crop_fn} has multiple matching gloms")
                 for j, gt_glom in enumerate(matching_gloms):
+                    print()
                     dist = eucl_dist(point1 = (p_xc, p_yc), point2= gt_glom[1:3])
                     min_dist = dist if dist < min_dist else min_dist
                     min_class = matching_gloms[j][0]
                 gt_class = min_class
-                
-            gt_classes.update({crop_fp:gt_class})
-            
+                gt_classes.update({crop_fp:gt_class})
+
+
         return gt_classes
+    
+
     
     def balance_dataset(self):
 
