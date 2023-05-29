@@ -373,9 +373,9 @@ class CropLabeller():
             
             elif len(matching_gloms) > 1: # if multiple matches for same pred obj:
                 min_dist = 99999999
-                print(f"{crop_fn} has multiple matching gloms")
+                # print(f"{crop_fn} has multiple matching gloms")
                 for j, gt_glom in enumerate(matching_gloms):
-                    print()
+                    # print()
                     dist = eucl_dist(point1 = (p_xc, p_yc), point2= gt_glom[1:3])
                     min_dist = dist if dist < min_dist else min_dist
                     min_class = matching_gloms[j][0]
@@ -398,11 +398,11 @@ class CropLabeller():
 
         # albumentations funcs
         transform = A.Compose([
-            A.ToGray(p=0.5),
+            A.OneOf([A.ToGray(p=0.2),
+                    A.CLAHE(p=0.5),
+                    A.RandomBrightnessContrast(p=0.2)]),
             A.HorizontalFlip(p=0.5),
-            A.CLAHE(p=0.5),
-            A.VerticalFlip(p=0.5),
-            A.RandomBrightnessContrast(p=0.2)])
+            A.VerticalFlip(p=0.5)])
         change_name_augm = lambda fp, i: os.path.join(os.path.dirname(fp), f"Augm_{i}_{os.path.basename(fp)}")
         
         

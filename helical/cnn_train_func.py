@@ -131,20 +131,18 @@ def train_model(model, dataloader_cls, dataloaders, device, map_classes,
             optimizer.step()
             
             loss_train += loss.data
-            acc_train += (torch.sum(preds == true_classes) / t_batch) # number true classes for all images in batch
-            
+            acc_train += (torch.sum(preds == true_classes).cpu().numpy() / t_batch) # number true classes for all images in batch
+
             del inputs, labels, outputs, preds
             torch.cuda.empty_cache()
         
-        avg_loss = loss_train / dataloader_cls.trainset_size
-        avg_acc = acc_train / dataloader_cls.trainset_size
+        avg_loss = loss_train / i #dataloader_cls.trainset_size
+        avg_acc = acc_train / i #dataloader_cls.trainset_size
         
         model.train(False)
         model.eval()
             
-        for i, data in enumerate(dataloaders['val']):
-            # if i % 100 == 0:
-            #     print("\rValidation batch {}/{}".format(i, val_batches), end='', flush=True)
+        for j, data in enumerate(dataloaders['val']):
                 
             inputs, labels = data
             inputs, labels = inputs.to(device), labels.to(device)
@@ -162,8 +160,8 @@ def train_model(model, dataloader_cls, dataloaders, device, map_classes,
             del inputs, labels, outputs, preds
             torch.cuda.empty_cache()
         
-        avg_loss_val = loss_val / dataloader_cls.valset_size
-        avg_acc_val = acc_val / dataloader_cls.valset_size
+        avg_loss_val = loss_val / j #dataloader_cls.valset_size
+        avg_acc_val = acc_val / j #dataloader_cls.valset_size
 
         print(f"Epoch {epoch} result: ")
         print(f"Avg loss (train): {avg_loss:.4f}, Avg loss (val): {avg_loss_val:.4f} ")
@@ -195,7 +193,7 @@ def eval_model(model, dataloader_cls, dataloaders, criterion):
     print("Evaluating model")
     print('-' * 10)
     
-    for i, data in enumerate(tqdm(dataloaders['val'])):
+    for k, data in enumerate(tqdm(dataloaders['val'])):
         # if i % 100 == 0:
         #     print("\rTest batch {}/{}".format(i, test_batches), end='', flush=True)
 
@@ -216,8 +214,8 @@ def eval_model(model, dataloader_cls, dataloaders, criterion):
         del inputs, labels, outputs, preds
         torch.cuda.empty_cache()
     # print(dataloader_cls.valset_size)
-    avg_loss = loss_test / dataloader_cls.valset_size
-    avg_acc = acc_test / dataloader_cls.valset_size
+    avg_loss = loss_test / k #dataloader_cls.valset_size
+    avg_acc = acc_test / k #dataloader_cls.valset_size
     
     elapsed_time = time.time() - since
     print()

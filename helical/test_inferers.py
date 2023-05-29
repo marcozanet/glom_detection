@@ -31,7 +31,7 @@ def test_yolo_infere_trainvaltest_muw_sfog_for_feature_extraction():
     yolov5dir = PARAMS['yolov5dir']
     images_dir = PARAMS['images_dir'] 
     datasets = ['test', 'val', 'train']
-    weights = PARAMS['weights']
+    weights = PARAMS['weights'] 
     save_crop = PARAMS['save_crop']
     augment = PARAMS['augment']
     conf_thres = PARAMS['conf_thres']

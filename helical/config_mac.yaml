@@ -19,13 +19,13 @@ readme: >
 ##################################################
 cnn_trainer:
   {
-    yolo_data_root: '/Users/marco/helical_tests/test_cnn_trainer2/detection',
-    cnn_data_root: '/Users/marco/helical_tests/test_cnn_trainer2',
+    yolo_data_root: '/Users/marco/helical_tests/test_cnn_zaneta/detection',
+    cnn_data_root: '/Users/marco/helical_tests/test_cnn_zaneta',
     map_classes: {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2},
-    yolo_exp_folds: [ '/Users/marco/helical_tests/test_cnn_trainer2/exp39','/Users/marco/helical_tests/test_cnn_trainer2/exp40'], # exp30=test
+    yolo_exp_folds: [ '/Users/marco/helical_tests/test_cnn_zaneta/exp42','/Users/marco/helical_tests/test_cnn_zaneta/exp43'], # exp30=test
     lr: 0.001,
     k_tot: 4,
-    k_i: 0,
+    k_i: 2,
     batch: 5,
     epochs: 2,
     num_workers: 0,
@@ -69,7 +69,7 @@ test_yolo_infere_detect_muw_sfog:
   {
     repository_dir: '/Users/marco/yolo/code/helical',
     yolov5dir: '/Users/marco/yolov5',
-    images_dir: '/Users/marco/helical_tests/test_merge_muw_zaneta/tiles/train/images',
+    images_dir: '/Users/marco/helical_tests/test_cnn_zaneta/detection/tiles/train/images',
     weights: '/Users/marco/yolov5/runs/train/exp139/weights/best.pt',
     save_crop: True,
     augment: False,

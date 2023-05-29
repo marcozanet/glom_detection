@@ -31,11 +31,13 @@ class CNNDataset(Dataset):
 
         if self.dataset == 'train': 
             transform = A.Compose([
-                A.Blur(), 
+
+                A.OneOf([
                 A.Downscale(),
-                A.CLAHE(),
                 A.ChannelShuffle(),
                 A.RandomBrightnessContrast(),
+                ]),
+                A.CLAHE(),
                 A.HorizontalFlip(),
                 A.VerticalFlip(),
                 ToTensorV2(),
@@ -61,7 +63,7 @@ class CNNDataset(Dataset):
                 print(f"Image list for '{self.dataset}' is empty.")
                 return None
             else:
-                raise ValueError(f"Image list for '{self.dataset}' is empty.")
+                raise ValueError(f"Image list for '{self.dataset}' is empty. Path: {os.path.join(self.root_dir, self.dataset, '*', '*.jpg')} ")
 
         return image_list
     

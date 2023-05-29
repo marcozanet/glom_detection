@@ -49,9 +49,29 @@ class CNN_KCrossValidation(KCrossValidation):
 
         tile_imgs = sorted(glob(os.path.join(self.data_root, '*', '*', f'*{self.tile_img_fmt}')))
 
+        def get_basename(fp:str):
+            if "ROI" in fp:
+                ret = os.path.basename(fp).split('ROI')[0]
+                # if 'split('_I_')[1]
+            else:
+                ret = os.path.basename(fp).split('_')[0]
+            
+            if 'Augm' in ret:
+                splitter = "_".join(ret.split("_", 2)[:2])
+                ret = ret.split(splitter + '_')[1]
+                # print(ret)
+
+
+            return ret
+        # get_basename = lambda fp: os.path.basename(fp).split('ROI')[0].split('_I_')[1] if "ROI" in fp else os.path.basename(fp).split('_')[0]
+
         # print(os.path.join(self.data_root, '*', '*', f'*{self.tile_img_fmt}'))
         tile_lbls = [os.path.split(os.path.dirname(fp))[1] for fp in tile_imgs]
-        wsi_fns = list(set([os.path.basename(fp).split('_')[0] for fp in tile_imgs]))
+        wsi_fns = list(set([get_basename(fp) for fp in tile_imgs]))
+
+        # if data is zaneta:
+        # if "ROI" in fp
+        # print(f"wsi_fns: {wsi_fns}")
 
         # assert len(wsi_fns) > 0, self.log.warning(f"{self.class_name}._get_data: len(wsi_imgs):{len(wsi_fns)}.")
         assert len(tile_imgs) > 0, self.log.warning(f"{self.class_name}._get_data: len(tile_imgs):{len(tile_imgs)}.")
@@ -69,6 +89,7 @@ class CNN_KCrossValidation(KCrossValidation):
         list_imgs = sorted(self.data['wsi_fns'])
         fnames = sorted(self.data['wsi_fns'])#sorted([os.path.basename(name).split('.')[0] for name in list_imgs])
         fp_fnames = {os.path.basename(fp).split('.')[0]:fp for fp in list_imgs}
+        print(fp_fnames)
         fp_fnames = dict(sorted(fp_fnames.items(), key=lambda x:x[0]))
 
         folds = []
