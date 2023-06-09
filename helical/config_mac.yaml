@@ -53,12 +53,30 @@ cnn_feature_extractor:
     cnn_weights_path: '/Users/marco/Downloads/VGG16_v2-OCT_Retina_half_dataset.pt',
     yolo_root: '/Users/marco/helical_tests/test_cnn_zaneta/detection',
     exp_folds: ['/Users/marco/helical_tests/test_cnn_zaneta/exp42', '/Users/marco/helical_tests/test_cnn_zaneta/exp43'],
-    batch: 1,
+    batch: 5,
     num_workers: 8,
     resize_crops: True
   }
 ##################################################
 
+##################################################
+#############    MIL_RUNNER_TRUE.PY    #############
+##################################################
+mil_trainer:
+  {
+    root: '/Users/marco/helical_tests/test_cnn_zaneta/cnn_dataset',
+    all_slides_dir: '/Users/marco/Downloads/zaneta_files/safe',
+    map_classes: {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2},
+    bag_classes:  {0:0.25, 1:0.5, 2:0.75, 3:1},
+    n_instances_per_bag: 9,
+    stain: 'pas',
+    # batch: 5,
+    # num_workers: 8,
+    epochs: 10,
+    lr0: 0.0001,
+    limit_n_bags_to: 30
+  }
+##################################################
 
 ##################################################
 #############    TEST_INFERERS.PY    #############
@@ -91,24 +109,6 @@ test_yolo_infere_detect_hubmap_pas:
 ##################################################
 
 
-##################################################
-#############    MIL_RUNNER_TRUE.PY    #############
-##################################################
-mil_trainer:
-  {
-    root: '/Users/marco/helical_tests/test_cnn_zaneta/cnn_dataset',
-    all_slides_dir: '/Users/marco/Downloads/zaneta_files/safe',
-    map_classes: {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2},
-    bag_classes:  {0:0.25, 1:0.5, 2:0.75, 3:1},
-    n_instances_per_bag: 9,
-    stain: 'pas',
-    batch: 5,
-    num_workers: 8,
-    epochs: 10,
-    lr0: 0.0001,
-    limit_n_bags_to: 30
-  }
-##################################################
 
 
 ##################################################

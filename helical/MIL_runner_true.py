@@ -18,7 +18,9 @@ print(torch.cuda.is_available())
 
 
 ##############    PREPROCESSING    ################
-def preprocess(params:dict):
+def preprocess():
+    params = get_config_params('mil_trainer')
+    params2 = get_config_params('cnn_feature_extractor')
     print('*'*20)
     print("PREPARE DATA FOR MIL TRAINING")
     print('*'*20)
@@ -29,9 +31,9 @@ def preprocess(params:dict):
     bag_classes = {0:0.25, 1:0.5, 2:0.75, 3:1} # TODO ISSUE READING YAML
     n_instances_per_bag = params['n_instances_per_bag']
     stain = params['stain']
-    batch = params['batch']
+    batch = params2['batch']
     limit_n_bags_to = params['limit_n_bags_to']
-    num_workers = params['num_workers']
+    num_workers = params2['num_workers']
     train_loader_path = os.path.join(os.path.dirname(root),  'train_loader.pth')
     val_loader_path = os.path.join(os.path.dirname(root), 'val_loader.pth')
     feat_extract_folder_path = os.path.join(os.path.dirname(root), 'feat_extract')
@@ -62,15 +64,18 @@ def preprocess(params:dict):
     return train_loader, val_loader
 
 #################    TRAIN    ####################
-def train(params:dict, train_loader, val_loader):
+def train(train_loader, val_loader):
 
     print('*'*20)
     print("START TRAINING")
     print('*'*20)
+    params = get_config_params('mil_trainer')
+    params2 = get_config_params('cnn_feature_extractor')
+
     epochs = params['epochs']
     # n_instances_per_bag = params['n_instances_per_bag']
     lr0 = params['lr0']
-    batch_size = params['batch']
+    batch_size = params2['batch']
     ex_feats, ex_labels = next(iter(train_loader))
     assert ex_feats.shape[0] == batch_size, f"First shape of ex_feats = {ex_feats.shape[0]}, but batch shape is {batch_size}"
     # print(ex_feats.shape)
@@ -170,9 +175,8 @@ def train(params:dict, train_loader, val_loader):
     print(f"Training time: {time.time()-start_ts}s")
 
 def run():
-    params = get_config_params('mil_trainer')
-    train_loader, val_loader = preprocess(params)
-    train(params=params, train_loader=train_loader, val_loader=val_loader)
+    train_loader, val_loader = preprocess()
+    train(train_loader=train_loader, val_loader=val_loader)
     return
 
 
