@@ -3,8 +3,10 @@ from torch.utils.data import Dataset
 import torchvision.transforms as T
 import torch
 import numpy as np
-from MIL_bags_creation import BagCreator
+from MIL_bags_creation_new import BagCreator
 from configurator import Configurator
+from MIL_bag_manager import BagManager
+from cnn_feat_extract_main import extract_cnn_features
 
 
 class MILDataset(Dataset, Configurator):
@@ -13,140 +15,119 @@ class MILDataset(Dataset, Configurator):
         -> given an idx it reads bag_features, bag_label"""
 
 
-    def __init__(self, 
-                instances_folder:str, 
-                exp_folder:str,
-                sclerosed_idx: int,
-                n_images_per_bag: int,
-                n_classes: int,
-                ) -> None:
+    def __init__(self,
+                 folder:str,
+                 all_slides_dir:str,
+                 map_classes:dict, # {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2},
+                 bag_classes:dict, #= {0:0.25, 1:0.5, 2:0.75, 3:1},
+                 stain:str='pas',
+                 n_instances_per_bag:int=9,
+                 limit_n_bags_to:int = None ) -> None:
         
         super().__init__()
-        assert os.path.isdir(instances_folder), f"'instances_folders':{instances_folder} is not a valid dirpath."
-        assert isinstance(sclerosed_idx, int), f"'sclerosed_idx':{sclerosed_idx} should be an int."
-        assert os.path.isdir(exp_folder), f"'exp_folder':{exp_folder} is not a valid dirpath."
+        self.folder = folder 
+        self.all_slides_dir = all_slides_dir
+        self.map_classes = map_classes
+        self.bag_classes = bag_classes
+        self.stain = stain.upper()
+        self.n_instances_per_bag = n_instances_per_bag
+        self.limit_n_bags_to = limit_n_bags_to
 
-        self.instances_folders = instances_folder
-        self.sclerosed_idx = sclerosed_idx
-        self.exp_folder = exp_folder
-        self.n_images_per_bag = n_images_per_bag
-        self.n_classes = n_classes
-        self.class_name = self.__class__.__name__ 
-
-        # creator = BagCreator(instances_folder=instances_folder, 
-        #                     sclerosed_idx=sclerosed_idx, 
-        #                     exp_folder=exp_folder,
-        #                     n_images_per_bag=n_images_per_bag,
-        #                     n_classes=n_classes)
-        # self.bags_indices, self.bags_features, self.bags_labels = creator()
-        # self.log_example()
         self.data = self.get_data()
+
         return 
     
     
     def get_data(self):
+        """ 1) 1st bag creation round 2) Balances bags by augmenting images 
+            3) extract features for all resulting images 4) Converts bag instances from images to features. """
 
-        creator = BagCreator(instances_folder=self.instances_folders, 
-                            sclerosed_idx=self.sclerosed_idx, 
-                            exp_folder=self.exp_folder,
-                            n_images_per_bag=self.n_images_per_bag,
-                            n_classes=self.n_classes)
-        bags_indices, bags_features, bags_labels = creator()
-        print('bags creator done')
+        # 1) create bags from images
+        bag_manager = BagManager(folder=self.folder, 
+                            map_classes=self.map_classes,
+                            bag_classes=self.bag_classes,
+                            all_slides_dir=self.all_slides_dir,
+                            stain=self.stain, 
+                            n_instances_per_bag=self.n_instances_per_bag)
+        bag_manager()
+
+        # 2) extract features from all images
+        feat_extract_path_like = os.path.join(os.path.dirname(os.path.dirname(self.folder)), 'feat_extract')
+        if os.path.isdir(feat_extract_path_like):
+            print(f"Feat extract already existing: {feat_extract_path_like}")
+        
+        sets2extract = os.path.basename(self.folder) if os.path.basename(self.folder) in ['train', 'val', 'test'] else 'all'
+        print(f"Extracting: {sets2extract}")
+        extract_cnn_features(sets2extract=sets2extract)
+
+        # 3) convert image bags to feature bags:
+        bag_manager.convert_imagebags2featbags()
+        bags_indices = bag_manager.bags_indices
+        bags_labels = bag_manager.bags_labels
+
+        print(f"bags labels idx0: {bags_labels[0]}")
+        print(f"bag at idx 0: {bags_indices[0]}")
+
         data = []
-        for bag, images in bags_indices.items(): 
-            # print(bags_features)
-            bag_features = bags_features[bag]
-            # print(bag_features)
-            bag_label = bags_labels[bag]
-            # print(bag_label)
-            data = [(bag_features[i], bag_label) for i in bag_features.keys()]
-            # print(data)
-            assert len(data)>0, f"'data' has length 0, but should be > 0. "
+        for i, (bag_idx, bag) in enumerate(bags_indices.items()):
+            data.append((bag, bags_labels[bag_idx]))
+            if self.limit_n_bags_to is not None:
+                if i==self.limit_n_bags_to:
+                    break
 
-        return  data
+        self._print_bag_summary()
+
+
+        return  data    
     
-    # def log_example(self):
-    #     """ Logs example of output from dataset."""
-        
-    #     ex_bag_features, ex_bag_label = self.__getitem__(0)
-    #     rand_idx_image = random.choice(list(ex_bag_features.keys()))
-    #     self.log.info(f"{self.class_name}.{'__init__'}: example output of dataset[idx_bag=0]: bag_features: {len(ex_bag_features.keys())} features, each of shape:{ex_bag_features[rand_idx_image].shape}, bag_label:{ex_bag_label} ")
-        
 
+    def _print_bag_summary(self):
+        """ Prints a summary for the created bags."""
 
-    #     return
+        print(f"Created a total of {len(self.data)} bags. ")
+        bag_features, bag_label = self.__getitem__[0]
+        n_feats = bag_features.shape[0]
+        print(f"Each bag has {self.n_instances_per_bag} instances. Each instance has {n_feats//self.n_instances_per_bag} features, for a total {n_feats} features. ")
+
+        return
 
 
     def __len__(self) -> int:
-        # print(len(self.bags_indices.keys()))
         return len(self.data)
 
 
     def __getitem__(self, idx) -> dict:
 
-        print(f"idx: {idx}")
-        bag_feat_file = self.data[idx][0]
-        # print(bag_feat_file)
-        bag_feature = torch.from_numpy(np.load(bag_feat_file))
+        # 1) read label:
+        bag_label = self.data[idx][1]
 
-        # brutally averaging!!
-        # self.log.warning(f"{self.class_name}.{'__getitem__'}: before: {bag_feature.shape}")
-        bag_feature = bag_feature.mean(dim=0)
-        # self.log.warning(f"{self.class_name}.{'__getitem__'}: after: {bag_feature.shape}")
+        # 2) read feats and convert to torch:
+        bag_features = []
+        for file_idx, file in self.data[idx][0].items():
+            file_feat = torch.from_numpy(np.load(file))
+            bag_features.append(file_feat)
+        bag_features = torch.stack(bag_features)
+        bag_features = bag_features.flatten()
 
-        print(f"bag_feat_shape: {bag_feature.shape}")
-        # print(bag_feature)
-        bag_label = torch.Tensor(self.data[idx][1])
-
-
-
-        # self.log.warning(f"{self.class_name}.{'__getitem__'}: brutally averaging to lower dims!!")
-        # self.log.warning(f"{self.class_name}.{'__getitem__'}: add normalization!!")
-
-        # bag_features = {i: torch.from_numpy(np.load(file)) for i,file in enumerate(bag_feats_files.values())}
-        # bag_features = [torch.from_numpy(np.load(file)) for file in bag_feats_files.values()]
-        # bag_features = [torch.from_numpy(np.load(bag_feats_files[i])) for i in range(0, len(bag_feats_files))]
-        # bag_features = torch.stack(bag_features)
-        # bag_features = {i: torch.from_numpy(np.load(bag_feats_files[i])) for i in range(0, len(bag_feats_files)) }
-        # print(self.bags_labels)
-        # print(self.bags_labels[idx])
-        # bag_label = torch.tensor(self.bags_labels[idx])
-
-
-        return bag_feature, bag_label
+        return bag_features, bag_label
 
 
 def test_MILDataset():
 
-    import random
-    instances_folder = '/Users/marco/helical_tests/test_bagcreator/images'
-    exp_folder = '/Users/marco/yolov5/runs/detect/exp7'
-    sclerosed_idx=2
-    n_images_per_bag = 9
-    n_classes = 4
+    folder = '/Users/marco/helical_tests/test_cnn_zaneta/cnn_dataset/test'
+    map_classes = {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2}
+    bag_classes = {0:0.25, 1:0.5, 2:0.75, 3:1}
+    stain = 'PAS'
+    n_instances_per_bag=9
+    all_slides_dir='/Users/marco/Downloads/zaneta_files/safe'
+    dataset = MILDataset(folder=folder, 
+                        map_classes=map_classes,
+                        bag_classes=bag_classes,
+                        all_slides_dir=all_slides_dir,
+                        stain=stain, 
+                        n_instances_per_bag=n_instances_per_bag)
 
-
-    dataset = MILDataset(instances_folder=instances_folder,
-                         exp_folder=exp_folder, 
-                         sclerosed_idx=sclerosed_idx,
-                         n_images_per_bag = n_images_per_bag,
-                         n_classes=n_classes)
-    print(dataset[0])
-    # dict
-    # for i in range(len(dataset)):
-    #     bag_feats, bag_label = dataset[i]
-    #     idx_image = random.choice(list(bag_feats.keys()))
-    #     print(f"Feats shape: {bag_feats[idx_image].shape}")
-    #     print(f"Label: {bag_label}")
-
-    # list
-    # for i in range(len(dataset)):
-    #     bag_feats, bag_label = dataset[i]
-    #     print(f"Feats shape: {bag_feats[0].shape}")
-    #     print(f"Label: {bag_label}")
-
-
+    print(len(dataset))
 
     return
     

@@ -3,9 +3,10 @@ from torchvision import models
 from torch import nn
 from cnn_feat_extract_funcs import prepare_data, feature_extraction
 from utils import get_config_params
+from typing import Literal
 
 
-def extract_cnn_features():
+def extract_cnn_features(sets2extract:Literal['all', 'train', 'val', 'test']='all'):
 
     print("PyTorch Version: ",torch.__version__)
     print("Torchvision Version: ",torchvision.__version__)
@@ -38,7 +39,7 @@ def extract_cnn_features():
 
     # Load pretrained weights from CNN
     model = vgg16
-    model.load_state_dict(torch.load(cnn_weights_path))
+    model.load_state_dict(torch.load(cnn_weights_path, map_location=torch.device('cpu')))
 
     # Freeze training for all layers
     for param in model.features.parameters():
@@ -50,7 +51,7 @@ def extract_cnn_features():
     model.classifier = nn.Sequential(*features) # Replace the model classifier
 
     # torch.save(vgg16.state_dict(), 'VGG16_v2-OCT_Retina_half_dataset.pt')
-    dataloader = prepare_data(cnn_root_fold=cnn_root_fold, map_classes=map_classes, batch=batch, 
+    dataloader = prepare_data(cnn_root_fold=cnn_root_fold, map_classes=map_classes, batch=batch, sets2extract=sets2extract,
                               num_workers=num_workers, exp_folds=exp_folds, yolo_root=yolo_root, resize_crops=resize_crops)
     features = feature_extraction(model, dataloader, cnn_root_fold=cnn_root_fold)
 

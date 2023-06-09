@@ -1,9 +1,0 @@
-29/05 11:37:20|INFO|CNN_KCrossValidation.__init__: n_wsis:20.
-29/05 11:37:20|INFO|CNN_KCrossValidation._get_i_split: iter_0,  train: 15 images, test: 5.
-29/05 11:37:20|INFO|CNN_KCrossValidation._get_i_split: iter_1,  train: 15 images, test: 5.
-29/05 11:37:20|INFO|CNN_KCrossValidation._get_i_split: iter_2,  train: 15 images, test: 5.
-29/05 11:37:20|INFO|CNN_KCrossValidation._get_i_split: iter_3,  train: 15 images, test: 5.
-29/05 11:37:20|INFO|CNN_KCrossValidation.fix_n_tiles: n_tiles_tot:{}.
-29/05 11:37:20|INFO|CNN_KCrossValidation._change_folds: train: 15 images: ['I_1_S_1_', 'I_1_S_2_', 'I_1_S_3_', 'I_1_S_4_', 'I_2_S_1_', 'I_2_S_2_', 'I_2_S_3_', 'I_2_S_4_', 'I_2_S_5_', 'I_3_S_1_', 'I_4_S_2_', 'I_4_S_3_', 'I_4_S_4_', 'I_4_S_5_', 'I_4_S_6_'].
-29/05 11:37:20|INFO|CNN_KCrossValidation._change_folds: test: 5 labels: ['I_3_S_2_', 'I_3_S_3_', 'I_3_S_4_', 'I_3_S_5_', 'I_4_S_1_'].
-29/05 11:37:20|INFO|Wsi_fns splitted in: train:4570 val:254, test:0. 

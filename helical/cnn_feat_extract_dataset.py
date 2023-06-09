@@ -17,7 +17,6 @@ class CNNDataset(Dataset):
 
     def __init__(self, 
                  root_dir:str,
-                #  dataset:Literal['train', 'val', 'test'],
                  map_classes:dict,
                  ) -> None:
         
@@ -45,10 +44,11 @@ class CNNDataset(Dataset):
         """ Retrieves all images (image paths) from root folder. """
 
         # assert self.dataset in ['train', 'val', 'test'], f"dataset:{dataset} should be in ['train', 'val', 'test']. "
-        image_list = glob(os.path.join(self.root_dir, '*', '*.jpg'))
+        path_like = os.path.join(self.root_dir, '*', '*.jpg') if os.path.basename(self.root_dir) in ['train', 'val', 'test'] else os.path.join(self.root_dir, '*', '*', '*.jpg')
+        image_list = glob(path_like) 
         image_list = [file for file in image_list if "DS" not in file]
 
-        assert len(image_list) > 0, f"Image list for '{self.dataset}' is empty."
+        assert len(image_list) > 0, f"Image list for '{path_like}' is empty."
 
         return image_list
     
@@ -99,5 +99,3 @@ if __name__ == '__main__':
     image = image.numpy()
     print(type(image))
     print(image.shape)
-
-    # plt.imshow(image)

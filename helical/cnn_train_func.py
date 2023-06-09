@@ -5,8 +5,6 @@ import copy
 from typing import List
 from cnn_assign_class_crop import CropLabeller
 from cnn_splitter import CNNDataSplitter
-from cnn_loaders import CNNDataLoaders
-from glob import glob
 from tqdm import tqdm 
 import matplotlib.pyplot as plt
 import torchvision
@@ -136,8 +134,8 @@ def train_model(model, dataloader_cls, dataloaders, device, map_classes,
             del inputs, labels, outputs, preds
             torch.cuda.empty_cache()
         
-        avg_loss = loss_train / i #dataloader_cls.trainset_size
-        avg_acc = acc_train / i #dataloader_cls.trainset_size
+        avg_loss = loss_train / (i+1) #dataloader_cls.trainset_size
+        avg_acc = acc_train / (i+1) #dataloader_cls.trainset_size
         
         model.train(False)
         model.eval()
@@ -155,13 +153,13 @@ def train_model(model, dataloader_cls, dataloaders, device, map_classes,
             loss = criterion(outputs, labels.data)
             
             loss_val += loss.data
-            acc_val += (torch.sum(preds == labels.data) / v_batch)
+            acc_val += (torch.sum(preds == labels.data).cpu().numpy() / v_batch)
             
             del inputs, labels, outputs, preds
             torch.cuda.empty_cache()
         
-        avg_loss_val = loss_val / j #dataloader_cls.valset_size
-        avg_acc_val = acc_val / j #dataloader_cls.valset_size
+        avg_loss_val = loss_val / (j+1) #dataloader_cls.valset_size
+        avg_acc_val = acc_val / (j+1) #dataloader_cls.valset_size
 
         print(f"Epoch {epoch} result: ")
         print(f"Avg loss (train): {avg_loss:.4f}, Avg loss (val): {avg_loss_val:.4f} ")
@@ -214,8 +212,8 @@ def eval_model(model, dataloader_cls, dataloaders, criterion):
         del inputs, labels, outputs, preds
         torch.cuda.empty_cache()
     # print(dataloader_cls.valset_size)
-    avg_loss = loss_test / k #dataloader_cls.valset_size
-    avg_acc = acc_test / k #dataloader_cls.valset_size
+    avg_loss = loss_test / (k+1) #dataloader_cls.valset_size
+    avg_acc = acc_test / (k+1) #dataloader_cls.valset_size
     
     elapsed_time = time.time() - since
     print()
@@ -225,3 +223,50 @@ def eval_model(model, dataloader_cls, dataloaders, criterion):
     print('-' * 10)
 
     return
+
+
+def infere(model, dataloader_cls, dataloaders, criterion):
+    since = time.time()
+    avg_loss = 0
+    avg_acc = 0
+    loss_test = 0
+    acc_test = 0
+    device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
+
+    test_batches = len(dataloaders['val'])
+    print("Evaluating model")
+    print('-' * 10)
+    
+    for k, data in enumerate(tqdm(dataloaders['val'])):
+        # if i % 100 == 0:
+        #     print("\rTest batch {}/{}".format(i, test_batches), end='', flush=True)
+
+        model.train(False)
+        model.eval()
+        inputs, labels = data
+        v_batch = labels.shape[0]
+
+        # inputs, labels = data
+        inputs, labels = inputs.to(device), labels.to(device)
+        outputs = model(inputs)
+        _, preds = torch.max(outputs.data, 1, keepdim=True)
+        loss = criterion(outputs, labels)
+
+        loss_test += loss.data
+        acc_test += (torch.sum(preds == labels.data) / v_batch)
+
+        del inputs, labels, outputs, preds
+        torch.cuda.empty_cache()
+    # print(dataloader_cls.valset_size)
+    avg_loss = loss_test / (k+1) #dataloader_cls.valset_size
+    avg_acc = acc_test / (k+1) #dataloader_cls.valset_size
+    
+    elapsed_time = time.time() - since
+    print()
+    print("Evaluation completed in {:.0f}m {:.0f}s".format(elapsed_time // 60, elapsed_time % 60))
+    print("Avg loss (test): {:.4f}".format(avg_loss))
+    print("Avg acc (test): {:.4f}".format(avg_acc))
+    print('-' * 10)
+
+    return
+    

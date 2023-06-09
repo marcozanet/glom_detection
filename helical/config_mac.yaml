@@ -45,18 +45,16 @@ cnn_trainer:
 ##################################################
 cnn_feature_extractor:
   {
-    cnn_root_fold: '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline',
-    cnn_data_root: '/Users/marco/helical_tests/test_cnn_trainer',
+    cnn_root_fold: '/Users/marco/helical_tests/test_cnn_zaneta',
+    # cnn_data_root: '/Users/marco/helical_tests/test_cnn_trainer',
     map_classes: {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2},
-    yolo_exp_folds: ['/Users/marco/helical_tests/test_cnn_trainer/exp10', '/Users/marco/helical_tests/test_cnn_trainer/exp11','/Users/marco/helical_tests/test_cnn_trainer/exp12'], 
+    # yolo_exp_folds: ['/Users/marco/helical_tests/test_cnn_trainer/exp10', '/Users/marco/helical_tests/test_cnn_trainer/exp11','/Users/marco/helical_tests/test_cnn_trainer/exp12'], 
     vgg_weights_path:  '/Users/marco/.cache/torch/hub/checkpoints/vgg16_bn-6c64b313.pth',
-    cnn_weights_path: '/Users/marco/helical_tests/cnn_model/exps_2023_04_28__12_52_20/VGG16_v2-OCT_Retina_half_dataset.pt',
-    yolo_root: '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/detection',
-    exp_folds: ['/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/exp30'],
-                # '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/exp31_fake',
-                #  '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/exp32_fake' ],
+    cnn_weights_path: '/Users/marco/Downloads/VGG16_v2-OCT_Retina_half_dataset.pt',
+    yolo_root: '/Users/marco/helical_tests/test_cnn_zaneta/detection',
+    exp_folds: ['/Users/marco/helical_tests/test_cnn_zaneta/exp42', '/Users/marco/helical_tests/test_cnn_zaneta/exp43'],
     batch: 1,
-    num_workers: 0,
+    num_workers: 8,
     resize_crops: True
   }
 ##################################################
@@ -98,16 +96,17 @@ test_yolo_infere_detect_hubmap_pas:
 ##################################################
 mil_trainer:
   {
-    instances_root: '/Users/marco/helical_tests/test_featureextractor/test_fullpipeline/feat_extract',
-    n_instances_per_bag: 8,
+    root: '/Users/marco/helical_tests/test_cnn_zaneta/cnn_dataset',
+    all_slides_dir: '/Users/marco/Downloads/zaneta_files/safe',
     map_classes: {'Glo-healthy':0, 'Glo-unhealthy':1, 'false_positives':2},
-    n_classes: 4,
+    bag_classes:  {0:0.25, 1:0.5, 2:0.75, 3:1},
+    n_instances_per_bag: 9,
+    stain: 'pas',
+    batch: 5,
+    num_workers: 8,
     epochs: 10,
     lr0: 0.0001,
-    batch: 1,
-    sclerosed_idx: 2,
-    num_workers: 0,
-    mapping: {(0, 0, 0): 0, (0, 255, 0): 1, (255, 0, 0): 2}
+    limit_n_bags_to: 30
   }
 ##################################################
 
