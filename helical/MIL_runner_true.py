@@ -3,18 +3,13 @@ import os
 from torch import nn, optim
 import time
 from MIL_model import MIL_NN
+from MIL_bag_manager import BagManager
 from MIL_dataloader import get_loaders
 from tqdm import tqdm
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 from MIL_utils import calculate_metric, print_scores
 from utils import get_config_params
-start_ts = time.time()
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-print(torch.cuda.is_available())
 
-
-# #################    PARAMS    ####################
-# PARAMS = get_config_params('mil_trainer')
 
 
 ##############    PREPROCESSING    ################
@@ -31,14 +26,13 @@ def preprocess():
     bag_classes = {0:0.25, 1:0.5, 2:0.75, 3:1} # TODO ISSUE READING YAML
     n_instances_per_bag = params['n_instances_per_bag']
     stain = params['stain']
-    batch = params2['batch']
+    batch = params['batch']
     limit_n_bags_to = params['limit_n_bags_to']
     num_workers = params2['num_workers']
     train_loader_path = os.path.join(os.path.dirname(root),  'train_loader.pth')
     val_loader_path = os.path.join(os.path.dirname(root), 'val_loader.pth')
     feat_extract_folder_path = os.path.join(os.path.dirname(root), 'feat_extract')
-    print(train_loader_path)
-    print(val_loader_path)
+    
     # load loaders if they exist:
     if os.path.isdir(feat_extract_folder_path):
         print(f"'feat_extract' folder existing.")
@@ -47,6 +41,22 @@ def preprocess():
             train_loader = torch.load(train_loader_path)
             val_loader = torch.load(val_loader_path)
             return train_loader, val_loader
+        
+    # clean bags: 
+    train_bag__manager = BagManager(folder=os.path.join(root, 'train'), 
+                                    map_classes=map_classes,
+                                    bag_classes=bag_classes,
+                                    all_slides_dir=all_slides_dir,
+                                    stain=stain, 
+                                    n_instances_per_bag=n_instances_per_bag)
+    train_bag__manager._del_augm_files()
+    test_bag__manager = BagManager(folder=os.path.join(root, 'test'), 
+                                    map_classes=map_classes,
+                                    bag_classes=bag_classes,
+                                    all_slides_dir=all_slides_dir,
+                                    stain=stain, 
+                                    n_instances_per_bag=n_instances_per_bag)
+    test_bag__manager._del_augm_files()
 
     # if they don't exist already, compute them:
     train_loader, val_loader =  get_loaders(root=root,
@@ -71,11 +81,14 @@ def train(train_loader, val_loader):
     print('*'*20)
     params = get_config_params('mil_trainer')
     params2 = get_config_params('cnn_feature_extractor')
+    start_ts = time.time()
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    print(torch.cuda.is_available())
 
     epochs = params['epochs']
     # n_instances_per_bag = params['n_instances_per_bag']
     lr0 = params['lr0']
-    batch_size = params2['batch']
+    batch_size = params['batch']
     ex_feats, ex_labels = next(iter(train_loader))
     assert ex_feats.shape[0] == batch_size, f"First shape of ex_feats = {ex_feats.shape[0]}, but batch shape is {batch_size}"
     # print(ex_feats.shape)

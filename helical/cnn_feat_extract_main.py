@@ -21,7 +21,6 @@ def extract_cnn_features(sets2extract:Literal['all', 'train', 'val', 'test']='al
     yolo_root = PARAMS['yolo_root']
     exp_folds = PARAMS['exp_folds']
     resize_crops = PARAMS['resize_crops']
-    batch = PARAMS['batch']
 
     # Load the pretrained model from pytorch
     vgg16 = models.vgg16_bn(weights = 'VGG16_BN_Weights.DEFAULT') # pretrained on COCO (?)
@@ -51,7 +50,7 @@ def extract_cnn_features(sets2extract:Literal['all', 'train', 'val', 'test']='al
     model.classifier = nn.Sequential(*features) # Replace the model classifier
 
     # torch.save(vgg16.state_dict(), 'VGG16_v2-OCT_Retina_half_dataset.pt')
-    dataloader = prepare_data(cnn_root_fold=cnn_root_fold, map_classes=map_classes, batch=batch, sets2extract=sets2extract,
+    dataloader = prepare_data(cnn_root_fold=cnn_root_fold, map_classes=map_classes, sets2extract=sets2extract,
                               num_workers=num_workers, exp_folds=exp_folds, yolo_root=yolo_root, resize_crops=resize_crops)
     features = feature_extraction(model, dataloader, cnn_root_fold=cnn_root_fold)
 

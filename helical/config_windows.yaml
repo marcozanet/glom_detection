@@ -31,7 +31,7 @@ cnn_trainer:
     lr: 0.00005,
     k_tot: 5,
     k_i: 0,
-    # batch: 4,
+    batch: 4,
     epochs: 10,
     num_workers: 0,
     dataset: 'muw',
@@ -51,8 +51,7 @@ cnn_feature_extractor:
     cnn_weights_path: 'D:\marco\test_cnn_trainer2\VGG16_v2-OCT_Retina_half_dataset.pt',
     yolo_root: 'D:/marco/test_cnn_trainer2/detection',
     exp_folds: ['D:/marco/test_cnn_trainer2/exp42', 'D:/marco/test_cnn_trainer2/exp43'],
-    batch: 5,
-    num_workers: 8,
+    num_workers: 1,
     resize_crops: True
   }
 ##################################################
@@ -67,7 +66,7 @@ mil_trainer:
     n_instances_per_bag: 9,
     stain: 'pas',
     batch: 5,
-    num_workers: 8,
+    num_workers: 1,
     epochs: 10,
     lr0: 0.0001,
     limit_n_bags_to: 30

@@ -53,8 +53,7 @@ cnn_feature_extractor:
     cnn_weights_path: '/Users/marco/Downloads/VGG16_v2-OCT_Retina_half_dataset.pt',
     yolo_root: '/Users/marco/helical_tests/test_cnn_zaneta/detection',
     exp_folds: ['/Users/marco/helical_tests/test_cnn_zaneta/exp42', '/Users/marco/helical_tests/test_cnn_zaneta/exp43'],
-    batch: 5,
-    num_workers: 8,
+    num_workers: 1,
     resize_crops: True
   }
 ##################################################
@@ -70,8 +69,8 @@ mil_trainer:
     bag_classes:  {0:0.25, 1:0.5, 2:0.75, 3:1},
     n_instances_per_bag: 9,
     stain: 'pas',
-    # batch: 5,
-    # num_workers: 8,
+    batch: 5,
+    num_workers: 8,
     epochs: 10,
     lr0: 0.0001,
     limit_n_bags_to: 30

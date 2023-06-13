@@ -49,6 +49,7 @@ class MILDataset(Dataset, Configurator):
                             all_slides_dir=self.all_slides_dir,
                             stain=self.stain, 
                             n_instances_per_bag=self.n_instances_per_bag)
+        # bag_manager._del_augm_files()
         bag_manager()
 
         # 2) extract features from all images
@@ -74,22 +75,22 @@ class MILDataset(Dataset, Configurator):
             if self.limit_n_bags_to is not None:
                 if i==self.limit_n_bags_to:
                     break
-
-        self._print_bag_summary()
+        # self.data = data
+        # self._print_bag_summary()
 
 
         return  data    
     
 
-    def _print_bag_summary(self):
-        """ Prints a summary for the created bags."""
+    # def _print_bag_summary(self):
+    #     """ Prints a summary for the created bags."""
 
-        print(f"Created a total of {len(self.data)} bags. ")
-        bag_features, bag_label = self.__getitem__[0]
-        n_feats = bag_features.shape[0]
-        print(f"Each bag has {self.n_instances_per_bag} instances. Each instance has {n_feats//self.n_instances_per_bag} features, for a total {n_feats} features. ")
+    #     print(f"Created a total of {len(self.data)} bags. ")
+    #     # bag_features, bag_label = self.__getitem__[0]
+    #     n_feats = bag_features.shape[0]
+    #     print(f"Each bag has {self.n_instances_per_bag} instances. Each instance has {n_feats//self.n_instances_per_bag} features, for a total {n_feats} features. ")
 
-        return
+    #     return
 
 
     def __len__(self) -> int:

@@ -2,14 +2,14 @@ import time
 import torch
 import os, shutil, sys
 from glob import glob
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from cnn_feat_extract_loaders import CNNDataLoaders
 from cnn_assign_class_crop import CropLabeller
 from cnn_splitter import CNNDataSplitter
 from typing import List, Literal
 import numpy as np
 
-def prepare_data(cnn_root_fold:str, map_classes:dict, batch:int, num_workers:int, 
+def prepare_data(cnn_root_fold:str, map_classes:dict,  num_workers:int, 
                  yolo_root:str, exp_folds:List[str], resize_crops:bool, sets2extract:Literal['all', 'train', 'val', 'test']): 
     """ Prepares data for feature extraction: puts all images in the same folder 
         (regardless of trainset, valset, testset) and gets the dataloader to be used by the model."""
@@ -63,7 +63,7 @@ def prepare_data(cnn_root_fold:str, map_classes:dict, batch:int, num_workers:int
         if not os.path.isfile(dst):
             shutil.copy(src=img, dst=dst)
     assert len(os.listdir(feat_extract_fold))>0, f"No images found in extract fold: {feat_extract_fold}"
-    dataloader_cls = CNNDataLoaders(root_dir=feat_extract_fold, map_classes=map_classes, batch=batch, num_workers=num_workers)
+    dataloader_cls = CNNDataLoaders(root_dir=feat_extract_fold, map_classes=map_classes, batch=1, num_workers=num_workers) # 1 image saved at a time
     dataloader = dataloader_cls()
 
     return  dataloader
@@ -86,7 +86,8 @@ def feature_extraction(model, dataloader, cnn_root_fold) -> None:
             os.makedirs(os.path.join(cnn_root_fold, 'feat_extract', _set, clss, 'feats'), exist_ok=True)
 
     # Feature extraction:
-    for i, data in enumerate(tqdm(dataloader, "Feat extraction")):
+    tot_saved = 0
+    for i, data in enumerate(tqdm(dataloader, desc="Feat extraction", position=0, leave=True)):
         model.train(False)
         model.eval()
         inputs, labels, fp = data
@@ -95,9 +96,12 @@ def feature_extraction(model, dataloader, cnn_root_fold) -> None:
         fp=fp[0] # because it's batched otherwise
         feat_shape = outputs.data.shape
         save_fp = os.path.join(os.path.dirname(fp), 'feats', os.path.basename(fp).replace('.jpg', '.npy'))
+        # print(save_fp)
+        tot_saved+=1
         save_feats(save_fp=save_fp, feats=outputs.data )
         del inputs, labels, outputs 
         torch.cuda.empty_cache()
+    print(f"{tot_saved} TOT SAVED")
     print(f"Features with shape {feat_shape} saved in {os.path.dirname(save_fp)}.")
     print('-' * 10)
 

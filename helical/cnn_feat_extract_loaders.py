@@ -20,6 +20,7 @@ class CNNDataLoaders():
         self.batch = batch 
         self.num_workers = num_workers
         self._parse()
+        print(f"CNN Loader batch:{batch}")
 
         return
     

@@ -272,7 +272,9 @@ class BagManager():
             # 1) check that each bag has at least 9 el  
             assert len(bag) >= self.n_instances_per_bag, f"Length of bag is {len(bag)} but min should be {self.n_instances_per_bag} "
             # 2) check that files in bags exist
-            assert all([os.path.isfile(file) for file in list(bag.values()) ])
+            for file in bag.values():
+                assert os.path.isfile(file), f"{file} is not a valid filepath for bag {bag_idx}"
+            # assert all([os.path.isfile(file) for file in list(bag.values()) ])
 
         # 3) check that class bags are balanced 
         assert all([list(self.class_freq.values())[0] == v  for k, v in self.class_freq.items()]), f"Classes are not balanced: values are not all the same in {self.class_freq}"
@@ -324,7 +326,9 @@ class BagManager():
         print(f"Files after FP augmentation: {len(files)}")
 
         self.create_bags()
+        files = glob(self._images_path_like)
         self._augment_bags()
+        files = glob(self._images_path_like)
         self._final_check()
         files = glob(self._images_path_like)
         print(f"Files after class balancing: {len(files)}")
