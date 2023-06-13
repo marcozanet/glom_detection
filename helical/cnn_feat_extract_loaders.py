@@ -56,7 +56,8 @@ class CNNDataLoaders():
             plt.imshow(inp)
             if title is not None:
                 plt.title(title)
-            plt.pause(0.001)
+            plt.pause(0.1)
+            plt.close()
 
         def show_databatch(inputs, classes):
             out = torchvision.utils.make_grid(inputs)
@@ -75,9 +76,9 @@ class CNNDataLoaders():
     def __call__(self) -> tuple:  
 
         dataloader = self.get_loader()
-        self.show_data()
-        self.show_data()
-        self.show_data()
+        # self.show_data()
+        # self.show_data()
+        # self.show_data()
 
         return dataloader
 
