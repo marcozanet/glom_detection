@@ -12,8 +12,10 @@ class MIL_NN(torch.nn.Module):
                  scoring=None,
                 ):
         super(MIL_NN, self).__init__()
+        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
         # print('8')
-        self.agg = agg if agg is not None else AttentionSoftMax(n)
+        self.agg = agg.to(device) if agg is not None else AttentionSoftMax(n).to(device)
         
         # print('post softmax')
         if n_mid == 0:
