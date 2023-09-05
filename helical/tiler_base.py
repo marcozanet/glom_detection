@@ -23,6 +23,8 @@ from loggers import get_logger
 from decorators import log_start_finish
 import json
 import cv2
+from utils import get_config_params
+
 class TilerBase():
 
     def __init__(self, 
@@ -43,7 +45,7 @@ class TilerBase():
 
         self.log = get_logger()
         assert os.path.isdir(folder), ValueError(f"Provided 'folder':{folder} is not a valid dirpath.")
-        assert isinstance(tile_shape, tuple), TypeError(f"'tile_shape' should be a tuple of int.")
+        assert isinstance(tile_shape, list), TypeError(f"'tile_shape' should be a list of int.")
         assert isinstance(tile_shape[0], int) and isinstance(tile_shape[1], int), TypeError(f"'tile_shape' should be a tuple of int.")
         assert save_root is None or os.path.isdir(save_root), ValueError(f"'save_root':{save_root} should be either None or a valid dirpath. ")
         assert isinstance(step, int), f"'step' should be int."
@@ -598,21 +600,19 @@ class TilerBase():
         
         assert os.path.isfile(fp), ValueError(f"'fp':{fp} is not a valid filepath. ")
 
-
+        # read sample rect:
         with open(fp, 'r') as f:
             data = geojson.load(f)
         all_dicts = []
         for rect in data['features']:
-
             assert len(rect['geometry']['coordinates'][0]) == 5, f"There seems to be more than 4 vertices annotated. "
-
             vertices = rect['geometry']['coordinates'][0][:-1]
             location = vertices[0]
-            h =  vertices[1][1] - vertices[0][1]
+            h =  vertices[2][1] - vertices[1][1] 
             w =  vertices[2][0] - vertices[0][0]
 
-            assert h>=0, f"{fp} has a feature with negative height. "
-            assert w>=0, f"{fp} has a feature with negative width. "
+            assert h>0, f"Sample has zero or negative height. H:{h} Vertices: {vertices}"
+            assert w>0, f"Sample has zero or negative width. W:{w} Vertices: {vertices} "
 
             dictionary = {'location':location, 'w':w, 'h':h}
             all_dicts.append(dictionary)

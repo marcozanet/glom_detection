@@ -39,6 +39,7 @@ class ProfilerBase(Configurator, ABC):
         self.verbose = verbose
         self.empty_ok = empty_ok
         self.skip_test = skip_test
+        self.already_written = False
 
 
         return
@@ -53,19 +54,16 @@ class ProfilerBase(Configurator, ABC):
         wsi_labels = glob(os.path.join(self.data_root, 'wsi', '*', 'labels', self.wsi_labels_like))
         tile_images = glob(os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like))
         tile_labels = glob(os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like))
-        
+
         # in case of e.g. data cleaning, test files are NOT to be changed.
-        if self.skip_test: 
-            self.log.info(f"{self._class_name}.{'_get_data'}: Skipping test files.")
-            is_not_test = lambda path: os.path.basename(os.path.dirname(os.path.dirname(path))) != 'test'
-            wsi_images = list(filter(is_not_test, wsi_images))
-            wsi_labels = list(filter(is_not_test, wsi_images))
-            tile_images = list(filter(is_not_test, wsi_images))
-            tile_labels = list(filter(is_not_test, wsi_images))
-        else:
-            self.log.info(f"{self._class_name}.{'_get_data'}: Listing also test files.")
-
-
+        if self.already_written is False:
+            self.log.info(f"{self._class_name}.{'_get_data'}: Ignoring test files in cleaning dataset.")
+        is_not_test = lambda path: os.path.basename(os.path.dirname(os.path.dirname(path))) != 'test'
+        wsi_images = list(filter(is_not_test, wsi_images))
+        wsi_labels = list(filter(is_not_test, wsi_labels))
+        tile_images = list(filter(is_not_test, tile_images))
+        tile_labels = list(filter(is_not_test, tile_labels))
+   
         data = {'wsi_images':wsi_images, 'wsi_labels':wsi_labels, 'tile_images':tile_images,  'tile_labels':tile_labels }
         
         # if allowed to be empty:
@@ -77,8 +75,9 @@ class ProfilerBase(Configurator, ABC):
                 self.log.warning(f"{self._class_name}.{'_get_data'}: no tile image like {os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like)} was found.")
             if len(tile_labels) > 0:
                 self.log.warning(f"{self._class_name}.{'_get_data'}: no tile label like {os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like)} was found.")
-        self.log.info(f"{self._class_name}.{'_get_data'}: Found {len(wsi_images)} slides with {len(wsi_labels)} annotations and {len(wsi_images)} tiles with {len(wsi_labels)} annotations. ")
-        
+        # if len(wsiself.log.info(f"{self._class_name}.{'_get_data'}: Found {len(wsi_images)} slides with {len(wsi_labels)} annotations and {len(wsi_images)} tiles with {len(wsi_labels)} annotations. ")
+        self.already_written = True
+
         return data
     
 

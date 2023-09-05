@@ -5,6 +5,7 @@ from torch.utils.data import DataLoader
 from typing import Tuple
 import matplotlib.pyplot as plt 
 import torchvision
+import math
 
 class CNNDataLoaders():
 
@@ -16,12 +17,19 @@ class CNNDataLoaders():
                  ) -> None:
         
         self.root_dir = root_dir
-        self.map_classes = map_classes
+        self.map_classes = map_classes if 'false_positives' in map_classes.keys() else self._get_map_classes(map_classes)
         self.batch = batch 
         self.num_workers = num_workers
         self._parse()
 
         return
+    
+
+    def _get_map_classes(self, old_map_classes:dict):
+
+        new_map_classes = {k:v for k,v in old_map_classes.items()}
+        new_map_classes.update({'false_positives':max(new_map_classes.values())+1}) # adding false positive class for base class = 0 e.g. Glomerulus (wo classification)
+        return new_map_classes
     
 
     def _parse(self): 
@@ -33,6 +41,7 @@ class CNNDataLoaders():
 
         return
     
+
     def get_loaders(self):
 
         # get train, val, test set:
@@ -65,49 +74,71 @@ class CNNDataLoaders():
 
         return dataloaders
     
-    
-    def show_data(self):
-
-        def imshow(inp, title=None):
-            inp = inp.numpy().transpose((1, 2, 0))
-
-            # plt.figure(figsize=(10, 10))
-            fig = plt.figure()
-            plt.axis('off')
-            plt.imshow(inp)
-            if title is not None:
-                plt.title(title)
-            plt.pause(0.001)
-            fig.savefig('cnn_crops.png')
-            plt.close()
-
-        def show_databatch(inputs, classes):
-            out = torchvision.utils.make_grid(inputs)
-            
-            onehot2int = lambda tensor: tensor.argmax() 
-
-            reversed_map_classes = {v:k for k,v in self.map_classes.items()}
-
-            # classes
-            imshow(out, title=[reversed_map_classes[int(onehot2int(x))] for x in classes])
-
-        # Get a batch of training data
+    def show_data(self, ncols:int=2):
+        
         inputs, classes = next(iter(self.dataloaders['train']))
-        # classes = [self.map_classes[self.] for x in classes]
-        # print(classes)
-        show_databatch(inputs, classes)
+        onehot2int = lambda tensor: tensor.argmax() 
+        reversed_map_classes = {v:k for k,v in self.map_classes.items()}
+        classes = [reversed_map_classes[int(onehot2int(x))] for x in classes]
+        inputs = inputs.numpy().transpose((0, 2, 3, 1))
+        n_imgs = len(inputs)
+        nrows= math.ceil(n_imgs/ncols)
+        fig = plt.figure(figsize=(ncols*3, nrows*3))
+        inp_clss=zip(inputs, classes)
 
+        for i,(img,clss) in enumerate(inp_clss):
+            plt.subplot(nrows, ncols, i+1)
+            plt.imshow(img)
+            plt.axis('off')
+            plt.title(clss)
+            plt.tight_layout()
+        # plt.show()
+        fig.savefig('img_cnn_data.png')
 
-        return 
+        return
+    
+    
+    # def show_data(self):
+
+    #     def imshow(inp, title=None):
+    #         inp = inp.numpy().transpose((1, 2, 0))
+
+    #         # plt.figure(figsize=(10, 10))
+    #         fig = plt.figure()
+    #         plt.axis('off')
+    #         plt.imshow(inp)
+    #         if title is not None:
+    #             plt.title(title)
+    #         plt.pause(0.001)
+    #         fig.savefig('cnn_data.png')
+    #         plt.close()
+
+    #     def show_databatch(inputs, classes):
+    #         print(inputs.shape)
+    #         out = torchvision.utils.make_grid(inputs, nrow=len(inputs)//2)
+    #         onehot2int = lambda tensor: tensor.argmax() 
+    #         reversed_map_classes = {v:k for k,v in self.map_classes.items()}
+    #         # classes
+    #         title = [reversed_map_classes[int(onehot2int(x))][:3] for x in classes]
+    #         imshow(out, title=title)
+
+    #     # Get a batch of training data
+    #     inputs, classes = next(iter(self.dataloaders['train']))
+    #     # classes = [self.map_classes[self.] for x in classes]
+    #     # print(classes)
+    #     show_databatch(inputs, classes)
+
+    #     return 
+    
     
     def __call__(self) -> tuple:  
 
         dataloaders = self.get_loaders()
         self.show_data()
-        self.show_data()
-        self.show_data()
 
         return dataloaders
+
+
 
 
 if __name__ == "__main__": 

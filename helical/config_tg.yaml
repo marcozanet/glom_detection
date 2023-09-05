@@ -1,0 +1,38 @@
+readme: >
+  - input_dir for inference needs to contain a list of images for detection.
+  - input_dir for validation needs to be a folder with /images and /labels subfolders. Labels need to be in YOLO format.
+
+
+inference:
+  {
+    repository_dir: '/Users/marco/yolo/code/helical',
+    yolov5dir: '/Users/marco/yolov5',
+    input_dir: '/Users/marco/tg_integration_tests/infere_in',
+    output_dir: '/Users/marco/tg_integration_tests/infere_out', 
+    save_imgs: True,
+    save_txt: True,
+    augment: False,
+    model: 'yolo',
+    task: 'detection', 
+    classify: True,
+    device: 'gpu',
+    convert2mask: true,
+    show_mask: true
+
+  }
+
+
+validation:
+  {
+    repository_dir: '/Users/marco/yolo/code/helical',
+    yolov5dir: '/Users/marco/yolov5',
+    input_dir: '/Users/marco/tg_integration_tests/val_in',
+    output_dir: '/Users/marco/tg_integration_tests/val_out', 
+    # nb here save_imgs can't be set
+    save_txt: True,
+    augment: False,
+    model: 'yolo',
+    task: 'detection', 
+    classify: True,
+    device: 'gpu',
+  }

@@ -1,6 +1,6 @@
 import shutil
 from abc import abstractmethod
-from typing import Literal, List
+from typing import Literal, List, Tuple
 import os
 from configurator import Configurator
 from crossvalidation import KCrossValidation
@@ -8,7 +8,7 @@ from glob import glob
 import numpy as np
 from tqdm import tqdm
 import json
-
+from utils import get_config_params
 
 class CNN_KCrossValidation(KCrossValidation): 
 
@@ -19,22 +19,9 @@ class CNN_KCrossValidation(KCrossValidation):
         
         super().__init__(*args, **kwargs)
         self.class_name = self.__class__.__name__  
-        # self.wsi_img_fmt = '.tif'
-        # self.wsi_lbl_fmt = '.json'
         self.tile_img_fmt = '.jpg'
-        # self.tile_lbl_fmt = '.txt'
-        # self.data_root = data_root
-        # self.k = k
-        # self.dataset = dataset
         self._parse()
 
-        # PRIMA C'ERA QUESTO:
-        # self.data, self.file_list = self._get_data()
-        # self.n_wsis = len(self.data['wsi_imgs'])
-        # self.log.info(f"{self.class_name}.__init__: n_wsis:{self.n_wsis}.")
-        # self.splits = self.create_folds()
-        # self.n_tiles_dict = self.get_n_tiles()
-        
         return
     
     def _parse(self): 
@@ -45,37 +32,29 @@ class CNN_KCrossValidation(KCrossValidation):
         return
     
     
-    def _get_data(self): 
+    def _get_data(self)->Tuple[dict, list]: 
+        """ Collects tile images, tile labels and wsi basenames. """
+        
+        path_like = os.path.join(self.data_root, '*', '*', f'*{self.tile_img_fmt}')
+        tile_imgs = sorted(glob(path_like))
 
-        tile_imgs = sorted(glob(os.path.join(self.data_root, '*', '*', f'*{self.tile_img_fmt}')))
-
-        def get_basename(fp:str):
-            if "ROI" in fp:
-                ret = os.path.basename(fp).split('ROI')[0]
-                # if 'split('_I_')[1]
+        def get_basename(fp:str):       # helper func to get wsi basename
+            fn = os.path.basename(fp)
+            if "ROI" in fn:
+                ret = os.path.basename(fn).split('ROI')[0]
             else:
-                ret = os.path.basename(fp).split('_')[0]
-            
-            if 'Augm' in ret:
-                splitter = "_".join(ret.split("_", 2)[:2])
-                ret = ret.split(splitter + '_')[1]
-                # print(ret)
-
-
+                if 'Augm' not in fn:
+                    ret = "_".join(fn.split('_')[:2])
+                else:
+                    ret = "_".join(fn.split('_')[2:4])
             return ret
-        # get_basename = lambda fp: os.path.basename(fp).split('ROI')[0].split('_I_')[1] if "ROI" in fp else os.path.basename(fp).split('_')[0]
 
-        # print(os.path.join(self.data_root, '*', '*', f'*{self.tile_img_fmt}'))
         tile_lbls = [os.path.split(os.path.dirname(fp))[1] for fp in tile_imgs]
         wsi_fns = list(set([get_basename(fp) for fp in tile_imgs]))
 
-        # if data is zaneta:
-        # if "ROI" in fp
-        # print(f"wsi_fns: {wsi_fns}")
-
-        # assert len(wsi_fns) > 0, self.log.warning(f"{self.class_name}._get_data: len(wsi_imgs):{len(wsi_fns)}.")
-        assert len(tile_imgs) > 0, self.log.warning(f"{self.class_name}._get_data: len(tile_imgs):{len(tile_imgs)}.")
-        assert len(tile_lbls) > 0, self.log.warning(f"{self.class_name}._get_data: len(tile_lbls):{len(tile_lbls)}.")
+        assert len(wsi_fns) > 0, self.log.warning(f"{self.class_name}._get_data: len(wsi_imgs):{len(wsi_fns)}.")
+        assert len(tile_imgs) > 0, self.log.warning(f"{self.class_name}._get_data: len(tile_imgs):{len(tile_imgs)}. Path: {path_like}")
+        assert len(tile_lbls) > 0, self.log.warning(f"{self.class_name}._get_data: len(tile_lbls):{len(tile_lbls)}. Path: {path_like}")
 
         data = {'wsi_fns':wsi_fns, 'tile_imgs':tile_imgs, 'tile_lbls':tile_lbls}
         file_list = tile_imgs + tile_lbls
@@ -87,9 +66,8 @@ class CNN_KCrossValidation(KCrossValidation):
         """ Splits data into k folds. """
 
         list_imgs = sorted(self.data['wsi_fns'])
-        fnames = sorted(self.data['wsi_fns'])#sorted([os.path.basename(name).split('.')[0] for name in list_imgs])
+        fnames = sorted(self.data['wsi_fns'])
         fp_fnames = {os.path.basename(fp).split('.')[0]:fp for fp in list_imgs}
-        print(fp_fnames)
         fp_fnames = dict(sorted(fp_fnames.items(), key=lambda x:x[0]))
 
         folds = []
@@ -105,9 +83,8 @@ class CNN_KCrossValidation(KCrossValidation):
         
         return folds
     
-    def _get_i_split(self, folds:dict): 
 
-        # print(folds)
+    def _get_i_split(self, folds:dict): 
 
         fold_splits = {}
         for i in range(self.k): 
@@ -125,14 +102,16 @@ class CNN_KCrossValidation(KCrossValidation):
             
         return fold_splits
     
-    def _change_kfold(self, fold_i:int): 
 
+    def _change_kfold(self, fold_i:int): 
+        
+        func_n = self._change_kfold.__name__
         assert fold_i < self.k , self.log.error(f"{self.class_name}._change_folds: fold_i:{fold_i} should be < num folds({self.k}). Index starting from 0.")
         
         # ADDED HERE NOT TESTED, WAS IN THE INIT
         self.data, self.file_list = self._get_data() #self.file_list
         self.n_wsis = len(self.data['wsi_fns'])
-        self.log.info(f"{self.class_name}.__init__: n_wsis:{self.n_wsis}.")
+        self._format_msg(msg=f"n_wsis:{self.n_wsis}", func_n=func_n)
         self.splits = self.create_folds()
         self.n_tiles_dict = self.get_n_tiles()
 
@@ -165,16 +144,18 @@ class CNN_KCrossValidation(KCrossValidation):
         
         n_train = _move_files('train')
         self.data, self.file_list = self._get_data() # update data
-        # self.log.info(f"Splitted train: {n_train}")
-
-        # TODO ADD ONLY IN CASE THERE IS 
         n_val = _move_files('val')
         self.data, self.file_list = self._get_data() # update data
+        self._format_msg(f"Files splitting: train:{n_train}, val:{n_val}, test:0. ", func_n=func_n)
+        self._log_class_balance()
+        return
 
-        self.log.info(f"Wsi_fns splitted in: train:{n_train} val:{n_val}, test:0. ")
 
-
-
+    def _log_class_balance(self)->None:
+        
+        func_n = self._log_class_balance.__name__
+        n_files = lambda fold: {_class_dir:len(os.listdir(os.path.join(self.data_root, fold, _class_dir))) for _class_dir in os.listdir(os.path.join(self.data_root, fold)) if 'DS_Store' not in _class_dir}
+        self._format_msg(f"Class balance: 'train':{n_files(fold='train')}, 'val':{n_files(fold='val')}, 'test':{n_files(fold='test')} ", func_n=func_n)
         return
     
     

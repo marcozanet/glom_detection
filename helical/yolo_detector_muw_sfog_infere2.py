@@ -45,9 +45,6 @@ class YOLO_Inferer_Detector():
 
 
         return
-    
-
-
 
 
     def infere(self, visualize: bool = False, save_txt: bool = False) -> None:
@@ -72,6 +69,7 @@ class YOLO_Inferer_Detector():
             command +=" --visualize"
         if self.conf_thres is not None:
             command += f" --conf-thres {self.conf_thres}" 
+
 
         # 3) infere (e.g. predict):
         self.log.info(f"Start inference YOLO: ⏳")

@@ -24,10 +24,10 @@ class ConverterBase(Configurator):
                 folder: str, 
                 level:int,
                 map_classes: dict,
-                data_source:Literal['muw', 'hubmap'],
+                data_source:Literal['muw', 'hubmap', 'tcd'],
                 multiple_samples: bool,
                 stain: Literal['pas', 'sfog'],
-                convert_from: Literal['json_wsi_mask', 'jsonliketxt_wsi_mask', 'gson_wsi_mask'], 
+                convert_from: Literal['json_wsi_mask', 'jsonliketxt_wsi_mask', 'gson_wsi_mask', 'geojson_wsi_mask'], 
                 convert_to: Literal['json_wsi_bboxes', 'txt_wsi_bboxes', 'geojson_wsi_mask'],
                 save_folder = None,
                 verbose: bool = False) -> None:
@@ -35,6 +35,7 @@ class ConverterBase(Configurator):
             json_wsi_mask"""
         
         super().__init__()
+        
 
         assert os.path.isdir(folder), ValueError(f"'folder': {folder} is not a dir.")
         assert convert_from in ['json_wsi_mask', 'jsonliketxt_wsi_mask', 'gson_wsi_mask'], f"'convert_from'{convert_from} should be in ['json_wsi_mask', 'jsonliketxt_wsi_mask', 'gson_wsi_mask']. '"
@@ -66,13 +67,14 @@ class ConverterBase(Configurator):
             path_like = os.path.join(self.folder, f'*.{self.format_from}')
         elif self.data_source == 'hubmap' or self.data_source == 'zaneta':
             path_like = os.path.join(self.folder, f'*.json')
+        elif self.data_source == 'tcd':
+            path_like = os.path.join(self.folder, f"*.json")
+        else: 
+            self.log.exception(f"Datasource not in the existing ones.")
+            
         files = glob(path_like)
-        if self.verbose is True:
-            self.log.info(f"First 5 files: {files[:5]}", extra={'className': self.__class__.__name__})
         if len(files)==0:
             self.log.warn(f"No file like {path_like} found")
-
-        print(files)
 
         return files
 
@@ -294,9 +296,6 @@ class ConverterBase(Configurator):
     def _rename_all(self) -> None:
         """ Renames all files (annotations and slides) to <basename>_<stain>.<ext>. """
 
-        if self.verbose is True: 
-            self.log.info(f"{self.class_name}.{'_rename_all'}: renaiming all filenames to <basename>_<stain>.<ext>")
-
         rename_file = lambda fp, ext  : (fp, os.path.join(os.path.dirname(fp), os.path.basename(fp).split(self.stain.upper())[0] + f'{self.stain.upper()}.{ext}'))
         
         geojson_files = glob(os.path.join(self.folder, "*.geojson"))
@@ -315,7 +314,7 @@ class ConverterBase(Configurator):
         for old_fp, new_fp in old_new_tif: 
             os.rename(old_fp, new_fp)
 
-        self.log.info(f"{self.class_name}.{'_rename_all'}: renamed all filenames to <basename>_<stain>.<ext>")
+        self.log.info(f"{self.class_name}.{'_rename_all'}: Renamed all filenames to <basename>_<stain>.<ext>")
 
         return
     

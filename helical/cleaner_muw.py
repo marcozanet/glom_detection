@@ -1,12 +1,12 @@
 ### cleans dataset from e.g. duplicates and from having too many empty images -> removes majority of them.
 
 from profiler_muw import ProfilerMUW
-from shutil import copytree
-import os
+import os, shutil
 from tqdm import tqdm
 import random 
 import sys
 from decorators import log_start_finish
+from utils import copy_tree
 
 
 
@@ -15,6 +15,8 @@ class CleanerMuw(ProfilerMUW):
     def __init__(self, 
                 empty_perc:float = 0.1,  
                 safe_copy:bool = True,
+                remove_classes: list = None,
+                ignore_classes: list = None,
                 *args, 
                 **kwargs):
             
@@ -22,9 +24,9 @@ class CleanerMuw(ProfilerMUW):
 
         self.empty_perc = empty_perc
         self.safe_copy = safe_copy
+        self.remove_classes = remove_classes
+        self.ignore_classes = ignore_classes
         self.data = self._get_data()
-
-
         return
     
 
@@ -58,6 +60,7 @@ class CleanerMuw(ProfilerMUW):
         do()
 
         return
+    
 
 
     def _remove_class_(self, class_num:int=3) -> None:
@@ -67,47 +70,37 @@ class CleanerMuw(ProfilerMUW):
         unique_classes = self._get_unique_labels()
         assert str(class_num) in unique_classes, self.log.error(f"{self._class_name}.{'_replacing_class'}: AssertionError:'class':{class_num} not in unique classes: {unique_classes}")
 
+            
+        # look into each label file:
+        for label_fp in tqdm(self.data['tile_labels'], desc = f" Removing class '{class_num}' from labels"):
+
+            assert os.path.isfile(label_fp), self.log.error(f"'label_fp':{label_fp} is not a valid filepath.")
+            
+            # pop out the desired class:
+            found = False
+            with open(label_fp, mode ='r') as f:
+                old_rows = f.readlines()
+                new_rows = old_rows.copy()
+                for i, row in enumerate(old_rows):
+                    if row[0] == str(class_num):
+                        new_rows.remove(row)
+                        found = True
+
+            # overwrite label file:
+            if found is True:
+                with open(label_fp, 'w') as f:
+                    f.writelines(new_rows)
+                    if self.verbose is True:
+                        print(f"Removed class.")
         
-        @log_start_finish(class_name=self.__class__.__name__, func_name='_remove_class_', msg = f" Removing class:{class_num}" )
-        def do():
-            
-            # look into each label file:
-            for label_fp in tqdm(self.data['tile_labels'], desc = f" Removing class '{class_num}' from labels"):
-
-                assert os.path.isfile(label_fp), self.log.error(f"'label_fp':{label_fp} is not a valid filepath.")
-                
-                # pop out the desired class:
-                found = False
-                with open(label_fp, mode ='r') as f:
-                    rows = f.readlines()
-                    for i, row in enumerate(rows):
-                        if row[0] == str(class_num):
-                            if self.verbose is True:
-                                print(f"rows before: {rows}")
-                            rows.pop(i)
-                            if self.verbose is True:
-                                print(f"rows after: {rows}")
-                            found = True
-                        else:
-                            found = False
-
-                # overwrite label file:
-                if found is True:
-                    with open(label_fp, 'w') as f:
-                        f.writelines(rows)
-                        if self.verbose is True:
-                            print(f"Removed class.")
-            
-            # final check:
-            unique_classes = self._get_unique_labels()
-            assert str(class_num) not in unique_classes, f"Removed class still appears in 'unique_classes':{unique_classes}"
-            
-            # update self.data: 
-            self.data = self._get_data()
-
-            return
+        # final check:
+        self.data = self._get_data()
+        unique_classes = self._get_unique_labels()
+        assert str(class_num) not in unique_classes, self.log.error(f"Removed class {class_num} still appears in 'unique_classes':{unique_classes}")
         
-        do()
+        # update self.data: 
+        self.data = self._get_data()
+
 
         return
 
@@ -352,7 +345,6 @@ class CleanerMuw(ProfilerMUW):
         full, empty = self._get_empty_images(also_from_test=False)
         num_empty = len(empty)
         num_full = len(full)
-        self.log.info(f"empty: {num_empty}, full:{num_empty}")
 
         assert num_full > 0, self.log.error(f"{self._class_name}.{'_remove_perc_'}: no full image found. full images:{num_full}, empty images:{num_empty}")
 
@@ -378,7 +370,7 @@ class CleanerMuw(ProfilerMUW):
             for file in tqdm(img_empty2del, desc = "Removing empty images"):
                 os.remove(file)
             
-            self.log.info(f"{self._class_name}.{'_remove_perc_'}: empty:{num_empty-len(img_empty2del)}, full:{num_full}, tot:{num_empty-len(img_empty2del) + num_full}")
+            self.log.info(f"{self._class_name}.{'_remove_perc_'}: Keeping {self.empty_perc*100}% of empty images. Empty images:{num_empty-len(img_empty2del)}, full images:{num_full}. Tot images:{num_empty-len(img_empty2del) + num_full}")
 
             return
         
@@ -417,7 +409,7 @@ class CleanerMuw(ProfilerMUW):
         dst = os.path.join(os.path.dirname(self.data_root), 'safe_copy')
         if not os.path.isdir(dst):
             self.log.info(f"{self._class_name}.{'_copy_tree'}: Safe copying tree before modifying:")
-            copytree(src = src, dst = dst)
+            shutil.copytree(src = src, dst = dst)
         else:
             self.log.info(f"{self._class_name}.{'_copy_tree'}: Safe copy of the data tree already existing. Skipping.")
 
@@ -443,7 +435,9 @@ class CleanerMuw(ProfilerMUW):
 
         return
     
-    def _clean_hubmap(self): 
+    def _clean_generic(self): 
+
+        func_n = self._clean_generic.__name__
 
         if self.safe_copy is True:
             self._copy_tree()
@@ -451,14 +445,22 @@ class CleanerMuw(ProfilerMUW):
         self._del_unpaired_labels()
         # 2) remove label redundancies
         self._del_redundant_labels()
-        # # 5) removes tissue class
-        # self._remove_class_(class_num=3)
-        # # 6) assign randomly the NA class (int=1) to either class 0 or 2:
-        # self._assign_NA_randomly()
-        # # 7) replace class 2 with class 1 ({0:healthy, 1:NA, 2:unhealthy} -> {0:healthy, 2:unhealthy})
-        # self._replacing_class(class_old=2, class_new=1)
         # 8) removing empty images to only have empty_perc of images being empty
         self._remove_perc_()
+
+        if self.remove_classes is not None:
+            for clss in self.remove_classes:
+                self._remove_class_(class_num=clss)
+        
+        if self.ignore_classes is not None:
+            self.format_msg(f"Copying tree to {os.path.join(self.data_root, 'temp')} with {self.tile_labels_like}", func_n=func_n, type='warning')
+            # 1) Copy labels in a temp tree
+            copy_tree(tree_path=self.data_root, 
+                        dst_dir=os.path.join(self.data_root, 'temp'), 
+                        keep_format="."+self.tiles_label_format)
+            # 2) remove classes:
+            for clss in self.ignore_classes:
+                self._remove_class_(class_num=clss)
         
 
         return
@@ -469,6 +471,9 @@ class CleanerMuw(ProfilerMUW):
     def __call__(self) -> None:
 
         self._clean_muw()
+
+
+
         return 
 
 

@@ -105,6 +105,40 @@ test_yolo_infere_detect_hubmap_pas:
     visualize: True, 
     save_txt: False
   }
+
+
+test_inference_tg:
+  {
+    repository_dir: '/Users/marco/yolo/code/helical',
+    yolov5dir: '/Users/marco/yolov5',
+    input_dir: '/Users/marco/tg_integration_tests/infere_in',
+    output_dir: '/Users/marco/tg_integration_tests/infere_out', 
+    save_imgs: True,
+    save_txt: True,
+    augment: False,
+    model: 'yolo',
+    mode: 'detection', 
+    classify: True,
+    device: 'gpu',
+    
+  }
+
+
+validate_tg:
+  {
+    repository_dir: '/Users/marco/yolo/code/helical',
+    yolov5dir: '/Users/marco/yolov5',
+    input_dir: '/Users/marco/tg_integration_tests/val_in', # should be a folder containing both /images and /labels (labels need to be in yolo format.)
+    output_dir: '/Users/marco/tg_integration_tests/val_out', 
+    save_imgs: True,
+    save_txt: True,
+    augment: False,
+    model: 'yolo',
+    mode: 'detection', 
+    classify: True,
+    device: 'gpu',
+    
+  }
 ##################################################
 
 

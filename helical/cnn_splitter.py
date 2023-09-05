@@ -13,7 +13,6 @@ class CNNDataSplitter():
                  yolo_root:str,
                  dst_root: str,
                  map_classes: dict,
-                 resize:bool=True,
                  treat_as_single_class:bool=False) -> None:
         """ Prepares data for CNN. Crops are divided by true class, resized and split in datasets."""
 
@@ -23,7 +22,6 @@ class CNNDataSplitter():
         self.class_folds = self._get_class_folds()
         self.tot_images = self._get_all_files()
         self.dst_root = dst_root
-        self.resize = resize
         self.yolo_root = yolo_root
         self.map_classes = {v:k for v,k in map_classes.items() if k!='false_positives'} 
 
@@ -36,8 +34,6 @@ class CNNDataSplitter():
 
         class_folds = list(self.map_classes.keys())
         class_folds.append('false_positives')
-        # print(class_folds)
-        # found_folds = 
         for exp_fold in self.src_folds: 
             found_folds = os.listdir(os.path.join(exp_fold, 'crops_true_classes'))
             found_folds = [dir for dir in found_folds if "DS" not in dir]
@@ -46,21 +42,21 @@ class CNNDataSplitter():
         return list(set(class_folds))
     
     
-    def _resize_images(self) -> None:
-        """ Resizes images to match input size of the CNN (224, 224, 3) and saves them in the same folder."""
+    # def _resize_images(self) -> None:
+    #     """ Resizes images to match input size of the CNN (224, 224, 3) and saves them in the same folder."""
 
-        # get all moved images: 
-        tot_moved_images = glob(os.path.join(self.dst_root, '*', '*', '*.jpg'))
-        tot_moved_images = [file for file in tot_moved_images if "DS" not in file]
-        assert len(tot_moved_images)>0, f"No image like {os.path.join(self.dst_root, '*', '*', '*.jpg')} found in dst_root."
+    #     # get all moved images: 
+    #     tot_moved_images = glob(os.path.join(self.dst_root, '*', '*', '*.jpg'))
+    #     tot_moved_images = [file for file in tot_moved_images if "DS" not in file]
+    #     assert len(tot_moved_images)>0, f"No image like {os.path.join(self.dst_root, '*', '*', '*.jpg')} found in dst_root."
 
-        for img_fp in tqdm(tot_moved_images, 'resizing'): 
-            # print(img_fp)
-            image = cv2.imread(img_fp, cv2.COLOR_BGR2RGB)
-            image = cv2.resize(image, dsize=(224, 224))
-            cv2.imwrite(img_fp, image)
+    #     for img_fp in tqdm(tot_moved_images, 'resizing'): 
+    #         # print(img_fp)
+    #         image = cv2.imread(img_fp, cv2.COLOR_BGR2RGB)
+    #         image = cv2.resize(image, dsize=(224, 224))
+    #         cv2.imwrite(img_fp, image)
 
-        return
+    #     return
     
 
     def _get_all_files(self):
@@ -75,6 +71,7 @@ class CNNDataSplitter():
 
         return tot_images
     
+
     def _treat_as_single_class(self):
         """ Merges all classes other than 'false_positives' altogether in 'item' 
             resulting classes used by the model are 'false_positives', 'item'. """
@@ -131,6 +128,7 @@ class CNNDataSplitter():
 
         return
     
+    
     def _split_move_images(self, test_size:float=0.2):
         """ Splits crops from exp folder into train, val, test and moves them in the new folds. """
 
@@ -160,7 +158,7 @@ class CNNDataSplitter():
         # self._get_all_files()
         self._make_dataset()
         self._split_move_images()
-        self._resize_images()
+        # self._resize_images()
         if self.treat_as_single_class:
             self._treat_as_single_class()
         

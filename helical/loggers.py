@@ -18,6 +18,8 @@ import sys
 
 #     return logger
 
+
+
 def get_logger():
     """ Gets logger. """
     logformat = "%(asctime)s|%(levelname)s|%(message)s" # class and func name are inside message in decorator

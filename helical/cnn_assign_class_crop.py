@@ -83,6 +83,7 @@ class CropLabeller():
         self.map_classes = {v:k for v,k in map_classes.items() if k!='false_positives'} 
         self.resize = resize
         self.resize_shape = (224,224)
+        self.manual_check = False
 
         return
     
@@ -296,61 +297,62 @@ class CropLabeller():
         
         
         # check if falls in any of the true objs
-        gt_classes = {}
-        for i, pred_row in enumerate(pred_rows): # for each pred obj
-            crop_fn = lbl2cropfn(pred_lbl=pred_lbl, crop_n=i)
-            crop_fp = cropfn_2_cropfp(crop_fn=crop_fn)
-            p_clss, p_xc, p_yc, p_w, p_h = get_objs_from_row_txt_label(pred_row)
+        if self.manual_check is True:
+            gt_classes = {}
+            for i, pred_row in enumerate(pred_rows): # for each pred obj
+                crop_fn = lbl2cropfn(pred_lbl=pred_lbl, crop_n=i)
+                crop_fp = cropfn_2_cropfp(crop_fn=crop_fn)
+                p_clss, p_xc, p_yc, p_w, p_h = get_objs_from_row_txt_label(pred_row)
+                    
+
+                matching_gloms = [] 
+                zs= []
+                for z, gt_row in enumerate(gt_rows): # for each true label obj
+                    g_clss, g_xc, g_yc, g_w, g_h = get_objs_from_row_txt_label(gt_row)
+                    min_x, max_x = max(g_xc - g_w/2, 0), min(g_xc + g_w/2, self.img_size[0])
+                    min_y, max_y = max(g_yc - g_h/2, 0), min(g_yc + g_h/2, self.img_size[1])
+                    if min_x<=p_xc<=max_x and min_y<=p_yc<=max_y: # look if pred center falls into true obj
+                        if  g_w> 0.5 or g_h> 0.5: #NB IGNORE OBJECTS BIGGER THAN HALF THE TILE! (NO GLOMS LIKE THIS AT LEVEL 2 OF TILING)
+                            continue 
+                        matching_gloms.append((g_clss, g_xc, g_yc, g_w, g_h))
+                    #     zs.append(z)
+                    # if len(matching_gloms)>1:
+                    #     print(f"Multiple matches for PRED:{crop_fn}. {p_xc, p_yc}")
+                    #     for el, match_glom in zip(zs, matching_gloms):
+                    #         print(f"\nGT gloms: {el}: {match_glom}")
+                        # raise NotImplementedError()
+
+                # if glom is one of those with wrong label:
+                found = False
+                def get_cropfn_and_i(fp:str):
+                    try:
+                        basefn, crop_n = (fp.split('_crop')[0], int(fp.split('_crop')[-1].split('.')[0]))
+                    except: 
+                        raise Exception(f"fp:{fp} couldn't split it in basefn and crop_n")
+                    return basefn, crop_n
                 
-
-            matching_gloms = [] 
-            zs= []
-            for z, gt_row in enumerate(gt_rows): # for each true label obj
-                g_clss, g_xc, g_yc, g_w, g_h = get_objs_from_row_txt_label(gt_row)
-                min_x, max_x = max(g_xc - g_w/2, 0), min(g_xc + g_w/2, self.img_size[0])
-                min_y, max_y = max(g_yc - g_h/2, 0), min(g_yc + g_h/2, self.img_size[1])
-                if min_x<=p_xc<=max_x and min_y<=p_yc<=max_y: # look if pred center falls into true obj
-                    if  g_w> 0.5 or g_h> 0.5: #NB IGNORE OBJECTS BIGGER THAN HALF THE TILE! (NO GLOMS LIKE THIS AT LEVEL 2 OF TILING)
-                        continue 
-                    matching_gloms.append((g_clss, g_xc, g_yc, g_w, g_h))
-                #     zs.append(z)
-                # if len(matching_gloms)>1:
-                #     print(f"Multiple matches for PRED:{crop_fn}. {p_xc, p_yc}")
-                #     for el, match_glom in zip(zs, matching_gloms):
-                #         print(f"\nGT gloms: {el}: {match_glom}")
-                    # raise NotImplementedError()
-
-            # if glom is one of those with wrong label:
-            found = False
-            def get_cropfn_and_i(fp:str):
-                try:
-                    basefn, crop_n = (fp.split('_crop')[0], int(fp.split('_crop')[-1].split('.')[0]))
-                except: 
-                    raise Exception(f"fp:{fp} couldn't split it in basefn and crop_n")
-                return basefn, crop_n
-            
-            for wrong_lbl in LBLS_0:
-                basefn, crop_n = get_cropfn_and_i(wrong_lbl)
-                if basefn in pred_lbl and i==crop_n:
-                    gt_classes.update({crop_fp:0})
-                    found = True
-                    break
-            for wrong_lbl in LBLS_1:
-                basefn, crop_n = get_cropfn_and_i(wrong_lbl)
-                if basefn in pred_lbl and i==crop_n:
-                    gt_classes.update({crop_fp:1})
-                    # print(f"{wrong_lbl.split('_crop')[0]} and i== {int(wrong_lbl.split('_crop')[-1].split('.')[0])}")
-                    found = True
-                    break
-            for wrong_lbl in LBLS_NONE:
-                basefn, crop_n = get_cropfn_and_i(wrong_lbl)
-                if basefn in pred_lbl and i==crop_n:                   
-                    gt_classes.update({crop_fp:None})
-                    print(f"{wrong_lbl.split('_crop')[0]} and i== {int(wrong_lbl.split('_crop')[-1].split('.')[0])}")
-                    found = True
-                    break
-            if found is True:
-                continue
+                for wrong_lbl in LBLS_0:
+                    basefn, crop_n = get_cropfn_and_i(wrong_lbl)
+                    if basefn in pred_lbl and i==crop_n:
+                        gt_classes.update({crop_fp:0})
+                        found = True
+                        break
+                for wrong_lbl in LBLS_1:
+                    basefn, crop_n = get_cropfn_and_i(wrong_lbl)
+                    if basefn in pred_lbl and i==crop_n:
+                        gt_classes.update({crop_fp:1})
+                        # print(f"{wrong_lbl.split('_crop')[0]} and i== {int(wrong_lbl.split('_crop')[-1].split('.')[0])}")
+                        found = True
+                        break
+                for wrong_lbl in LBLS_NONE:
+                    basefn, crop_n = get_cropfn_and_i(wrong_lbl)
+                    if basefn in pred_lbl and i==crop_n:                   
+                        gt_classes.update({crop_fp:None})
+                        print(f"{wrong_lbl.split('_crop')[0]} and i== {int(wrong_lbl.split('_crop')[-1].split('.')[0])}")
+                        found = True
+                        break
+                if found is True:
+                    continue
 
 
             # otherwise (normal scenario):
@@ -455,10 +457,17 @@ class CropLabeller():
 
 
 if __name__ == "__main__": 
-    root_data = '/Users/marco/helical_tests/test_merge_muw_zaneta'
-    exp_data = '/Users/marco/helical_tests/test_cnn_trainer2/exp40'
+    root_data = '/Users/marco/Downloads/new_dataset/detection'
+    exp_data = '/Users/marco/yolov5/runs/detect/exp60'
     map_classes = {'Glo-healthy':0, 'Glo-unhealthy':1} 
     resize = True
     labeller = CropLabeller(root_data=root_data, exp_data=exp_data, 
                             map_classes=map_classes, resize = resize)
     labeller()
+    # root_data = '/Users/marco/helical_tests/test_merge_muw_zaneta'
+    # exp_data = '/Users/marco/helical_tests/test_cnn_trainer2/exp40'
+    # map_classes = {'Glo-healthy':0, 'Glo-unhealthy':1} 
+    # resize = True
+    # labeller = CropLabeller(root_data=root_data, exp_data=exp_data, 
+    #                         map_classes=map_classes, resize = resize)
+    # labeller()

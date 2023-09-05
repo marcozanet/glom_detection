@@ -19,12 +19,19 @@ class CNNDataset(Dataset):
         
         self.root_dir = root_dir 
         self.dataset = dataset 
-        self.map_classes = map_classes
+        self.map_classes = map_classes if 'false_positives' in map_classes.keys() else self._get_map_classes(map_classes)
         self.image_list = self._get_image_list()
         self.imgs_fn = [os.path.basename(fp) for fp in self.image_list] if self.image_list is not None else None
         self.transform = self._get_transf_()
 
         return 
+    
+    def _get_map_classes(self, old_map_classes:dict):
+
+        new_map_classes = {k:v for k,v in old_map_classes.items()}
+        new_map_classes.update({'false_positives':max(new_map_classes.values())+1}) # adding false positive class for base class = 0 e.g. Glomerulus (wo classification)
+        # print(f"WARNINGxxxxx: added false pos. New map: {new_map_classes}" )
+        return new_map_classes
     
     def _get_transf_(self): 
         """ Gets transform depending on the data used . """
@@ -33,11 +40,12 @@ class CNNDataset(Dataset):
             transform = A.Compose([
 
                 A.OneOf([
-                A.Downscale(),
-                A.ChannelShuffle(),
-                A.RandomBrightnessContrast(),
+                # A.Downscale(),
+                # A.ChannelShuffle(),
+                A.RandomContrast(limit=0.1),
+                # A.RandomBrightnessContrast(),
                 ]),
-                A.CLAHE(),
+                # A.CLAHE(),
                 A.HorizontalFlip(),
                 A.VerticalFlip(),
                 ToTensorV2(),
@@ -88,6 +96,8 @@ class CNNDataset(Dataset):
 
         # label:
         label_name = os.path.split(os.path.dirname(img_fp))[1]
+        # print(label_name)
+        # print(self.map_classes)
         label_val = self.map_classes[label_name]
         label = torch.tensor(label_val)
         label = nn.functional.one_hot(label, num_classes = len(self.map_classes))

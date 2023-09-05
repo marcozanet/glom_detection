@@ -53,8 +53,7 @@ datetime,status,duration,exp_fold,dataset,batch_size,task,map_classes,epochs,til
 12/05/2023 11:54:42,completed,0h 5m 40s,exp113,muw,5,detection,"{'Glo-healthy': 1, 'Glo-unhealthy': 0}",1,512,512,yolov5s.pt,None,/Users/marco/helical_datasets/muw_sfog_copia2/detection/tiles,True,8,2,testing
 12/05/2023 12:08:11,completed,0h 22m 32s,exp114,muw,5,detection,"{'Glo-healthy': 1, 'Glo-unhealthy': 0}",5,512,512,yolov5s.pt,None,/Users/marco/helical_datasets/muw_sfog_copia2/detection/tiles,True,8,2,testing
 12/05/2023 12:45:53,completed,1h 30m 11s,exp115,muw,5,detection,"{'Glo-healthy': 1, 'Glo-unhealthy': 0}",20,512,512,yolov5s.pt,None,/Users/marco/helical_datasets/muw_sfog_copia2/detection/tiles,True,8,2,testing
-12/05/2023 14:28:56,<1min,0h 0m 1s,exp116,muw,5,detection,"{'Glo-healthy': 1, 'Glo-unhealthy': 0}",5,512,512,yolov5s.pt,None,/Users/marco/helical_datasets/muw_sfog_copia2/detection/tiles,True,8,2,testing
-12/05/2023 14:29:34,prepared,0h 0m 0s,exp116,muw,5,detection,"{'Glo-healthy': 1, 'Glo-unhealthy': 0}",5,512,512,yolov5s.pt,None,/Users/marco/helical_datasets/muw_sfog_copia2/detection/tiles,True,8,2,testing
+  12/05/2023 14:29:34,prepared,0h 0m 0s,exp116,muw,5,detection,"{'Glo-healthy': 1, 'Glo-unhealthy': 0}",5,512,512,yolov5s.pt,None,/Users/marco/helical_datasets/muw_sfog_copia2/detection/tiles,True,8,2,testing
 12/05/2023 14:57:55,completed,0h 23m 20s,exp117,muw,5,detection,"{'Glo-healthy': 1, 'Glo-unhealthy': 0}",5,512,512,yolov5s.pt,None,/Users/marco/helical_datasets/muw_sfog_copia2/detection/tiles,True,8,2,testing
 13/05/2023 15:17:45,started,0h 0m 0s,exp118,hubmap,5,detection,{'glomerulus': 0},5,512,512,yolov5s.pt,None,/Users/marco/helical_tests/test_manager_segm_hubmap_pas/detection/tiles,True,8,2,testing
 13/05/2023 15:19:39,started,0h 0m 0s,exp118,hubmap,5,detection,{'glomerulus': 0},5,512,512,yolov5s.pt,None,/Users/marco/helical_tests/test_manager_segm_hubmap_pas/detection/tiles,True,8,2,testing
@@ -88,4 +87,4 @@ datetime,status,duration,exp_fold,dataset,batch_size,task,map_classes,epochs,til
 20/05/2023 22:09:26,completed,15h 51m 21s,exp140,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",30,512,512,yolov5s.pt,None,/Users/marco/helical_tests/test_merge_muw_zaneta/tiles,True,5,2,testing
 21/05/2023 15:39:28,prepared,0h 0m 0s,exp141,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",50,512,512,yolov5s.pt,None,/Users/marco/helical_tests/test_merge_muw_zaneta/tiles,True,5,2,testing
 22/05/2023 14:59:48,prepared,0h 0m 0s,exp142,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",50,512,512,yolov5s.pt,None,/Users/marco/helical_tests/test_merge_muw_zaneta/tiles,True,5,2,testing
-22/05/2023 16:53:48,prepared,0h 0m 0s,exp143,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",50,512,512,yolov5s.pt,None,/Users/marco/helical_tests/test_merge_muw_zaneta/tiles,True,5,2,testing
+22/05/2023 16:53:48,plotfailed,2h 24m 26s,exp143,muw,20,detection,"{'Glo-healthy': 0, 'Glo-unhealthy': 1}",50,512,512,yolov5s.pt,None,/Users/marco/helical_tests/test_merge_muw_zaneta/tiles,True,5,2,testing

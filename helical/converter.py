@@ -22,15 +22,21 @@ if hasattr(os, 'add_dll_directory'):
         import openslide
 else:
     import openslide
+from utils import get_config_params
+
+
 
 class Converter(ConverterBase):
 
     def __init__(self, 
+                 config_yaml_fp:str,
                  *args, 
                  **kwargs) -> None:
         """ Offers conversion capabilities from/to a variety of formats. 
             json_wsi_mask"""
-        
+        self.params = get_config_params(yaml_fp=config_yaml_fp, config_name='processor')
+        self.verbose_level = self.params['verbose_level']
+        self.annotations_in_slide_coords = self.params['annotations_in_slide_coords']
         super().__init__(*args, **kwargs)
 
         return
@@ -40,6 +46,7 @@ class Converter(ConverterBase):
     def _split_multisample_json(self, json_wsi_file:str, geojson_sample_rect:str): 
         """ If file is multisample, splits the annotation json wsi 
             into multiple json sample annotation files."""
+        func_n = self._split_multisample_json.__name__
         
         assert os.path.isfile(json_wsi_file), f"'json_wsi_file':{json_wsi_file} is not a valid filepath."
         assert os.path.isfile(geojson_sample_rect), f"'geojson_sample_rect':{geojson_sample_rect} is not a valid filepath."
@@ -47,121 +54,101 @@ class Converter(ConverterBase):
         # read geojson rectangle file
         with open(geojson_sample_rect, 'r') as f:
             data_rect = geojson.load(f)
-        n_samples = len(data_rect['features'])
         
         # read json annotation file
         with open(json_wsi_file, 'r') as f:
             data_annotations = json.load(f)
 
-        # loop through annotation vertices of every object
+        # define func to later write sample files:
         def write_sample_file(json_wsi_file, sample_n, json_obj): 
-
             fp = json_wsi_file.replace('.json', f"_sample{sample_n}.json")
-            assert 'json' in fp, self.log.error(f"{fp} doesn't contain 'json'.")
+            assert 'json' in fp, self.log.error(f"{self.class_name}.{func_n}: {fp} doesn't contain 'json'.")
             with open(fp, 'w') as f:
                 json.dump(obj=json_obj, fp=f)
-            # self.log.info(f"saved {fp}")
             return
 
-        
-        # slide_fp = geo
-        
-
-        # sample_json_dict = {}
+        # loop through annotation vertices of every object
         for j, sample in enumerate(data_rect['features']):
-            
             if j > 9:
                 raise NotImplementedError() # there will be issues later in tiler (wildcard [0-9] wouldn't work)
-
             sample_json_dict = {'features':[]}
             rect_vertices = sample['geometry']['coordinates'][0]
             assert len(rect_vertices) == 5, f"Geojson sample has {len(rect_vertices)} vertices, but should have 5."
             x_start,y_start = rect_vertices[0]
             x_end,y_end = rect_vertices[2]
             assert x_start!=x_end and y_start!=y_end, f"Some sample rectangle vertices are coincident: x_start:{x_start}, x_end:{x_end}, y_start:{y_start}, y_end:{y_end}"
-            self.log.info(f"Rectangle for {os.path.basename(json_wsi_file)}: x_start:{x_start}, x_end:{x_end}, y_start:{y_start}, y_end:{y_end}")
-            
-            if len(data_annotations)==0:
-                self.log.error(f"data annotations is empty: {data_annotations}. Making empty label. ")
+            if self.verbose_level in ['medium', 'high']: self.log.info(f"{self.class_name}.{func_n}: Rectangle for {os.path.basename(json_wsi_file)}: x_start:{x_start}, x_end:{x_end}, y_start:{y_start}, y_end:{y_end}")
+            if len(data_annotations)==0: # sanity check
+                self.log.error(f"{self.class_name}.{func_n}: data annotations is empty: {data_annotations}. Making empty label. ")
                 write_sample_file(json_wsi_file=json_wsi_file, sample_n=0, json_obj={})
-                self.log.error(f"done write sample file")
+                self.log.error(f"{self.class_name}.{func_n}: done write sample file")
 
-
+            # loop through annotation objs:
             for i, feat in enumerate(data_annotations):
-                # compute center: 
-                xc = np.array([tup[1] for tup in feat['geometry']['coordinates'][0]]).mean()
-                yc = np.array([tup[0] for tup in feat['geometry']['coordinates'][0]]).mean() # TODO CHECK THAT X E Y SONO NEL CORRETTO ORDINE
+                # compute center of annotation object and check if it falls in the sample rect:
+                xc = np.array([tup[0] for tup in feat['geometry']['coordinates'][0]]).mean()
+                yc = np.array([tup[1] for tup in feat['geometry']['coordinates'][0]]).mean() # TODO CHECK THAT X E Y SONO NEL CORRETTO ORDINE
                 
-                if self.data_source == 'muw':
-                    xc, yc = yc, xc 
+                if self.annotations_in_slide_coords is False:
+                    raise NotImplementedError()
+                
+
+                # if self.data_source in ['muw', 'tcd'] :
+                #     xc, yc = yc, xc 
 
                 # if center outside sample rectangle, continue:
                 if not x_start<=xc<=x_end:
-                    self.log.error(f'xc non cade dentro i vertici del rettangolo :{x_start}<={xc}<={x_end}. Skipping glom.')
+                    if self.verbose_level == 'high': self.log.warning(f'{self.class_name}.{func_n}: xc non cade dentro i vertici del rettangolo :{x_start}<={xc}<={x_end}. Skipping glom.')
                     continue 
                 if not y_start<=yc<=y_end:
-                    self.log.error(f'yc non cade dentro i vertici del rettangolo:{y_start}<={yc}<={y_end}. Skipping glom.')
+                    if self.verbose_level == 'high': self.log.warning(f'{self.class_name}.{func_n}: yc non cade dentro i vertici del rettangolo:{y_start}<={yc}<={y_end}. Skipping glom.')
                     continue 
-                # if obj is Tissue and not glom, skip: 
+
+                # (else= if it falls in the sample) get class: 
                 try:
-                    _class = feat['properties']['classification']['name']
+                    _class = feat['properties']['classification']['name'] # TODO CHECK
                 except: 
                     _class = "Glo-NA"
-
-                if _class == 'Tissue':
-                    if self.data_source == 'zaneta':
-                        self.log.error("_class == 'Tissue', there shouldn't be any Tissue class in 'zaneta' annotations.")
+                if _class == 'Tissue': # if tissue, skip it
+                    if self.data_source in ['zaneta', 'tcd']:
+                        self.log.error(f"{self.class_name}.{func_n}: _class == 'Tissue', there shouldn't be any Tissue class in 'zaneta' and 'tcd' annotations.")
                     continue
-                # print(f"center: {xc,yc}")
-                # else write the vertices of the obj:
-                # sample_json_dict[j]['features'].append({'coordinates': []})
+
+                
+                # else (=if it falls and not Tissue) write the vertices of the obj:
+                if self.verbose_level == 'high': self.log.info(f"{self.class_name}.{func_n}: Obj of class {_class} center: (xc, yc): {(xc,yc)} falls into ({(x_start, x_end), (y_start, y_end)}). ")
                 coords = []
                 file_coords = feat['geometry']['coordinates'][0]
                 try: 
                     _ = [ (xi,yi) for xi, yi in feat['geometry']['coordinates'][0] ]
                 except:
-                    self.log.warn(f"File: '{json_wsi_file}' at row: '{feat['geometry']['coordinates'][0]}' would raise Exception. \nTaking away one more parenthesis than usual." )
+                    self.log.warn(f"{self.class_name}.{func_n}: File: '{json_wsi_file}' at row: '{feat['geometry']['coordinates'][0]}' would raise Exception. \nTaking away one more parenthesis than usual." )
                     file_coords = feat['geometry']['coordinates'][0][0]
 
-
-
-                # try:
+                # save coords to be written in the sample file:
                 for xi, yi in file_coords:
-                    # clip x and y: e.g. if xi exceeds x_min or x_max, take x_min or x_max as new xi
+                    # clip all coords of the mask: e.g. if xi exceeds rectangle size, take x_min or x_max as new xi
                     if self.data_source == 'muw':
                         clip_x, clip_y = xi, yi
-                        xy = (clip_x - x_start, clip_y - y_start)
-                    elif self.data_source == 'zaneta':
+                        xy = (clip_x - x_start, clip_y - y_start) # annotations are not in rectangle coordinates
+                    elif self.data_source in ['zaneta', 'tcd']:
                         clip_x, clip_y = (min(max(x_start, xi), x_end), min(max(y_start, yi), y_end) )
                         xy = (clip_x - x_start, clip_y - y_start)
-                        xy = (clip_x, clip_y)
                     else:
                         raise NotImplementedError()
-                    # if clipped_xy != (xi,yi):
-                        # print(f"xi,yi: {xi,yi}")
-                        # print(f"xi,yi clipped: {clipped_xy}")
-                        # print(clipped_xy)
-                        # raise NotImplementedError()
+                    # cumulate new mask coords:
                     coords.append(xy)
-                sample_json_dict['features'].append( {'coordinates':coords,'classification':_class}  )
-                # except: 
-                #     print(json_wsi_file)
-                #     print(feat['geometry']['coordinates'][0])
-                #     raise NotImplementedError()
-
-                
-                # print(f'splitting writing {json_wsi_file}')
+                # save new mask coords: 
+                sample_json_dict['features'].append( {'coordinates':coords,'classification':_class} )
                 write_sample_file(json_wsi_file=json_wsi_file, sample_n=j, json_obj=sample_json_dict)
 
-                
+        if self.verbose_level in ['medium', 'high']: self.log.info(f"{self.class_name}.{func_n}: ✅ {os.path.basename(json_wsi_file)} splitted in {j+1} sample files. ")
 
         return
     
-
     
-
-
     def _convert_gson2txt(self, gson_file:str) -> str:
+        func_n = self._convert_gson2txt.__name__
 
         # 1) read in binary and remove extra chars:
         with open(gson_file, encoding='utf-8', errors='ignore', mode = 'r') as f:
@@ -174,7 +161,7 @@ class Converter(ConverterBase):
         text = json.loads(text)
         with open(save_file, 'w') as fs:
             json.dump(obj = text, fp = fs)
-        self.log.info(f"{self.__class__.__name__}.{'_convert_gson2txt'} Converter: ✅ WSi .json annotation converted to WSI .txt annotation. ", extra={'className': self.__class__.__name__})
+        self.log.info(f"{self.class_name}.{func_n}: Converter: ✅ WSi .json annotation converted to WSI .txt annotation. ", extra={'className': self.__class__.__name__})
         # 3) convert using json converter:
         converted_file = self._convert_json2txt(json_file=save_file)
         # 4) clear txt annotations from ROI objects
@@ -182,23 +169,26 @@ class Converter(ConverterBase):
 
         return  converted_file
     
+
     def _remove_empty_pair(self, empty_file:str) -> None: 
         """ Removes all files with basename of the passed file from current folder. """
+        func_n = self._remove_empty_pair.__name__
 
         files = glob(os.path.join(os.path.dirname(empty_file), f"{os.path.basename(empty_file).split('.')[0]}*" ))
         for file in files: 
             os.remove(file)
-        self.log.warning(f"{self.class_name}.{'_remove_empty_pair'}: removed {len(files)} files starting with {os.path.basename(empty_file).split('.')}.")
+        self.log.warning(f"{self.class_name}.{func_n}: removed {len(files)} files starting with {os.path.basename(empty_file).split('.')}.")
 
         return
     
+
     def _check_annotations(self) -> None:
         """ Filters out empty annotations, by removing annotations and corresponding slides. """
+        func_n = self._check_annotations.__name__
 
-        EXT = '.gson'
-        files = glob(os.path.join(self.folder, f'*{EXT}'))
-        if self.verbose is True:
-                self.log.info(f"{self.class_name}.{'_remove_empty_pair'}: checking annotations:")
+        label_fmt = '.' + self.params['label_format']
+        files = glob(os.path.join(self.folder, f'*{label_fmt}'))
+        if self.verbose_level == 'high': self.log.info(f"{self.class_name}.{func_n}: checking annotations:")
         
         remaining = 0
         rem_files = []
@@ -207,38 +197,36 @@ class Converter(ConverterBase):
             with open(gson_file, encoding='utf-8', errors='ignore', mode = 'r') as f:
                 text = f.read()
             if '{' not in text: 
-                self.log.warning(f"{self.class_name}.{'_convert_gson2geojson'}: removing slide  and its label {gson_file}.")
+                self.log.warning(f"{self.class_name}.{func_n}: removing slide  and its label {gson_file}.")
                 del_files = glob(os.path.join(os.path.dirname(gson_file), f"{os.path.basename(gson_file).split('.')[0]}*" ))
                 for file in del_files: 
                     os.remove(file)
-                self.log.warning(f"{self.class_name}.{'_remove_empty_pair'}: removed {len(del_files)} files starting with {os.path.basename(gson_file).split('.')[0]}.")
+                self.log.warning(f"{self.class_name}.{func_n}: removed {len(del_files)} files starting with {os.path.basename(gson_file).split('.')[0]}.")
             else: 
                 remaining += 1
                 rem_files.append(gson_file)
-        self.log.warning(f"{self.class_name}.{'_remove_empty_pair'}: annotations checked. Remaining files: {remaining}.")
+        if self.verbose_level == 'high': self.log.info(f"{self.class_name}.{func_n}: annotations checked. Remaining files: {remaining}.")
 
         # for each file verify that also tif exist and at least 1 geojson file: 
         for file in rem_files: 
             geo_file = os.path.join(os.path.dirname(file) , os.path.basename(file).split('.')[0] + f".geojson")
-            assert os.path.isfile(geo_file), self.log.error(f"{self.class_name}.{'_check_annotations'}: 'geo_file':{geo_file} doesn't exist. ")
+            assert os.path.isfile(geo_file), self.log.error(f"{self.class_name}.{func_n}: 'geo_file':{geo_file} doesn't exist. ")
             tif_file = os.path.join(os.path.dirname(file) , os.path.basename(file).split('.')[0] + f".tif")
-            assert os.path.isfile(geo_file), self.log.error(f"{self.class_name}.{'_check_annotations'}: 'tif_file':{tif_file} doesn't exist. ")
-
-
-
+            assert os.path.isfile(geo_file), self.log.error(f"{self.class_name}.{func_n}: 'tif_file':{tif_file} doesn't exist. ")
 
         return
     
 
     def _convert_gson2geojson(self, gson_file:str) -> str:
         """ Converts file in gson format to geojson for visualization purposes. """
+        func_n = self._convert_gson2geojson.__name__
 
         # 1) read in binary and remove extra chars:
         with open(gson_file, encoding='utf-8', errors='ignore', mode = 'r') as f:
             text = f.read()
         
         # check if empty:
-        assert '{' in text, self.log.error(f"{self.class_name}.{'_convert_gson2geojson'}: label {gson_file} is empty!")
+        assert '{' in text, self.log.error(f"{self.class_name}.{func_n}: label {gson_file} is empty!")
         text = '[' + text[text.index('{'):]
         json_obj = text.replace("\\", '').replace("/", '')
 
@@ -253,19 +241,19 @@ class Converter(ConverterBase):
         with open(geojson_file, 'w') as fs:
             geojson.dump(obj = json_obj, fp = fs)
 
-        self.log.info("✅ Converter: WSI .gson annotation converted to WSI .geojson annotation. ", extra={'className': self.__class__.__name__})
+        self.log.info(f"{self.class_name}.{func_n}: ✅ Converter: WSI .gson annotation converted to WSI .geojson annotation. ", extra={'className': self.__class__.__name__})
 
         return  geojson_file
     
     def _check_already_converted(self, file: str) -> bool:
         """ Checks whether conversion has already been computed. """
-
+        func_n = self._check_already_converted.__name__
         fname = os.path.split(file)[1].split(f'.{self.format_from}')[0]
         files = glob(os.path.join(self.save_folder, f'*.{self.format_to}'))
         files = [file for file in files if fname in file]
 
         if len(files) > 0:
-            self.log.info(f"✅ Already converted: found txt WSI annotation in {self.folder} for {fname}.tiff. Skipping slide.", extra={'className': self.__class__.__name__})
+            self.log.info(f"{self.class_name}.{func_n}: ✅ Already converted: found txt WSI annotation in {self.folder} for {fname}.tiff. Skipping slide.", extra={'className': self.__class__.__name__})
             computed = True
         else:
             computed = False
@@ -274,6 +262,7 @@ class Converter(ConverterBase):
     
 
     def _convert_muw(self, file:str, LEVEL):
+        func_n = self._convert_muw.__name__
 
         print(f"CALLING CONVERTER muw: {file}")
 
@@ -287,7 +276,7 @@ class Converter(ConverterBase):
         if not os.path.isfile(txt_file):
             self.level = 0 # i.e. output txt is in original coordinates
             self._convert_gson2txt(gson_file=gson_file) # this will also save an intermediate json file
-        assert os.path.isfile(txt_file), self.log.error(f"{self.class_name}.{'__call__'}: txt-converted file {txt_file} doesn't exist.")
+        assert os.path.isfile(txt_file), self.log.error(f"{self.class_name}.{func_n}: txt-converted file {txt_file} doesn't exist.")
 
         # 2) splitting the geojson file into multiple txt files (1 for sample/ROI):
         geojson_file = change_format(gson_file, 'geojson')
@@ -300,70 +289,37 @@ class Converter(ConverterBase):
         # if level then all geojson need to be downsampled :
         # if LEVEL != 0:
         json_file = change_format(gson_file, 'json')
-        self.log.info(json_file)
+        self.log.info(f"{self.class_name}.{func_n}:{json_file}")
         self._split_multisample_json(json_wsi_file=json_file, geojson_sample_rect=geojson_file)
 
         self._downscale_geojson_file(json_file=json_file)
         self._interpolate_vertices(json_file=json_file)
 
-        # self.log.info(f'tesssstinnnnnngggg muw: {file}')
-        # self._test_show_label_image(file=file.split('.')[0])
 
         return
 
-    def _convert_hubmap(self, file:str, LEVEL:int):
-
-        self.log.info(f"CALLING CONVERTER hubmap: {file}")
-
+    def _convert_hubmap(self, file:str) ->None:
+        """ Use convert_hubmap when you have annotation files in .json format along with a sample rectangle annotation in .geojson format"""
+        func_n = self._convert_hubmap.__name__
         change_format = lambda fp, fmt: os.path.join(os.path.dirname(fp), os.path.basename(fp).split('.')[0] + f".{fmt}")
-
         geojson_file = change_format(file, 'geojson')
         json_file = change_format(file, 'json')
-        # print('wooooo')
-        self.log.info(f'Converting with converter hubmap: {file}')
-        # raise NotImplementedError()
+
+        if self.verbose_level in ['medium', 'high']: self.log.info(f'{self.class_name}.{func_n} ⏳ Converting with converter hubmap: {json_file}')
         self._split_multisample_json(json_wsi_file=json_file, geojson_sample_rect=geojson_file)
-        # self._downscale_geojson_file(json_file=json_file)
+        if self.verbose_level in ['medium', 'high']: self.log.info(f'{self.class_name}.{func_n} ⏳ Interpolating vertices: {os.path.basename(json_file)}')
         self._interpolate_vertices(json_file=json_file)
-
-        self.log.info(f'tesssstinnnnnngggg hubmap: {file}')
-        # self._test_show_label_image(file=file.split('.')[0])
+        if self.verbose_level in ['medium', 'high']: self.log.info(f'{self.class_name}.{func_n} ✅ Interpolating vertices: {os.path.basename(json_file)}')
 
         return
     
-    def __call__(self) -> None:
-        """ Converts using the proper function depending on the conversion task of choice. """
-        
-        # 1) rename all files to <basename>_<stain>.<ext>.
-        self._rename_all()
-        # 2) check annotations empty:
-        self._check_annotations()
-        base_names = self._get_files()
-        print(len(base_names))
-        LEVEL = self.level
-            
-        for file in tqdm(base_names, desc = f"Converting annotations for YOLO"):
-            print(file)
-            if self.data_source == 'muw':
-                self._convert_muw(file=file, LEVEL=LEVEL)
-            elif self.data_source == 'hubmap':
-                print('converting hubmap')
-                self._convert_hubmap(file=file, LEVEL=LEVEL)
-            elif self.data_source == 'zaneta':
-                self.log.info('converting with convert_hubmapppp')
-                self._convert_hubmap(file=file, LEVEL=0)
-            else: 
-                raise NotImplementedError()
-            
- 
-        return
     
-    
-    def _interpolate_vertices(self, json_file: str, times:int = 3):
+    def _interpolate_vertices(self, json_file: str, times:int = 2):
         
+        func_n = self._interpolate_vertices.__name__
         basename = os.path.basename(json_file).split('.json')[0]
         json_sample_files = [file for file in glob(os.path.join(os.path.dirname(json_file), f"{basename}*.json")) if 'sample' in file]
-        assert len(json_sample_files), self.log.error(f"'json_sample_files':{json_sample_files} is empty.")
+        assert len(json_sample_files), self.log.error(f"{self.class_name}.{func_n}: 'json_sample_files':{json_sample_files} is empty.")
 
         def interpolate(vertices: list, times:int): 
             for _ in range(times):
@@ -385,17 +341,13 @@ class Converter(ConverterBase):
             return new_vertices
 
         for json_sample in json_sample_files:
-            
             # read/copy
             with open(json_sample, 'r') as f:
                 data = json.load(f)
-
             if len(data)==0:
-                self.log.warn(f"File is empty. Skipping vertices interpolation")
+                self.log.warn(f"{self.class_name}.{func_n}: File is empty. Skipping vertices interpolation")
                 continue
             
-
-
             data_new = data.copy()
 
             # loop through gloms/vertices and interpolate:
@@ -413,10 +365,10 @@ class Converter(ConverterBase):
     
     def _downscale_geojson_file(self, json_file:str):
         """ """
+        func_n = self._downscale_geojson_file.__name__
         basename = os.path.basename(json_file).split('.json')[0]
         json_sample_files = [file for file in glob(os.path.join(os.path.dirname(json_file), f"{basename}*.json")) if 'sample' in file]
-        print(f'downsampling {json_sample_files}')
-        assert len(json_sample_files), f"'json_sample_files':{json_sample_files} is empty."
+        assert len(json_sample_files), f"{self.class_name}.{func_n}: 'json_sample_files':{json_sample_files} is empty."
 
         # get level dims and original dims to rescale:
         slide_file = json_file.split('.')[0] + '.tif'
@@ -458,6 +410,31 @@ class Converter(ConverterBase):
         return
 
 
+    def __call__(self) -> None:
+        """ Converts using the proper function depending on the conversion task of choice. """
+        func_n = self.__call__.__name__
+        # 1) rename all files to <basename>_<stain>.<ext>.
+        self._rename_all()
+        # 2) check annotations empty:
+        self._check_annotations()
+        base_names = self._get_files()
+        LEVEL = self.level
+        
+        if self.verbose_level in ['medium', 'high']: self.log.info(f'{self.class_name}.{func_n}: ⏳ Converting annotations ')
+        for file in tqdm(base_names, desc = f"Converting annotations for YOLO"):
+            if self.data_source == 'muw':
+                self._convert_muw(file=file, LEVEL=LEVEL)
+            elif self.data_source == 'hubmap':
+                self._convert_hubmap(file=file, LEVEL=LEVEL)
+            elif self.data_source == 'zaneta':
+                self._convert_hubmap(file=file)
+            elif self.data_source == 'tcd':
+                self._convert_hubmap(file=file)
+            else: 
+                raise NotImplementedError()
+        self.log.info(f'{self.class_name}.{func_n}: ✅ Converted labels to YOLO format. ')
+ 
+        return
 
         
 

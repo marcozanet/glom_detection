@@ -33,95 +33,6 @@ class ProfilerMUW(ProfilerBase):
         return
 
 
-    
-    # def _get_data(self) -> dict:
-    #     """ From a roots like root -> wsi/tiles->train,val,test->images/labels, 
-    #         it returns a list of wsi images/labels and tiles images/labels."""
-        
-    #     # @log_start_finish(class_name=self.__class__.__name__, func_name='_get_data', 
-    #                     #   msg = f" Getting data from: '{os.path.basename(self.data_root)}'" )
-    #     def do():
-
-    #         wsi_images = glob(os.path.join(self.data_root, 'wsi', '*', 'images', self.wsi_images_like))
-    #         wsi_labels = glob(os.path.join(self.data_root, 'wsi', '*', 'labels', self.wsi_labels_like))
-    #         tile_images = glob(os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like))
-    #         tile_labels = glob(os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like))
-    #         # self.log.info(f"looking for images like: {os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like)} ")
-    #         # self.log.info(f"images found: {len(tile_images)}")
-    #         data = {'wsi_images':wsi_images, 'wsi_labels':wsi_labels, 'tile_images':tile_images,  'tile_labels':tile_labels }
-            
-    #         if self.empty_ok is False:
-    #             assert len(tile_images) > 0, self.log.error(f"{self._class_name}.{'_get_data'}: no tile image like {os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like)} was found.")
-    #         else:
-    #             if len(tile_images) > 0: 
-    #                 self.log.warning(f"{self._class_name}.{'_get_data'}: no tile image like {os.path.join(self.data_root, 'tiles', '*', 'images', self.tile_images_like)} was found.")
-    #         if self.empty_ok is False:
-    #             assert len(tile_labels) > 0, self.log.error(f"{self._class_name}.{'_get_data'}: no tile label like {os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like)} was found.")
-    #         else:
-    #             if len(tile_labels) > 0:
-    #                 self.log.warning(f"{self._class_name}.{'_get_data'}: no tile label like {os.path.join(self.data_root, 'tiles', '*', 'labels', self.tile_labels_like)} was found.")
-            
-    #         # self.log.info(f"completed func, returning {data}")
-    #         self.log.info(f"{self._class_name}.{'_get_data'}: Found {len(wsi_images)} slides with {len(wsi_labels)} annotations and {wsi_images} tiles with {wsi_labels} annotations. ")
-    #         return data
-        
-    #     returned = do()
-    #     # self.log.info(f"do called. returning {returned}")
-
-    #     return returned
-
-
-    
-    # def _get_unique_labels(self, verbose = False) -> dict:
-    #     """ Returns unique label values from the dataset. """
-    #     class_name = self.__class__.__name__
-    #     func_name = '_get_unique_labels'
-
-    #     # @log_start_finish(class_name, func_name, msg = f"Getting unique labels:'{os.path.basename(self.data_root)} '" )
-    #     def do():
-    #         unique_labels = []
-    #         for label_fp in self.data['tile_labels']:
-    #             with open(label_fp, mode ='r') as f:
-    #                 rows = f.readlines()
-    #                 labels = [row[0] for row in rows]
-    #                 unique_labels.extend(labels)
-    #         unique_labels = list(set(unique_labels))
-            
-    #         if verbose is True:
-    #             self.log.info(f"{class_name}.{func_name}: Unique classes: {unique_labels}", )
-
-    #         return unique_labels
-        
-    #     returned = do()
-
-    #     return  returned
-
-
-    
-    # def _get_class_freq(self) -> dict:
-
-    #     class_name = self.__class__.__name__
-    #     func_name = '_get_class_freq'
-
-    #     @log_start_finish(class_name=class_name, func_name=func_name,  msg = f" Getting classes frequency" )
-    #     def do():
-    #         class_freq = {'0':0, '1':0, '2':0, '3':0}
-    #         for label_fp in self.data['tile_labels']:
-    #             with open(label_fp, mode ='r') as f:
-    #                 rows = f.readlines()
-    #                 labels = [row[0] for row in rows]
-    #                 for label in labels:
-    #                     class_freq[label] += 1
-
-    #         if self.verbose is True:
-    #             self.log.info(f"{class_name}.{func_name}: class_freq: {class_freq}")
-
-    #         return class_freq
-    #     returned = do()
-
-    #     return returned
-    
-    
     def _get_instances_df(self): 
         """ Creates the tiles DataFrame. """
         
@@ -355,67 +266,7 @@ class ProfilerMUW(ProfilerBase):
         return returned
 
 
-    # def _get_empty_images(self):
-    #     """ Return """
 
-    #     class_name = self.__class__.__name__
-    #     func_name = '_get_empty_images'
-
-    #     @log_start_finish(class_name=self.__class__.__name__, func_name=func_name, msg = f"Getting nsamples in slide:" )
-    #     def do():
-    #         tile_images = self.data['tile_images']
-    #         tile_labels = self.data['tile_labels']
-
-    #         assert len(tile_images)>0, self.log.error(f"{self._class_name}.{'_get_empty_images'}: 'tile_images':{len(tile_images)}. No tile image found. ")
-    #         assert len(tile_labels)>0, self.log.error(f"{self._class_name}.{'_get_empty_images'}: 'tile_labels':{len(tile_labels)}. No tile label found. ")
-            
-    #         empty_images = [file for file in tile_images if os.path.join(os.path.dirname(file).replace('images', 'labels'), os.path.basename(file).replace(self.tiles_image_format,self.tiles_label_format)) not in tile_labels]
-    #         empty_images = [file for file in empty_images if "DS" not in empty_images and self.tiles_image_format in file]
-    #         empty_images = [file for file in empty_images if os.path.isfile(file)]
-
-    #         full_images = [file for file in tile_images if os.path.join(os.path.dirname(file).replace('images', 'labels'), os.path.basename(file).replace(self.tiles_image_format,self.tiles_label_format)) in tile_labels]
-    #         unpaired_labels = [file for file in tile_labels if os.path.join(os.path.dirname(file).replace('labels', 'images'), os.path.basename(file).replace(self.tiles_label_format, self.tiles_image_format)) not in tile_images]
-            
-    #         if len(unpaired_labels) > 2:
-    #             self.log.info(f"{class_name}.{func_name}:❗️ Found {len(unpaired_labels)} labels that don't have a matching image. Maybe deleting based on size also deleted images with objects?")
-
-    #         assert full_images is not None, self.log.error(f"{self._class_name}.{'_get_empty_images'}: 'full_images' is None. No full image found. ")
-
-    #         return (full_images, empty_images)
-        
-    #     returned = do()
-
-        return returned
-    
-
-    # def log_data_summary(self): 
-    #     """ Logs a summary of the data. """
-
-    #     self.log.info(f"{self._class_name}.{'_log_summary'}: 'Data root':{self.data_root}")
-    #     self.data=self._get_data()
-    #     slides = self.data['wsi_images']
-    #     train_slides = [file for file in slides if 'train' in file]
-    #     val_slides = [file for file in slides if 'val' in file]
-    #     test_slides = [file for file in slides if 'test' in file]
-    #     self.log.info(f"{self._class_name}.{'_log_summary'}: 'trainset':{train_slides}, 'valset':{val_slides}, 'testset':{test_slides}")
-    #     class_freq = self._get_class_freq()
-    #     self.log.info(f"{self._class_name}.{'_log_summary'}: 'class frequency':{class_freq} ")
-    #     unique_labels = self._get_unique_labels()
-    #     self.log.info(f"{self._class_name}.{'_log_summary'}: 'unique labels':{unique_labels} ")
-    #     returned = self._get_empty_images()
-    #     full_images, empty_images = returned[0], returned[1]
-    #     empty_perc = round(len(empty_images)/(len(full_images) + len(empty_images)), 2)
-    #     self.log.info(f"{self._class_name}.{'_log_summary'}: 'full_images':{len(full_images)}. 'empty_images':{len(empty_images)}. Empty perc:{empty_perc} ")
-
-    #     return
-
-
-    
-    
-    def show_summary(self): 
-
-
-        return
 
     
     def __call__(self) -> None:
@@ -430,17 +281,3 @@ class ProfilerMUW(ProfilerBase):
 
 
 
-# def test_Profiler():
-#     import sys 
-#     system = 'mac' if sys.platform == 'darwin' else 'windows'
-
-#     verbose = True
-#     data_root = '/Users/marco/Downloads/train_20feb23_copy' if system == 'mac' else r'D:\marco\datasets\muw\detection'
-#     profiler = Profiler(data_root=data_root, verbose=True)
-#     profiler()
-
-#     return
-
-
-# if __name__ == '__main__':
-#     test_Profiler()

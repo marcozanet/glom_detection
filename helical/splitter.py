@@ -7,78 +7,79 @@ from glob import glob
 import shutil
 from tqdm import tqdm
 from configurator import Configurator
+from utils import get_config_params
 
 
 class Splitter(Configurator):
 
     def __init__(self,
-                 src_dir: str,
-                 dst_dir: str,
-                 image_format: Literal['tif', 'tiff', 'png'],
-                #  label_format: Literal['txt', 'gson', 'json'],
-                 empty_perc: float = 0.1,
-                 ratio = [0.7, 0.15, 0.15], 
-                 task = Literal['detection', 'segmentation', 'MIL', 'mil', 'both'],
-                 safe_copy:bool = True,
-                 verbose:bool = False,
-                 reproducibility = True) -> None:
-        
+                 config_yaml_fp:str
+                 ) -> None:
         super().__init__()
 
         self.log = get_logger()
+        self.config_yaml_fp = config_yaml_fp
+        self.params = get_config_params(yaml_fp=config_yaml_fp, config_name='processor')
 
-        ALLOWED_IMAGE_FORMATS = ['tif', 'tiff', 'png']
-        ALLOWED_LABEL_FORMATS = ['txt', 'gson', 'json']
+
+        self.empty_perc = self.params["empty_perc"]
+        self.empty_perc = 0.1 if self.params["empty_perc"] is None else self.empty_perc
+        self.src_dir = self.params["src_root"]
+        self.dst_dir = self.params["dst_root"]
+        self.slide_format = self.params["slide_format"]
+        self.label_format = self.params["label_format"]
+        self.task = self.params["task"]
+        self.splitting_mode = 'wtest' if len(self.params["ratio"])==3 else 'wotest'
+        self.image_type = self.params["image_type"]
+        self.verbose = self.params["verbose"]
+        self.ratio = self.params["ratio"]
+        self.safe_copy = self.params["safe_copy"]
+        self.reproducibility = self.params['reproducibility']
+        self.verbose_level = self.params["verbose_level"]
+        self.class_name = self.__class__.__name__
+
+        
+        return
+    
+    def _parse_args(self)->None:
+
+        ALLOWED_SLIDE_FORMATS = ['tif', 'tiff', 'svs']
+        ALLOWED_LABEL_FORMATS = ['txt', 'gson', 'json', 'geojson']
         ALLOWED_TASKS = ['detection', 'segmentation', 'MIL', 'mil', 'both']
-
-        assert image_format in ALLOWED_IMAGE_FORMATS, f"'image_format':{image_format} should be one of {ALLOWED_IMAGE_FORMATS}"
-        # assert label_format in ALLOWED_LABEL_FORMATS, f"'label_format':{label_format} should be one of {ALLOWED_LABEL_FORMATS}"
-        assert os.path.isdir(dst_dir), f"'dst_dir':{dst_dir} is not a valid filepath."
-        assert os.path.isdir(src_dir), f"'src_dir':{src_dir} is not a valid filepath."
-        assert task in ALLOWED_TASKS, ValueError(f"'task'= {task} should be one of {ALLOWED_TASKS}. ")
+        assert self.slide_format in ALLOWED_SLIDE_FORMATS, f"'slide_format':{self.slide_format} should be one of {ALLOWED_SLIDE_FORMATS}"
+        assert self.label_format in ALLOWED_LABEL_FORMATS, f"'label_format':{self.label_format} should be one of {ALLOWED_LABEL_FORMATS}"
+        assert os.path.isdir(self.dst_dir), f"'dst_dir':{self.dst_dir} is not a valid filepath."
+        assert os.path.isdir(self.src_dir), f"'src_dir':{self.src_dir} is not a valid filepath."
+        assert self.task in ALLOWED_TASKS, ValueError(f"'task'= {self.task} should be one of {ALLOWED_TASKS}. ")
         assert isinstance(ratio, List), TypeError(f"'ratio' should be left empty or be a list. ")
         try:    
             ratio = [float(value) if isinstance(value, str) else value for value in ratio]
         except:
             TypeError(f"Values in 'ratio' can't be converted to float.")
         assert (len(ratio) == 3 or len(ratio) == 2) and round(np.sum(np.array(ratio)), 2) == 1.0, ValueError(f"'ratio' should be a list of floats with sum 1, but has sum {np.sum(np.array(ratio))}." )
-        assert isinstance(verbose, bool), f"'verbose' should be a boolean."
-        assert isinstance(safe_copy, bool), f"safe_copy should be boolean."
-        assert isinstance(reproducibility, bool), f"'reproducibility':{reproducibility} should be boolean."
+        assert isinstance(self.verbose, bool), f"'verbose' should be a boolean."
+        assert isinstance(self.safe_copy, bool), f"safe_copy should be boolean."
+        assert isinstance(self.reproducibility, bool), f"'reproducibility':{self.reproducibility} should be boolean."
 
-        self.empty_perc = 0.1 if empty_perc is None else empty_perc
-        self.src_dir = src_dir
-        self.dst_dir = dst_dir
-        self.image_format = image_format
-        # self.label_format = label_format
-        self.task = task
-        self.splitting_mode = 'wtest' if len(ratio)==3 else 'wotest'
-        self.image_type = 'wsi' if image_format in ['tif', 'tiff'] else 'tile'
-        self.verbose = verbose
-        self.ratio = ratio
-        self.safe_copy = safe_copy
-        self.reproducibility =reproducibility
-
-        
         return
     
+
     def _split_yolo_tiles(self):
-        """ Splits images and annotation tiles into folds."""
-
-        self.log.error("Not Implementeds")
-
+        raise NotImplementedError()
         return
     
+
     def _split_yolo_wsi(self):
         """ Splits WSIs """
 
         # 1) get slides
-        slides = self._get_files(format=self.image_format)
-        print(slides)
+        slides = self._get_files(format=self.slide_format)
+        if self.verbose_level == 'high': self.log.info(f"Slide list: {slides}")
         # getting all files with those names in src.folder (i.e. all labels, regardless of format)
-        labels = [os.path.join(self.src_dir, file) for file in os.listdir(self.src_dir) for slide in slides if os.path.basename(slide.split('.')[0]) in file]
-        labels = [file for file in labels if self.image_format not in file]
-        print(labels)
+        labels = glob(os.path.join(self.src_dir, f'*.{self.label_format}' ))
+        rect_labels = glob(os.path.join(self.src_dir, f'*.geojson' ))
+        labels += rect_labels
+        if self.verbose_level == 'high': self.log.info(f"Label list: {labels}")
         # 2) check if already splitted
         skipping = self._check_already_splitted()
         print(skipping)
@@ -96,11 +97,11 @@ class Splitter(Configurator):
     
     def _split_slides(self, 
                     image_list: list, 
-                    label_list: list = None, 
+                    label_list: list, 
                     train_balance: bool = False) -> Tuple[List, List] :
         """ Splits images in train, val and test. 
             Returns: tuple containing lists of train, val, test images and labels"""
-
+        func_name = self._split_slides.__name__
         SEED = 10
         n_images = len(image_list)
         n_val_imgs = round(self.ratio[1] * n_images) 
@@ -112,9 +113,9 @@ class Splitter(Configurator):
             if self.reproducibility is True:
                 random.seed(SEED)
             rand_img = random.choice(image_list)
-            val_imgs.append(rand_img)
+            val_imgs.append(rand_img) 
             image_list.remove(rand_img)
-        print(f"Val images: {len(val_imgs)}")
+        if self.verbose_level in ['medium', 'high']: self.log.info(f"{self.class_name}.{func_name}: Val images: {len(val_imgs)}")
         
         # 2) randomly pick test images:
         if self.splitting_mode == 'wtest':
@@ -125,15 +126,19 @@ class Splitter(Configurator):
                 rand_img = random.choice(image_list)
                 test_imgs.append(rand_img)
                 image_list.remove(rand_img)
-            print(f"Test images: {len(test_imgs)}")
+            if self.verbose_level in ['medium', 'high']: self.log.info(f"{self.class_name}.{func_name}: Test images: {len(test_imgs)}")
 
         # 3) remaining images are train:
         if train_balance is False:
             train_imgs = image_list
-            print(f"Train images: {len(train_imgs)}")
+            if self.verbose_level in ['medium', 'high']: self.log.info(f"{self.class_name}.{func_name}: Train images: {len(train_imgs)}")
         else:
             raise NotImplementedError()
 
+        if self.splitting_mode == 'wtest': 
+            self.log.info(f"{self.class_name}.{func_name}: Train images: {len(train_imgs)}, Val images: {len(val_imgs)}, Test images: {len(test_imgs)}")
+        else:
+            self.log.info(f"{self.class_name}.{func_name}: Train images: {len(train_imgs)}, Val images: {len(val_imgs)}")
 
         images = [train_imgs, val_imgs, test_imgs] if self.splitting_mode == 'wtest' else [train_imgs, val_imgs]
 
@@ -167,7 +172,6 @@ class Splitter(Configurator):
 
     def _split_images(self, 
                     image_list: list, 
-                    mask_list: list = None, 
                     empty_images: list = None,
                     train_balance: bool = False) -> Tuple[List, List] :
         """ Splits images in train, val and test. 
@@ -279,7 +283,7 @@ class Splitter(Configurator):
         subfolds_names = ['train', 'val', 'test']
         for img_dir, label_dir, fold in zip(images, labels, subfolds_names):
 
-            self.log.info(f"{self.__class__.__name__}.{'_move_files'}: {fold}set: {[os.path.basename(file) for file in img_dir]}")
+            if self.verbose_level in ['high', 'medium']: self.log.info(f"{self.__class__.__name__}.{'_move_files'}: {fold}set: {[os.path.basename(file) for file in img_dir]}")
 
             for image in tqdm(img_dir, desc = f"Filling {fold}"):
                 img_fn = os.path.split(image)[1]
@@ -419,74 +423,9 @@ class Splitter(Configurator):
 
 def test_Splitter():
 
-    # print(" ########################    TEST 1: ⏳    ########################")
-    # src_dir = '/Users/marco/Downloads/another_test'
-    # dst_dir = '/Users/marco/Downloads/boh'
-    # image_format = 'tif'
-    # ratio = [0.7, 0.3]
-    # task = 'detection'
-    # verbose = True
-    # safe_copy = True
-
-    # splitter = Splitter(src_dir=src_dir,
-    #                     dst_dir=dst_dir,
-    #                     image_format=image_format,
-    #                     ratio=ratio,
-    #                     task=task,
-    #                     verbose = verbose, 
-    #                     safe_copy = safe_copy)
-    # splitter()
-    # print(" ########################    TEST 1: ✅    ########################")
-
-    # raise Exception
-
-    # print(f"Testing: dataset removed.")
-    # shutil.rmtree(path= os.path.join(dst_dir, task) )
-
-    print(" ########################    TEST 2: ⏳     ########################")
-    src_dir = '/Users/marco/Downloads/test_folders/test_process_data_and_train'
-    dst_dir = '/Users/marco/Downloads/test_folders/test_process_data_and_train'
-    image_format = 'tif'
-    ratio = [0.6, 0.2, 0.2]
-    task = 'detection'
-    verbose = True
-    safe_copy = True
-
-    splitter = Splitter(src_dir=src_dir,
-                        dst_dir=dst_dir,
-                        image_format=image_format,
-                        ratio=ratio,
-                        task=task,
-                        verbose = verbose, 
-                        safe_copy = safe_copy)
+    config_yaml_fp = '/Users/marco/yolo/code/helical/tcd_config_training.yaml'
+    splitter = Splitter(config_yaml_fp=config_yaml_fp)
     splitter()
-    # splitter.move_already_tiled(tile_root = '/Users/marco/Downloads/muw_slides')
-    # splitter._remove_empty_images()
-    print(" ########################    TEST 2: ✅    ########################")
-
-
-    # print(" ########################    TEST 3: ⏳     ########################")
-    # src_dir = '/Users/marco/Downloads/test_folders/test_featureextractor/images'
-    # dst_dir = '/Users/marco/Downloads/test_folders/test_milsplitter'
-    # image_format = 'png'
-    # ratio = [0.6, 0.2, 0.2]
-    # task = 'detection'
-    # verbose = True
-    # safe_copy = True
-
-    # splitter = Splitter(src_dir=src_dir,
-    #                     dst_dir=dst_dir,
-    #                     image_format=image_format,
-    #                     ratio=ratio,
-    #                     task=task,
-    #                     verbose = verbose, 
-    #                     safe_copy = safe_copy)
-    # splitter()
-    # # splitter.move_already_tiled(tile_root = '/Users/marco/Downloads/muw_slides')
-    # # splitter._remove_empty_images()
-    # print(" ########################    TEST 3: ✅    ########################")
-
-    
 
     return
 
