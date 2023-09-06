@@ -62,7 +62,7 @@ class Processor(ProcessorBase):
             data = data['features']
             with open(file=file, mode='w') as f: 
                 geojson.dump(obj=data, fp=f)
-            # self.log.info(f"converted {file}")
+        self.log.info(f"converted {file}")
 
         return
     
