@@ -17,6 +17,7 @@ import numpy as np
 from glob import glob
 import cv2
 from torch import nn
+from torchvision import models
 
 
 class CNN_Trainer_Base(Configurator):
@@ -237,7 +238,9 @@ class CNN_Trainer_Base(Configurator):
         pred_label_dir = os.path.join(exp_fold, 'labels')
         crops_dir = os.path.join(exp_fold, 'crops')
         assert os.path.isdir(crops_dir), self.assert_log(f"'crops_dir':{crops_dir} is not a valid dirpath.")
-        images = glob(os.path.join(self.yolo_data_root, 'tiles', '*', 'images', '*.png'))
+        path_like = os.path.join(self.yolo_data_root, 'tiles', '*', 'images', '*.png')
+        images = glob(path_like)
+        assert len(images)>0, self.assert_log(f"'images' is empty. Path like:{path_like}", func_n=func_n)
         fnames = [os.path.basename(file).split('.')[0] for file in images]
         pred_labels = glob(os.path.join(pred_label_dir, '*.txt'))
         reversed_map_classes = {v:k for k,v in self.params['map_classes'].items()}
@@ -326,8 +329,8 @@ class CNN_Trainer_Base(Configurator):
         # plt.show()
         fig.savefig('img_cnn_preds.png')
         plt.close()
-
         return
+    
     
     def plot_metrics(self, epoch:int, train_losses:list, val_losses:list, train_accs:list, val_accs:list):
         
@@ -346,17 +349,33 @@ class CNN_Trainer_Base(Configurator):
         fig.savefig(f"img_cnn_metrics.png")
         plt.close()
         return
+    
 
+    def get_model(self)->None:
+        """ Creates VGG16 model with default weights and matches 
+            classification head with the desired number of classes. """
+        func_n = self.get_model.__name__
+        # Load the pretrained model from pytorch
+        print("-"*10)
+        self.format_msg(f"⏳ Creating VGG16 model.", func_n=func_n)
+        vgg16 = models.vgg16_bn(weights = 'VGG16_BN_Weights.DEFAULT')
+        vgg16.load_state_dict(torch.load(self.weights_path))
+        num_features = vgg16.classifier[6].in_features
+        vgg16.classifier[-1]= nn.Linear(num_features, len(self.map_classes))
+        self.format_msg(f"✅ Created VGG16 model.", func_n=func_n)
+        return vgg16
+    
+    
 
     def train_model(self)->torch.Tensor:
         """ Trains the VGG model. """
         func_n = self.train_model.__name__
 
         # set starting values
-
-        model =  self.model
-        # criterion = self.criterion
-        # optimizer = self.optimizer
+        model = self.get_model()
+        assert any([param.requires_grad for param in model.features.parameters()]), self.assert_log(f"No param requires grad. Model won't update.", func_n=func_n)
+        if self.device != 'cpu': model.to(self.device)   # move model to gpus
+        criterion = nn.CrossEntropyLoss()
         since = time.time() # get start time
         best_model_wts = copy.deepcopy(model.state_dict())
         best_acc = 0.0
@@ -364,12 +383,11 @@ class CNN_Trainer_Base(Configurator):
         avg_acc = 0
         avg_loss_val = 0
         avg_acc_val = 0
-        criterion = nn.CrossEntropyLoss()
+        self.log.info(f"lr: {self.lr}")
         optimizer = torch.optim.SGD(model.parameters(), lr=self.lr, momentum=0.9)
         # exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
         self.format_msg(msg=f"Model is on: {next(model.parameters()).device}", func_n=func_n)
-        model.to(self.device)   # move model to gpu
-        criterion = criterion.to(self.device)
+        # self.format_msg(msg=f"'criterion' is on: {criterion.device}", func_n=func_n)
 
         # TRAINING LOOP
         train_accs, val_accs = [], []
@@ -383,30 +401,36 @@ class CNN_Trainer_Base(Configurator):
             loss_train = 0
             loss_val = 0
             acc_train = 0
+            acc_train_i = 0
+            acc_val_i = 0
             acc_val = 0
             model.train(True)
+            get_desc = lambda acc_train_i, loss_train_i: f"Acc train: {acc_train_i:.2f}, Loss train: {loss_train_i:.2f}."
+            progress_bar = tqdm(self.loaders['train'], desc=get_desc(acc_train_i=0, loss_train_i=0))
             # for each batch in train loaders:
-            for i, data in enumerate(tqdm(self.loaders['train'])):
+            for i, data in enumerate(progress_bar):
                 inputs, labels = data
                 t_batch = labels.shape[0]
-                inputs = inputs.to(self.device)     # move images to gpu
-                labels =  labels.to(self.device)    # move labels to gpu
+                if self.device != 'cpu': inputs = inputs.to(self.device)     # move images to gpu
+                if self.device != 'cpu': labels = labels.to(self.device)    # move labels to gpu
                 optimizer.zero_grad()               # zero out gradient
-                model.zero_grad()
+                # model.zero_grad()
                 outputs = model(inputs)             # run input through model and get output
                 _, preds = torch.max(outputs.data, 1, keepdim=True)         # get pred from logits
                 _, true_classes = torch.max(labels.data, 1, keepdim=True)   # get true class 
                 # show data
                 if i==0:  self.show_train_data(images=inputs, pred_lbl=preds, gt_lbl=true_classes, n_epoch=epoch)
                 weights_before = list(model.parameters())[0].clone()
-                loss = criterion(outputs, labels.data)     # evaluate model
-                loss.backward()                            # update loss (graph)
+                loss = criterion(outputs, labels)     # evaluate model
+                loss.backward()                             # update loss (graph)
                 optimizer.step()                           # update optimizer
                 weights_after = list(model.parameters())[0].clone()
                 # check that weights are being updated
-                if epoch==0: assert not {torch.equal(weights_before.data, weights_after.data)}, self.assert_log(f"Weights are not being updated.", func_n=func_n)
+                # if i==2: assert not {torch.equal(weights_before.data, weights_after.data)}, self.assert_log(f"Weights are not being updated.", func_n=func_n)
                 loss_train += loss.data                    # update mean loss 
-                acc_train += (torch.sum(preds == true_classes).cpu().numpy() / t_batch) 
+                acc_train_i = torch.sum(preds == true_classes).cpu().numpy()/t_batch
+                acc_train += acc_train_i 
+                if i%1==0: progress_bar.set_description(desc=get_desc(acc_train_i=acc_train_i, loss_train_i=loss.data))
                 if acc_train>len(self.loaders['train']): print(f"acc_train_i:{acc_train:.4f}. torch_sum:{torch.sum(preds == true_classes).cpu().numpy()}/{t_batch}")
                 del inputs, labels, outputs, preds # free cache memory
                 torch.cuda.empty_cache()

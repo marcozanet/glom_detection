@@ -3,13 +3,14 @@ readme: >
   - input_dir for validation needs to be a folder with /images and /labels subfolders. Labels need to be in YOLO format.
   - slides and annotations should be in format <name>_<STAIN>.<format>
   - map classes: {'Cellular Crescent':1, 'Glomerulus':0, 'FibrousCrescent:2'}, {'Glo-unhealthy':0, 'Glo-NA':1, 'Glo-healthy':2, 'Tissue':3},
+  - num_workers should be set to 0 for windows gpu
 
 system:
     os: 'macos'
 
 processor: 
-  src_root : 'C:\marco\biopsies\tcd_biopsies' 
-  dst_root : 'C:\marco\biopsies\tcd_biopsies'
+  src_root : 'F:\marco\tcd_biopsies' 
+  dst_root : 'F:\marco\tcd_biopsies'
   image_type: 'wsi'
   slide_format : 'svs'
   label_format : 'json'
@@ -38,10 +39,10 @@ processor:
 
 
 yolo_trainer:
-  src_root : '/Users/marco/Downloads/new_dataset'
-  dst_root : '/Users/marco/Downloads/new_dataset'
-  repo: '/Users/marco/yolo/code/helical'
-  yolov5dir: '/Users/marco/yolov5'
+  src_root : 'F:\marco\tcd_biopsies'
+  dst_root : 'F:\marco\tcd_biopsies'
+  repo: 'C:\marco\code\glom_detection\helical'
+  yolov5dir: 'C:\marco\yolov5'
   map_classes: {'Cellular Crescent':1, 'Glomerulus':0, 'FibrousCrescent':2} 
   datasource : 'tcd'
   slide_format : 'svs'
@@ -55,10 +56,10 @@ yolo_trainer:
   tiling_level : 0
   tiling_show : True
   stain: 'pas'
-  batch_size: 6
+  batch_size: 2
   epochs: 10
   save_features: False
-  workers: 1
+  workers: 0
   image_size: 1024
   device: null 
   single_cls: False
@@ -71,18 +72,18 @@ yolo_trainer:
 
 
 inference:
+  input_dir: F:\marco\tcd_biopsies/detection/tiles/train/images
+  repository_dir:  C:\marco\code\glom_detection\helical
+  yolov5dir: C:\marco\yolov5
   augment: false
   classify: false
   device: gpu
-  input_dir: /Users/marco/Downloads/new_dataset/detection/tiles/train/images
   task: detection
   model: yolo
   output_dir: null #
-  repository_dir: /Users/marco/yolo/code/helical
   save_imgs: true
   save_txt: true
   save_crop: true
-  yolov5dir: /Users/marco/yolov5
   create_masks: false
   show_mask: false
   imgsz: [2048,2048]
@@ -103,7 +104,8 @@ validation:
 
 yolo_post_processing:
   output_dir: null
-  dst_root: '/Users/marco/Downloads/new_dataset'
+  yolov5dir: C:\marco\yolov5
+  dst_root: F:\marco\tcd_biopsies
   save_folder: '/Users/marco/helical_tests/test_cropper'
   image_shape: [640,640]
   task: 'detection'
@@ -111,23 +113,24 @@ yolo_post_processing:
   percentile: null
   plot_boxes: True
   skip_cropped_objects: True
-  yolov5dir: /Users/marco/yolov5
 
 
 cnn_trainer:
-  yolo_data_root: '/Users/marco/Downloads/new_dataset/detection'
-  cnn_data_fold: '/Users/marco/Downloads/new_dataset'
+  yolo_data_root: F:\marco\tcd_biopsies\detection
+  cnn_data_fold: F:\marco\tcd_biopsies
   map_classes:  {'Glomerulus':0, 'Cellular Crescent':1,  'FibrousCrescent':2} # important that base class (Glomerulus) is 0
   yolo_exp_dir: [ /Users/marco/yolov5/runs/detect/exp60','/Users/marco/yolov5/runs/detect/exp61', '/Users/marco/yolov5/runs/detect/exp62']
-  yolov5dir: /Users/marco/yolov5
+  weights_path: C:\Users\hp\.cache\torch\hub\checkpoints\vgg16_bn-6c64b313.pth
+  cnn_exp_fold: F:\marco\cnn_runs
+  yolov5dir: C:\marco\yolov5
+  root_data: F:\marco\tcd_biopsies
+  exp_data: C:\marco\yolov5\runs\detect
   lr: 0.001
   k_tot: 4
   k_i: 2
   batch: 7
-  epochs: 10
+  epochs: 3
   num_workers: 0
-  weights_path: '/Users/marco/.cache/torch/hub/checkpoints/vgg16_bn-6c64b313.pth'
-  cnn_exp_fold: '/Users/marco/helical_tests/cnn_model/exps'
   dataset: 'muw'
   yolo_task: 'detection'
   crop_percentile: 90
@@ -135,8 +138,6 @@ cnn_trainer:
   # resize_crops: false
   resize_shape: [224,224]
   treat_as_single_class: False
-  device: 'mps' # tested for mps and cpu
+  device: 'cpu' # tested for mps and cpu
   skip_test: true
-  root_data: '/Users/marco/Downloads/new_dataset'
   mutually_exclusive_classes: false
-  exp_data: '/Users/marco/yolov5/runs/detect'

@@ -304,6 +304,7 @@ class CropLabeller(Configurator):
             if len(matching_gloms) == 0: 
                 crop_fn = lbl2cropfn(pred_lbl=pred_lbl, crop_n=i)
                 crop_fp = cropfn_2_cropfp(crop_fn=crop_fn)
+                print(f"FP found!")
                 gt_classes.update({crop_fp:None})
             
             # print('i')
@@ -339,10 +340,17 @@ class CropLabeller(Configurator):
         assert os.path.isdir(temp_tree), self.assert_log(f"'temp' tree doesn't exist at {temp_tree}", func_n=func_n)
         
         # get corresponding true label with also classification from the temp tree:
-        '/Users/marco/Downloads/new_dataset/detection/temp/tiles/train/labels/BH13_PAS_sample0_0_3.txt'
-        '/Users/marco/Downloads/new_dataset/detection/tiles/train/labels/BH13_PAS_sample0_0_3.txt'
+        # gt_lbl_temp: '/Users/marco/Downloads/new_dataset/detection/temp/tiles/train/labels/BH13_PAS_sample0_0_3.txt'
+        # gt_lbl: '/Users/marco/Downloads/new_dataset/detection/tiles/train/labels/BH13_PAS_sample0_0_3.txt'
+
         assert self.root_data in gt_lbl, self.assert_log(f"{self.root_data} not in {gt_lbl}", func_n=func_n)
-        gt_lbl_temp = os.path.join(temp_tree) + gt_lbl.split(os.path.join(self.root_data, self.params['yolo_task']))[1]
+
+
+        gt_lbl_temp_path_like = os.path.join(temp_tree, 'tiles', '*', 'labels', os.path.basename(gt_lbl))
+        temp_matches = glob(gt_lbl_temp_path_like)
+        assert len(temp_matches)==1, self.assert_log(f"'temp_matches' has length: {temp_matches}.", func_n=func_n)
+        gt_lbl_temp = temp_matches[0]
+
         assert os.path.isfile(gt_lbl_temp), self.assert_log(f"'gt_lbl_temp':{gt_lbl_temp} is not a valid filepath.", func_n=func_n)
 
         match_clss, match_xc, match_yc, match_w, match_h = matching_glom
@@ -408,7 +416,9 @@ class CropLabeller(Configurator):
             clss_images = glob(os.path.join(clss_fp, '*.jpg'))
             clss_images = [img for img in clss_images if 'Augm' not in img]
 
-            if len(clss_images)==0: self.log.warning( f"No images like {os.path.join(clss_fp, '*.jpg')}")
+            if len(clss_images)==0: self.log.warning( f"No images like {os.path.join(clss_fp, '*.jpg')}. Skipping. DATASET WILL BE UNBALANCED.")
+            if len(clss_images)==0: continue
+
             n_imgs_to_make = max_n_imgs - n_imgs
 
             print(f"Images to create: {n_imgs_to_make}")

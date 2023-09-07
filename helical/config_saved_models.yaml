@@ -11,7 +11,7 @@ yolo:
       { weights: '/Users/marco/yolov5/runs/train/exp148/weights/best.pt',
         conf_thres: 0.425},
       wo_classification: 
-      { weights: '/Users/marco/yolov5/runs/train/exp158/weights/best.pt',
+      { weights: '/Users/marco/Downloads/best.pt',
         conf_thres: 0.2}
     },
   

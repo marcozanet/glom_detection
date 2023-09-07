@@ -42,26 +42,7 @@ class CNN_Trainer(CNN_Trainer_Base):
         return
     
     
-    def get_model(self)->None:
-        """ Creates VGG16 model with default weights and matches 
-            classification head with the desired number of classes. """
-        func_n = self.get_model.__name__
-        # Load the pretrained model from pytorch
-        print("-"*10)
-        self.format_msg(f"⏳ Creating VGG16 model.", func_n=func_n)
-        vgg16 = models.vgg16_bn(weights = 'VGG16_BN_Weights.DEFAULT')
-        vgg16.load_state_dict(torch.load(self.weights_path))
-        # Freeze training for all layers
-        for param in vgg16.features.parameters():
-            param.require_grad = False
-        # Newly created modules have require_grad=True by default
-        num_features = vgg16.classifier[6].in_features
-        vgg16.classifier[-1]= nn.Linear(num_features, len(self.map_classes))
-        vgg16.to(self.device)
-        self.model = vgg16
-        self.format_msg(f"✅ Created VGG16 model.", func_n=func_n)
 
-        return 
     
 
     def train(self)-> None:
@@ -81,7 +62,6 @@ class CNN_Trainer(CNN_Trainer_Base):
 
         self._crossvalidation()
         self.get_loaders()
-        self.get_model()
         self.train()
 
         return

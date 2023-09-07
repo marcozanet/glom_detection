@@ -1,20 +1,20 @@
-05/09 16:19:54|INFO|CNN_Trainer._crossvalidation: ⏳ Applyting crossvalidation: tot:4, current k_fold:2
-05/09 16:19:54|INFO|CNN_KCrossValidation._change_kfold: n_wsis:5
-05/09 16:19:54|INFO|CNN_KCrossValidation._get_i_split: iter_0,  train: 4 images, test: 1.
-05/09 16:19:54|INFO|CNN_KCrossValidation._get_i_split: iter_1,  train: 4 images, test: 1.
-05/09 16:19:54|INFO|CNN_KCrossValidation._get_i_split: iter_2,  train: 4 images, test: 1.
-05/09 16:19:54|INFO|CNN_KCrossValidation._get_i_split: iter_3,  train: 3 images, test: 2.
-05/09 16:19:54|INFO|CNN_KCrossValidation.get_n_tiles: n_tiles_tot:{}.
-05/09 16:19:54|INFO|CNN_KCrossValidation._change_folds: train: 4 images: ['BH10_PAS', 'BH11_PAS', 'BH13_PAS', 'BH14_PAS'].
-05/09 16:19:54|INFO|CNN_KCrossValidation._change_folds: test: 1 labels: ['BH12_PAS'].
-05/09 16:19:54|INFO|CNN_KCrossValidation._change_kfold: Files splitting: train:1333, val:367, test:0. 
-05/09 16:19:54|INFO|CNN_KCrossValidation._log_class_balance: Class balance: 'train':{'Cellular Crescent': 349, 'FibrousCrescent': 340, 'Glomerulus': 337, 'false_positives': 307}, 'val':{'Cellular Crescent': 76, 'FibrousCrescent': 85, 'Glomerulus': 88, 'false_positives': 118}, 'test':{'Cellular Crescent': 0, 'FibrousCrescent': 0, 'Glomerulus': 0, 'false_positives': 0} 
-05/09 16:19:54|INFO|CNN_Trainer._crossvalidation: ✅ Applied crossvalidation. Current k fold: 2:
-05/09 16:19:54|INFO|CNN_Trainer.get_loaders: ⏳ Getting loaders
-05/09 16:19:54|INFO|CNN_Trainer.get_loaders: ✅ Got loaders.
-05/09 16:19:54|INFO|CNN_Trainer.get_model: ⏳ Creating VGG16 model.
-05/09 16:19:55|INFO|CNN_Trainer.get_model: ✅ Created VGG16 model.
-05/09 16:19:55|INFO|CNN_Trainer.train: ⏳ Training VGG16 model.
-05/09 16:19:55|INFO|CNN_Trainer.train_model: Model is on: mps:0
-05/09 16:19:55|INFO|CNN_Trainer.train_model: ⏳ Epoch 0/10
-05/09 16:19:57|ERROR|CNN_Trainer.train_model: Weights are not being updated.
+07/09 09:28:54|INFO|CNN_Trainer._crossvalidation: ⏳ Applyting crossvalidation: tot:4, current k_fold:2
+07/09 09:28:54|INFO|CNN_KCrossValidation._change_kfold: n_wsis:5
+07/09 09:28:54|INFO|CNN_KCrossValidation._get_i_split: iter_0,  train: 4 images, test: 1.
+07/09 09:28:54|INFO|CNN_KCrossValidation._get_i_split: iter_1,  train: 4 images, test: 1.
+07/09 09:28:54|INFO|CNN_KCrossValidation._get_i_split: iter_2,  train: 4 images, test: 1.
+07/09 09:28:54|INFO|CNN_KCrossValidation._get_i_split: iter_3,  train: 3 images, test: 2.
+07/09 09:28:54|INFO|CNN_KCrossValidation.get_n_tiles: n_tiles_tot:{}.
+07/09 09:28:54|INFO|CNN_KCrossValidation._change_folds: train: 4 images: ['BH10_PAS', 'BH11_PAS', 'BH13_PAS', 'BH14_PAS'].
+07/09 09:28:54|INFO|CNN_KCrossValidation._change_folds: test: 1 labels: ['BH12_PAS'].
+07/09 09:28:54|INFO|CNN_KCrossValidation._change_kfold: Files splitting: train:1292, val:328, test:0. 
+07/09 09:28:54|INFO|CNN_KCrossValidation._log_class_balance: Class balance: 'train':{'Cellular Crescent': 326, 'FibrousCrescent': 324, 'Glomerulus': 319, 'false_positives': 323}, 'val':{'Cellular Crescent': 79, 'FibrousCrescent': 81, 'Glomerulus': 86, 'false_positives': 82}, 'test':{'Cellular Crescent': 0, 'FibrousCrescent': 0, 'Glomerulus': 0, 'false_positives': 0} 
+07/09 09:28:54|INFO|CNN_Trainer._crossvalidation: ✅ Applied crossvalidation. Current k fold: 2:
+07/09 09:28:54|INFO|CNN_Trainer.get_loaders: ⏳ Getting loaders
+07/09 09:29:02|INFO|CNN_Trainer.get_loaders: ✅ Got loaders.
+07/09 09:29:02|INFO|CNN_Trainer.train: ⏳ Training VGG16 model.
+07/09 09:29:02|INFO|CNN_Trainer.get_model: ⏳ Creating VGG16 model.
+07/09 09:29:02|INFO|CNN_Trainer.get_model: ✅ Created VGG16 model.
+07/09 09:29:03|INFO|lr: 0.001
+07/09 09:29:03|INFO|CNN_Trainer.train_model: Model is on: mps:0
+07/09 09:29:03|INFO|CNN_Trainer.train_model: ⏳ Epoch 0/10

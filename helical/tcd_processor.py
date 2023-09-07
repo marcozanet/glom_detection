@@ -55,7 +55,9 @@ class Processor(ProcessorBase):
     def _convert_geojson2json(self)-> None: 
         """ TCD files should be 1) rect around sample in geojson fmt 2) slide annotation in .geojson BUT NAMED AS .json as to 
         not be confused with the rect geojson file 3) slide in .svs fmt. This func converts the NAMED .json file into a real .json fmt."""
-        json_files = glob(os.path.join(self.src_root, '*.json'))
+        path_like = os.path.join(self.src_root, '*.json')
+        json_files = glob(path_like)
+        assert len(json_files)>0, f"'json_files' is empty. Path like: {path_like}."
         for file in json_files:
             with open(file=file, mode='r') as f: 
                 data = geojson.load(f)
