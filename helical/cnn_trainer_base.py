@@ -3,21 +3,17 @@ import time
 import os, shutil
 import copy
 from typing import List
-from cnn_assign_class_crop_new import CropLabeller
-from cnn_splitter import CNNDataSplitter
-from tqdm import tqdm 
-import matplotlib.pyplot as plt
-import torchvision
-from loggers import get_logger
-from utils import get_config_params
-from datetime import datetime
-from configurator import Configurator
 import math
 import numpy as np
+from tqdm import tqdm 
 from glob import glob
-import cv2
+from datetime import datetime
+import matplotlib.pyplot as plt
 from torch import nn
 from torchvision import models
+from cnn_loaders import CNNDataLoaders
+from utils import get_config_params
+from configurator import Configurator
 
 
 class CNN_Trainer_Base(Configurator):
@@ -64,14 +60,16 @@ class CNN_Trainer_Base(Configurator):
         self.device = torch.device('mps') if self.device == 'mps' else self.gpu
         self.now = datetime.now()
         self.dt_string = self.now.strftime("%Y_%m_%d__%H_%M_%S")
-        self.weights_save_fold = self.cnn_exp_fold +f"_{self.dt_string}"
+        self.weights_save_fold = os.path.join(self.cnn_exp_fold,f"{self.dt_string}")
         self.yolov5dir = self.params['yolov5dir']
         self.skip_test = self.params['skip_test']
         self.yolo_exp_folds = self._get_last3_detect_dir()
         self.skipped_crops = []
         self.min_w_h = self.params['min_w_h'] if self.params['min_w_h'] is not None else 0.1
+        self.mode= self.params['mode']
         
         return
+        
     
 
     def _get_map_classes(self, old_map_classes:dict):
@@ -86,9 +84,22 @@ class CNN_Trainer_Base(Configurator):
 
         assert os.path.isdir(self.yolo_data_root), self.assert_log(f"'yolo_data_root':{self.yolo_data_root} is not a valid dirpath.")
 
-
         return
     
+
+    def get_loaders(self, mode:str, show_data:bool=True)->None:
+        """ Creates DataLoader class and gets Train and Val Loaders. """
+        func_n = self.get_loaders.__name__
+        assert mode in ['train', 'val', 'inference'], self.assert_log(f"'mode':{mode} should be one of ['train', 'val', 'inference']", func_n=func_n)
+        self.format_msg(f"⏳ Getting loaders", func_n=func_n)
+        self.dataloader_cls = CNNDataLoaders(root_dir=os.path.join(self.cnn_data_fold, 'cnn_dataset'),
+                                             map_classes=self.map_classes, mode=mode,
+                                             batch=self.batch, num_workers=self.num_workers)
+        if mode=='inference': show_data=False
+        self.loaders = self.dataloader_cls(show_data=show_data)
+        self.format_msg(f"✅ Got loaders.", func_n=func_n)
+        return
+        
 
     def _get_last3_detect_dir(self)-> list:
         """ Returns last 3 (modified) folders from exp fold. """
@@ -102,201 +113,10 @@ class CNN_Trainer_Base(Configurator):
             list_folds.remove(last_fold)
         return  last_3
     
-    
-    def _get_objs_from_row_txt_label(self, row:str): # helper func
-        row = row.replace('\n', '')
-        nums = row.split(' ')
-        clss = int(float(nums[0]))
-        nums = [float(num) for num in nums[1:]]
-        # detection case:
-        if len(nums) == 4:
-            x_c, y_c, w, h = nums
-        # segmentation case:
-        elif len(nums) == 8: 
-            x_min, y_min, x_max, y_min, x_max, y_max, x_min, y_max = nums
-            x_c, y_c = x_min + (x_max-x_min)/2, y_min + (y_max-y_min)/2
-            w, h = x_max-x_min, y_max-y_min
-            assert all([el>=0 for el in [x_c, y_c, w, h]])
-            assert x_c-w/2 == x_min, f"{x_c}-{w}/2 != {x_min}. Result is: {x_c-w/2}. "
-        else:
-            print(f"there should be 4 or 8 objects apart from class but are {len(nums)}")
 
-        return clss, x_c, y_c, w, h    
-    
-    
-    def prepare_data(self)->None:
-        """ Prepares data for CNN training: puts all images in the same folder 
-            (regardless of trainset, valset, testset) and gets the dataloader 
-            to be used by the model."""
-        func_n = self.prepare_data.__name__
-        msg_base = f"{self.class_name}.{func_n}: "
-        self.log.info(msg_base + f"⏳ Preparing data for CNN training:")
-
-
-        # Assign true classes back to crops out of yolo:
-        # assert 'false_positives' in self.map_classes.keys(), f"'false_positives' missing in 'map_classes'. "
-        cnn_root = os.path.join(self.cnn_data_fold, 'cnn_dataset')
-        self.log.info(msg_base + f"⏳ Labelling crops out of YOLO:")
-        for exp_fold in self.yolo_exp_folds:
-            # 1) create crops:
-            self.center_crop(exp_fold=exp_fold)
-            # 2) assign each crop the correct label:
-            labeller = CropLabeller(self.config_yaml_fp, exp_fold=exp_fold, skipped_crops=self.skipped_crops)
-            labeller()
-        self.log.info(msg_base + f"✅ Labelled crops.")
-
-        # Creating Dataset and splitting into train, val, test:
-        self.log.info(msg_base + f"⏳ Creating train,val,test sets:")
-        cnn_processor = CNNDataSplitter(src_folds=self.yolo_exp_folds, map_classes=self.map_classes, yolo_root=self.yolo_data_root, 
-                                        dst_root=cnn_root, treat_as_single_class=self.treat_as_single_class)
-        cnn_processor()
-        cnn_dataset_fold = os.path.join(self.cnn_data_fold, 'cnn_dataset')
-        self.log.info(msg_base + f"✅ Created train,val,test sets.")
-
-        return cnn_dataset_fold
-    
-
-
-    # def crop_gloms(self, exp_fold:str):
-
-    #     func_n = self.crop_gloms.__name__
-    #     pred_label_dir = os.path.join(exp_fold, 'labels')
-    #     crops_dir = os.path.join(exp_fold, 'crops')
-    #     crops_true_classes_dir = os.path.join(exp_fold, 'crops_true_classes')
-    #     images = glob(os.path.join(self.yolo_data_root, 'tiles', '*', 'images', '*.png'))
-    #     fnames = [os.path.basename(file).split('.')[0] for file in images]
-    #     pred_labels = glob(os.path.join(pred_label_dir, '*.txt'))
-    #     reversed_map_classes = {v:k for k,v in self.params['map_classes'].items()}
-
-    #     # if crops already exist, remove and replace:
-    #     if os.path.isdir(crops_dir): shutil.rmtree(crops_dir)
-    #     if os.path.isdir(crops_true_classes_dir): shutil.rmtree(crops_true_classes_dir)
-    #     os.makedirs(crops_dir)
-
-    #     # for each pred, look for corresponding image
-    #     all_w, all_h = [], []
-    #     for pred_lbl in tqdm(pred_labels, desc='Cropping Images'):
-    #         lbl_fn = os.path.basename(pred_lbl).split('.')[0]
-    #         try:
-    #             idx = fnames.index(lbl_fn)
-    #         except:
-    #             raise Exception(f"Index not found for '{lbl_fn} in {fnames}")
-    #         corr_img = images[idx]
-    #         image = cv2.imread(corr_img)
-    #         W,H = image.shape[:2]
-    #         with open(pred_lbl, 'r') as f:
-    #             rows = f.readlines()
-            
-    #         # for each obj, create a new cropped image:
-    #         for i, row in enumerate(rows):
-    #             new_image = np.zeros_like(image)
-    #             clss, x_c, y_c, w, h = self._get_objs_from_row_txt_label(row=row)
-    #             all_w.append(w)
-    #             all_h.append(h)
-    #             x_min, x_max = int((x_c-w/2)*W), int((x_c+w/2)*W)
-    #             y_min, y_max = int((y_c-h/2)*H), int((y_c+h/2)*H)
-    #             # saving WITH INVERTED COORDS:
-    #             new_image[y_min:y_max, x_min:x_max] = image[y_min:y_max, x_min:x_max]
-    #             os.makedirs(os.path.join(crops_dir, reversed_map_classes[clss]), exist_ok=True)
-    #             fp = os.path.join(crops_dir, reversed_map_classes[clss], f"{lbl_fn}_crop{i}.jpg")
-    #             cv2.imwrite(fp, new_image)
-
-    #     self.all_w, self.all_h = all_w, all_h
-    #     self.center_crop(exp_fold=exp_fold)
-
-    #     return
-
-    def get_max_crop(self, exp_fold:str):
-
-        func_n = self.get_max_crop.__name__
-        pred_label_dir = os.path.join(exp_fold, 'labels')
-        crops_dir = os.path.join(exp_fold, 'crops')
-        crops_true_classes_dir = os.path.join(exp_fold, 'crops_true_classes')
-        pred_labels = glob(os.path.join(pred_label_dir, '*.txt'))
-        # if crops already exist, remove and replace:
-        if os.path.isdir(crops_dir): shutil.rmtree(crops_dir)
-        if os.path.isdir(crops_true_classes_dir): shutil.rmtree(crops_true_classes_dir)
-        os.makedirs(crops_dir)
-        # for each pred, look for corresponding image
-        all_w, all_h = [], []
-        for pred_lbl in tqdm(pred_labels, desc='Cropping Images'):
-            with open(pred_lbl, 'r') as f:
-                rows = f.readlines()
-            # for each obj, create a new cropped image:
-            for i, row in enumerate(rows):
-                clss, x_c, y_c, w, h = self._get_objs_from_row_txt_label(row=row)
-                all_w.append(w)
-                all_h.append(h)
-
-        return all_w, all_h
-    
-
-    def center_crop(self, exp_fold:str)-> None:
-
-        func_n = self.center_crop.__name__
-        all_w, all_h = self.get_max_crop(exp_fold=exp_fold)
-        pred_label_dir = os.path.join(exp_fold, 'labels')
-        crops_dir = os.path.join(exp_fold, 'crops')
-        assert os.path.isdir(crops_dir), self.assert_log(f"'crops_dir':{crops_dir} is not a valid dirpath.")
-        path_like = os.path.join(self.yolo_data_root, 'tiles', '*', 'images', '*.png')
-        images = glob(path_like)
-        assert len(images)>0, self.assert_log(f"'images' is empty. Path like:{path_like}", func_n=func_n)
-        fnames = [os.path.basename(file).split('.')[0] for file in images]
-        pred_labels = glob(os.path.join(pred_label_dir, '*.txt'))
-        reversed_map_classes = {v:k for k,v in self.params['map_classes'].items()}
-        all_w, all_h = np.array(all_w), np.array(all_h)
-        max_w = np.percentile(all_w, self.crop_percentile)
-        max_h = np.percentile(all_h, self.crop_percentile)
-        max_size = max(max_w, max_h)
-        X_C, Y_C = max_size/2, max_size/2
-
-        # for each pred, look for corresponding image
-        for pred_lbl in tqdm(pred_labels, desc='Center cropping'):
-            lbl_fn = os.path.basename(pred_lbl).split('.')[0]
-            try:
-                idx = fnames.index(lbl_fn)
-            except:
-                raise Exception(f"Index not found for '{lbl_fn} in {fnames}")
-            corr_img = images[idx]
-            image = cv2.imread(corr_img)
-            W,H = image.shape[:2]
-            with open(pred_lbl, 'r') as f:
-                rows = f.readlines()
-            
-            # for each obj, create a new cropped image:
-            for i, row in enumerate(rows):
-                new_image = np.zeros(shape=(int(max_size*W), int(max_size*H), 3))
-                clss, x_c, y_c, w, h = self._get_objs_from_row_txt_label(row=row)
-                x_min, x_max = int((x_c-w/2)*W), int((x_c+w/2)*W)
-                y_min, y_max = int((y_c-h/2)*H), int((y_c+h/2)*H)
-                w_old, h_old = x_max-x_min, y_max-y_min
-                x_min_new, x_max_new = int(X_C*W - w_old/2), int(X_C*W + w_old/2)
-                y_min_new, y_max_new = int(Y_C*H - h_old/2), int(Y_C*H + h_old/2)
-                
-                if (x_max-x_min) > int(max_size*W) or (y_max-y_min)>int(max_size*H): 
-                    fp = os.path.join(crops_dir, reversed_map_classes[clss], f"{lbl_fn}_crop{i}.jpg")
-                    self.skipped_crops.append(fp)
-                    continue
-                if w < self.min_w_h or h < self.min_w_h: 
-                    fp = os.path.join(crops_dir, reversed_map_classes[clss], f"{lbl_fn}_crop{i}.jpg")
-                    self.skipped_crops.append(fp)
-                    continue
-
-                if (x_max_new - x_min_new) != (x_max-x_min): 
-                    x_max_new -= (x_max_new - x_min_new) - (x_max-x_min)
-                if (y_max_new - y_min_new )!= (y_max-y_min): 
-                    y_max_new -= (y_max_new - y_min_new) - (y_max-y_min)
-
-                new_image[y_min_new:y_max_new, x_min_new:x_max_new] = image[y_min:y_max, x_min:x_max]
-                os.makedirs(os.path.join(crops_dir, reversed_map_classes[clss]), exist_ok=True)
-                fp = os.path.join(crops_dir, reversed_map_classes[clss], f"{lbl_fn}_crop{i}.jpg")
-                cv2.imwrite(fp, new_image)
-
-        return
-    
 
     def show_train_data(self, images:torch.Tensor, pred_lbl:torch.Tensor,
-                  gt_lbl:torch.Tensor, n_epoch:int = None, ncols:int=2)->None:
+                  gt_lbl:torch.Tensor, ncols:int=2, mode:str='train')->None:
         """ Plots images during training. """
         
         shorten_name = lambda name: name.split(' ')[0][:4]
@@ -327,7 +147,7 @@ class CNN_Trainer_Base(Configurator):
                 spine.set_edgecolor(color)
 
         # plt.show()
-        fig.savefig('img_cnn_preds.png')
+        fig.savefig(f'img_cnn_{mode}_preds.png')
         plt.close()
         return
     
@@ -392,6 +212,8 @@ class CNN_Trainer_Base(Configurator):
         # TRAINING LOOP
         train_accs, val_accs = [], []
         train_losses, val_losses = [], []
+        get_desc = lambda acc_train_i, loss_train_i: f"Acc train: {acc_train_i:.2f}, Loss train: {loss_train_i:.2f}."
+        progress_bar = tqdm(self.loaders['train'], desc=get_desc(acc_train_i=0, loss_train_i=0))
         for epoch in range(self.epochs):
 
             # 1) TRAIN for each epoch:
@@ -402,11 +224,8 @@ class CNN_Trainer_Base(Configurator):
             loss_val = 0
             acc_train = 0
             acc_train_i = 0
-            acc_val_i = 0
             acc_val = 0
             model.train(True)
-            get_desc = lambda acc_train_i, loss_train_i: f"Acc train: {acc_train_i:.2f}, Loss train: {loss_train_i:.2f}."
-            progress_bar = tqdm(self.loaders['train'], desc=get_desc(acc_train_i=0, loss_train_i=0))
             # for each batch in train loaders:
             for i, data in enumerate(progress_bar):
                 inputs, labels = data
@@ -488,14 +307,14 @@ class CNN_Trainer_Base(Configurator):
         return model
 
 
-def eval_model(model, dataloader_cls, 
-               dataloaders, criterion)->None:
+def eval_model(self, model_path:str=None)->None:
+        #model, dataloader_cls, 
+               #dataloaders, criterion)->None:
     since = time.time()
     avg_loss = 0
     avg_acc = 0
     loss_test = 0
     acc_test = 0
-    device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
     test_batches = len(dataloaders['val'])
     print("Evaluating model")
@@ -511,7 +330,7 @@ def eval_model(model, dataloader_cls,
         v_batch = labels.shape[0]
 
         # inputs, labels = data
-        inputs, labels = inputs.to(device), labels.to(device)
+        inputs, labels = inputs.to(self.device), labels.to(self.device)
         outputs = model(inputs)
         _, preds = torch.max(outputs.data, 1, keepdim=True)
         loss = criterion(outputs, labels)

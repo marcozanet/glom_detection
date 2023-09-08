@@ -9,7 +9,7 @@ readme: >
 system:
     os: 'macos'
 
-processor: 
+processor: # NB QUANDO FAI PROCESSING PER INFERENCE NON FARE OVERLAPPING ALTRIMENTI HAI GLOM DOPPI TRIPLI ECC!
   src_root : '/Users/marco/Downloads/new_dataset' # needs to contain: slide in .svs, annotation in .geojson, rectangle annotation in .json
   dst_root : '/Users/marco/Downloads/new_dataset'
   image_type: 'wsi'
@@ -76,7 +76,7 @@ inference:
   augment: false
   classify: false
   device: gpu
-  input_dir: /Users/marco/Downloads/new_dataset/detection/tiles/train/images
+  input_dir: '/Users/marco/Downloads/prova_inference' # /Users/marco/Downloads/new_dataset/detection/tiles/train/images
   task: detection
   model: yolo
   output_dir: null #
@@ -126,10 +126,10 @@ cnn_trainer:
   k_tot: 4
   k_i: 2
   batch: 7
-  epochs: 10
+  epochs: 2
   num_workers: 2
   weights_path: '/Users/marco/.cache/torch/hub/checkpoints/vgg16_bn-6c64b313.pth'
-  cnn_exp_fold: '/Users/marco/helical_tests/cnn_model/exps'
+  cnn_exp_fold: '/Users/marco/helical_tests/cnn_model/train'
   dataset: 'muw'
   yolo_task: 'detection'
   crop_percentile: 90
@@ -142,3 +142,22 @@ cnn_trainer:
   root_data: '/Users/marco/Downloads/new_dataset'
   mutually_exclusive_classes: false
   exp_data: '/Users/marco/yolov5/runs/detect'
+  mode: inference
+
+cnn_validator:
+  model_path: 
+  save_dir: /Users/marco/helical_tests/cnn_model
+
+cnn_inferer: # please use test folder from the root cnn_dataset->train/val/test as inference folder. 
+  model_path: 
+  save_dir: /Users/marco/helical_tests/cnn_model
+
+cnn_feature_extractor:
+  model_path:
+  save_dir: /Users/marco/Downloads/prova
+
+berden_score_computer:
+  slides_dir: /Users/marco/Downloads/safe_new_dataset/safe
+  cnn_exp_dir: /Users/marco/helical_tests/cnn_model
+  slides_fmt: 'svs'
+  crops_fmt: 'jpg'

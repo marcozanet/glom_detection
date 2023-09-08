@@ -15,15 +15,16 @@ class CNNDataset(Dataset):
                  root_dir:str,
                  dataset:Literal['train', 'val', 'test'],
                  map_classes:dict,
+                 mode:str='train'
                  ) -> None:
         
         self.root_dir = root_dir 
         self.dataset = dataset 
+        self.mode = mode
         self.map_classes = map_classes if 'false_positives' in map_classes.keys() else self._get_map_classes(map_classes)
         self.image_list = self._get_image_list()
         self.imgs_fn = [os.path.basename(fp) for fp in self.image_list] if self.image_list is not None else None
         self.transform = self._get_transf_()
-
         return 
     
     def _get_map_classes(self, old_map_classes:dict):
@@ -63,7 +64,7 @@ class CNNDataset(Dataset):
         """ Retrieves all images (image paths) from root folder. """
 
         assert self.dataset in ['train', 'val', 'test'], f"dataset:{dataset} should be in ['train', 'val', 'test']. "
-        image_list = glob(os.path.join(self.root_dir, self.dataset, '*', '*.jpg'))
+        image_list = glob(os.path.join(self.root_dir, self.dataset, '*', '*.jpg')) if self.mode!='inference' else glob(os.path.join(self.root_dir, self.dataset, '*.jpg'))
         image_list = [file for file in image_list if "DS" not in file]
 
         if len(image_list) == 0: 
@@ -92,6 +93,9 @@ class CNNDataset(Dataset):
         image = self.transform(image=img)['image']
         image = image.float()
         image = image / 255
+
+        if self.mode=='inference':
+            return image, img_fp
         # print(f"max: {image.max()}, min: {image.min()}")
 
         # label:
@@ -108,6 +112,7 @@ class CNNDataset(Dataset):
         assert isinstance(image, torch.Tensor), f"{type(image)}"
         assert isinstance(label, torch.Tensor), f"{type(label)}"
 
+        if self.return_fp is True: return image, label, img_fp
 
         return image, label
     

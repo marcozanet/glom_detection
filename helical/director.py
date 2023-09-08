@@ -13,6 +13,10 @@ from tcd_yolo_trainer import YOLO_Trainer
 from tg_inference import YOLO_Inferer
 from tg_validate import YOLO_Validator
 from cnn_trainer import CNN_Trainer
+from cnn_process import CNN_Process
+from cnn_validator import CNN_Validator
+from cnn_inferer import CNN_Inferer
+from cnn_feature_extractor import CNN_FeatureExtractor
 from utils import get_config_params
 from configurator import Configurator
 
@@ -42,21 +46,17 @@ class Director(Configurator):
         detector.train()
         return
     
-
+    
     def yolo_infere(self):
         inferer = YOLO_Inferer(config_yaml_fp=self.config_yaml_fp, models_yaml_fp=self.models_yaml_fp)
         inferer()
         return
-    
 
-    # def yolo_validate(self):
-    #     validator = YOLO_Validator(config_yaml_fp=self.config_yaml_fp, models_yaml_fp=self.models_yaml_fp)
-    #     validator()
-    #     return
-    
+        
 
     def yolo_infere_trainvaltest(self):
         func_n = self.yolo_infere_trainvaltest.__name__
+
         base_msg = f"{self.class_n}.{func_n} "
         self.infere_params = get_config_params(self.config_yaml_fp, 'inference')
         datasets = ['test', 'val', 'train']
@@ -76,14 +76,35 @@ class Director(Configurator):
 
         return
     
-    def cnn_process(self):
-        cnn_trainer = CNN_Trainer(config_yaml_fp=self.config_yaml_fp)
-        cnn_trainer.prepare_data()
+    def cnn_process(self, mode:str):
+        cnn_processor = CNN_Process(config_yaml_fp=self.config_yaml_fp)
+        cnn_processor(mode)
         return
 
     def cnn_train(self):
         cnn_trainer = CNN_Trainer(config_yaml_fp=self.config_yaml_fp)
         cnn_trainer()
+        return
+
+    def cnn_validate(self):
+        cnn_validator = CNN_Validator(config_yaml_fp=self.config_yaml_fp)
+        cnn_validator()
+        return
+    
+    def cnn_extract_features(self):
+        cnn_feature_extractor = CNN_FeatureExtractor(config_yaml_fp=self.config_yaml_fp)
+        cnn_feature_extractor()
+        return
+    
+    def cnn_process_inference(self):
+        self.cnn_process(mode='inference')
+
+
+        return
+    
+    def cnn_infere(self):
+        cnn_inferer = CNN_Inferer(config_yaml_fp=self.config_yaml_fp)
+        cnn_inferer()
         return
     
 
@@ -102,7 +123,12 @@ class Director(Configurator):
 
 
 if __name__ == '__main__':
-    config_yaml_fp = 'config_tcd.yaml'
-    models_yaml_fp = 'config_saved_models.yaml'
+    from sys import platform 
+    if platform == 'darwin':
+        config_yaml_fp = 'config_tcd.yaml'
+        models_yaml_fp = 'config_saved_models.yaml'
+    else:
+        config_yaml_fp = 'config_tcd_windows.yaml'
+        models_yaml_fp = 'config_saved_models_windows.yaml'
     director = Director(config_yaml_fp=config_yaml_fp, models_yaml_fp=models_yaml_fp)
-    director.cnn_train()
+    director.cnn_infere()

@@ -22,6 +22,7 @@ class MIL_NN(torch.nn.Module):
             self.bag_model = LogisticRegression(n, n_classes)
         else:
             self.bag_model = NN(n, n_mid, n_classes, dropout=dropout, scoring=scoring)
+            
         # print('post bag model')
         
     def forward(self, bag_features:dict, bag_lbls=None):

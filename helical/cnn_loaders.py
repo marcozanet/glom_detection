@@ -14,19 +14,20 @@ class CNNDataLoaders():
                  map_classes: dict,
                  batch:int = 2,
                  num_workers:int = 0,
+                 mode:str='train'
                  ) -> None:
         
         self.root_dir = root_dir
         self.map_classes = map_classes if 'false_positives' in map_classes.keys() else self._get_map_classes(map_classes)
         self.batch = batch 
         self.num_workers = num_workers
+        self.mode = mode
         self._parse()
 
         return
     
 
     def _get_map_classes(self, old_map_classes:dict):
-
         new_map_classes = {k:v for k,v in old_map_classes.items()}
         new_map_classes.update({'false_positives':max(new_map_classes.values())+1}) # adding false positive class for base class = 0 e.g. Glomerulus (wo classification)
         return new_map_classes
@@ -45,9 +46,16 @@ class CNNDataLoaders():
     def get_loaders(self):
 
         # get train, val, test set:
-        trainset = CNNDataset(root_dir=self.root_dir, dataset='train', map_classes=self.map_classes) 
-        valset = CNNDataset(root_dir=self.root_dir, dataset='val', map_classes=self.map_classes)
-        testset = CNNDataset(root_dir=self.root_dir, dataset='test', map_classes=self.map_classes)
+        if self.mode == 'inference':
+            testset = CNNDataset(root_dir=self.root_dir, dataset='test', map_classes=self.map_classes, mode=self.mode)
+            test_dataloader = DataLoader(testset, batch_size=self.batch, shuffle=False, num_workers=self.num_workers, pin_memory=True)
+            dataloaders = {'test':test_dataloader}
+            self.dataloaders = dataloaders
+            return dataloaders
+
+        trainset = CNNDataset(root_dir=self.root_dir, dataset='train', map_classes=self.map_classes, mode=self.mode) 
+        valset = CNNDataset(root_dir=self.root_dir, dataset='val', map_classes=self.map_classes, mode=self.mode)
+        testset = CNNDataset(root_dir=self.root_dir, dataset='test', map_classes=self.map_classes, mode=self.mode)
 
         # check that datasets don't intersect:
         if valset.imgs_fn is not None:
@@ -64,13 +72,11 @@ class CNNDataLoaders():
         print(f"Test size: {len(testset)} images.")
 
         train_dataloader = DataLoader(trainset, batch_size=self.batch, shuffle=True, num_workers=self.num_workers, pin_memory=True)
-        valid_dataloader = DataLoader(valset, batch_size=self.batch, shuffle=False, num_workers=self.num_workers, pin_memory=True)
-        # print(type(valid_dataloader))
+        valid_dataloader = DataLoader(valset, batch_size=self.batch, shuffle=True, num_workers=self.num_workers, pin_memory=True)
         test_dataloader = DataLoader(testset, batch_size=self.batch, shuffle=False, num_workers=self.num_workers, pin_memory=True)
 
         dataloaders = {'train':train_dataloader, 'val':valid_dataloader, 'test':test_dataloader} if valset.imgs_fn is not None else {'train':train_dataloader, 'test':test_dataloader}
         self.dataloaders = dataloaders
-        # print(dataloaders)
 
         return dataloaders
     
@@ -94,6 +100,7 @@ class CNNDataLoaders():
             plt.tight_layout()
         # plt.show()
         fig.savefig('img_cnn_data.png')
+        plt.close()
 
         return
     
@@ -131,10 +138,10 @@ class CNNDataLoaders():
     #     return 
     
     
-    def __call__(self) -> tuple:  
+    def __call__(self, show_data:bool=True) -> tuple:  
 
         dataloaders = self.get_loaders()
-        self.show_data()
+        if show_data is True: self.show_data()
 
         return dataloaders
 

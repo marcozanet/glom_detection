@@ -31,17 +31,6 @@ class CNN_Trainer(CNN_Trainer_Base):
         return
     
     
-    def get_loaders(self)->None:
-        """ Creates DataLoader class and gets Train and Val Loaders. """
-        func_n = self.get_loaders.__name__
-        self.format_msg(f"⏳ Getting loaders", func_n=func_n)
-        self.dataloader_cls = CNNDataLoaders(root_dir=os.path.join(self.cnn_data_fold, 'cnn_dataset'), map_classes=self.map_classes, 
-                                        batch=self.batch, num_workers=self.num_workers)
-        self.loaders = self.dataloader_cls()
-        self.format_msg(f"✅ Got loaders.", func_n=func_n)
-        return
-    
-    
 
     
 
@@ -61,7 +50,7 @@ class CNN_Trainer(CNN_Trainer_Base):
     def __call__(self)->None:
 
         self._crossvalidation()
-        self.get_loaders()
+        self.get_loaders(mode='train')
         self.train()
 
         return

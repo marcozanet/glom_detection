@@ -6,7 +6,6 @@ import yaml
 from yaml import SafeLoader
 import tqdm
 
-# def 
 
 
 def copy_tree(tree_path:str, dst_dir:str, keep_format:str)->None:
