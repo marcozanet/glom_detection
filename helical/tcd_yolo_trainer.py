@@ -2,7 +2,6 @@ import os
 os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
 from typing import Literal, List
 import shutil
-from profiler_muw import ProfilerMUW
 from plotter_data_detect_muw_sfog import PlotterDetectMUW
 from plotter_data_detect_hubmap_pas import PlotterDetectHub
 from plotter_data_segm_hubmap_pas import PlotterSegmHubmap

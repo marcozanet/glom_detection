@@ -19,6 +19,7 @@ else:
 import cv2
 from loggers import get_logger
 from utils import get_config_params
+from cleaner import Cleaner
 
 
 class Processor(ProcessorBase): 
@@ -118,16 +119,7 @@ class Processor(ProcessorBase):
         # 1) convert annotations to yolo format:
         if self.verbose_level in ['medium', 'high']: self.log.info(f"{class_name}.{func_name}: ⏳ 1) Converting annotations to YOLO format:")
         converter = Converter(config_yaml_fp=self.config_yaml_fp,
-                            folder = slides_labels_folder, 
-                            map_classes = self.map_classes,
-                            stain = self.stain, 
-                            data_source = self.data_source,
-                            multiple_samples = self.multiple_samples,
-                            convert_from='gson_wsi_mask',  
-                            convert_to='txt_wsi_bboxes',
-                            save_folder= slides_labels_folder, 
-                            level = self.tiling_level,
-                            verbose=self.verbose)
+                                folder = slides_labels_folder) 
         converter()
         if self.verbose_level in ['medium', 'high']: self.log.info(f"{class_name}.{func_name}: ✅ 1) Converting annotations to YOLO format:")
 
@@ -339,7 +331,9 @@ class Processor(ProcessorBase):
         # elif self.data_source == 'hubmap' or self.data_source == 'muw':
             # self._clean_muw_dataset()
 
-        self._clean_balance_dataset()
+        # clean and balance dataset
+        cleaner = Cleaner(config_yaml_fp=self.config_yaml_fp)
+        cleaner()
 
         if self.task == 'detection':
             self._segmentation2detection()
@@ -360,4 +354,6 @@ def test_processor():
 
 
 if __name__ == '__main__':
-    test_processor()
+    config_yaml_fp = '/Users/marco/yolo/code/helical/config_mac_tcd.yaml'
+    cleaner = Cleaner(config_yaml_fp=config_yaml_fp)
+    cleaner()

@@ -1,7 +1,7 @@
 
 allowed:
   slide_formats: ['svs', 'tif']
-  label_formats: ['json']
+  label_formats: ['json', 'gson']
   datasources: ['muw', 'tcd', 'hubmap']
   tasks: ['segmentation', 'detection']
   stains: ['pas', 'h&e', 'sfog']

@@ -1,2 +1,83 @@
-08/09 12:21:07|INFO|BerdenScoreComputer.compute_berden_score: ✅ Class percentages for slides computed. Class percentages: {'BH13_PAS': {'Cellular Crescent': 0.283, 'FibrousCrescent': 0.0189, 'Glomerulus': 0.6981}}
-08/09 12:21:07|INFO|BerdenScoreComputer.compute_berden_score: ✅ Berden scores for slides computed. Berden output classes: {'BH13_PAS': 'Focal'}
+11/09 21:40:10|INFO|Processor._make_tiles_branch: Created tree at '/Users/marco/helical_tests/sept_tests/test_muw/detection/tiles'.
+11/09 21:40:10|INFO|Processor._split_data: ⏳ Splitting WSIs with [0.7, 0.2, 0.1] ratio.: 
+11/09 21:40:10|INFO|Splitter._split_slides: Train images: 2, Val images: 1, Test images: 0
+11/09 21:40:10|INFO|Processor._split_data: ✅ Splitted WSIs in train, val, test sets.
+11/09 21:40:10|INFO|Processor.tile_dataset: ⏳ Tiling dataset at '/Users/marco/helical_tests/sept_tests/test_muw/detection/wsi':
+11/09 21:40:10|INFO|Processor.tile_dataset: START TILING 'TRAIN'
+11/09 21:40:10|INFO|Converter._rename_all: Renamed all filenames to <basename>_<stain>.<ext>
+11/09 21:40:10|INFO|Converter._convert_labels2json: ⏳ Json labels don't exist. Converting labels to .json.
+11/09 21:40:10|INFO|Converter._convert_labels2json: ✅ Converted labels to .json.
+11/09 21:40:10|INFO|Converter.__call__: Converter.__call__: ✅ Converted annotations. 
+11/09 21:40:10|INFO|Tiler.__call__: ⏳ Tiling images and labels with patch shape: [2048, 2048]'. 
+11/09 21:40:10|INFO|Tiler._get_completed_files: Completed 0/2 files.
+11/09 21:40:10|INFO|Tiler._get_tile_images: ⏳ Tiling slide: 200104066_09_SFOG.tif
+11/09 21:40:10|INFO|Tiler._get_tile_images: ⏳ Reading sample_0. Region size: (28328, 54455)
+11/09 21:40:39|INFO|Tiler._get_tile_images: ✅ Read region. 
+11/09 21:40:46|INFO|Tiler._get_tile_images: ⏳ Tiling sample_0 image. Patches shape: (2048, 2048, 3):
+11/09 21:41:03|INFO|Tiler._get_tile_images: ✅ Saved 338 sample_0 patches in '/Users/marco/helical_tests/sept_tests/test_muw/detection/tiles/train/images'.
+11/09 21:41:03|INFO|Tiler._get_tile_images: ⏳ Tiling sample_0 label.
+11/09 21:41:37|INFO|Tiler._get_tile_images: ✅ Tiled sample_0 label.
+11/09 21:41:37|INFO|Tiler._get_tile_images: ⏳ Reading sample_1. Region size: (35840, 65606)
+11/09 21:42:25|INFO|Tiler._get_tile_images: ✅ Read region. 
+11/09 21:42:35|INFO|Tiler._get_tile_images: ⏳ Tiling sample_1 image. Patches shape: (2048, 2048, 3):
+11/09 21:42:58|INFO|Tiler._get_tile_images: ✅ Saved 544 sample_1 patches in '/Users/marco/helical_tests/sept_tests/test_muw/detection/tiles/train/images'.
+11/09 21:42:58|INFO|Tiler._get_tile_images: ⏳ Tiling sample_1 label.
+11/09 21:43:52|INFO|Tiler._get_tile_images: ✅ Tiled sample_1 label.
+11/09 21:44:01|INFO|Tiler._get_tile_images: ⏳ Tiling slide: 200209761_09_SFOG.tif
+11/09 21:44:01|INFO|Tiler._get_tile_images: ⏳ Reading sample_0. Region size: (29463, 68397)
+11/09 21:44:39|INFO|Tiler._get_tile_images: ✅ Read region. 
+11/09 21:44:48|INFO|Tiler._get_tile_images: ⏳ Tiling sample_0 image. Patches shape: (2048, 2048, 3):
+11/09 21:45:17|INFO|Tiler._get_tile_images: ✅ Saved 462 sample_0 patches in '/Users/marco/helical_tests/sept_tests/test_muw/detection/tiles/train/images'.
+11/09 21:45:17|INFO|Tiler._get_tile_images: ⏳ Tiling sample_0 label.
+11/09 21:46:04|INFO|Tiler._get_tile_images: ✅ Tiled sample_0 label.
+11/09 21:46:04|INFO|Tiler._get_tile_images: ⏳ Reading sample_1. Region size: (15809, 66648)
+11/09 21:46:27|INFO|Tiler._get_tile_images: ✅ Read region. 
+11/09 21:46:33|INFO|Tiler._get_tile_images: ⏳ Tiling sample_1 image. Patches shape: (2048, 2048, 3):
+11/09 21:46:54|INFO|Tiler._get_tile_images: ✅ Saved 224 sample_1 patches in '/Users/marco/helical_tests/sept_tests/test_muw/detection/tiles/train/images'.
+11/09 21:46:54|INFO|Tiler._get_tile_images: ⏳ Tiling sample_1 label.
+11/09 21:47:18|INFO|Tiler._get_tile_images: ✅ Tiled sample_1 label.
+11/09 21:47:18|INFO|Tiler._get_tile_images: ⏳ Reading sample_2. Region size: (17515, 66534)
+11/09 21:47:41|INFO|Tiler._get_tile_images: ✅ Read region. 
+11/09 21:47:47|INFO|Tiler._get_tile_images: ⏳ Tiling sample_2 image. Patches shape: (2048, 2048, 3):
+11/09 21:48:09|INFO|Tiler._get_tile_images: ✅ Saved 256 sample_2 patches in '/Users/marco/helical_tests/sept_tests/test_muw/detection/tiles/train/images'.
+11/09 21:48:09|INFO|Tiler._get_tile_images: ⏳ Tiling sample_2 label.
+11/09 21:48:36|INFO|Tiler._get_tile_images: ✅ Tiled sample_2 label.
+11/09 21:48:41|INFO|Processor.tile_dataset: START TILING 'VAL'
+11/09 21:48:41|INFO|Converter._rename_all: Renamed all filenames to <basename>_<stain>.<ext>
+11/09 21:48:41|INFO|Converter._convert_labels2json: ⏳ Json labels don't exist. Converting labels to .json.
+11/09 21:48:41|INFO|Converter._convert_labels2json: ✅ Converted labels to .json.
+11/09 21:48:41|INFO|Converter.__call__: Converter.__call__: ✅ Converted annotations. 
+11/09 21:48:41|INFO|Tiler.__call__: ⏳ Tiling images and labels with patch shape: [2048, 2048]'. 
+11/09 21:48:41|INFO|Tiler._get_completed_files: Completed 0/1 files.
+11/09 21:48:41|INFO|Tiler._get_tile_images: ⏳ Tiling slide: 200219757_09_SFOG.tif
+11/09 21:48:41|INFO|Tiler._get_tile_images: ⏳ Reading sample_0. Region size: (97618, 18651)
+11/09 21:49:14|INFO|Tiler._get_tile_images: ✅ Read region. 
+11/09 21:49:23|INFO|Tiler._get_tile_images: ⏳ Tiling sample_0 image. Patches shape: (2048, 2048, 3):
+11/09 21:49:53|INFO|Tiler._get_tile_images: ✅ Saved 423 sample_0 patches in '/Users/marco/helical_tests/sept_tests/test_muw/detection/tiles/val/images'.
+11/09 21:49:53|INFO|Tiler._get_tile_images: ⏳ Tiling sample_0 label.
+11/09 21:50:36|INFO|Tiler._get_tile_images: ✅ Tiled sample_0 label.
+11/09 21:50:45|INFO|Processor.tile_dataset: START TILING 'TEST'
+11/09 21:50:45|WARNING|Processor._tile_folder: test fold is empty. Skipping.
+11/09 21:50:45|INFO|Processor.tile_dataset: ✅ Tiled '/Users/marco/helical_tests/sept_tests/test_muw/detection/wsi'.
+11/09 21:50:45|INFO|Processor._move_slides_back: Moving slides back:
+11/09 21:50:45|INFO|Processor._move_slides_back: Moved slides back.
+11/09 21:50:45|INFO|Cleaner._get_data: Ignoring test files in cleaning dataset.
+11/09 21:50:45|INFO|Cleaner._copy_tree: Cleaner._copy_tree: Safe copy of the data tree already existing. Skipping.
+11/09 21:50:45|INFO|Cleaner._copy_tree: Safe copied label tree before modifying them.
+11/09 21:50:45|INFO|looking for labels like /Users/marco/helical_tests/sept_tests/test_muw/detection/tiles/train/labels/200104066_09_SFOG_sample1_4_8.txt
+11/09 21:50:45|INFO|Cleaner._del_unpaired_labels: deleted 0 labels without matching image. Updating self.data. 
+11/09 21:50:45|INFO|Cleaner._del_redundant_labels: ✅ Deleted redundant labels.
+11/09 21:50:45|INFO|Cleaner._get_empty_images: found 1767 empty images and 480 full images. 
+11/09 21:50:45|INFO|empty: 1767, full:1767
+11/09 21:50:45|INFO|Cleaner._remove_perc_: Deleting 1714 images
+11/09 21:50:45|INFO|Cleaner._remove_perc_: Deleting 0 labels
+11/09 21:50:46|INFO|Cleaner._remove_perc_: ✅ Removal done. Empty:53, full:480, tot:533
+11/09 21:50:46|WARNING|Cleaner._remove_class_: 'class':3 not in unique classes: ['2', '0', '1']. Skipping removal.
+11/09 21:50:46|INFO|Cleaner._remove_class_: Removing class:1
+11/09 21:50:46|INFO|Cleaner._remove_class_: Removed class 1
+11/09 21:50:46|INFO|Cleaner._get_unique_labels: Unique classes: ['2', '0']
+11/09 21:50:46|INFO|Cleaner._replacing_class: Replacing class:2 with class:1
+11/09 21:50:46|INFO|Cleaner._replacing_class: New unique classes: unique_classes = ['0', '1'] 
+11/09 21:50:46|INFO|Processor._segmentation2detection: Converted mask segmentation annotations to bounding box labels for detection. 
+11/09 21:50:46|INFO|Processor._segmentation2detection_temptree: Path_like:/Users/marco/helical_tests/sept_tests/test_muw/detection/temp/tiles/*/labels/*.txt
+11/09 21:50:46|INFO|Processor._segmentation2detection_temptree: Converted mask segmentation annotations to bounding box labels for detection. 

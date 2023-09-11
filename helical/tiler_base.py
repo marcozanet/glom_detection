@@ -271,7 +271,8 @@ class TilerBase():
             if self.multiple_samples is True:
                 # get file with location of image/label samples within the slide:
                 multisample_loc_file = self._get_multisample_loc_file(fp, file_format='geojson')
-                sample_locations = self._get_location_w_h(fp = multisample_loc_file) if multisample_loc_file is not None else [{'location':(0,0), 'w':W, 'h':H}]
+                # sample_locations = self._get_location_w_h(fp = multisample_loc_file) if multisample_loc_file is not None else [{'location':(0,0), 'w':W, 'h':H}]
+                sample_locations = self._get_location_w_h(fp = multisample_loc_file) if self.level !=0 else [{'location':(0,0), 'w':W, 'h':H}]
             else:
                 multisample_loc_file = None
                 sample_locations = [{'location':(0,0), 'w':W, 'h':H}]
@@ -608,12 +609,12 @@ class TilerBase():
             assert len(rect['geometry']['coordinates'][0]) == 5, f"There seems to be more than 4 vertices annotated. "
             vertices = rect['geometry']['coordinates'][0][:-1]
             location = vertices[0]
-            h =  vertices[2][1] - vertices[1][1] 
+            h =  vertices[2][1] - vertices[0][1] 
             w =  vertices[2][0] - vertices[0][0]
 
             assert h>0, f"Sample has zero or negative height. H:{h} Vertices: {vertices}"
             assert w>0, f"Sample has zero or negative width. W:{w} Vertices: {vertices} "
-
+            # raise NotImplementedError( f"Sample has zero or negative height. H:{h} Vertices: {vertices}. w'{h}'")
             dictionary = {'location':location, 'w':w, 'h':h}
             all_dicts.append(dictionary)
 

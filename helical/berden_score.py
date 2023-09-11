@@ -167,7 +167,7 @@ class BerdenScoreComputer(Configurator):
         self._count_sample_classes()
         self._count_slide_classes()
         self.compute_berden_score(groupby=groupby)
-        return
+        return self.d_group_berden 
 
 
 

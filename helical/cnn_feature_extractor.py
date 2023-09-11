@@ -90,7 +90,7 @@ class CNN_FeatureExtractor(CNN_Trainer_Base):
     
     def __call__(self) -> Any:
         self._create_dirs()
-        self.get_loaders(return_fp=True, show_data=False)
+        self.get_loaders(mode='val', show_data=False)
         self._get_last_model_path()
         self.extract_features()
 

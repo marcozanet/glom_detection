@@ -6,14 +6,14 @@ from typing import List
 import numpy as np
 import pandas as pd 
 from tqdm import tqdm
-from profiler_muw import ProfilerMUW
+from profiler import Profiler
 import cv2
 from loggers import get_logger
 from decorators import log_start_finish
 import random
 
 
-class PlotterDetectMUW(ProfilerMUW): 
+class PlotterDetectMUW(Profiler): 
 
     def __init__(self,
                 files:list = None,

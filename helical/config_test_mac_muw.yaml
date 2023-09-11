@@ -1,0 +1,170 @@
+readme: >
+  - input_dir for inference needs to contain a list of images for detection.
+  - input_dir for validation needs to be a folder with /images and /labels subfolders. Labels need to be in YOLO format.
+  - slides and annotations should be in format <name>_<STAIN>.<format>
+  - map classes: {'Cellular Crescent':1, 'Glomerulus':0, 'FibrousCrescent:2'}, {'Glo-unhealthy':0, 'Glo-NA':1, 'Glo-healthy':2, 'Tissue':3},
+  - input from hospital are slides + annotations in geojson format -> they need to be converted in json format. 
+    There's a mismatch between the hospital input and what should be the input to the pipeline -> some preprocessing needed.
+
+system:
+    os: 'macos'
+
+processor: # NB QUANDO FAI PROCESSING PER INFERENCE NON FARE OVERLAPPING ALTRIMENTI HAI GLOM DOPPI TRIPLI ECC!
+  src_root : '/Users/marco/helical_tests/sept_tests/test_muw' # needs to contain: slide in .svs, annotation in .geojson, rectangle annotation in .json
+  dst_root : '/Users/marco/helical_tests/sept_tests/test_muw'
+  image_type: 'wsi'
+  slide_format : 'tif'
+  label_format : 'gson'
+  split_ratio : [0.7, 0.15, 0.15]  
+  datasource : 'muw'
+  task : 'detection'
+  verbose : True
+  crossvalidation: true
+  safe_copy : False
+  tiling_shape: [2048, 2048]
+  tiling_step : 2048
+  tiling_level : 0
+  tiling_show : True
+  reproducibility: True
+  empty_perc: null
+  ratio: [0.7,0.2,0.1]
+  verbose_level: 'low'
+  map_classes: {'Glo-unhealthy':0, 'Glo-NA':1, 'Glo-healthy':2, 'Tissue':3}
+  desired_map_classes: {'Glo-unhealthy':0, 'Glo-NA':1, 'Glo-healthy':2, 'Tissue':3}
+  remove_classes: null
+  ignore_classes: [1,2]
+  stain: 'sfog'
+  interpolate_vertices_times: 1
+  resize: null #[1024,1024] #[512, 512], # nb non numero singolo!!
+  multiple_samples: True
+  annotations_in_slide_coords: True # else if in rect coordinates, they need to be rescaled
+  testing_mode: True
+  add_corners: False # adds corner points in patches were gloms are cropped
+
+
+yolo_trainer:
+  src_root : '/Users/marco/Downloads/new_dataset'
+  dst_root : '/Users/marco/Downloads/new_dataset'
+  repo: '/Users/marco/yolo/code/helical'
+  yolov5dir: '/Users/marco/yolov5'
+  map_classes: {'Cellular Crescent':1, 'Glomerulus':0, 'FibrousCrescent':2} 
+  datasource : 'tcd'
+  slide_format : 'svs'
+  label_format : 'json'
+  split_ratio : [0.34, 0.33, 0.33]  
+  data_source : 'tcd'
+  task : 'detection'
+  safe_copy : False
+  tiling_shape: [2048, 2048]
+  tiling_step : 512
+  tiling_level : 0
+  tiling_show : True
+  stain: 'pas'
+  batch_size: 6
+  epochs: 10
+  save_features: False
+  workers: 1
+  image_size: 1024
+  device: null 
+  single_cls: False
+  multiple_samples: True
+  resize: [640,640]
+  yolov5_weights: null # by default yolov5s.pt
+  crossvalid_tot_kfolds: 5
+  crossvalid_cur_kfold: 2 
+  note: 'testing'
+
+
+inference:
+  augment: false
+  classify: false
+  device: gpu
+  input_dir: '/Users/marco/Downloads/prova_inference' # /Users/marco/Downloads/new_dataset/detection/tiles/train/images
+  task: detection
+  model: yolo
+  output_dir: null #
+  repository_dir: /Users/marco/yolo/code/helical
+  save_imgs: true
+  save_txt: true
+  save_crop: true
+  yolov5dir: /Users/marco/yolov5
+  create_masks: false
+  show_mask: false
+  imgsz: [2048,2048]
+
+
+validation:
+  augment: false
+  classify: true
+  device: gpu
+  input_dir: /Users/marco/tg_integration_tests/val_in
+  task: detection
+  model: yolo
+  output_dir: /Users/marco/tg_integration_tests/val_out
+  repository_dir: /Users/marco/yolo/code/helical
+  save_txt: true
+  yolov5dir: /Users/marco/yolov5
+
+
+yolo_post_processing:
+  output_dir: null
+  dst_root: '/Users/marco/Downloads/new_dataset'
+  save_folder: '/Users/marco/helical_tests/test_cropper'
+  image_shape: [640,640]
+  task: 'detection'
+  crop_shape: null
+  percentile: null
+  plot_boxes: True
+  skip_cropped_objects: True
+  yolov5dir: /Users/marco/yolov5
+
+
+cnn_trainer:
+  yolo_data_root: '/Users/marco/Downloads/new_dataset/detection' 
+  cnn_data_fold: '/Users/marco/Downloads/new_dataset'
+  map_classes:  {'Glomerulus':0, 'Cellular Crescent':1,  'FibrousCrescent':2} # important that base class (Glomerulus) is 0
+  yolo_exp_dir: [ /Users/marco/yolov5/runs/detect/exp60','/Users/marco/yolov5/runs/detect/exp61', '/Users/marco/yolov5/runs/detect/exp62']
+  yolov5dir: /Users/marco/yolov5
+  lr: 0.001
+  k_tot: 4
+  k_i: 2
+  batch: 7
+  epochs: 2
+  num_workers: 2
+  weights_path: '/Users/marco/.cache/torch/hub/checkpoints/vgg16_bn-6c64b313.pth'
+  cnn_exp_fold: '/Users/marco/helical_tests/cnn_model/train'
+  dataset: 'muw'
+  yolo_task: 'detection'
+  crop_percentile: 90
+  min_w_h: 0.2 # min acceptable size (%) to post process yolo object detection. Default: 0.1
+  # resize_crops: false
+  resize_shape: [224,224]
+  treat_as_single_class: False
+  device: 'mps' # tested for mps and cpu
+  skip_test: true
+  root_data: '/Users/marco/Downloads/new_dataset'
+  mutually_exclusive_classes: false
+  exp_data: '/Users/marco/yolov5/runs/detect'
+  mode: inference
+
+cnn_validator:
+  model_path: 
+  save_dir: /Users/marco/helical_tests/cnn_model
+
+cnn_inferer: # please use test folder from the root cnn_dataset->train/val/test as inference folder. 
+  model_path: 
+  save_dir: /Users/marco/helical_tests/cnn_model
+
+cnn_feature_extractor:
+  model_path:
+  save_dir: /Users/marco/Downloads/prova
+
+berden_score_computer:
+  slides_dir: /Users/marco/Downloads/safe_new_dataset/safe
+  cnn_exp_dir: /Users/marco/helical_tests/cnn_model
+  slides_fmt: 'svs'
+  crops_fmt: 'jpg'
+
+
+prognosis_reporter:
+  data_csv: '/Users/marco/yolo/code/helical/patients_data.csv'

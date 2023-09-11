@@ -3,7 +3,7 @@ from typing import Literal, Tuple
 import os
 from splitter import Splitter
 from move_data import move_slides_for_tiling, move_slides_back_from_tiling
-from cleaner_muw import CleanerMuw
+# from cleaner_muw import CleanerMuw
 from configurator import Configurator
 from abc import ABC, abstractmethod
 from utils import get_config_params
@@ -131,21 +131,15 @@ class ProcessorBase(Configurator, ABC):
         return
     
     
-    def _clean_balance_dataset(self, safe_copy:bool=False) -> None: 
-        """ Uses the dataset cleaner to finalize the dataset, e.g. by grouping classes 
-            from {0:glom_healthy, 1:glom_na, 2: glom_sclerosed, 3: tissue}
-            to {0:glom_healthy, 1:glom_sclerosed} """
+    # def _clean_balance_dataset(self, safe_copy:bool=False) -> None: 
+    #     """ Uses the dataset cleaner to finalize the dataset, e.g. by grouping classes 
+    #         from {0:glom_healthy, 1:glom_na, 2: glom_sclerosed, 3: tissue}
+    #         to {0:glom_healthy, 1:glom_sclerosed} """
         
-        cleaner = CleanerMuw(data_root=os.path.join(self.dst_root, self.task), 
-                             safe_copy=safe_copy,
-                             remove_classes=self.remove_classes,
-                             ignore_classes=self.ignore_classes)
-        if self.data_source == 'muw':
-            cleaner._clean_muw()
-        else:
-             cleaner._clean_generic()
+    #     cleaner = Cleaner(config_yaml_fp=self.config_yaml_fp)
+    #     cleaner()
 
-        return
+    #     return
     
 
     def tile_dataset(self): 
@@ -166,7 +160,6 @@ class ProcessorBase(Configurator, ABC):
     
     
     def _rename_tiff2tif(self):
-
         files = [os.path.join(self.src_root,file) for file in os.listdir(self.src_root) if '.tiff' in file]
         old_new_names = [(file, file.replace('.tiff', '.tif')) for file in files ]
         for old_fp, new_fp in old_new_names: 
@@ -176,26 +169,3 @@ class ProcessorBase(Configurator, ABC):
     
 
     
-
-    # def __call__(self) -> None:
-
-    #     # 1) create tiles branch
-    #     self._make_tiles_branch()
-    #     # 1) split data
-    #     self._split_data()
-    #     # 2) prepare for tiling 
-    #     self._move_slides_forth()
-    #     # 3) tile images and labels:
-    #     self.tile_dataset()
-    #     #4) move slides back 
-    #     self._move_slides_back()
-    #     # 4) clean dataset, e.g. 
-    #     self._clean_muw_dataset()
-
-    #     return
-
-
-
-
-# if __name__ == '__main__': 
-#     test_ProcessorManager()

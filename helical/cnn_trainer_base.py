@@ -69,7 +69,6 @@ class CNN_Trainer_Base(Configurator):
         self.mode= self.params['mode']
         
         return
-        
     
 
     def _get_map_classes(self, old_map_classes:dict):
@@ -77,13 +76,10 @@ class CNN_Trainer_Base(Configurator):
         new_map_classes = {k:v for k,v in old_map_classes.items()}
         new_map_classes.update({'false_positives':max(new_map_classes.values())+1}) # adding false positive class for base class = 0 e.g. Glomerulus (wo classification)
         return new_map_classes
-
     
 
     def _parse_args(self)->None:
-
         assert os.path.isdir(self.yolo_data_root), self.assert_log(f"'yolo_data_root':{self.yolo_data_root} is not a valid dirpath.")
-
         return
     
 
@@ -120,7 +116,6 @@ class CNN_Trainer_Base(Configurator):
         """ Plots images during training. """
         
         shorten_name = lambda name: name.split(' ')[0][:4]
-
         images = images.cpu()
         images = images.permute((0,2,3,1)).numpy()
         pred_lbl, gt_lbl = pred_lbl.cpu(), gt_lbl.cpu()
@@ -165,7 +160,6 @@ class CNN_Trainer_Base(Configurator):
             if i==0: plt.yticks(np.arange(0,1.05,0.1))
             plt.xticks(range(self.params['epochs']))
         plt.suptitle(f"CNN Metrics Epoch:{epoch}")
-        # plt.show()
         fig.savefig(f"img_cnn_metrics.png")
         plt.close()
         return
@@ -306,96 +300,3 @@ class CNN_Trainer_Base(Configurator):
         model.load_state_dict(best_model_wts)   # save best model
         return model
 
-
-def eval_model(self, model_path:str=None)->None:
-        #model, dataloader_cls, 
-               #dataloaders, criterion)->None:
-    since = time.time()
-    avg_loss = 0
-    avg_acc = 0
-    loss_test = 0
-    acc_test = 0
-
-    test_batches = len(dataloaders['val'])
-    print("Evaluating model")
-    print('-' * 10)
-    
-    for k, data in enumerate(tqdm(dataloaders['val'])):
-        # if i % 100 == 0:
-        #     print("\rTest batch {}/{}".format(i, test_batches), end='', flush=True)
-
-        model.train(False)
-        model.eval()
-        inputs, labels = data
-        v_batch = labels.shape[0]
-
-        # inputs, labels = data
-        inputs, labels = inputs.to(self.device), labels.to(self.device)
-        outputs = model(inputs)
-        _, preds = torch.max(outputs.data, 1, keepdim=True)
-        loss = criterion(outputs, labels)
-
-        loss_test += loss.data
-        acc_test += (torch.sum(preds == labels.data) / v_batch)
-
-        del inputs, labels, outputs, preds
-        torch.cuda.empty_cache()
-    # print(dataloader_cls.valset_size)
-    avg_loss = loss_test / (k+1) #dataloader_cls.valset_size
-    avg_acc = acc_test / (k+1) #dataloader_cls.valset_size
-    
-    elapsed_time = time.time() - since
-    print()
-    print("Evaluation completed in {:.0f}m {:.0f}s".format(elapsed_time // 60, elapsed_time % 60))
-    print("Avg loss (test): {:.4f}".format(avg_loss))
-    print("Avg acc (test): {:.4f}".format(avg_acc))
-    print('-' * 10)
-
-    return
-
-
-def infere(model, dataloader_cls, dataloaders, criterion)->None:
-    since = time.time()
-    avg_loss = 0
-    avg_acc = 0
-    loss_test = 0
-    acc_test = 0
-    device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
-
-    test_batches = len(dataloaders['val'])
-    print("Evaluating model")
-    print('-' * 10)
-    
-    for k, data in enumerate(tqdm(dataloaders['val'])):
-        # if i % 100 == 0:
-        #     print("\rTest batch {}/{}".format(i, test_batches), end='', flush=True)
-
-        model.train(False)
-        model.eval()
-        inputs, labels = data
-        v_batch = labels.shape[0]
-
-        # inputs, labels = data
-        inputs, labels = inputs.to(device), labels.to(device)
-        outputs = model(inputs)
-        _, preds = torch.max(outputs.data, 1, keepdim=True)
-        loss = criterion(outputs, labels)
-
-        loss_test += loss.data
-        acc_test += (torch.sum(preds == labels.data) / v_batch)
-
-        del inputs, labels, outputs, preds
-        torch.cuda.empty_cache()
-    # print(dataloader_cls.valset_size)
-    avg_loss = loss_test / (k+1) #dataloader_cls.valset_size
-    avg_acc = acc_test / (k+1) #dataloader_cls.valset_size
-    
-    elapsed_time = time.time() - since
-    print()
-    print("Evaluation completed in {:.0f}m {:.0f}s".format(elapsed_time // 60, elapsed_time % 60))
-    print("Avg loss (test): {:.4f}".format(avg_loss))
-    print("Avg acc (test): {:.4f}".format(avg_acc))
-    print('-' * 10)
-
-    return
-    

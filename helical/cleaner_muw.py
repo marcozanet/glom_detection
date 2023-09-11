@@ -1,33 +1,40 @@
 ### cleans dataset from e.g. duplicates and from having too many empty images -> removes majority of them.
 
-from profiler_muw import ProfilerMUW
+from profiler import Profiler
 import os, shutil
 from tqdm import tqdm
 import random 
 import sys
 from decorators import log_start_finish
 from utils import copy_tree
+from utils import get_config_params
 
 
+class CleanerMuw(Profiler):
 
-class CleanerMuw(ProfilerMUW):
-
-    def __init__(self, 
-                empty_perc:float = 0.1,  
-                safe_copy:bool = True,
-                remove_classes: list = None,
-                ignore_classes: list = None,
-                *args, 
-                **kwargs):
+    def __init__(self,
+                 config_yaml_fp:str
+                 )->None:
+                 
+                # empty_perc:float = 0.1,  
+                # safe_copy:bool = True,
+                # remove_classes: list = None,
+                # ignore_classes: list = None,
+                # *args, 
+                # **kwargs):
             
-        super().__init__(*args, **kwargs)
-
-        self.empty_perc = empty_perc
-        self.safe_copy = safe_copy
-        self.remove_classes = remove_classes
-        self.ignore_classes = ignore_classes
+        super().__init__(config_yaml_fp=config_yaml_fp)
+        self.params = get_config_params(yaml_fp=config_yaml_fp, config_name='processor')
+        self._set_attrs()
         self.data = self._get_data()
         return
+    
+    def _set_attrs(self) -> None:
+        self.empty_perc = self.params['empty_perc'] if self.params['empty_perc'] is None else 0.1
+        self.safe_copy = True
+        self.remove_classes = self.params['remove_classes']
+        self.ignore_classes = self.params['ignore_classes']
+        return 
     
 
     def _del_unpaired_labels(self):
@@ -415,55 +422,8 @@ class CleanerMuw(ProfilerMUW):
 
         return
     
-    def _clean_muw(self): 
 
-        if self.safe_copy is True:
-            self._copy_tree()
-        # 1) delete labels where image doesn't exist
-        self._del_unpaired_labels()
-        # 2) remove label redundancies
-        self._del_redundant_labels()
-        # # 5) removes tissue class
-        # self._remove_class_(class_num=3)
-        # # 6) assign randomly the NA class (int=1) to either class 0 or 2:
-        self._assign_NA_randomly()
-        # # 7) replace class 2 with class 1 ({0:healthy, 1:NA, 2:unhealthy} -> {0:healthy, 2:unhealthy})
-        self._replacing_class(class_old=2, class_new=1)
-        # 8) removing empty images to only have empty_perc of images being empty
-        self._remove_perc_()
-        
 
-        return
-    
-    def _clean_generic(self): 
-
-        func_n = self._clean_generic.__name__
-
-        if self.safe_copy is True:
-            self._copy_tree()
-        # 1) delete labels where image doesn't exist
-        self._del_unpaired_labels()
-        # 2) remove label redundancies
-        self._del_redundant_labels()
-        # 8) removing empty images to only have empty_perc of images being empty
-        self._remove_perc_()
-
-        if self.remove_classes is not None:
-            for clss in self.remove_classes:
-                self._remove_class_(class_num=clss)
-        
-        if self.ignore_classes is not None:
-            self.format_msg(f"Copying tree to {os.path.join(self.data_root, 'temp')} with {self.tile_labels_like}", func_n=func_n, type='warning')
-            # 1) Copy labels in a temp tree
-            copy_tree(tree_path=self.data_root, 
-                        dst_dir=os.path.join(self.data_root, 'temp'), 
-                        keep_format="."+self.tiles_label_format)
-            # 2) remove classes:
-            for clss in self.ignore_classes:
-                self._remove_class_(class_num=clss)
-        
-
-        return
     
 
 
@@ -475,25 +435,3 @@ class CleanerMuw(ProfilerMUW):
 
 
         return 
-
-
-
-# def test_Cleaner():
-#     import sys 
-#     system = 'mac' if sys.platform == 'darwin' else 'windows'
-    
-#     safe_copy = False
-#     data_root = '/Users/marco/converted_march'
-#     # data_root = '/Users/marco/Downloads/train_20feb23/' if system == 'mac' else r'D:\marco\datasets\muw\detection'
-#     cleaner = CleanerMuw(data_root=data_root, 
-#                         safe_copy=safe_copy,
-#                         wsi_images_like = '*.tif', 
-#                         wsi_labels_like = '*.gson',
-#                         tile_images_like = '*.png',
-#                         tile_labels_like = '*.txt',)
-#     cleaner()
-#     return
-
-
-# if __name__ == '__main__':
-#     test_Cleaner()

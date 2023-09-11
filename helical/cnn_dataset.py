@@ -39,23 +39,12 @@ class CNNDataset(Dataset):
 
         if self.dataset == 'train': 
             transform = A.Compose([
-
-                A.OneOf([
-                # A.Downscale(),
-                # A.ChannelShuffle(),
-                A.RandomContrast(limit=0.1),
-                # A.RandomBrightnessContrast(),
-                ]),
-                # A.CLAHE(),
                 A.HorizontalFlip(),
                 A.VerticalFlip(),
-                ToTensorV2(),
-            ])
+                ToTensorV2(),])
         else:
             transform = A.Compose([
-                ToTensorV2(),
-                # ConvertImageDtype()
-            ])
+                ToTensorV2(),])
 
         return transform
     
@@ -100,19 +89,16 @@ class CNNDataset(Dataset):
 
         # label:
         label_name = os.path.split(os.path.dirname(img_fp))[1]
-        # print(label_name)
-        # print(self.map_classes)
         label_val = self.map_classes[label_name]
         label = torch.tensor(label_val)
         label = nn.functional.one_hot(label, num_classes = len(self.map_classes))
         label = label.float()
-        # TODO TRANSFORM THIS IN TORCH
 
-        # print(f"image size: {image.shape}, label size: {label.shape}")
         assert isinstance(image, torch.Tensor), f"{type(image)}"
         assert isinstance(label, torch.Tensor), f"{type(label)}"
 
-        if self.return_fp is True: return image, label, img_fp
+        if self.mode=='val':
+            return image, label, img_fp
 
         return image, label
     
