@@ -17,7 +17,7 @@ processor: # NB QUANDO FAI PROCESSING PER INFERENCE NON FARE OVERLAPPING ALTRIME
   label_format : 'json'
   split_ratio : [0.7, 0.15, 0.15]  
   datasource : 'tcd'
-  task : 'detection'
+  task : 'segmentation'
   verbose : True
   safe_copy : False
   tiling_shape: [2048, 2048]
@@ -53,7 +53,7 @@ yolo_trainer:
   label_format : 'json'
   split_ratio : [0.34, 0.33, 0.33]  
   data_source : 'tcd'
-  task : 'detection'
+  task : 'segmentation'
   safe_copy : False
   tiling_shape: [2048, 2048]
   tiling_step : 512
@@ -61,11 +61,11 @@ yolo_trainer:
   tiling_show : True
   stain: 'pas'
   batch_size: 6
-  epochs: 3
+  epochs: 15
   save_features: False
   workers: 1
   image_size: 1024
-  device: 'mps' 
+  device: 'cpu' 
   single_cls: False
   multiple_samples: True
   resize: [640,640]
@@ -79,8 +79,8 @@ inference:
   augment: false
   classify: false
   device: gpu
-  input_dir: '/Users/marco/Downloads/prova_inference' # /Users/marco/Downloads/new_dataset/detection/tiles/train/images
-  task: detection
+  input_dir: /Users/marco/Downloads/new_dataset/segmentation/tiles/train/images
+  task: segmentation
   model: yolo
   output_dir: null #
   repository_dir: /Users/marco/yolo/code/helical

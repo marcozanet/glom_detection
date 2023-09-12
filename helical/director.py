@@ -118,6 +118,6 @@ class Director(Configurator):
 
 
 if __name__ == '__main__':
-    models_yaml_fp = 'config_saved_models.yaml' if sys.platform=='darwin' else 'config_saved_models_windows.yaml'
-    director = Director(dataset='muw', models_yaml_fp=models_yaml_fp, testing=True)
-    director.yolo_process()
+    models_yaml_fp = 'best_models_mac.yaml' if sys.platform=='darwin' else 'best_models_windows.yaml'
+    director = Director(dataset='tcd', models_yaml_fp=models_yaml_fp, testing=False)
+    director.yolo_train()

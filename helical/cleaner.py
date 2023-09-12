@@ -12,21 +12,6 @@ from utils import get_config_params
 from utils import copy_tree
 
 
-# class CleanerBase(ProfilerBase):
-
-#     def __init__(self, 
-#                 empty_perc:float = 0.1,  
-#                 safe_copy:bool = True,
-#                 *args, 
-#                 **kwargs):
-            
-#         super().__init__(*args, **kwargs)
-#         self.empty_perc = empty_perc
-#         self.safe_copy = safe_copy
-#         return
-    
-
-
 class Cleaner(Profiler):
 
     def __init__(self,

@@ -2,9 +2,9 @@ import os
 os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
 from typing import Literal, List
 import shutil
-from plotter_data_detect_muw_sfog import PlotterDetectMUW
-from plotter_data_detect_hubmap_pas import PlotterDetectHub
-from plotter_data_segm_hubmap_pas import PlotterSegmHubmap
+# from plotter_data_detect_muw_sfog import PlotterDetectMUW
+# from plotter_data_detect_hubmap_pas import PlotterDetectHub
+# from plotter_data_segm_hubmap_pas import PlotterSegmHubmap
 from tcd_yolo_base import YOLOBase
 from exp_tracker import Exp_Tracker
 from datetime import datetime
@@ -98,20 +98,20 @@ class YOLO_Trainer(YOLOBase):
         shutil.copyfile(src=os.path.join(self.repository_dir, 'code.log'), dst = os.path.join(exp_fold, 'train.log'))
         shutil.copyfile(src=os.path.join(self.repository_dir, 'exp_tracker.csv'), dst = os.path.join(exp_fold, 'exp_tracker.csv'))
         data_root = os.path.join(self.data_folder.split(self.task)[0], self.task)
-        plotters = {'detection':{'muw': PlotterDetectMUW, 
-                                'hubmap': PlotterDetectHub},
-                    'segmentation':{'muw':None, 
-                                    'hubmap':PlotterSegmHubmap}}
+        # plotters = {'detection':{'muw': PlotterDetectMUW, 
+        #                         'hubmap': PlotterDetectHub},
+        #             'segmentation':{'muw':None, 
+        #                             'hubmap':PlotterSegmHubmap}}
 
-        plotter = plotters[self.task][self.dataset]
-        assert plotter is not None, self.log.error(f"{self._class_name}.{'_log_data'}: Plotter for segmentation muw Not implemented")
+        # plotter = plotters[self.task][self.dataset]
+        # assert plotter is not None, self.log.error(f"{self._class_name}.{'_log_data'}: Plotter for segmentation muw Not implemented")
                 
-        try:
-            plotter(data_root=data_root, files=None, verbose = False)
-            shutil.copyfile(src=os.path.join(self.repository_dir, 'plot_data.png'), dst = os.path.join(exp_fold, 'data.png'))
+        # try:
+        #     plotter(data_root=data_root, files=None, verbose = False)
+        #     shutil.copyfile(src=os.path.join(self.repository_dir, 'plot_data.png'), dst = os.path.join(exp_fold, 'data.png'))
 
-        except:
-            self.log.error(f"{self._class_name}.{'_log_data'}: ❌ Failed plotting.")
+        # except:
+        #     self.log.error(f"{self._class_name}.{'_log_data'}: ❌ Failed plotting.")
 
         return
 
