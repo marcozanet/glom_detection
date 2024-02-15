@@ -21,6 +21,8 @@ from tiler_base import TilerBase
 from skimage import io
 from utils import get_config_params
 
+TEST_LABEL_NORMALIZATION = True
+
 
 class Tiler(TilerBase): 
 
@@ -71,6 +73,7 @@ class Tiler(TilerBase):
                 try:
                     if self.verbose_level in ['medium', 'high']: self.log.info(f"{class_name}.{func_name}: ⏳ Opening '{os.path.basename(fp)}':" )
                     slide = openslide.OpenSlide(fp)
+                    self.log.info(f"slide dims: {slide.level_dimensions}")
                     W, H = slide.dimensions
                 except:
                     self.log.error(f"{class_name}.{func_name}: ❌ Couldn t open file: '{os.path.basename(fp)}'. Skipping." )
@@ -98,9 +101,8 @@ class Tiler(TilerBase):
                     region = slide
                 else:
                     try:
-                        self.log.info(f"{class_name}.{func_name}: ⏳ Reading sample_{sample_n}. Region size: {(W,H)}")
+                        self.log.info(f"{class_name}.{func_name}: ⏳ Reading sample_{sample_n}. Region size: {(W,H)}. Level: {self.level}")
                         region = slide.read_region(location = location , level = self.level, size= (W,H)).convert("RGB")
-                        self.log.info(f"{class_name}.{func_name}: ✅ Read region. ")
                     except:
                         self.log.error(f"{class_name}.{func_name}: ❌ Reading region failed")
                 
@@ -109,6 +111,7 @@ class Tiler(TilerBase):
                 if self.verbose_level in ['medium', 'high']: self.log.info(f"{class_name}.{func_name}: ⏳ Converting to numpy sample_{sample_n}:")
                 try:
                     np_slide = np.array(region)
+                    self.log.info(f"{class_name}.{func_name}: ✅ Read region with dimensions: {np_slide.shape} ")
                 except:
                     self.log.error(f"{class_name}.{func_name}: ❌ Conversion to numpy.")
                 if self.verbose_level in ['medium', 'high']: self.log.info(f"{class_name}.{func_name}: ✅ Converted to numpy sample_{sample_n}:")
@@ -117,7 +120,7 @@ class Tiler(TilerBase):
                 self.log.info(f"{class_name}.{func_name}: ⏳ Tiling sample_{sample_n} image. Patches shape: {w,h,3}:")
                 patches = patchify(np_slide, (w, h, 3), step =  self.step )
                 if self.verbose_level == 'high': self.log.info(f"{class_name}.{func_name}: ✅ Tiled sample_{sample_n} image. Patches shape: {patches.shape}:")
-                w_tiles,h_tiles = patches.shape[0],patches.shape[1]
+                w_tiles, h_tiles = patches.shape[0],patches.shape[1]
                 sample_fn = os.path.split(fp.replace(f'.{self.slide_format}', f"_sample{sample_n}"))[1]
                 self._write_ntiles(sample_fn=sample_fn, dims=(w_tiles,h_tiles))
 
@@ -145,7 +148,7 @@ class Tiler(TilerBase):
                 self.log.info(f"{class_name}.{func_name}: ⏳ Tiling sample_{sample_n} label.")
                 json_sample = fp.replace(f'.{self.slide_format}', f'_sample{sample_n}.json')
                 save_folder = os.path.join(self.save_root, 'labels')
-                self._get_tile_labels(fp = json_sample, region_dims=(W,H), save_folder= save_folder)
+                self._get_tile_labels(fp = json_sample, region_dims=(np_slide.shape[:2]), save_folder= save_folder)
                 self.log.info(f"{class_name}.{func_name}: ✅ Tiled sample_{sample_n} label.")
             return W, H
         
@@ -205,6 +208,11 @@ class Tiler(TilerBase):
             return       
 
         # patchify masks:
+
+        # if TEST_LABEL_NORMALIZATION is True: 
+        #     vertex_mask = vertex_mask/
+
+            self.log.info(f"💉 TEST NORMALIZATION APPLIED !")
         label_patches = patchify(vertex_mask, (w, h), step = self.step )
         order_patches = patchify(order_mask, (w, h), step = self.step )
         class_patches = patchify(class_mask, (w, h), step = self.step )

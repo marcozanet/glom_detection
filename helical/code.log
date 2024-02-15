@@ -1,17 +1,18 @@
-12/09 12:48:25|INFO|YOLO_Trainer.get_exp_fold: exp folder: /Users/marco/yolov5/runs/train/exp161.
-12/09 12:48:25|INFO|KCrossValidation.__init__: n_wsis:2.
-12/09 12:48:25|INFO|KCrossValidation.get_n_tiles: n_tiles_tot:{'BH10_PAS_sample1': [16, 17], 'BH10_PAS_sample0': [28, 8], 'BH11_PAS_sample1': [16, 17], 'BH11_PAS_sample0': [28, 8]}.
-12/09 12:48:25|INFO|KCrossValidation._change_folds: train: 1 images: ['BH11_PAS'].
-12/09 12:48:25|INFO|KCrossValidation._change_folds: test: 1 labels: ['BH11_PAS'].
-12/09 12:48:25|INFO|{'BH10_PAS_sample1': [16, 17], 'BH10_PAS_sample0': [28, 8], 'BH11_PAS_sample1': [16, 17], 'BH11_PAS_sample0': [28, 8]}
-12/09 12:48:25|INFO|{'BH11_PAS_sample1': [16, 17], 'BH11_PAS_sample0': [28, 8]}
-12/09 12:48:25|INFO|/Users/marco/Downloads/new_dataset/segmentation/wsi/train/labels/n_tiles.json
-12/09 12:48:25|INFO|{'BH10_PAS_sample1': [16, 17], 'BH10_PAS_sample0': [28, 8], 'BH11_PAS_sample1': [16, 17], 'BH11_PAS_sample0': [28, 8]}
-12/09 12:48:25|INFO|{'BH10_PAS_sample1': [16, 17], 'BH10_PAS_sample0': [28, 8], 'BH11_PAS_sample1': [16, 17], 'BH11_PAS_sample0': [28, 8]}
-12/09 12:48:25|INFO|/Users/marco/Downloads/new_dataset/segmentation/wsi/val/labels/n_tiles.json
-12/09 12:48:25|INFO|⏳ Setting configurations for YOLO: 
-12/09 12:48:25|INFO|✅ YOLO set up completed YOLO ✅ .
-12/09 12:48:25|INFO|YOLO_Trainer.train: data:/Users/marco/yolov5/data/helical.yaml
-12/09 12:48:25|INFO|YOLO_Trainer.train: weights:yolov5s-seg.pt
-12/09 12:48:25|INFO|⏳ Start training YOLO:
-12/09 12:48:25|INFO|YOLO_Trainer.train: python segment/train.py --img 1024 --batch 6 --epochs 15 --data /Users/marco/yolov5/data/helical.yaml --weights yolov5s-seg.pt --workers 1 --device cpu
+14/09 17:32:44|INFO|converted /Users/marco/Downloads/new_dataset/BH10_PAS.json
+14/09 17:32:44|INFO|Processor._make_tiles_branch: Created tree at '/Users/marco/Downloads/new_dataset/segmentation/tiles'.
+14/09 17:32:44|INFO|Processor._split_data: ⏳ Splitting WSIs with [0.7, 0.2, 0.1] ratio.: 
+14/09 17:32:44|INFO|Splitter._split_slides: Train images: 2, Val images: 0, Test images: 0
+14/09 17:32:44|INFO|Processor._split_data: ✅ Splitted WSIs in train, val, test sets.
+14/09 17:32:44|INFO|Processor.tile_dataset: ⏳ Tiling dataset at '/Users/marco/Downloads/new_dataset/segmentation/wsi':
+14/09 17:32:44|INFO|Processor.tile_dataset: START TILING 'TRAIN'
+14/09 17:32:44|INFO|Converter._rename_all: Renamed all filenames to <basename>_<stain>.<ext>
+14/09 17:32:45|INFO|Converter.__call__: Converter.__call__: ✅ Converted annotations. 
+14/09 17:32:45|INFO|Tiler.__call__: ⏳ Tiling images and labels with patch shape: [2048, 2048]'. 
+14/09 17:32:45|INFO|Tiler._get_completed_files: Completed 0/2 files.
+14/09 17:32:45|INFO|slide dims: ((24871, 27972), (12435, 13986), (6217, 6993), (3108, 3496), (1554, 1748))
+14/09 17:32:45|INFO|Tiler._get_tile_images: ⏳ Tiling slide: BH11_PAS.svs
+14/09 17:32:45|INFO|Tiler._get_tile_images: ⏳ Reading sample_0. Region size: (5781, 16382). Level: 1
+14/09 17:32:48|INFO|Tiler._get_tile_images: ✅ Read region with dimensions: (16382, 5781, 3) 
+14/09 17:32:48|INFO|Tiler._get_tile_images: ⏳ Tiling sample_0 image. Patches shape: (2048, 2048, 3):
+14/09 17:33:10|INFO|Tiler._get_tile_images: ✅ Saved 224 sample_0 patches in '/Users/marco/Downloads/new_dataset/segmentation/tiles/train/images'.
+14/09 17:33:10|INFO|Tiler._get_tile_images: ⏳ Tiling sample_0 label.

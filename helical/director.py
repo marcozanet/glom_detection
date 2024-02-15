@@ -33,7 +33,7 @@ class Director(Configurator):
         self.config_yaml_fp = config_yaml_fp
         self.models_yaml_fp = models_yaml_fp
         self.class_n = self.__class__.__name__
-        return
+        return 
     
     
     def _parse_args(self):
@@ -95,7 +95,7 @@ class Director(Configurator):
         cnn_feature_extractor()
         return
     
-    def cnn_process_inference(self):
+    def cnn_process_inference(self):    
         self.cnn_process(mode='inference')
         return
     
@@ -120,4 +120,4 @@ class Director(Configurator):
 if __name__ == '__main__':
     models_yaml_fp = 'best_models_mac.yaml' if sys.platform=='darwin' else 'best_models_windows.yaml'
     director = Director(dataset='tcd', models_yaml_fp=models_yaml_fp, testing=False)
-    director.yolo_train()
+    director.yolo_process()

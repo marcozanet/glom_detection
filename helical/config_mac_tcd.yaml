@@ -22,7 +22,7 @@ processor: # NB QUANDO FAI PROCESSING PER INFERENCE NON FARE OVERLAPPING ALTRIME
   safe_copy : False
   tiling_shape: [2048, 2048]
   tiling_step : 512
-  tiling_level : 0
+  tiling_level : 1
   tiling_show : True
   reproducibility: True
   empty_perc: null
